@@ -1,0 +1,25 @@
+{
+  "name": "ejupi-labs-blog",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "build": "node scripts/build.mjs",
+    "validate": "node scripts/validate.mjs",
+    "test": "npm run build && npm run validate && node --test",
+    "check": "npm run test && wrangler deploy --dry-run",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run check && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.111.0"
+  },
+  "overrides": {
+    "sharp": "0.35.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

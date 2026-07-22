@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc" shape-rendering="crispEdges">
+  <title id="title">Ejupi Labs favicon</title>
+  <desc id="desc">Ejupi Labs EL monogram: a bold E, a slim L and the Signal Oxide node.</desc>
+  <rect width="512" height="512" fill="#0E1111"/>
+  <g fill="#F4F1EA">
+    <rect x="40" y="100" width="64" height="312"/>
+    <rect x="40" y="100" width="186" height="60"/>
+    <rect x="40" y="226" width="166" height="58"/>
+    <rect x="40" y="352" width="186" height="60"/>
+    <rect x="270" y="100" width="30" height="312"/>
+    <rect x="270" y="382" width="112" height="30"/>
+  </g>
+  <rect x="422" y="354" width="58" height="58" fill="#E97A4A"/>
+</svg>
