@@ -5,6 +5,16 @@ export function shouldCloseOnEscape(key, expanded) {
 if (typeof document !== "undefined") {
 document.documentElement.classList.remove("no-js");
 
+const skipLink = document.querySelector('.skip-link[href^="#"]');
+
+if (skipLink instanceof HTMLAnchorElement) {
+  skipLink.addEventListener("click", () => {
+    const target = document.querySelector(skipLink.hash);
+    if (!(target instanceof HTMLElement)) return;
+    window.requestAnimationFrame(() => target.focus());
+  });
+}
+
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const menu = document.querySelector("[data-menu]");
 

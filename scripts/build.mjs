@@ -176,7 +176,7 @@ function indexPage(localeKey) {
   return `${pageHead({ localeKey, title: locale.ui.home, description: locale.index.description })}
 <body>
 ${header(localeKey, null, true)}
-<main id="main" itemscope itemtype="https://schema.org/Blog">
+<main id="main" tabindex="-1" itemscope itemtype="https://schema.org/Blog">
   <section class="index-hero">
     <div class="index-hero__copy">
       <span class="eyebrow">${escapeHtml(locale.index.eyebrow)}</span>
@@ -290,7 +290,7 @@ function articlePage(localeKey, definition, index) {
   return `${pageHead({ localeKey, title: study.title, description: study.summary, slug: definition.slug, type: "article" })}
 <body>
 ${header(localeKey, definition.slug)}
-<main id="main">
+<main id="main" tabindex="-1">
   <article itemscope itemtype="https://schema.org/Article">
     <meta itemprop="datePublished" content="${site.published}" />
     <meta itemprop="author" content="${escapeHtml(site.author)}" />
@@ -338,7 +338,7 @@ function notFoundPage(localeKey) {
   return `${pageHead({ localeKey, title: "404", description: locale.ui.notFoundBody, noIndex: true })}
 <body>
 ${header(localeKey, null)}
-<main class="not-found shell" id="main"><span class="not-found__code">ERROR / 404</span><h1>${escapeHtml(locale.ui.notFoundTitle)}</h1><p>${escapeHtml(locale.ui.notFoundBody)}</p><a class="text-link" href="${routeFor(localeKey, null)}">${escapeHtml(locale.ui.notFoundAction)} <span aria-hidden="true">→</span></a></main>
+<main class="not-found shell" id="main" tabindex="-1"><span class="not-found__code">ERROR / 404</span><h1>${escapeHtml(locale.ui.notFoundTitle)}</h1><p>${escapeHtml(locale.ui.notFoundBody)}</p><a class="text-link" href="${routeFor(localeKey, null)}">${escapeHtml(locale.ui.notFoundAction)} <span aria-hidden="true">→</span></a></main>
 ${footer(localeKey)}
 </body>
 </html>`;

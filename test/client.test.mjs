@@ -15,3 +15,10 @@ test("mobile disclosure locks page scrolling while open", async () => {
 
   assert.match(source, /document\.body\.classList\.toggle\("menu-open", open\)/);
 });
+
+test("skip link transfers keyboard focus to the main landmark", async () => {
+  const source = await readFile(new URL("../src/client.js", import.meta.url), "utf8");
+
+  assert.match(source, /skipLink\.addEventListener\("click"/);
+  assert.match(source, /requestAnimationFrame\(\(\) => target\.focus\(\)\)/);
+});
