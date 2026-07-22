@@ -15,3 +15,16 @@ test("localized article keeps its language switch on the equivalent article", as
   assert.match(html, /href="\/fr\/case-studies\/archival-workflow-management\/"/);
   assert.match(html, /hreflang="x-default" href="https:\/\/blog\.ejupilabs\.com\/case-studies\/archival-workflow-management\/"/);
 });
+
+test("every generated HTML page exposes a focusable main landmark", async () => {
+  const pages = [
+    "../dist/index.html",
+    "../dist/404.html",
+    "../dist/fr/case-studies/retail-erp-evolution/index.html",
+  ];
+
+  for (const page of pages) {
+    const html = await readFile(new URL(page, import.meta.url), "utf8");
+    assert.match(html, /<main\b[^>]*\bid="main"[^>]*\btabindex="-1"|<main\b[^>]*\btabindex="-1"[^>]*\bid="main"/);
+  }
+});
