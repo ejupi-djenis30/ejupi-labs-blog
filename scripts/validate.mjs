@@ -1,5 +1,6 @@
+import { createHash } from "node:crypto";
 import { access, readFile, readdir } from "node:fs/promises";
-import { extname, join, resolve } from "node:path";
+import { basename, extname, join, resolve } from "node:path";
 import { caseDefinitions, localeOrder, locales, site } from "../src/content.mjs";
 
 const root = resolve(import.meta.dirname, "..");
@@ -77,6 +78,9 @@ for (const localeKey of localeOrder) {
     if (count(html, /rel="alternate" hreflang=/g) !== 5) errors.push(`${label} must expose four languages and x-default.`);
     if (!html.includes('href="#main"')) errors.push(`${label} has no skip link.`);
     if (!html.includes('id="site-navigation"')) errors.push(`${label} menu is not associated with its toggle.`);
+    if (!/href="\/assets\/styles\.[0-9a-f]{12}\.css"/u.test(html)) errors.push(`${label} has no fingerprinted stylesheet.`);
+    if (!/src="\/assets\/client\.[0-9a-f]{12}\.js"/u.test(html)) errors.push(`${label} has no fingerprinted client script.`);
+    if (/\/assets\/(?:styles\.css|client\.js)/u.test(html)) errors.push(`${label} references an unversioned mutable asset.`);
     if (/href=""|src=""/.test(html)) errors.push(`${label} contains an empty link or source.`);
     if (/\.\.|\?\.|!\./.test(html.replaceAll("https://", ""))) errors.push(`${label} contains duplicated terminal punctuation.`);
     if (/<img(?![^>]*\balt=)[^>]*>/i.test(html)) errors.push(`${label} contains an image without alt text.`);
@@ -96,6 +100,21 @@ for (const localeKey of localeOrder) {
 const files = await allFiles(dist);
 const rasterFiles = files.filter((file) => [".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif"].includes(extname(file).toLowerCase()));
 if (rasterFiles.length > 0) errors.push(`Raster assets are not allowed: ${rasterFiles.join(", ")}`);
+
+const fingerprintedAssets = files.filter((file) =>
+  /^(?:styles\.[0-9a-f]{12}\.css|client\.[0-9a-f]{12}\.js)$/u.test(basename(file)),
+);
+if (fingerprintedAssets.length !== 2) {
+  errors.push(`Expected one fingerprinted stylesheet and one fingerprinted client script, found ${fingerprintedAssets.length}.`);
+}
+for (const file of fingerprintedAssets) {
+  const match = basename(file).match(/\.(?<fingerprint>[0-9a-f]{12})\.(?:css|js)$/u);
+  const contents = await readFile(file);
+  const actual = createHash("sha256").update(contents).digest("hex").slice(0, 12);
+  if (match?.groups?.fingerprint !== actual) {
+    errors.push(`${basename(file)} is not named after its content digest.`);
+  }
+}
 
 const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
 if (count(sitemap, /<url>/g) !== 16) errors.push("Sitemap must contain four indexes and twelve case-study URLs.");
