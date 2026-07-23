@@ -3,7 +3,7 @@ export const site = {
   section: "Case Studies",
   url: "https://blog.ejupilabs.com",
   portfolioUrl: "https://ejupilabs.com",
-  author: "Djenis Ejupi",
+  author: "Ejupi Labs",
   published: "2026-07-22",
 };
 
