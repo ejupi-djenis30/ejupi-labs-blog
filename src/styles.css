@@ -1128,7 +1128,10 @@ li {
   }
 
   body.menu-open {
+    position: fixed;
+    width: 100%;
     overflow: hidden;
+    overscroll-behavior: none;
   }
 
   .header-inner {
@@ -1164,13 +1167,17 @@ li {
     visibility: hidden;
     opacity: 0;
     transform: translateY(-0.75rem);
-    transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
+    transition:
+      opacity 160ms ease,
+      transform 160ms ease,
+      visibility 0s linear 160ms;
   }
 
   .site-nav[data-open="true"] {
     visibility: visible;
     opacity: 1;
     transform: translateY(0);
+    transition-delay: 0s;
   }
 
   .no-js .site-header {

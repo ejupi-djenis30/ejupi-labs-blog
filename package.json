@@ -9,11 +9,13 @@
     "build": "node scripts/build.mjs",
     "validate": "node scripts/validate.mjs",
     "test": "npm run build && npm run validate && node --test",
-    "check": "npm run test && wrangler deploy --dry-run",
+    "test:e2e": "playwright test",
+    "check": "npm run test && npm run test:e2e && wrangler deploy --dry-run",
     "dev": "npm run build && wrangler dev",
     "deploy": "npm run check && wrangler deploy"
   },
   "devDependencies": {
+    "@playwright/test": "1.61.1",
     "wrangler": "4.111.0"
   },
   "overrides": {
