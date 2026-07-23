@@ -28,6 +28,7 @@ Useful commands:
 npm run build      # generate dist/
 npm run validate   # validate routes, SEO, localisation and asset policy
 npm test           # build, validate and run Node tests
+npm run test:e2e   # exercise mobile navigation and responsive state in Chromium
 npm run check      # full test suite plus a Cloudflare deployment dry-run
 ```
 
@@ -42,6 +43,7 @@ scripts/validate.mjs Build and SEO validator
 site/assets/        Local fonts and Ejupi Labs SVG brand assets
 site/_headers       Cloudflare security and cache headers
 test/               Content, navigation and generated-route tests
+e2e/                Browser-level keyboard, focus, scroll and resize checks
 wrangler.jsonc      Assets-only Worker and custom-domain configuration
 ```
 
