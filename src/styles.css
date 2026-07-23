@@ -1157,7 +1157,9 @@ li {
     right: 0;
     left: 0;
     display: grid;
-    max-height: calc(100svh - var(--header-height));
+    height: calc(100svh - var(--header-height));
+    max-height: none;
+    align-content: start;
     justify-items: start;
     gap: 1.5rem;
     padding: 2rem 4vw 2.5rem;
