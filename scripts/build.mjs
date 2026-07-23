@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { caseDefinitions, localeOrder, locales, site } from "../src/content.mjs";
@@ -5,6 +6,17 @@ import { caseDefinitions, localeOrder, locales, site } from "../src/content.mjs"
 const root = resolve(import.meta.dirname, "..");
 const outputRoot = join(root, "dist");
 const sourceRoot = join(root, "site");
+const stylesSource = await readFile(join(root, "src", "styles.css"), "utf8");
+const clientSource = await readFile(join(root, "src", "client.js"), "utf8");
+const fingerprint = (source) => createHash("sha256").update(source).digest("hex").slice(0, 12);
+const assetFiles = Object.freeze({
+  styles: `assets/styles.${fingerprint(stylesSource)}.css`,
+  client: `assets/client.${fingerprint(clientSource)}.js`,
+});
+const assetUrls = Object.freeze({
+  styles: `/${assetFiles.styles}`,
+  client: `/${assetFiles.client}`,
+});
 
 const escapeHtml = (value) =>
   String(value)
@@ -73,8 +85,8 @@ function pageHead({ localeKey, title, description, slug = null, type = "website"
   ${alternates(slug)}
   <link rel="alternate" type="application/rss+xml" title="${escapeHtml(site.name)} — ${escapeHtml(locale.ui.home)}" href="${absolute(feedRoute(localeKey))}" />
   <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/assets/styles.css" />
-  <script src="/assets/client.js" type="module"></script>
+  <link rel="stylesheet" href="${assetUrls.styles}" />
+  <script src="${assetUrls.client}" type="module"></script>
   <meta property="og:site_name" content="${escapeHtml(site.name)}" />
   <meta property="og:type" content="${type}" />
   <meta property="og:title" content="${escapeHtml(pageTitle)}" />
@@ -376,8 +388,8 @@ await rm(outputRoot, { recursive: true, force: true });
 await mkdir(join(outputRoot, "assets"), { recursive: true });
 await cp(join(sourceRoot, "assets"), join(outputRoot, "assets"), { recursive: true });
 await cp(join(sourceRoot, "_headers"), join(outputRoot, "_headers"));
-await cp(join(root, "src", "styles.css"), join(outputRoot, "assets", "styles.css"));
-await cp(join(root, "src", "client.js"), join(outputRoot, "assets", "client.js"));
+await write(assetFiles.styles, stylesSource);
+await write(assetFiles.client, clientSource);
 
 for (const localeKey of localeOrder) {
   const locale = locales[localeKey];

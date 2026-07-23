@@ -4,6 +4,9 @@ import test from "node:test";
 
 test("English case-study index links to all three canonical articles", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
+  assert.match(html, /href="\/assets\/styles\.[0-9a-f]{12}\.css"/);
+  assert.match(html, /src="\/assets\/client\.[0-9a-f]{12}\.js"/);
+  assert.doesNotMatch(html, /\/assets\/(?:styles\.css|client\.js)/);
   for (const slug of ["ai-workflow-cloud-migration", "archival-workflow-management", "retail-erp-evolution"]) {
     assert.match(html, new RegExp(`href="/case-studies/${slug}/"`));
   }
