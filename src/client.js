@@ -74,10 +74,11 @@ if (typeof document !== "undefined") {
     function restoreScrollPosition() {
       document.body.classList.remove("menu-open");
       document.body.style.removeProperty("top");
-      const previousScrollBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = "auto";
-      window.scrollTo(0, lockedScrollPosition);
-      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+      window.scrollTo({
+        top: lockedScrollPosition,
+        left: 0,
+        behavior: "instant",
+      });
     }
 
     function setMenu(open, { restoreFocus = true } = {}) {
@@ -110,7 +111,7 @@ if (typeof document !== "undefined") {
 
       restorePageAccess();
       restoreScrollPosition();
-      if (restoreFocus) menuToggle.focus();
+      if (restoreFocus) menuToggle.focus({ preventScroll: true });
     }
 
     function closeForNavigation() {

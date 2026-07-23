@@ -21,15 +21,33 @@ for (const localePath of locales) {
     await expect(menu).toHaveAttribute("aria-hidden", "true");
     await expect(menu).toHaveJSProperty("inert", true);
 
-    await page.evaluate(() => window.scrollTo(0, 500));
-    const lockedPosition = await page.evaluate(() => window.scrollY);
-    await toggle.click();
+    const lockedPosition = await page.evaluate(() => {
+      const previousScrollBehavior =
+        document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = "auto";
+      window.scrollTo(0, 500);
+      const position = window.scrollY;
+      document.documentElement.style.scrollBehavior = previousScrollBehavior;
+      return position;
+    });
+    expect(lockedPosition).toBeGreaterThan(0);
+    await expect(toggle).toBeInViewport();
+    const toggleBox = await toggle.boundingBox();
+    expect(toggleBox).not.toBeNull();
+    await page.mouse.click(
+      toggleBox.x + toggleBox.width / 2,
+      toggleBox.y + toggleBox.height / 2,
+    );
 
     await expect(toggle).toHaveAttribute("aria-expanded", "true");
     await expect(menu).not.toHaveAttribute("aria-hidden", "true");
     await expect(menu).toHaveJSProperty("inert", false);
     await expect(page.locator("body")).toHaveClass(/menu-open/);
     await expect(page.locator("body")).toHaveCSS("position", "fixed");
+    await expect(page.locator("body")).toHaveCSS(
+      "top",
+      `-${lockedPosition}px`,
+    );
     await expect(menu.locator("a").first()).toBeFocused();
     expect(await page.locator("main").evaluate((element) => element.inert)).toBe(true);
 
@@ -46,7 +64,9 @@ for (const localePath of locales) {
     await expect(menu).toHaveAttribute("aria-hidden", "true");
     await expect(page.locator("body")).not.toHaveClass(/menu-open/);
     expect(await page.locator("main").evaluate((element) => element.inert)).toBe(false);
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(lockedPosition);
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY))
+      .toBe(lockedPosition);
     expect(consoleErrors).toEqual([]);
   });
 }
