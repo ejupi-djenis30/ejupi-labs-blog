@@ -14,7 +14,9 @@ test("mobile disclosure locks page scrolling while open", async () => {
   const source = await readFile(new URL("../src/client.js", import.meta.url), "utf8");
 
   assert.match(source, /document\.body\.style\.top = `-\$\{lockedScrollPosition\}px`/);
-  assert.match(source, /window\.scrollTo\(0, lockedScrollPosition\)/);
+  assert.match(source, /top: lockedScrollPosition/);
+  assert.match(source, /behavior: "instant"/);
+  assert.match(source, /menuToggle\.focus\(\{ preventScroll: true \}\)/);
 });
 
 test("mobile disclosure isolates the page and traps keyboard focus", async () => {
