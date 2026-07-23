@@ -44,10 +44,20 @@ for (const localePath of locales) {
     await expect(menu).toHaveJSProperty("inert", false);
     await expect(page.locator("body")).toHaveClass(/menu-open/);
     await expect(page.locator("body")).toHaveCSS("position", "fixed");
+    await expect(menu).toHaveCSS("position", "fixed");
+    await expect(menu).toHaveCSS("top", "72px");
+    await expect(menu).toHaveCSS("height", "772px");
+    await expect(menu).toHaveCSS("max-height", "none");
+    await expect(menu).toHaveCSS("background-color", "rgb(244, 241, 234)");
+    await expect(menu).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
     await expect(page.locator("body")).toHaveCSS(
       "top",
       `-${lockedPosition}px`,
     );
+    const menuBox = await menu.boundingBox();
+    expect(menuBox).not.toBeNull();
+    expect(Math.abs(menuBox.y - 72)).toBeLessThanOrEqual(1);
+    expect(Math.abs(menuBox.y + menuBox.height - 844)).toBeLessThanOrEqual(1);
     await expect(menu.locator("a").first()).toBeFocused();
     expect(await page.locator("main").evaluate((element) => element.inert)).toBe(true);
 
