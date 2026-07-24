@@ -11,6 +11,12 @@ const expectedSlugs = [
   "ai-workflow-cloud-migration",
   "archival-workflow-management",
   "retail-erp-evolution",
+  "careeros-local",
+  "eliza-lab",
+  "djenis-ai-agent",
+  "dig-gopher-explorer",
+  "integradraw",
+  "vector-placement-operations",
 ];
 
 function routeFor(localeKey, slug) {
@@ -86,15 +92,19 @@ for (const localeKey of localeOrder) {
     if (/<img(?![^>]*\balt=)[^>]*>/i.test(html)) errors.push(`${label} contains an image without alt text.`);
 
     if (slug) {
-      if (count(html, /data-story-section/g) !== 7) errors.push(`${label} must contain seven complete story sections.`);
+      const definition = caseDefinitions.find((item) => item.slug === slug);
+      const expectedSections = definition?.kind === "labs" ? 8 : 7;
+      if (count(html, /data-story-section/g) !== expectedSections) errors.push(`${label} must contain ${expectedSections} complete story sections.`);
       if (!html.includes("architecture-frame")) errors.push(`${label} is missing its architecture figure.`);
       if (!html.includes(locales[localeKey].ui.sourceNote)) errors.push(`${label} is missing its evidence boundary.`);
+      if (definition?.kind === "labs" && !html.includes("evidence-ledger")) errors.push(`${label} is missing its evidence ledger.`);
+      if (definition?.kind === "labs" && !html.includes(definition.projectUrl)) errors.push(`${label} is missing its working product link.`);
     }
   }
 
   const feedPath = join(dist, locale.prefix.replace(/^\//, ""), "feed.xml");
   if (!(await exists(feedPath))) errors.push(`Missing RSS feed for ${localeKey}.`);
-  else if (count(await readFile(feedPath, "utf8"), /<item>/g) !== 3) errors.push(`RSS feed ${localeKey} must contain three items.`);
+  else if (count(await readFile(feedPath, "utf8"), /<item>/g) !== 9) errors.push(`RSS feed ${localeKey} must contain nine items.`);
 }
 
 const files = await allFiles(dist);
@@ -117,8 +127,13 @@ for (const file of fingerprintedAssets) {
 }
 
 const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
-if (count(sitemap, /<url>/g) !== 16) errors.push("Sitemap must contain four indexes and twelve case-study URLs.");
-if (count(sitemap, /hreflang="x-default"/g) !== 16) errors.push("Every sitemap URL needs an x-default alternate.");
+if (count(sitemap, /<url>/g) !== 40) errors.push("Sitemap must contain four indexes and thirty-six case-study URLs.");
+if (count(sitemap, /hreflang="x-default"/g) !== 40) errors.push("Every sitemap URL needs an x-default alternate.");
+
+const openSearch = await readFile(join(dist, "opensearch.xml"), "utf8");
+if (!openSearch.includes('template="https://blog.ejupilabs.com/?q={searchTerms}"')) {
+  errors.push("OpenSearch must target the canonical client-side archive search.");
+}
 
 const headers = await readFile(join(dist, "_headers"), "utf8");
 for (const header of ["Content-Security-Policy", "Permissions-Policy", "Referrer-Policy", "X-Content-Type-Options"]) {
@@ -132,5 +147,5 @@ if (errors.length > 0) {
   console.error(errors.map((error) => `- ${error}`).join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Validated ${files.length} files, 16 canonical pages, 4 locales and 3 stable case-study routes.`);
+  console.log(`Validated ${files.length} files, 40 canonical pages, 4 locales and 9 stable case-study routes.`);
 }

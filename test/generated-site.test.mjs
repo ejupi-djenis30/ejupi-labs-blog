@@ -2,14 +2,27 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("English case-study index links to all three canonical articles", async () => {
+test("English case-study index links to all nine canonical articles", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
   assert.match(html, /href="\/assets\/styles\.[0-9a-f]{12}\.css"/);
   assert.match(html, /src="\/assets\/client\.[0-9a-f]{12}\.js"/);
   assert.doesNotMatch(html, /\/assets\/(?:styles\.css|client\.js)/);
-  for (const slug of ["ai-workflow-cloud-migration", "archival-workflow-management", "retail-erp-evolution"]) {
+  for (const slug of [
+    "ai-workflow-cloud-migration",
+    "archival-workflow-management",
+    "retail-erp-evolution",
+    "careeros-local",
+    "eliza-lab",
+    "djenis-ai-agent",
+    "dig-gopher-explorer",
+    "integradraw",
+    "vector-placement-operations",
+  ]) {
     assert.match(html, new RegExp(`href="/case-studies/${slug}/"`));
   }
+  assert.match(html, /data-case-search/);
+  assert.match(html, /data-case-type="labs"/);
+  assert.match(html, /"@type":"Blog"/);
 });
 
 test("localized article keeps its language switch on the equivalent article", async () => {
@@ -30,4 +43,32 @@ test("every generated HTML page exposes a focusable main landmark", async () => 
     const html = await readFile(new URL(page, import.meta.url), "utf8");
     assert.match(html, /<main\b[^>]*\bid="main"[^>]*\btabindex="-1"|<main\b[^>]*\btabindex="-1"[^>]*\bid="main"/);
   }
+});
+
+test("localized Labs articles keep canonical and hreflang routes aligned", async () => {
+  const html = await readFile(
+    new URL("../dist/it/case-studies/careeros-local/index.html", import.meta.url),
+    "utf8",
+  );
+  assert.match(
+    html,
+    /rel="canonical" href="https:\/\/blog\.ejupilabs\.com\/it\/case-studies\/careeros-local\/"/,
+  );
+  assert.match(
+    html,
+    /hreflang="de" href="https:\/\/blog\.ejupilabs\.com\/de\/case-studies\/careeros-local\/"/,
+  );
+  assert.match(html, /"@type":"BlogPosting"/);
+});
+
+test("sitemap and feed include the expanded editorial archive", async () => {
+  const sitemap = await readFile(
+    new URL("../dist/sitemap.xml", import.meta.url),
+    "utf8",
+  );
+  const feed = await readFile(new URL("../dist/feed.xml", import.meta.url), "utf8");
+  assert.match(sitemap, /\/fr\/case-studies\/vector-placement-operations\//);
+  assert.match(sitemap, /<lastmod>2026-07-24<\/lastmod>/);
+  assert.match(feed, /<category>Machine learning<\/category>/);
+  assert.match(feed, /\/case-studies\/careeros-local\//);
 });

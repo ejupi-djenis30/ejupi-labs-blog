@@ -8,8 +8,165 @@ export function calculateReadingProgress(scrollY, scrollHeight, viewportHeight) 
   return Math.min(1, Math.max(0, scrollY / scrollable));
 }
 
+export function normalizeSearchValue(value) {
+  return String(value)
+    .normalize("NFKD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLocaleLowerCase()
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+export function matchesCaseStudy(
+  { text, kind, topic },
+  { query = "", selectedKind = "", selectedTopic = "" },
+) {
+  const words = normalizeSearchValue(query).split(" ").filter(Boolean);
+  const normalizedText = normalizeSearchValue(text);
+  return (
+    (!selectedKind || kind === selectedKind) &&
+    (!selectedTopic || topic === selectedTopic) &&
+    words.every((word) => normalizedText.includes(word))
+  );
+}
+
 if (typeof document !== "undefined") {
   document.documentElement.classList.remove("no-js");
+
+  const discovery = document.querySelector("[data-discovery]");
+  const caseCards = [...document.querySelectorAll("[data-case-card]")];
+
+  if (discovery instanceof HTMLElement && caseCards.length > 0) {
+    const search = discovery.querySelector("[data-case-search]");
+    const topic = discovery.querySelector("[data-case-topic]");
+    const typeButtons = [
+      ...discovery.querySelectorAll("[data-case-type]"),
+    ].filter((element) => element instanceof HTMLButtonElement);
+    const clearButtons = [
+      ...document.querySelectorAll("[data-case-clear]"),
+    ].filter((element) => element instanceof HTMLButtonElement);
+    const count = discovery.querySelector("[data-case-count]");
+    const countLabel = discovery.querySelector("[data-case-count-label]");
+    const empty = document.querySelector("[data-case-empty]");
+    let selectedKind = "";
+
+    if (
+      search instanceof HTMLInputElement &&
+      topic instanceof HTMLSelectElement &&
+      count instanceof HTMLElement &&
+      countLabel instanceof HTMLElement &&
+      empty instanceof HTMLElement
+    ) {
+      discovery.hidden = false;
+
+      function readUrlState() {
+        const parameters = new URLSearchParams(window.location.search);
+        search.value = parameters.get("q") ?? "";
+        const requestedKind = parameters.get("type") ?? "";
+        selectedKind = typeButtons.some(
+          (button) => button.dataset.caseType === requestedKind,
+        )
+          ? requestedKind
+          : "";
+        const requestedTopic = parameters.get("topic") ?? "";
+        topic.value = [...topic.options].some(
+          (option) => option.value === requestedTopic,
+        )
+          ? requestedTopic
+          : "";
+      }
+
+      function writeUrlState() {
+        const url = new URL(window.location.href);
+        const values = {
+          q: search.value.trim(),
+          type: selectedKind,
+          topic: topic.value,
+        };
+        for (const [key, value] of Object.entries(values)) {
+          if (value) url.searchParams.set(key, value);
+          else url.searchParams.delete(key);
+        }
+        window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+      }
+
+      function updateResults({ updateUrl = true } = {}) {
+        let visibleCount = 0;
+        for (const card of caseCards) {
+          const visible = matchesCaseStudy(
+            {
+              text: card.textContent ?? "",
+              kind: card.dataset.kind ?? "",
+              topic: card.dataset.topic ?? "",
+            },
+            {
+              query: search.value,
+              selectedKind,
+              selectedTopic: topic.value,
+            },
+          );
+          card.hidden = !visible;
+          if (visible) visibleCount += 1;
+        }
+
+        for (const button of typeButtons) {
+          button.setAttribute(
+            "aria-pressed",
+            String(button.dataset.caseType === selectedKind),
+          );
+        }
+        count.textContent = String(visibleCount);
+        countLabel.textContent =
+          visibleCount === 1
+            ? countLabel.dataset.singular
+            : countLabel.dataset.plural;
+        empty.hidden = visibleCount !== 0;
+        if (updateUrl) writeUrlState();
+      }
+
+      function resetFilters({ focusSearch = true } = {}) {
+        search.value = "";
+        topic.value = "";
+        selectedKind = "";
+        updateResults();
+        if (focusSearch) search.focus();
+      }
+
+      search.addEventListener("input", () => updateResults());
+      topic.addEventListener("change", () => updateResults());
+      for (const button of typeButtons) {
+        button.addEventListener("click", () => {
+          selectedKind = button.dataset.caseType ?? "";
+          updateResults();
+        });
+      }
+      for (const button of clearButtons) {
+        button.addEventListener("click", () => resetFilters());
+      }
+      document.addEventListener("keydown", (event) => {
+        const target = event.target;
+        const isEditing =
+          target instanceof HTMLInputElement ||
+          target instanceof HTMLTextAreaElement ||
+          target instanceof HTMLSelectElement ||
+          target instanceof HTMLElement && target.isContentEditable;
+        if (event.key === "/" && !isEditing && !event.metaKey && !event.ctrlKey && !event.altKey) {
+          event.preventDefault();
+          search.focus();
+        } else if (event.key === "Escape" && document.activeElement === search && search.value) {
+          event.preventDefault();
+          search.value = "";
+          updateResults();
+        }
+      });
+      window.addEventListener("popstate", () => {
+        readUrlState();
+        updateResults({ updateUrl: false });
+      });
+      readUrlState();
+      updateResults({ updateUrl: false });
+    }
+  }
 
   const skipLink = document.querySelector('.skip-link[href^="#"]');
 
