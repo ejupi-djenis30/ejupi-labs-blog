@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { calculateReadingProgress, shouldCloseOnEscape } from "../src/client.js";
+import {
+  calculateReadingProgress,
+  matchesCaseStudy,
+  normalizeSearchValue,
+  shouldCloseOnEscape,
+} from "../src/client.js";
 
 test("mobile disclosure closes on Escape only while open", () => {
   assert.equal(shouldCloseOnEscape("Escape", true), true);
@@ -39,6 +44,29 @@ test("reading progress is clamped and handles non-scrollable pages", () => {
   assert.equal(calculateReadingProgress(250, 1500, 1000), 0.5);
   assert.equal(calculateReadingProgress(-50, 1500, 1000), 0);
   assert.equal(calculateReadingProgress(1000, 1500, 1000), 1);
+});
+
+test("case-study search is accent-insensitive and requires every query word", () => {
+  assert.equal(normalizeSearchValue("  Déploiement   GKE "), "deploiement gke");
+  const candidate = {
+    text: "Déploiement d’une plateforme GKE avec Terraform",
+    kind: "professional",
+    topic: "cloud-platforms",
+  };
+  assert.equal(matchesCaseStudy(candidate, { query: "gke terraform" }), true);
+  assert.equal(matchesCaseStudy(candidate, { query: "gke camunda" }), false);
+  assert.equal(
+    matchesCaseStudy(candidate, {
+      query: "deploiement",
+      selectedKind: "professional",
+      selectedTopic: "cloud-platforms",
+    }),
+    true,
+  );
+  assert.equal(
+    matchesCaseStudy(candidate, { selectedKind: "labs" }),
+    false,
+  );
 });
 
 test("reading progress batches scroll work through requestAnimationFrame", async () => {

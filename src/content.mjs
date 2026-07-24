@@ -1,10 +1,13 @@
+import { labsCases } from "./labs-content.mjs";
+import { labsLocales } from "./labs-locales.mjs";
+
 export const site = {
   name: "Ejupi Labs",
   section: "Case Studies",
   url: "https://blog.ejupilabs.com",
   portfolioUrl: "https://ejupilabs.com",
   author: "Ejupi Labs",
-  published: "2026-07-22",
+  published: "2026-07-24",
 };
 
 export const localeOrder = ["en", "it", "de", "fr"];
@@ -14,19 +17,106 @@ export const caseDefinitions = [
     slug: "ai-workflow-cloud-migration",
     number: "01",
     diagram: "cloud",
-    stack: ["GCP", "GKE", "Terraform", "Kubernetes", "GitLab CI/CD"],
+    kind: "professional",
+    categoryKey: "cloud-platforms",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-22",
+    updated: "2026-07-24",
+    stack: ["GKE", "Terraform", "Helm", "Cloud Build", "GitLab CI/CD"],
   },
   {
     slug: "archival-workflow-management",
     number: "02",
     diagram: "workflow",
-    stack: ["Java", "Spring Boot", "React", "Camunda"],
+    kind: "professional",
+    categoryKey: "workflow-software",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-22",
+    updated: "2026-07-24",
+    stack: ["Spring Boot", "React", "Single-SPA", "Camunda", "S3-compatible storage"],
   },
   {
     slug: "retail-erp-evolution",
     number: "03",
     diagram: "erp",
-    stack: ["C#", ".NET", "SQL Server", "JavaScript"],
+    kind: "professional",
+    categoryKey: "enterprise-software",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-22",
+    updated: "2026-07-24",
+    stack: ["C#", ".NET Framework 4.8", "SQL Server", "KnockoutJS", "Crystal Reports"],
+  },
+  {
+    slug: "careeros-local",
+    number: "04",
+    diagram: "careeros",
+    kind: "labs",
+    categoryKey: "local-first-product",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-24",
+    updated: "2026-07-24",
+    projectUrl: "https://ejupi-djenis30.github.io/careeros-local/",
+    stack: ["Tauri 2", "React 19", "FastAPI", "SQLite", "llama.cpp"],
+  },
+  {
+    slug: "eliza-lab",
+    number: "05",
+    diagram: "eliza",
+    kind: "labs",
+    categoryKey: "machine-learning",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-24",
+    updated: "2026-07-24",
+    projectUrl: "https://ejupi-djenis30.github.io/PsychologistRustBot/",
+    stack: ["Rust", "TF-IDF", "Logistic regression", "Open-set ML"],
+  },
+  {
+    slug: "djenis-ai-agent",
+    number: "06",
+    diagram: "agent",
+    kind: "labs",
+    categoryKey: "agent-systems",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-24",
+    updated: "2026-07-24",
+    projectUrl: "https://ejupi-djenis30.github.io/DjenisAiAgent/",
+    stack: ["Python", "Gemini", "Windows UIA", "Selenium", "FastAPI"],
+  },
+  {
+    slug: "dig-gopher-explorer",
+    number: "07",
+    diagram: "dig",
+    kind: "labs",
+    categoryKey: "protocol-tooling",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-24",
+    updated: "2026-07-24",
+    projectUrl: "https://ejupi-djenis30.github.io/Dig/",
+    stack: ["Node.js", "TCP", "Gopher", "PWA"],
+  },
+  {
+    slug: "integradraw",
+    number: "08",
+    diagram: "integradraw",
+    kind: "labs",
+    categoryKey: "computational-mathematics",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-24",
+    updated: "2026-07-24",
+    projectUrl: "https://ejupi-djenis30.github.io/IntegraDraw/",
+    stack: ["Java 17", "TypeScript", "Canvas", "Numerical methods"],
+  },
+  {
+    slug: "vector-placement-operations",
+    number: "09",
+    diagram: "vector",
+    kind: "labs",
+    categoryKey: "operations-software",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-24",
+    updated: "2026-07-24",
+    projectUrl: "https://ejupi-djenis30.github.io/vector-placement-operations/",
+    stack: ["JavaScript", "Local storage", "Playwright", "Static web"],
   },
 ];
 
@@ -65,11 +155,11 @@ export const locales = {
     index: {
       title: "Engineering decisions, shown in context.",
       description:
-        "Three close accounts of systems I worked on: what was brittle, what I changed and what became easier to run. Company names stay private. The technical scope does not.",
-      eyebrow: "Engineering case studies / 01—03",
+        "Nine detailed case studies: three anonymised professional systems and six open-source Labs projects. Each one explains the constraints, the decisions, what was built and where the evidence stops.",
+      eyebrow: "Engineering case studies / 01—09",
       introTitle: "Work worth explaining",
       introBody:
-        "A stack list tells you very little. These case studies focus on the decisions behind the code, the constraints around them and the result that could be supported in day-to-day use.",
+        "A stack list tells you very little. This archive separates professional work from Labs projects, then follows the decisions, verification and limits behind each system.",
       principles: [
         {
           number: "P01",
@@ -96,44 +186,44 @@ export const locales = {
         cardTitle: "AI workflow platform cloud migration",
         title: "Moving an AI workflow platform to a repeatable cloud foundation",
         summary:
-          "A multi-component document-processing platform relied on environment-specific deployments. I moved its infrastructure and delivery model to reusable Terraform, GKE and managed Google Cloud services.",
-        readMinutes: "8",
+          "In roughly one month, I moved a multi-component document and AI-workflow platform from an environment-specific on-premise setup to reusable Terraform, GKE and a controlled blue/red delivery path on Google Cloud.",
+        readMinutes: "10",
         facts: [
           ["Discipline", "Cloud platform engineering"],
-          ["Scope", "Infrastructure and delivery model"],
-          ["Platform", "Google Cloud"],
-          ["Context", "Professional engineering work"],
+          ["Scope", "Infrastructure, workloads and release path"],
+          ["Delivery", "Approximately one month"],
+          ["Boundary", "Anonymised professional case"],
         ],
         starting: {
           title: "The starting point",
           paragraphs: [
-            "The platform was a set of connected components for document processing and AI-assisted workflows. Its environments did not share one dependable setup path. A deployment that worked in one place could still be difficult to reproduce in the next.",
-            "Calling this a cloud migration would only describe the destination. The real job was to replace one-off infrastructure and delivery steps with a model that could be read, reviewed and repeated.",
+            "The on-premise platform combined a Vue interface, two Spring Boot services, a Python Temporal worker, Temporal, Keycloak, PostgreSQL and MinIO. It handled document extraction and AI-assisted workflows, but environments did not share one dependable setup path.",
+            "Calling this a cloud migration would only describe the destination. The actual job was to move stateful and stateless components deliberately, separate demonstration delivery from production delivery, and give operators a controlled switch between two production slots.",
           ],
         },
         constraints: {
           title: "What the design had to solve",
           intro: "The new platform model needed to make four things explicit:",
           items: [
-            "Multiple application components had to follow the same delivery logic.",
-            "Environment differences needed to be configuration, not undocumented setup work.",
-            "Infrastructure changes had to be visible before they reached a live environment.",
-            "Application workloads and managed cloud services needed a clear operational boundary.",
+            "Vue, Spring Boot, Python, Temporal and Keycloak workloads needed one Kubernetes deployment model.",
+            "PostgreSQL and MinIO data responsibilities had to move to Cloud SQL and Cloud Storage without hiding the change behind containers.",
+            "A demonstration pipeline and the production release path needed different risk controls.",
+            "Production rollout required an inactive slot, smoke verification and an explicit manual switch.",
           ],
         },
         diagnosis: {
           title: "The diagnosis",
           paragraphs: [
             "The fragile part was not a single service. It was the path from source code to a running environment. When that path varies by environment, every change carries hidden assumptions.",
-            "I treated reproducibility as the central requirement. Infrastructure definitions, cluster workloads and environment values needed separate responsibilities, while still moving through one delivery path.",
+            "I treated reproducibility and reversibility as the central requirements. Terraform modules define the Google Cloud foundation, Helm packages the Kubernetes workloads, and environment values stay separate from the reusable definitions.",
           ],
         },
         architecture: {
           title: "The resulting platform model",
           intro:
-            "GitLab CI/CD provides the delivery path. Terraform defines the Google Cloud foundation, GKE provides the workload layer, and managed services handle platform concerns that do not belong inside the application containers.",
-          labels: ["SOURCE", "CI / CD", "TERRAFORM", "GKE", "MANAGED SERVICES"],
-          caption: "One versioned path from change to running platform.",
+            "For production, GitLab CI hands the build to Cloud Build, publishes images in Artifact Registry and deploys to the inactive GKE slot. Kubernetes readiness and a smoke test must pass before an operator switches traffic. Cloud SQL and Cloud Storage replace self-managed PostgreSQL and MinIO responsibilities.",
+          labels: ["GITLAB CI", "CLOUD BUILD", "ARTIFACT REGISTRY", "GKE BLUE / RED", "CLOUD SQL + GCS"],
+          caption: "Build once, verify the inactive slot, then make the production switch explicit.",
         },
         decisions: {
           title: "Decisions that mattered",
@@ -145,51 +235,51 @@ export const locales = {
               tradeoff: "This asks for stricter module contracts, which is exactly where the discipline belongs.",
             },
             {
-              title: "Give workloads one runtime model",
-              body: "GKE gives the application components a consistent deployment target and makes their runtime configuration easier to reason about together.",
-              tradeoff: "A shared cluster model still needs clear ownership for namespaces, configuration and rollout behaviour.",
+              title: "Move state to managed boundaries",
+              body: "Cloud SQL takes the PostgreSQL role and Cloud Storage replaces MinIO object storage, while application workloads move to GKE.",
+              tradeoff: "The migration gains operational clarity but must account for provider-specific behaviour and data-transfer sequencing.",
             },
             {
-              title: "Use managed services on purpose",
-              body: "Managed Google Cloud services take platform responsibilities out of custom workloads where that boundary is useful.",
-              tradeoff: "The gain in operability comes with provider-specific choices that need to remain explicit in the architecture.",
+              title: "Switch only after verification",
+              body: "Production deploys to an inactive blue/red slot. Readiness signals and smoke tests run before a human makes the traffic switch.",
+              tradeoff: "The manual gate is slower than blind continuous deployment, but it keeps the final production decision visible.",
             },
           ],
         },
         delivery: {
           title: "Delivery and verification",
           paragraphs: [
-            "The delivery model puts infrastructure and workload changes on an inspectable route through GitLab CI/CD. Terraform makes the intended cloud state reviewable; the GKE deployment model gives application components a common target.",
-            "Verification follows the same boundary: first the infrastructure definition, then the platform resources, then the workloads that run on them. That sequence makes failures easier to locate than an environment-specific deployment script.",
+            "The demonstration path and production path stay distinct. Production moves from GitLab CI through Cloud Build and Artifact Registry to the inactive GKE environment instead of deploying directly over the live slot.",
+            "Verification combines Kubernetes readiness, Google Cloud alerts and infrastructure signals with a smoke test before the switch. This does not prove every business workflow; it proves the release candidate is healthy enough for the controlled cutover.",
           ],
         },
         result: {
-          title: "The qualitative result",
+          title: "The delivered result",
           paragraphs: [
-            "Infrastructure and delivery now follow one repeatable, auditable path. The platform can be discussed as a system rather than as a collection of environment exceptions.",
-            "The most useful outcome is not that the system runs on Google Cloud. It is that the route to a running environment is encoded, reviewable and consistent.",
+            "The migration replaced an on-premise, environment-specific route with reusable infrastructure modules, packaged workloads, managed data services and two controlled production slots.",
+            "The useful outcome is not simply “running on Google Cloud.” It is a release path that can be reviewed before deployment, checked before traffic moves and repeated for the next environment.",
           ],
         },
         scope:
-          "This case study covers the platform architecture and delivery work. The organisation, workload volumes, costs and commercial details are intentionally omitted.",
+          "The organisation, product name, endpoints, storage configuration, costs and workload volumes are omitted. The approximate delivery period, component boundaries and release sequence come from the project record.",
       },
       "archival-workflow-management": {
         category: "Workflow software",
         cardTitle: "Archival workflow management",
         title: "Giving operators one clear route through a complex archival workflow",
         summary:
-          "I built a Spring service and React microfrontend around a Camunda process so operators could manage archival sessions, packages and workflow state in one focused slice.",
-        readMinutes: "7",
+          "Over roughly three months, I built a Spring Boot service and React Single-SPA microfrontend around Camunda so operators could create archival sessions, move source packages through a nine-step lifecycle and track the resulting output.",
+        readMinutes: "9",
         facts: [
           ["Discipline", "Workflow and product engineering"],
-          ["Scope", "Service and microfrontend"],
-          ["Process", "Camunda orchestration"],
-          ["Context", "Professional engineering work"],
+          ["Scope", "Service, microfrontend and workflow boundary"],
+          ["Delivery", "Approximately three months"],
+          ["Boundary", "Anonymised professional case"],
         ],
         starting: {
           title: "The starting point",
           paragraphs: [
-            "Archival work was governed by a process, but operators still needed a practical way to manage the things moving through it: sessions, packages and changing workflow state.",
+            "The domain combined archival sessions, session types, organisation codes, input and output storage, source packages, resulting packages and workflow lifecycle. Operators needed one practical way to see how those records moved together.",
             "The feature also had to live inside a larger enterprise platform. It could not become a separate product with its own rules. It needed a focused boundary that fitted the surrounding system.",
           ],
         },
@@ -197,25 +287,25 @@ export const locales = {
           title: "What the design had to solve",
           intro: "The useful boundary sat between process state and operator action:",
           items: [
-            "A session and its packages needed to stay understandable as the workflow advanced.",
+            "A session, its source packages and resulting output packages needed to stay understandable across a nine-step lifecycle.",
             "Operator actions had to map cleanly to valid process transitions.",
             "Backend rules and frontend state could not drift into separate interpretations.",
-            "The feature had to integrate with the host platform without spreading its logic across it.",
+            "The Single-SPA microfrontend had to integrate with the host platform without spreading archival rules across it.",
           ],
         },
         diagnosis: {
           title: "The diagnosis",
           paragraphs: [
             "Camunda could coordinate the process, but orchestration alone was not the operator experience. The missing layer was a coherent application boundary around the workflow.",
-            "I separated the concerns: the Spring service owns the application-facing rules and process integration; the React microfrontend presents the current state and the actions that are valid from it.",
+            "I separated the concerns: the Spring Boot service owns application rules, S3-compatible storage references and Camunda integration; the React Single-SPA microfrontend presents current state and valid actions.",
           ],
         },
         architecture: {
           title: "The resulting application slice",
           intro:
-            "The microfrontend gives operators a focused surface. The Spring service translates application actions into workflow operations, while Camunda coordinates the process that moves sessions and packages forward.",
-          labels: ["OPERATOR", "REACT UI", "SPRING SERVICE", "CAMUNDA", "SESSIONS + PACKAGES"],
-          caption: "A clear boundary between user action, application rules and process state.",
+            "The microfrontend gives operators a focused surface. The Spring service translates application actions into workflow operations and storage references, while Camunda coordinates the process from session creation through output tracking.",
+          labels: ["OPERATOR", "REACT SINGLE-SPA", "SPRING BOOT API", "CAMUNDA", "S3 INPUT + OUTPUT"],
+          caption: "Application state, process state and package storage meet at one explicit service boundary.",
         },
         decisions: {
           title: "Decisions that mattered",
@@ -241,7 +331,7 @@ export const locales = {
         delivery: {
           title: "Delivery and verification",
           paragraphs: [
-            "The feature can be checked across the same route an operator uses: create or open a session, inspect its packages, perform an allowed action and confirm that the workflow state returns coherently to the interface.",
+            "Verification follows the same nine-step route an operator uses: create a session, attach source packages, start the workflow, observe valid transitions and track output packages when processing completes.",
             "The important failure cases sit at the boundaries. The service needs to reject invalid transitions, the UI needs to show incomplete or pending state honestly, and the process integration needs to remain the source of workflow truth.",
           ],
         },
@@ -253,26 +343,26 @@ export const locales = {
           ],
         },
         scope:
-          "This case study describes the service, microfrontend and workflow boundary. The organisation, archival domain details and commercial context remain private.",
+          "The organisation, product name, internal session types, storage endpoints, bucket names and credentials are omitted. The approximate delivery period and domain lifecycle come from the project record.",
       },
       "retail-erp-evolution": {
         category: "Enterprise software",
         cardTitle: "Retail ERP maintenance and evolution",
         title: "Improving a retail ERP without stepping outside daily operations",
         summary:
-          "I worked across SQL Server, .NET and the frontend of a business-critical retail ERP, improving performance, integrations and day-to-day reliability as one connected system.",
-        readMinutes: "7",
+          "Across approximately nineteen months, I worked through SQL Server, .NET Framework 4.8 and a KnockoutJS frontend in a live retail ERP, covering features, defects, reporting, two courier integrations and stock-receipt modernisation.",
+        readMinutes: "10",
         facts: [
           ["Discipline", "Enterprise product engineering"],
-          ["Scope", "Database, backend and frontend"],
-          ["System", "Business-critical retail ERP"],
-          ["Context", "Professional engineering work"],
+          ["Scope", "Database, backend, frontend and integrations"],
+          ["Delivery", "Approximately nineteen months"],
+          ["Boundary", "Anonymised professional case"],
         ],
         starting: {
           title: "The starting point",
           paragraphs: [
-            "The ERP supported daily retail operations. That made reliability a product requirement, not a maintenance footnote. Changes had to improve the system while preserving the work people already depended on.",
-            "Performance, integrations and interface behaviour were connected. Treating one layer in isolation would only move a problem somewhere else in the request path.",
+            "The ERP was a live retail monolith built on SQL Server, C# and .NET Framework 4.8, Entity Framework, KnockoutJS, JavaScript, jQuery, Bootstrap and Crystal Reports. Reliability was a product requirement, not a maintenance footnote.",
+            "The work covered new features, defects, stored procedures and views, reporting, two external courier integrations, requirements, training and support. A separate stock-receipt tool also moved toward .NET Core and multi-format ingestion.",
           ],
         },
         constraints: {
@@ -281,7 +371,7 @@ export const locales = {
           items: [
             "Existing workflows had to keep serving day-to-day retail work.",
             "Database, backend and frontend behaviour needed to change together when the contract changed.",
-            "Integrations had to remain understandable at the system boundary.",
+            "Two external courier integrations had to remain understandable at the system boundary.",
             "Performance work had to address the real path through the application, not one isolated symptom.",
           ],
         },
@@ -289,15 +379,15 @@ export const locales = {
           title: "The diagnosis",
           paragraphs: [
             "In a layered ERP, the visible delay or failure is often only the last link in the chain. A screen can be slow because of its request shape, backend work or a database access pattern. An integration issue can surface as a frontend inconsistency.",
-            "I worked through that full path. SQL Server, .NET services and the browser interface were treated as parts of one behaviour, with the integration boundary included in the same reasoning.",
+            "I worked through that full path across three application layers. SQL Server queries and stored procedures, .NET Framework rules, KnockoutJS screens, reports and courier exchanges were treated as parts of one operational behaviour.",
           ],
         },
         architecture: {
           title: "The working system view",
           intro:
-            "The useful unit of change was the end-to-end request: an operator action in the frontend, application rules in .NET, data work in SQL Server and any exchange at the integration boundary.",
-          labels: ["OPERATOR", "FRONTEND", ".NET", "SQL SERVER", "INTEGRATIONS"],
-          caption: "Follow the behaviour across layers instead of optimising a layer in isolation.",
+            "The useful unit of change was the end-to-end request: an operator action in KnockoutJS, application rules in .NET Framework 4.8, data work in SQL Server, reporting through Crystal Reports and exchanges at courier boundaries.",
+          labels: ["OPERATOR", "KNOCKOUTJS", ".NET FRAMEWORK 4.8", "SQL SERVER", "REPORTS + COURIERS"],
+          caption: "Follow the operational path through three application layers and its external boundaries.",
         },
         decisions: {
           title: "Decisions that mattered",
@@ -323,7 +413,7 @@ export const locales = {
         delivery: {
           title: "Delivery and verification",
           paragraphs: [
-            "Each change can be checked at the layer where it is made and again through the user-visible workflow it supports. Database behaviour, backend rules, integration responses and frontend state need to agree.",
+            "Each change was checked at its layer and again through the operational workflow it supported. Stored procedures and views, backend rules, courier responses, reports and frontend state needed to agree.",
             "That end-to-end check matters most around everyday paths. A technically correct change is not finished if it makes routine work harder to understand or less dependable.",
           ],
         },
@@ -335,7 +425,7 @@ export const locales = {
           ],
         },
         scope:
-          "This case study covers cross-layer engineering in a retail ERP. The organisation, users, commercial data and operational figures are intentionally omitted.",
+          "The organisation, product name, users, vendors, commercial data and operational KPIs are omitted. The approximate engagement length, technologies and two-integration scope come from the project record.",
       },
     },
   },
@@ -373,11 +463,11 @@ export const locales = {
     index: {
       title: "Decisioni tecniche, spiegate nel loro contesto.",
       description:
-        "Tre racconti ravvicinati di sistemi su cui ho lavorato: cosa non reggeva, cosa ho cambiato e cosa è diventato più semplice da gestire. I nomi delle aziende restano privati. Il lavoro tecnico no.",
-      eyebrow: "Case study di engineering / 01—03",
+        "Nove case study concreti: tre sistemi professionali anonimizzati e sei progetti open source di Labs. Ogni caso spiega i vincoli, le decisioni, ciò che è stato costruito e fin dove arrivano le prove.",
+      eyebrow: "Case study di engineering / 01—09",
       introTitle: "Lavoro che vale la pena spiegare",
       introBody:
-        "Un elenco di tecnologie dice poco. Questi case study parlano delle decisioni dietro al codice, dei vincoli reali e del risultato da sostenere nell’uso quotidiano.",
+        "Un elenco di tecnologie dice poco. L’archivio separa lavoro professionale e progetti Labs, poi segue decisioni, verifiche e limiti di ogni sistema.",
       principles: [
         {
           number: "P01",
@@ -404,18 +494,18 @@ export const locales = {
         cardTitle: "Migrazione cloud di una piattaforma AI",
         title: "Portare una piattaforma AI su una base cloud ripetibile",
         summary:
-          "Una piattaforma di elaborazione documentale composta da più componenti dipendeva da deploy specifici per ambiente. Ho trasferito infrastruttura e modello di delivery su Terraform riutilizzabile, GKE e servizi gestiti di Google Cloud.",
-        readMinutes: "8",
+          "In circa un mese ho portato una piattaforma multicomponente per documenti e workflow AI da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
+        readMinutes: "10",
         facts: [
           ["Disciplina", "Cloud platform engineering"],
-          ["Perimetro", "Infrastruttura e modello di delivery"],
-          ["Piattaforma", "Google Cloud"],
-          ["Contesto", "Lavoro di engineering professionale"],
+          ["Perimetro", "Infrastruttura, workload e percorso di rilascio"],
+          ["Consegna", "Circa un mese"],
+          ["Confine", "Caso professionale anonimizzato"],
         ],
         starting: {
           title: "Il punto di partenza",
           paragraphs: [
-            "La piattaforma riuniva più componenti per elaborare documenti e sostenere workflow assistiti dall’AI. Gli ambienti non condividevano un unico percorso di configurazione affidabile. Un deploy corretto in un ambiente poteva essere difficile da riprodurre nel successivo.",
+            "La piattaforma on-premise riuniva Vue, due servizi Spring Boot, un worker Python Temporal, Temporal, Keycloak, PostgreSQL e MinIO per l’estrazione documentale e workflow assistiti dall’AI.",
             "Definirla soltanto una migrazione cloud avrebbe descritto la destinazione, non il lavoro. Il punto era sostituire infrastruttura e passaggi una tantum con un modello leggibile, verificabile e ripetibile.",
           ],
         },
@@ -423,10 +513,10 @@ export const locales = {
           title: "Cosa doveva risolvere il nuovo modello",
           intro: "Il disegno della piattaforma doveva rendere espliciti quattro aspetti:",
           items: [
-            "Più componenti applicativi dovevano seguire la stessa logica di delivery.",
-            "Le differenze tra ambienti dovevano diventare configurazione, non lavoro manuale non documentato.",
-            "Le modifiche infrastrutturali dovevano essere visibili prima di arrivare su un ambiente attivo.",
-            "Workload applicativi e servizi cloud gestiti avevano bisogno di un confine operativo chiaro.",
+            "Vue, Spring Boot, Python, Temporal e Keycloak dovevano condividere un modello Kubernetes.",
+            "PostgreSQL e MinIO dovevano passare a Cloud SQL e Cloud Storage con responsabilità esplicite.",
+            "La pipeline dimostrativa e il rilascio di produzione richiedevano controlli diversi.",
+            "La produzione doveva usare uno slot inattivo, smoke test e switch manuale.",
           ],
         },
         diagnosis: {
@@ -439,9 +529,9 @@ export const locales = {
         architecture: {
           title: "Il modello di piattaforma risultante",
           intro:
-            "GitLab CI/CD fornisce il percorso di delivery. Terraform definisce la base Google Cloud, GKE ospita i workload e i servizi gestiti coprono le responsabilità di piattaforma che non appartengono ai container applicativi.",
-          labels: ["CODICE", "CI / CD", "TERRAFORM", "GKE", "SERVIZI GESTITI"],
-          caption: "Un solo percorso versionato dalla modifica alla piattaforma in esecuzione.",
+            "In produzione GitLab CI passa la build a Cloud Build, pubblica le immagini in Artifact Registry e distribuisce sullo slot GKE inattivo. Readiness Kubernetes e smoke test precedono lo switch manuale; Cloud SQL e Cloud Storage sostituiscono PostgreSQL e MinIO autogestiti.",
+          labels: ["GITLAB CI", "CLOUD BUILD", "ARTIFACT REGISTRY", "GKE BLUE / RED", "CLOUD SQL + GCS"],
+          caption: "Build unica, verifica sullo slot inattivo e switch di produzione esplicito.",
         },
         decisions: {
           title: "Le decisioni importanti",
@@ -467,8 +557,8 @@ export const locales = {
         delivery: {
           title: "Delivery e verifica",
           paragraphs: [
-            "Il modello mette modifiche infrastrutturali e workload su un percorso ispezionabile in GitLab CI/CD. Terraform rende verificabile lo stato cloud desiderato; il modello GKE offre ai componenti un obiettivo comune.",
-            "La verifica segue lo stesso confine: prima la definizione infrastrutturale, poi le risorse di piattaforma, infine i workload. Questa sequenza rende più semplice localizzare un errore rispetto a uno script diverso per ogni ambiente.",
+            "La pipeline dimostrativa resta distinta da quella di produzione. Quest’ultima passa da GitLab CI a Cloud Build e Artifact Registry prima di raggiungere lo slot GKE inattivo.",
+            "La verifica combina readiness Kubernetes, alert e segnali GCP con uno smoke test prima dello switch. Non prova ogni flusso di business, ma rende controllato il cutover.",
           ],
         },
         result: {
@@ -479,25 +569,25 @@ export const locales = {
           ],
         },
         scope:
-          "Il case study riguarda architettura di piattaforma e delivery. Organizzazione, volumi di lavoro, costi e dettagli commerciali non vengono riportati.",
+          "Organizzazione, prodotto, endpoint, configurazione storage, costi e volumi sono omessi. Durata approssimativa, componenti e sequenza di rilascio provengono dal record di progetto.",
       },
       "archival-workflow-management": {
         category: "Software di workflow",
         cardTitle: "Gestione di workflow archivistici",
         title: "Un percorso chiaro per gestire un workflow archivistico complesso",
         summary:
-          "Ho costruito un servizio Spring e un microfrontend React attorno a un processo Camunda, così gli operatori potevano gestire sessioni, pacchetti e stato del workflow in un unico spazio mirato.",
-        readMinutes: "7",
+          "In circa tre mesi ho costruito un servizio Spring Boot e un microfrontend React Single-SPA attorno a Camunda, per creare sessioni archivistiche, muovere pacchetti sorgente lungo un ciclo di nove passaggi e seguirne l’output.",
+        readMinutes: "9",
         facts: [
           ["Disciplina", "Workflow e product engineering"],
-          ["Perimetro", "Servizio e microfrontend"],
-          ["Processo", "Orchestrazione Camunda"],
-          ["Contesto", "Lavoro di engineering professionale"],
+          ["Perimetro", "Servizio, microfrontend e confine workflow"],
+          ["Consegna", "Circa tre mesi"],
+          ["Confine", "Caso professionale anonimizzato"],
         ],
         starting: {
           title: "Il punto di partenza",
           paragraphs: [
-            "Il lavoro archivistico era governato da un processo, ma agli operatori serviva comunque un modo pratico per gestire ciò che vi passava: sessioni, pacchetti e stato del workflow.",
+            "Il dominio comprendeva sessioni, tipologie, codici ente, storage input/output, pacchetti sorgente, pacchetti risultanti e lifecycle del workflow.",
             "La funzionalità doveva vivere dentro una piattaforma enterprise più ampia. Non poteva diventare un prodotto separato con regole proprie. Serviva un confine mirato che rispettasse il sistema circostante.",
           ],
         },
@@ -505,10 +595,10 @@ export const locales = {
           title: "Cosa doveva risolvere il design",
           intro: "Il confine utile si trovava tra stato del processo e azione dell’operatore:",
           items: [
-            "Una sessione e i suoi pacchetti dovevano restare comprensibili durante l’avanzamento.",
+            "Sessione, pacchetti sorgente e output dovevano restare comprensibili lungo nove passaggi.",
             "Le azioni dell’operatore dovevano corrispondere a transizioni valide.",
             "Regole backend e stato frontend non potevano divergere in interpretazioni diverse.",
-            "La funzionalità doveva integrarsi senza disperdere la propria logica nella piattaforma host.",
+            "Il microfrontend Single-SPA doveva integrarsi senza disperdere la propria logica nella piattaforma host.",
           ],
         },
         diagnosis: {
@@ -521,9 +611,9 @@ export const locales = {
         architecture: {
           title: "La sezione applicativa risultante",
           intro:
-            "Il microfrontend offre agli operatori una superficie mirata. Il servizio Spring traduce le azioni in operazioni di workflow, mentre Camunda coordina il processo che fa avanzare sessioni e pacchetti.",
-          labels: ["OPERATORE", "UI REACT", "SERVIZIO SPRING", "CAMUNDA", "SESSIONI + PACCHETTI"],
-          caption: "Un confine chiaro tra azione utente, regole applicative e stato del processo.",
+            "Il microfrontend offre una superficie mirata. Spring Boot traduce le azioni in operazioni Camunda e riferimenti storage S3-compatible, dal setup della sessione al tracking dell’output.",
+          labels: ["OPERATORE", "REACT SINGLE-SPA", "API SPRING BOOT", "CAMUNDA", "S3 INPUT + OUTPUT"],
+          caption: "Stato applicativo, processo e storage si incontrano in un confine esplicito.",
         },
         decisions: {
           title: "Le decisioni importanti",
@@ -549,7 +639,7 @@ export const locales = {
         delivery: {
           title: "Delivery e verifica",
           paragraphs: [
-            "La funzionalità si verifica lungo lo stesso percorso dell’operatore: creare o aprire una sessione, controllare i pacchetti, eseguire un’azione ammessa e confermare che lo stato torni coerente nell’interfaccia.",
+            "La verifica segue i nove passaggi operativi: creare la sessione, collegare i pacchetti sorgente, avviare il workflow, osservare le transizioni valide e seguire i pacchetti in output.",
             "I casi critici sono ai confini. Il servizio deve rifiutare transizioni non valide, la UI deve mostrare con onestà stati incompleti o in attesa e l’integrazione deve mantenere il processo come fonte dello stato.",
           ],
         },
@@ -561,26 +651,26 @@ export const locales = {
           ],
         },
         scope:
-          "Il case study descrive servizio, microfrontend e confine del workflow. Organizzazione, dettagli del dominio archivistico e contesto commerciale restano privati.",
+          "Organizzazione, prodotto, tipologie interne, endpoint, bucket e credenziali sono omessi. Durata approssimativa e lifecycle derivano dal record di progetto.",
       },
       "retail-erp-evolution": {
         category: "Software enterprise",
         cardTitle: "Manutenzione ed evoluzione di un ERP retail",
         title: "Migliorare un ERP retail senza interrompere le operazioni quotidiane",
         summary:
-          "Ho lavorato su SQL Server, .NET e frontend di un ERP retail business-critical, migliorando performance, integrazioni e affidabilità quotidiana come parti dello stesso sistema.",
-        readMinutes: "7",
+          "Per circa diciannove mesi ho lavorato su SQL Server, .NET Framework 4.8 e un frontend KnockoutJS di un ERP retail operativo: feature, bug, report, due integrazioni con corrieri e modernizzazione della ricezione stock.",
+        readMinutes: "10",
         facts: [
           ["Disciplina", "Enterprise product engineering"],
-          ["Perimetro", "Database, backend e frontend"],
-          ["Sistema", "ERP retail business-critical"],
-          ["Contesto", "Lavoro di engineering professionale"],
+          ["Perimetro", "Database, backend, frontend e integrazioni"],
+          ["Consegna", "Circa diciannove mesi"],
+          ["Confine", "Caso professionale anonimizzato"],
         ],
         starting: {
           title: "Il punto di partenza",
           paragraphs: [
-            "L’ERP sosteneva le operazioni retail quotidiane. L’affidabilità era quindi un requisito di prodotto, non una nota di manutenzione. Ogni modifica doveva migliorare il sistema senza danneggiare il lavoro già in corso.",
-            "Prestazioni, integrazioni e comportamento dell’interfaccia erano collegati. Intervenire su un solo livello avrebbe soltanto spostato il problema lungo il percorso della richiesta.",
+            "Il monolite operativo usava SQL Server, C#/.NET Framework 4.8, Entity Framework, KnockoutJS, JavaScript, jQuery, Bootstrap e Crystal Reports. Ogni modifica doveva preservare il lavoro quotidiano.",
+            "Il perimetro includeva feature, bug, stored procedure e view, reporting, due integrazioni esterne con corrieri, requisiti, formazione, supporto e l’evoluzione di uno strumento di ricezione stock verso .NET Core e ingestion multi-formato.",
           ],
         },
         constraints: {
@@ -589,7 +679,7 @@ export const locales = {
           items: [
             "I flussi esistenti dovevano continuare a sostenere il lavoro retail quotidiano.",
             "Database, backend e frontend dovevano cambiare insieme quando cambiava il contratto.",
-            "Le integrazioni dovevano restare comprensibili al confine del sistema.",
+            "Due integrazioni esterne con corrieri dovevano restare comprensibili al confine del sistema.",
             "Il lavoro sulle prestazioni doveva seguire il percorso reale, non un sintomo isolato.",
           ],
         },
@@ -597,15 +687,15 @@ export const locales = {
           title: "La diagnosi",
           paragraphs: [
             "In un ERP a più livelli, il ritardo o l’errore visibile è spesso l’ultimo anello. Una schermata può essere lenta per la forma della richiesta, il lavoro backend o l’accesso al database. Un problema d’integrazione può apparire come incoerenza frontend.",
-            "Ho lavorato sull’intero percorso. SQL Server, servizi .NET e interfaccia browser sono stati trattati come parti dello stesso comportamento, includendo anche il confine d’integrazione.",
+            "Ho lavorato sull’intero percorso attraverso tre livelli applicativi: query e stored procedure SQL Server, regole .NET Framework, schermate KnockoutJS, report e scambi con i corrieri.",
           ],
         },
         architecture: {
           title: "La vista utile del sistema",
           intro:
-            "L’unità utile di cambiamento era la richiesta end-to-end: un’azione dell’operatore nel frontend, le regole applicative in .NET, il lavoro dati in SQL Server e lo scambio al confine d’integrazione.",
-          labels: ["OPERATORE", "FRONTEND", ".NET", "SQL SERVER", "INTEGRAZIONI"],
-          caption: "Seguire il comportamento tra i livelli invece di ottimizzare un livello isolato.",
+            "L’unità utile di cambiamento era il percorso end-to-end: azione in KnockoutJS, regole .NET Framework 4.8, dati SQL Server, reporting Crystal Reports e scambi ai confini esterni.",
+          labels: ["OPERATORE", "KNOCKOUTJS", ".NET FRAMEWORK 4.8", "SQL SERVER", "REPORT + CORRIERI"],
+          caption: "Seguire il flusso operativo attraverso tre livelli e i suoi confini esterni.",
         },
         decisions: {
           title: "Le decisioni importanti",
@@ -631,7 +721,7 @@ export const locales = {
         delivery: {
           title: "Delivery e verifica",
           paragraphs: [
-            "Ogni modifica può essere verificata nel livello in cui nasce e di nuovo nel flusso utente che sostiene. Comportamento del database, regole backend, risposte delle integrazioni e stato frontend devono concordare.",
+            "Ogni modifica veniva verificata nel proprio livello e nel flusso operativo: stored procedure e view, regole backend, risposte dei corrieri, report e stato frontend dovevano concordare.",
             "La verifica end-to-end conta soprattutto nei percorsi quotidiani. Una modifica tecnicamente corretta non è finita se rende il lavoro abituale più difficile da capire o meno affidabile.",
           ],
         },
@@ -643,7 +733,7 @@ export const locales = {
           ],
         },
         scope:
-          "Il case study riguarda engineering cross-layer in un ERP retail. Organizzazione, utenti, dati commerciali e valori operativi non vengono riportati.",
+          "Organizzazione, prodotto, utenti, vendor, dati commerciali e KPI sono omessi. Durata approssimativa, tecnologie e due integrazioni derivano dal record di progetto.",
       },
     },
   },
@@ -681,11 +771,11 @@ export const locales = {
     index: {
       title: "Technische Entscheidungen, im Zusammenhang gezeigt.",
       description:
-        "Drei genaue Berichte über Systeme, an denen ich gearbeitet habe: Was nicht stabil war, was ich geändert habe und was sich danach einfacher betreiben liess. Unternehmensnamen bleiben vertraulich. Der technische Umfang nicht.",
-      eyebrow: "Engineering-Fallstudien / 01—03",
+        "Neun konkrete Fallstudien: drei anonymisierte berufliche Systeme und sechs Open-Source-Projekte aus Labs. Jede zeigt die Rahmenbedingungen, die Entscheidungen, das gebaute Ergebnis und die Grenzen der Belege.",
+      eyebrow: "Engineering-Fallstudien / 01—09",
       introTitle: "Arbeit, die eine Erklärung verdient",
       introBody:
-        "Eine Liste von Technologien sagt wenig aus. Diese Fallstudien zeigen die Entscheidungen hinter dem Code, die realen Einschränkungen und das Ergebnis im täglichen Betrieb.",
+        "Eine Technologieliste sagt wenig aus. Das Archiv trennt berufliche Arbeit und Labs-Projekte und folgt dann Entscheidungen, Prüfungen und Grenzen jedes Systems.",
       principles: [
         {
           number: "P01",
@@ -712,18 +802,18 @@ export const locales = {
         cardTitle: "Cloud-Migration einer AI-Workflow-Plattform",
         title: "Eine AI-Workflow-Plattform auf ein wiederholbares Cloud-Fundament stellen",
         summary:
-          "Eine mehrteilige Plattform zur Dokumentverarbeitung hing von umgebungsspezifischen Deployments ab. Ich überführte Infrastruktur und Delivery-Modell auf wiederverwendbares Terraform, GKE und verwaltete Google-Cloud-Dienste.",
-        readMinutes: "8",
+          "In etwa einem Monat überführte ich eine mehrteilige Dokument- und AI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
+        readMinutes: "10",
         facts: [
           ["Disziplin", "Cloud Platform Engineering"],
-          ["Umfang", "Infrastruktur und Delivery-Modell"],
-          ["Plattform", "Google Cloud"],
-          ["Kontext", "Professionelle Engineering-Arbeit"],
+          ["Umfang", "Infrastruktur, Workloads und Releaseweg"],
+          ["Lieferzeit", "Etwa ein Monat"],
+          ["Grenze", "Anonymisierte berufliche Fallstudie"],
         ],
         starting: {
           title: "Der Ausgangspunkt",
           paragraphs: [
-            "Die Plattform bestand aus verbundenen Komponenten für Dokumentverarbeitung und AI-gestützte Workflows. Ihre Umgebungen teilten keinen einzigen verlässlichen Einrichtungsweg. Ein Deployment konnte an einem Ort funktionieren und am nächsten schwer reproduzierbar sein.",
+            "Die On-Premise-Plattform verband Vue, zwei Spring-Boot-Dienste, einen Python-Temporal-Worker, Temporal, Keycloak, PostgreSQL und MinIO für Dokumentextraktion und AI-gestützte Workflows.",
             "Nur von einer Cloud-Migration zu sprechen, hätte das Ziel beschrieben, nicht die eigentliche Arbeit. Entscheidend war, einmalige Infrastruktur und Abläufe durch ein Modell zu ersetzen, das lesbar, prüfbar und wiederholbar ist.",
           ],
         },
@@ -731,10 +821,10 @@ export const locales = {
           title: "Was das Design lösen musste",
           intro: "Das neue Plattformmodell musste vier Dinge sichtbar machen:",
           items: [
-            "Mehrere Anwendungskomponenten mussten derselben Delivery-Logik folgen.",
-            "Unterschiede zwischen Umgebungen mussten Konfiguration sein, keine undokumentierte Handarbeit.",
-            "Infrastrukturänderungen mussten vor einer aktiven Umgebung prüfbar sein.",
-            "Anwendungs-Workloads und verwaltete Cloud-Dienste brauchten eine klare Betriebsgrenze.",
+            "Vue, Spring Boot, Python, Temporal und Keycloak brauchten ein gemeinsames Kubernetes-Modell.",
+            "PostgreSQL und MinIO mussten mit klaren Verantwortlichkeiten zu Cloud SQL und Cloud Storage wechseln.",
+            "Demo-Pipeline und Produktionsrelease benötigten unterschiedliche Risikokontrollen.",
+            "Produktion verlangte einen inaktiven Slot, Smoke-Test und einen manuellen Switch.",
           ],
         },
         diagnosis: {
@@ -747,9 +837,9 @@ export const locales = {
         architecture: {
           title: "Das resultierende Plattformmodell",
           intro:
-            "GitLab CI/CD bildet den Delivery-Weg. Terraform definiert das Google-Cloud-Fundament, GKE die Workload-Schicht, und verwaltete Dienste übernehmen Plattformaufgaben, die nicht in Anwendungscontainer gehören.",
-          labels: ["QUELLCODE", "CI / CD", "TERRAFORM", "GKE", "MANAGED SERVICES"],
-          caption: "Ein versionierter Weg von der Änderung bis zur laufenden Plattform.",
+            "GitLab CI übergibt den Produktionsbuild an Cloud Build, veröffentlicht Images in Artifact Registry und deployt in den inaktiven GKE-Slot. Kubernetes-Readiness und Smoke-Test gehen dem manuellen Switch voraus; Cloud SQL und Cloud Storage ersetzen selbstverwaltetes PostgreSQL und MinIO.",
+          labels: ["GITLAB CI", "CLOUD BUILD", "ARTIFACT REGISTRY", "GKE BLUE / RED", "CLOUD SQL + GCS"],
+          caption: "Ein Build, Prüfung im inaktiven Slot und ein bewusster Produktionswechsel.",
         },
         decisions: {
           title: "Entscheidungen, die zählten",
@@ -775,8 +865,8 @@ export const locales = {
         delivery: {
           title: "Delivery und Prüfung",
           paragraphs: [
-            "Das Delivery-Modell führt Infrastruktur- und Workload-Änderungen über einen prüfbaren Weg in GitLab CI/CD. Terraform macht den gewünschten Cloud-Zustand sichtbar; das GKE-Modell gibt den Komponenten ein gemeinsames Ziel.",
-            "Die Prüfung folgt derselben Grenze: zuerst die Infrastrukturdefinition, dann die Plattformressourcen und schliesslich die darauf laufenden Workloads. Fehler lassen sich so leichter eingrenzen als mit einem eigenen Deployment-Skript pro Umgebung.",
+            "Demo und Produktion bleiben getrennt. Produktion läuft von GitLab CI über Cloud Build und Artifact Registry in den inaktiven GKE-Slot.",
+            "Kubernetes-Readiness, GCP-Warnungen und Infrastruktursignale werden mit einem Smoke-Test vor dem Switch kombiniert. Das prüft nicht jeden Geschäftsablauf, macht den Cutover aber kontrollierbar.",
           ],
         },
         result: {
@@ -787,25 +877,25 @@ export const locales = {
           ],
         },
         scope:
-          "Diese Fallstudie behandelt Plattformarchitektur und Delivery. Organisation, Workload-Mengen, Kosten und kommerzielle Details bleiben bewusst unerwähnt.",
+          "Organisation, Produkt, Endpunkte, Storage-Konfiguration, Kosten und Volumen sind weggelassen. Ungefähre Dauer, Komponenten und Releasesequenz stammen aus der Projektdokumentation.",
       },
       "archival-workflow-management": {
         category: "Workflow-Software",
         cardTitle: "Verwaltung von Archivierungs-Workflows",
         title: "Ein klarer Arbeitsweg durch einen komplexen Archivierungsprozess",
         summary:
-          "Ich baute einen Spring-Dienst und ein React-Microfrontend um einen Camunda-Prozess, damit Mitarbeitende Sitzungen, Pakete und Workflow-Status in einem fokussierten Bereich verwalten konnten.",
-        readMinutes: "7",
+          "In etwa drei Monaten baute ich einen Spring-Boot-Dienst und ein React-Single-SPA-Microfrontend um Camunda, um Archivierungssitzungen, Quellpakete und den Output eines neunstufigen Ablaufs zu steuern.",
+        readMinutes: "9",
         facts: [
           ["Disziplin", "Workflow- und Product Engineering"],
-          ["Umfang", "Dienst und Microfrontend"],
-          ["Prozess", "Camunda-Orchestrierung"],
-          ["Kontext", "Professionelle Engineering-Arbeit"],
+          ["Umfang", "Dienst, Microfrontend und Workflow-Grenze"],
+          ["Lieferzeit", "Etwa drei Monate"],
+          ["Grenze", "Anonymisierte berufliche Fallstudie"],
         ],
         starting: {
           title: "Der Ausgangspunkt",
           paragraphs: [
-            "Die Archivierungsarbeit folgte einem Prozess. Trotzdem brauchten die Mitarbeitenden einen praktischen Weg, um die darin bewegten Dinge zu verwalten: Sitzungen, Pakete und den wechselnden Workflow-Status.",
+            "Die Domäne umfasste Sitzungen, Typen, Organisationscodes, Input- und Output-Storage, Quell- und Ergebnispakete sowie den Workflow-Lebenszyklus.",
             "Die Funktion musste in einer grösseren Enterprise-Plattform leben. Sie durfte kein separates Produkt mit eigenen Regeln werden, sondern brauchte eine fokussierte Grenze, die zum umgebenden System passte.",
           ],
         },
@@ -813,10 +903,10 @@ export const locales = {
           title: "Was das Design lösen musste",
           intro: "Die nützliche Grenze lag zwischen Prozessstatus und Benutzeraktion:",
           items: [
-            "Eine Sitzung und ihre Pakete mussten während des Prozessfortschritts verständlich bleiben.",
+            "Sitzung, Quellpakete und Output mussten über neun Prozessschritte verständlich bleiben.",
             "Benutzeraktionen mussten sauber auf gültige Prozessübergänge abgebildet werden.",
             "Backend-Regeln und Frontend-Status durften nicht auseinanderlaufen.",
-            "Die Funktion musste sich integrieren, ohne ihre Logik über die Host-Plattform zu verteilen.",
+            "Das Single-SPA-Microfrontend musste sich integrieren, ohne seine Logik über die Host-Plattform zu verteilen.",
           ],
         },
         diagnosis: {
@@ -829,9 +919,9 @@ export const locales = {
         architecture: {
           title: "Der resultierende Anwendungsausschnitt",
           intro:
-            "Das Microfrontend bietet eine fokussierte Oberfläche. Der Spring-Dienst übersetzt Anwendungsaktionen in Workflow-Operationen, während Camunda den Prozess für Sitzungen und Pakete koordiniert.",
-          labels: ["BENUTZER", "REACT UI", "SPRING SERVICE", "CAMUNDA", "SITZUNGEN + PAKETE"],
-          caption: "Eine klare Grenze zwischen Benutzeraktion, Anwendungsregeln und Prozessstatus.",
+            "Das Microfrontend bietet eine fokussierte Oberfläche. Spring Boot übersetzt Aktionen in Camunda-Operationen und S3-kompatible Storage-Referenzen, von der Sitzungserstellung bis zum Output-Tracking.",
+          labels: ["BENUTZER", "REACT SINGLE-SPA", "SPRING BOOT API", "CAMUNDA", "S3 INPUT + OUTPUT"],
+          caption: "Anwendungsstatus, Prozess und Storage treffen an einer klaren Grenze zusammen.",
         },
         decisions: {
           title: "Entscheidungen, die zählten",
@@ -857,7 +947,7 @@ export const locales = {
         delivery: {
           title: "Delivery und Prüfung",
           paragraphs: [
-            "Die Funktion lässt sich entlang desselben Wegs prüfen, den ein Benutzer nimmt: Sitzung öffnen oder erstellen, Pakete ansehen, eine erlaubte Aktion ausführen und den konsistenten Workflow-Status in der Oberfläche bestätigen.",
+            "Die Prüfung folgt den neun Schritten: Sitzung erstellen, Quellpakete verbinden, Workflow starten, gültige Übergänge beobachten und Ergebnispakete verfolgen.",
             "Die wichtigen Fehlerfälle liegen an den Grenzen. Der Dienst muss ungültige Übergänge ablehnen, die UI unvollständige oder laufende Zustände ehrlich zeigen, und die Prozessintegration muss die Quelle des Workflow-Status bleiben.",
           ],
         },
@@ -869,26 +959,26 @@ export const locales = {
           ],
         },
         scope:
-          "Diese Fallstudie beschreibt Dienst, Microfrontend und Workflow-Grenze. Organisation, fachliche Archivdetails und kommerzieller Kontext bleiben privat.",
+          "Organisation, Produkt, interne Typen, Endpunkte, Buckets und Zugangsdaten sind weggelassen. Ungefähre Dauer und Lebenszyklus stammen aus der Projektdokumentation.",
       },
       "retail-erp-evolution": {
         category: "Enterprise-Software",
         cardTitle: "Wartung und Weiterentwicklung eines Retail-ERP",
         title: "Ein Retail-ERP verbessern, ohne den täglichen Betrieb zu verlassen",
         summary:
-          "Ich arbeitete über SQL Server, .NET und das Frontend eines geschäftskritischen Retail-ERP hinweg und verbesserte Performance, Integrationen und tägliche Zuverlässigkeit als zusammenhängendes System.",
-        readMinutes: "7",
+          "Über etwa neunzehn Monate arbeitete ich an SQL Server, .NET Framework 4.8 und einem KnockoutJS-Frontend eines laufenden Retail-ERP: Features, Fehler, Reports, zwei Kuriereinbindungen und Modernisierung des Wareneingangs.",
+        readMinutes: "10",
         facts: [
           ["Disziplin", "Enterprise Product Engineering"],
-          ["Umfang", "Datenbank, Backend und Frontend"],
-          ["System", "Geschäftskritisches Retail-ERP"],
-          ["Kontext", "Professionelle Engineering-Arbeit"],
+          ["Umfang", "Datenbank, Backend, Frontend und Integrationen"],
+          ["Lieferzeit", "Etwa neunzehn Monate"],
+          ["Grenze", "Anonymisierte berufliche Fallstudie"],
         ],
         starting: {
           title: "Der Ausgangspunkt",
           paragraphs: [
-            "Das ERP unterstützte den täglichen Retail-Betrieb. Zuverlässigkeit war deshalb eine Produktanforderung, keine Randnotiz der Wartung. Änderungen mussten das System verbessern und zugleich bestehende Arbeit schützen.",
-            "Performance, Integrationen und Oberflächenverhalten hingen zusammen. Nur eine Schicht zu behandeln hätte das Problem lediglich an eine andere Stelle im Anfrageweg verschoben.",
+            "Der operative Monolith nutzte SQL Server, C#/.NET Framework 4.8, Entity Framework, KnockoutJS, JavaScript, jQuery, Bootstrap und Crystal Reports. Änderungen mussten den täglichen Betrieb schützen.",
+            "Der Umfang reichte von Features, Fehlern, Stored Procedures, Views und Reports über zwei externe Kuriereinbindungen bis zu Anforderungen, Schulung, Support und einer .NET-Core-Modernisierung für mehrformatigen Wareneingang.",
           ],
         },
         constraints: {
@@ -897,7 +987,7 @@ export const locales = {
           items: [
             "Bestehende Abläufe mussten die tägliche Retail-Arbeit weiter tragen.",
             "Datenbank, Backend und Frontend mussten bei Vertragsänderungen zusammenpassen.",
-            "Integrationen mussten an der Systemgrenze verständlich bleiben.",
+            "Zwei externe Kuriereinbindungen mussten an der Systemgrenze verständlich bleiben.",
             "Performance-Arbeit musste dem realen Anwendungspfad folgen, nicht nur einem isolierten Symptom.",
           ],
         },
@@ -905,15 +995,15 @@ export const locales = {
           title: "Die Diagnose",
           paragraphs: [
             "In einem mehrschichtigen ERP ist die sichtbare Verzögerung oder Störung oft nur das letzte Glied. Eine Ansicht kann wegen ihrer Anfrageform, Backend-Arbeit oder eines Datenbankzugriffs langsam sein. Ein Integrationsfehler kann als Frontend-Inkonsistenz erscheinen.",
-            "Ich arbeitete durch diesen gesamten Pfad. SQL Server, .NET-Dienste und Browser-Oberfläche wurden als Teile desselben Verhaltens behandelt, einschliesslich der Integrationsgrenze.",
+            "Ich arbeitete durch drei Anwendungsschichten: SQL-Server-Abfragen und Stored Procedures, .NET-Framework-Regeln, KnockoutJS-Ansichten, Reports und Kurieraustausch.",
           ],
         },
         architecture: {
           title: "Die nützliche Systemsicht",
           intro:
-            "Die sinnvolle Änderungseinheit war die Ende-zu-Ende-Anfrage: eine Benutzeraktion im Frontend, Anwendungsregeln in .NET, Datenarbeit in SQL Server und der Austausch an der Integrationsgrenze.",
-          labels: ["BENUTZER", "FRONTEND", ".NET", "SQL SERVER", "INTEGRATIONEN"],
-          caption: "Dem Verhalten durch alle Schichten folgen, statt eine Schicht isoliert zu optimieren.",
+            "Die sinnvolle Einheit war der Ende-zu-Ende-Pfad: KnockoutJS-Aktion, Regeln in .NET Framework 4.8, SQL-Server-Datenarbeit, Crystal Reports und externe Übergaben.",
+          labels: ["BENUTZER", "KNOCKOUTJS", ".NET FRAMEWORK 4.8", "SQL SERVER", "REPORTS + KURIERE"],
+          caption: "Dem Betriebspfad durch drei Schichten und seine externen Grenzen folgen.",
         },
         decisions: {
           title: "Entscheidungen, die zählten",
@@ -939,7 +1029,7 @@ export const locales = {
         delivery: {
           title: "Delivery und Prüfung",
           paragraphs: [
-            "Jede Änderung lässt sich in ihrer eigenen Schicht und erneut im unterstützten Benutzerablauf prüfen. Datenbankverhalten, Backend-Regeln, Integrationsantworten und Frontend-Status müssen übereinstimmen.",
+            "Jede Änderung wurde in ihrer Schicht und im Betriebsablauf geprüft: Stored Procedures, Backend-Regeln, Kurierantworten, Reports und Frontend-Status mussten zusammenpassen.",
             "Diese Ende-zu-Ende-Prüfung zählt besonders bei täglichen Abläufen. Eine technisch korrekte Änderung ist nicht fertig, wenn sie Routinearbeit schwerer verständlich oder weniger verlässlich macht.",
           ],
         },
@@ -951,7 +1041,7 @@ export const locales = {
           ],
         },
         scope:
-          "Diese Fallstudie behandelt schichtübergreifende Entwicklung in einem Retail-ERP. Organisation, Benutzer, kommerzielle Daten und Betriebskennzahlen bleiben bewusst unerwähnt.",
+          "Organisation, Produkt, Benutzer, Anbieter, kommerzielle Daten und KPIs sind weggelassen. Ungefähre Dauer, Technologien und zwei Integrationen stammen aus der Projektdokumentation.",
       },
     },
   },
@@ -989,11 +1079,11 @@ export const locales = {
     index: {
       title: "Les décisions techniques, avec leur contexte.",
       description:
-        "Trois récits précis de systèmes sur lesquels j’ai travaillé : ce qui était fragile, ce que j’ai changé et ce qui est devenu plus simple à exploiter. Les noms des entreprises restent confidentiels. Le périmètre technique, non.",
-      eyebrow: "Études de cas d’ingénierie / 01—03",
+        "Neuf études de cas concrètes : trois systèmes professionnels anonymisés et six projets open source de Labs. Chacune explique les contraintes, les décisions, ce qui a été construit et les limites des preuves.",
+      eyebrow: "Études de cas d’ingénierie / 01—09",
       introTitle: "Un travail qui mérite d’être expliqué",
       introBody:
-        "Une liste de technologies dit peu de choses. Ces études de cas présentent les décisions derrière le code, les contraintes réelles et le résultat à maintenir au quotidien.",
+        "Une liste de technologies dit peu de choses. L’archive sépare le travail professionnel des projets Labs, puis suit les décisions, la vérification et les limites de chaque système.",
       principles: [
         {
           number: "P01",
@@ -1020,18 +1110,18 @@ export const locales = {
         cardTitle: "Migration cloud d’une plateforme de workflow IA",
         title: "Installer une plateforme de workflow IA sur une base cloud reproductible",
         summary:
-          "Une plateforme de traitement documentaire composée de plusieurs éléments dépendait de déploiements propres à chaque environnement. J’ai transféré son infrastructure et son modèle de livraison vers Terraform réutilisable, GKE et des services managés Google Cloud.",
-        readMinutes: "8",
+          "En environ un mois, j’ai transféré une plateforme documentaire et de workflows IA depuis un déploiement on-premise propre à chaque environnement vers Terraform, GKE et une livraison blue/red contrôlée.",
+        readMinutes: "10",
         facts: [
           ["Discipline", "Ingénierie de plateforme cloud"],
-          ["Périmètre", "Infrastructure et modèle de livraison"],
-          ["Plateforme", "Google Cloud"],
-          ["Contexte", "Travail d’ingénierie professionnel"],
+          ["Périmètre", "Infrastructure, workloads et parcours de livraison"],
+          ["Livraison", "Environ un mois"],
+          ["Frontière", "Cas professionnel anonymisé"],
         ],
         starting: {
           title: "Le point de départ",
           paragraphs: [
-            "La plateforme réunissait plusieurs composants pour le traitement documentaire et des workflows assistés par l’IA. Ses environnements ne partageaient pas une voie de configuration fiable. Un déploiement correct à un endroit pouvait rester difficile à reproduire ailleurs.",
+            "La plateforme on-premise réunissait Vue, deux services Spring Boot, un worker Python Temporal, Temporal, Keycloak, PostgreSQL et MinIO pour l’extraction documentaire et des workflows assistés par l’IA.",
             "Parler uniquement de migration cloud aurait décrit la destination, pas le travail. Il fallait remplacer une infrastructure et des étapes ponctuelles par un modèle lisible, vérifiable et reproductible.",
           ],
         },
@@ -1039,10 +1129,10 @@ export const locales = {
           title: "Ce que la conception devait résoudre",
           intro: "Le nouveau modèle de plateforme devait rendre quatre éléments explicites :",
           items: [
-            "Plusieurs composants applicatifs devaient suivre la même logique de livraison.",
-            "Les différences entre environnements devaient devenir de la configuration, pas du travail manuel non documenté.",
-            "Les changements d’infrastructure devaient être visibles avant d’atteindre un environnement actif.",
-            "Les workloads applicatifs et les services cloud managés avaient besoin d’une frontière opérationnelle claire.",
+            "Vue, Spring Boot, Python, Temporal et Keycloak devaient partager un modèle Kubernetes.",
+            "PostgreSQL et MinIO devaient passer à Cloud SQL et Cloud Storage avec des responsabilités explicites.",
+            "La démonstration et la production exigeaient des contrôles de risque différents.",
+            "La production devait utiliser un slot inactif, un smoke test et un basculement manuel.",
           ],
         },
         diagnosis: {
@@ -1055,9 +1145,9 @@ export const locales = {
         architecture: {
           title: "Le modèle de plateforme obtenu",
           intro:
-            "GitLab CI/CD fournit le chemin de livraison. Terraform définit la base Google Cloud, GKE porte la couche de workloads et les services managés prennent en charge les responsabilités de plateforme qui n’appartiennent pas aux conteneurs applicatifs.",
-          labels: ["SOURCE", "CI / CD", "TERRAFORM", "GKE", "SERVICES MANAGÉS"],
-          caption: "Un chemin versionné entre la modification et la plateforme en fonctionnement.",
+            "GitLab CI transmet le build de production à Cloud Build, publie les images dans Artifact Registry et déploie sur le slot GKE inactif. Readiness Kubernetes et smoke test précèdent le basculement manuel ; Cloud SQL et Cloud Storage remplacent PostgreSQL et MinIO autogérés.",
+          labels: ["GITLAB CI", "CLOUD BUILD", "ARTIFACT REGISTRY", "GKE BLUE / RED", "CLOUD SQL + GCS"],
+          caption: "Un build, une vérification sur le slot inactif, puis un basculement explicite.",
         },
         decisions: {
           title: "Les décisions importantes",
@@ -1083,8 +1173,8 @@ export const locales = {
         delivery: {
           title: "Livraison et vérification",
           paragraphs: [
-            "Le modèle place les changements d’infrastructure et de workloads sur une voie inspectable dans GitLab CI/CD. Terraform rend l’état cloud attendu vérifiable ; le modèle GKE donne une cible commune aux composants.",
-            "La vérification suit la même frontière : d’abord la définition d’infrastructure, puis les ressources de plateforme, enfin les workloads. Cette séquence facilite la localisation d’un échec par rapport à un script différent pour chaque environnement.",
+            "La démonstration reste distincte de la production. Cette dernière passe de GitLab CI à Cloud Build et Artifact Registry avant le slot GKE inactif.",
+            "Readiness Kubernetes, alertes et signaux GCP sont complétés par un smoke test avant le basculement. Cela ne valide pas tous les parcours métier, mais rend le cutover contrôlable.",
           ],
         },
         result: {
@@ -1095,25 +1185,25 @@ export const locales = {
           ],
         },
         scope:
-          "Cette étude de cas couvre l’architecture de plateforme et la livraison. L’organisation, les volumes de travail, les coûts et les détails commerciaux sont volontairement omis.",
+          "Organisation, produit, endpoints, configuration du stockage, coûts et volumes sont omis. La durée approximative, les composants et la séquence de livraison proviennent du dossier de projet.",
       },
       "archival-workflow-management": {
         category: "Logiciel de workflow",
         cardTitle: "Gestion d’un workflow d’archivage",
         title: "Offrir un parcours clair dans un workflow d’archivage complexe",
         summary:
-          "J’ai construit un service Spring et un microfrontend React autour d’un processus Camunda afin que les opérateurs puissent gérer sessions, paquets et état du workflow dans un espace ciblé.",
-        readMinutes: "7",
+          "En environ trois mois, j’ai construit un service Spring Boot et un microfrontend React Single-SPA autour de Camunda pour créer des sessions, faire avancer les paquets sources dans un cycle de neuf étapes et suivre leur sortie.",
+        readMinutes: "9",
         facts: [
           ["Discipline", "Ingénierie produit et workflow"],
-          ["Périmètre", "Service et microfrontend"],
-          ["Processus", "Orchestration Camunda"],
-          ["Contexte", "Travail d’ingénierie professionnel"],
+          ["Périmètre", "Service, microfrontend et frontière workflow"],
+          ["Livraison", "Environ trois mois"],
+          ["Frontière", "Cas professionnel anonymisé"],
         ],
         starting: {
           title: "Le point de départ",
           paragraphs: [
-            "Le travail d’archivage suivait un processus, mais les opérateurs avaient toujours besoin d’un moyen pratique de gérer ce qui le traversait : les sessions, les paquets et l’état évolutif du workflow.",
+            "Le domaine couvrait sessions, types, codes d’organisation, stockage d’entrée et de sortie, paquets sources, paquets produits et cycle de vie du workflow.",
             "La fonctionnalité devait aussi vivre dans une plateforme d’entreprise plus large. Elle ne pouvait pas devenir un produit séparé avec ses propres règles. Il lui fallait une frontière ciblée, compatible avec le système environnant.",
           ],
         },
@@ -1121,10 +1211,10 @@ export const locales = {
           title: "Ce que la conception devait résoudre",
           intro: "La frontière utile se situait entre l’état du processus et l’action de l’opérateur :",
           items: [
-            "Une session et ses paquets devaient rester compréhensibles pendant l’avancement du workflow.",
+            "La session, les paquets sources et les sorties devaient rester compréhensibles sur neuf étapes.",
             "Les actions de l’opérateur devaient correspondre clairement à des transitions valides.",
             "Les règles backend et l’état frontend ne pouvaient pas devenir deux interprétations différentes.",
-            "La fonctionnalité devait s’intégrer sans disperser sa logique dans la plateforme hôte.",
+            "Le microfrontend Single-SPA devait s’intégrer sans disperser sa logique dans la plateforme hôte.",
           ],
         },
         diagnosis: {
@@ -1137,9 +1227,9 @@ export const locales = {
         architecture: {
           title: "La tranche applicative obtenue",
           intro:
-            "Le microfrontend offre une surface ciblée aux opérateurs. Le service Spring traduit les actions en opérations de workflow, tandis que Camunda coordonne le processus qui fait avancer sessions et paquets.",
-          labels: ["OPÉRATEUR", "UI REACT", "SERVICE SPRING", "CAMUNDA", "SESSIONS + PAQUETS"],
-          caption: "Une frontière claire entre action utilisateur, règles applicatives et état du processus.",
+            "Le microfrontend offre une surface ciblée. Spring Boot traduit les actions en opérations Camunda et références de stockage compatibles S3, depuis la création de session jusqu’au suivi des sorties.",
+          labels: ["OPÉRATEUR", "REACT SINGLE-SPA", "API SPRING BOOT", "CAMUNDA", "S3 ENTRÉE + SORTIE"],
+          caption: "État applicatif, processus et stockage se rejoignent à une frontière explicite.",
         },
         decisions: {
           title: "Les décisions importantes",
@@ -1165,7 +1255,7 @@ export const locales = {
         delivery: {
           title: "Livraison et vérification",
           paragraphs: [
-            "La fonctionnalité se vérifie le long du même parcours que l’opérateur : créer ou ouvrir une session, examiner ses paquets, exécuter une action permise et confirmer que l’état revient de manière cohérente dans l’interface.",
+            "La vérification suit les neuf étapes : créer la session, associer les paquets sources, démarrer le workflow, observer les transitions valides et suivre les paquets de sortie.",
             "Les cas d’échec importants se trouvent aux frontières. Le service doit refuser les transitions invalides, l’UI montrer honnêtement les états incomplets ou en attente, et l’intégration conserver le processus comme source de vérité.",
           ],
         },
@@ -1177,26 +1267,26 @@ export const locales = {
           ],
         },
         scope:
-          "Cette étude de cas décrit le service, le microfrontend et la frontière du workflow. L’organisation, les détails du domaine archivistique et le contexte commercial restent privés.",
+          "Organisation, produit, types internes, endpoints, buckets et identifiants sont omis. La durée approximative et le cycle proviennent du dossier de projet.",
       },
       "retail-erp-evolution": {
         category: "Logiciel d’entreprise",
         cardTitle: "Maintenance et évolution d’un ERP retail",
         title: "Améliorer un ERP retail sans interrompre les opérations quotidiennes",
         summary:
-          "J’ai travaillé sur SQL Server, .NET et le frontend d’un ERP retail critique, en améliorant performances, intégrations et fiabilité quotidienne comme un seul système.",
-        readMinutes: "7",
+          "Pendant environ dix-neuf mois, j’ai travaillé sur SQL Server, .NET Framework 4.8 et un frontend KnockoutJS d’un ERP retail actif : fonctionnalités, correctifs, rapports, deux intégrations transporteurs et modernisation de la réception de stock.",
+        readMinutes: "10",
         facts: [
           ["Discipline", "Ingénierie produit d’entreprise"],
-          ["Périmètre", "Base de données, backend et frontend"],
-          ["Système", "ERP retail critique"],
-          ["Contexte", "Travail d’ingénierie professionnel"],
+          ["Périmètre", "Base de données, backend, frontend et intégrations"],
+          ["Livraison", "Environ dix-neuf mois"],
+          ["Frontière", "Cas professionnel anonymisé"],
         ],
         starting: {
           title: "Le point de départ",
           paragraphs: [
-            "L’ERP soutenait les opérations retail quotidiennes. La fiabilité était donc une exigence produit, pas une note de maintenance. Chaque changement devait améliorer le système tout en préservant le travail existant.",
-            "Les performances, les intégrations et le comportement de l’interface étaient liés. Traiter une couche isolément n’aurait fait que déplacer le problème ailleurs dans le parcours de la requête.",
+            "Le monolithe opérationnel utilisait SQL Server, C#/.NET Framework 4.8, Entity Framework, KnockoutJS, JavaScript, jQuery, Bootstrap et Crystal Reports. Chaque changement devait préserver le travail quotidien.",
+            "Le périmètre couvrait fonctionnalités, bugs, procédures stockées, vues, reporting, deux intégrations transporteurs, exigences, formation, support et évolution d’un outil de réception vers .NET Core et l’ingestion multi-format.",
           ],
         },
         constraints: {
@@ -1205,7 +1295,7 @@ export const locales = {
           items: [
             "Les workflows existants devaient continuer à soutenir le travail retail quotidien.",
             "Base de données, backend et frontend devaient évoluer ensemble lorsque le contrat changeait.",
-            "Les intégrations devaient rester compréhensibles à la frontière du système.",
+            "Deux intégrations externes avec des transporteurs devaient rester compréhensibles à la frontière du système.",
             "Le travail de performance devait suivre le parcours réel, pas un symptôme isolé.",
           ],
         },
@@ -1213,15 +1303,15 @@ export const locales = {
           title: "Le diagnostic",
           paragraphs: [
             "Dans un ERP en couches, le ralentissement ou l’échec visible n’est souvent que le dernier maillon. Un écran peut être lent à cause de la forme de sa requête, du traitement backend ou d’un accès aux données. Un problème d’intégration peut apparaître comme une incohérence frontend.",
-            "J’ai travaillé sur ce parcours complet. SQL Server, les services .NET et l’interface web ont été traités comme les éléments d’un même comportement, y compris la frontière d’intégration.",
+            "J’ai suivi ce parcours sur trois couches : requêtes et procédures SQL Server, règles .NET Framework, écrans KnockoutJS, rapports et échanges avec les transporteurs.",
           ],
         },
         architecture: {
           title: "La vue utile du système",
           intro:
-            "L’unité de changement pertinente était la requête de bout en bout : une action dans le frontend, les règles applicatives en .NET, le travail de données dans SQL Server et l’échange à la frontière d’intégration.",
-          labels: ["OPÉRATEUR", "FRONTEND", ".NET", "SQL SERVER", "INTÉGRATIONS"],
-          caption: "Suivre le comportement entre les couches plutôt que d’optimiser une couche isolée.",
+            "L’unité pertinente était le parcours complet : action KnockoutJS, règles .NET Framework 4.8, données SQL Server, rapports Crystal Reports et échanges externes.",
+          labels: ["OPÉRATEUR", "KNOCKOUTJS", ".NET FRAMEWORK 4.8", "SQL SERVER", "RAPPORTS + TRANSPORT"],
+          caption: "Suivre le parcours opérationnel sur trois couches et ses frontières externes.",
         },
         decisions: {
           title: "Les décisions importantes",
@@ -1247,7 +1337,7 @@ export const locales = {
         delivery: {
           title: "Livraison et vérification",
           paragraphs: [
-            "Chaque changement peut être vérifié dans sa couche, puis dans le parcours utilisateur qu’il soutient. Le comportement de la base de données, les règles backend, les réponses d’intégration et l’état frontend doivent s’accorder.",
+            "Chaque changement était vérifié dans sa couche et dans le parcours opérationnel : procédures et vues, règles backend, réponses des transporteurs, rapports et état frontend devaient s’accorder.",
             "Cette vérification de bout en bout compte surtout sur les parcours quotidiens. Un changement techniquement correct n’est pas terminé s’il rend le travail courant moins compréhensible ou moins fiable.",
           ],
         },
@@ -1259,8 +1349,13 @@ export const locales = {
           ],
         },
         scope:
-          "Cette étude de cas couvre l’ingénierie entre les couches d’un ERP retail. L’organisation, les utilisateurs, les données commerciales et les chiffres opérationnels sont volontairement omis.",
+          "Organisation, produit, utilisateurs, fournisseurs, données commerciales et KPI sont omis. Durée approximative, technologies et deux intégrations proviennent du dossier de projet.",
       },
     },
   },
 };
+
+Object.assign(locales.en.cases, labsCases);
+for (const localeKey of ["it", "de", "fr"]) {
+  Object.assign(locales[localeKey].cases, labsLocales[localeKey]);
+}

@@ -107,3 +107,53 @@ test("desktop navigation remains available after an open mobile menu is resized"
   );
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test("archive search, taxonomy, URL state and empty state stay in sync", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/?q=local&type=labs");
+
+  const cards = page.locator("[data-case-card]:visible");
+  await expect(page.locator("[data-discovery]")).toBeVisible();
+  await expect(page.locator("[data-case-search]")).toHaveValue("local");
+  await expect(page.locator('[data-case-type="labs"]')).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(cards).toHaveCount(3);
+  await expect(page.locator("[data-case-count]")).toHaveText("3");
+
+  await page.locator("[data-case-search]").fill("phrase-that-does-not-exist");
+  await expect(cards).toHaveCount(0);
+  await expect(page.locator("[data-case-empty]")).toBeVisible();
+  await expect(page).toHaveURL(/q=phrase-that-does-not-exist/);
+
+  await page.locator("[data-case-empty] [data-case-clear]").click();
+  await expect(cards).toHaveCount(9);
+  await expect(page.locator("[data-case-search]")).toBeFocused();
+  await expect(page).toHaveURL(/^http:\/\/127\.0\.0\.1:\d+\/$/);
+
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("Tab");
+  await page.locator("body").click({ position: { x: 10, y: 200 } });
+  await page.keyboard.press("/");
+  await expect(page.locator("[data-case-search]")).toBeFocused();
+});
+
+test("localized Labs article exposes evidence and its working product page", async ({
+  page,
+}) => {
+  await page.goto("/de/case-studies/eliza-lab/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await expect(page.locator("#evidence")).toBeVisible();
+  await expect(page.locator(".evidence-ledger > div")).toHaveCount(4);
+  await expect(page.locator(".project-action")).toHaveAttribute(
+    "href",
+    "https://ejupi-djenis30.github.io/PsychologistRustBot/",
+  );
+  await expect(page.locator('.language-list a[hreflang="fr"]')).toHaveAttribute(
+    "href",
+    "/fr/case-studies/eliza-lab/",
+  );
+});
