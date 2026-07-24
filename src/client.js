@@ -48,6 +48,10 @@ if (typeof document !== "undefined") {
     const count = discovery.querySelector("[data-case-count]");
     const countLabel = discovery.querySelector("[data-case-count-label]");
     const empty = document.querySelector("[data-case-empty]");
+    const searchIndexUrl = discovery.dataset.searchIndexUrl ?? "";
+    const fullTextBySlug = new Map();
+    let searchIndexState = "idle";
+    let searchIndexPromise = null;
     let selectedKind = "";
 
     if (
@@ -90,12 +94,65 @@ if (typeof document !== "undefined") {
         window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
       }
 
+      async function loadSearchIndex() {
+        if (searchIndexState === "loaded" || searchIndexState === "unavailable") return;
+        if (searchIndexPromise) return searchIndexPromise;
+
+        searchIndexState = "loading";
+        discovery.setAttribute("aria-busy", "true");
+        searchIndexPromise = (async () => {
+          try {
+            if (!searchIndexUrl) throw new Error("Search index URL is missing.");
+            const response = await fetch(searchIndexUrl, {
+              credentials: "same-origin",
+              cache: "force-cache",
+            });
+            if (!response.ok) throw new Error(`Search index returned ${response.status}.`);
+            const payload = await response.json();
+            if (
+              payload?.schemaVersion !== 1 ||
+              !Array.isArray(payload.cases) ||
+              payload.cases.length !== caseCards.length
+            ) {
+              throw new Error("Search index has an unexpected shape.");
+            }
+            for (const entry of payload.cases) {
+              if (
+                typeof entry?.slug !== "string" ||
+                typeof entry?.text !== "string" ||
+                !caseCards.some((card) => card.dataset.caseSlug === entry.slug)
+              ) {
+                throw new Error("Search index contains an invalid case.");
+              }
+              fullTextBySlug.set(entry.slug, entry.text);
+            }
+            searchIndexState = "loaded";
+          } catch {
+            fullTextBySlug.clear();
+            searchIndexState = "unavailable";
+          } finally {
+            discovery.removeAttribute("aria-busy");
+          }
+        })();
+        return searchIndexPromise;
+      }
+
       function updateResults({ updateUrl = true } = {}) {
+        const hasQuery = normalizeSearchValue(search.value).length > 0;
+        if (hasQuery && (searchIndexState === "idle" || searchIndexState === "loading")) {
+          if (updateUrl) writeUrlState();
+          if (searchIndexState === "idle") {
+            void loadSearchIndex().then(() => updateResults({ updateUrl: false }));
+          }
+          return;
+        }
+
         let visibleCount = 0;
         for (const card of caseCards) {
+          const slug = card.dataset.caseSlug ?? "";
           const visible = matchesCaseStudy(
             {
-              text: card.textContent ?? "",
+              text: fullTextBySlug.get(slug) ?? card.textContent ?? "",
               kind: card.dataset.kind ?? "",
               topic: card.dataset.topic ?? "",
             },
