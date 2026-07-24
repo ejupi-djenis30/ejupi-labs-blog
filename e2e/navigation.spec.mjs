@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { caseDefinitions } from "../src/content.mjs";
 
 const locales = ["/", "/it/", "/de/", "/fr/"];
 
@@ -112,17 +113,17 @@ test("archive search, taxonomy, URL state and empty state stay in sync", async (
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/?q=local&type=labs");
+  await page.goto("/?q=llama.cpp&type=labs");
 
   const cards = page.locator("[data-case-card]:visible");
   await expect(page.locator("[data-discovery]")).toBeVisible();
-  await expect(page.locator("[data-case-search]")).toHaveValue("local");
+  await expect(page.locator("[data-case-search]")).toHaveValue("llama.cpp");
   await expect(page.locator('[data-case-type="labs"]')).toHaveAttribute(
     "aria-pressed",
     "true",
   );
-  await expect(cards).toHaveCount(3);
-  await expect(page.locator("[data-case-count]")).toHaveText("3");
+  await expect(cards).toHaveCount(1);
+  await expect(page.locator("[data-case-count]")).toHaveText("1");
 
   await page.locator("[data-case-search]").fill("phrase-that-does-not-exist");
   await expect(cards).toHaveCount(0);
@@ -130,7 +131,7 @@ test("archive search, taxonomy, URL state and empty state stay in sync", async (
   await expect(page).toHaveURL(/q=phrase-that-does-not-exist/);
 
   await page.locator("[data-case-empty] [data-case-clear]").click();
-  await expect(cards).toHaveCount(9);
+  await expect(cards).toHaveCount(caseDefinitions.length);
   await expect(page.locator("[data-case-search]")).toBeFocused();
   await expect(page).toHaveURL(/^http:\/\/127\.0\.0\.1:\d+\/$/);
 
@@ -141,13 +142,40 @@ test("archive search, taxonomy, URL state and empty state stay in sync", async (
   await expect(page.locator("[data-case-search]")).toBeFocused();
 });
 
+test("full-text index stays lazy and finds copy that exists only inside an article", async ({
+  page,
+}) => {
+  const searchRequests = [];
+  page.on("request", (request) => {
+    if (/\/assets\/search\.en\.[0-9a-f]{12}\.json$/u.test(request.url())) {
+      searchRequests.push(request.url());
+    }
+  });
+
+  await page.goto("/");
+  await expect(page.locator("[data-case-card]:visible")).toHaveCount(
+    caseDefinitions.length,
+  );
+  expect(searchRequests).toEqual([]);
+
+  await page.locator("[data-case-search]").fill("manual gate is slower");
+  await expect(page.locator("[data-case-card]:visible")).toHaveCount(1);
+  await expect(
+    page.locator(
+      '[data-case-card][data-case-slug="ai-workflow-cloud-migration"]:visible',
+    ),
+  ).toHaveCount(1);
+  await expect.poll(() => searchRequests.length).toBe(1);
+});
+
 test("localized Labs article exposes evidence and its working product page", async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/de/case-studies/eliza-lab/");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
   await expect(page.locator("#evidence")).toBeVisible();
-  await expect(page.locator(".evidence-ledger > div")).toHaveCount(4);
+  expect(await page.locator(".evidence-ledger > div").count()).toBeGreaterThanOrEqual(4);
   await expect(page.locator(".project-action")).toHaveAttribute(
     "href",
     "https://ejupi-djenis30.github.io/PsychologistRustBot/",
@@ -156,4 +184,18 @@ test("localized Labs article exposes evidence and its working product page", asy
     "href",
     "/fr/case-studies/eliza-lab/",
   );
+  const geometry = await page.evaluate(() => {
+    const frame = document.querySelector(".architecture-frame")?.getBoundingClientRect();
+    return {
+      overflow:
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
+      frameLeft: frame?.left,
+      frameRight: frame?.right,
+      viewport: document.documentElement.clientWidth,
+    };
+  });
+  expect(geometry.overflow).toBeLessThanOrEqual(0);
+  expect(geometry.frameLeft).toBeGreaterThanOrEqual(0);
+  expect(geometry.frameRight).toBeLessThanOrEqual(geometry.viewport);
 });

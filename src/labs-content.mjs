@@ -10,14 +10,15 @@ export const labsCases = {
       ["Product", "Open-source desktop utility"],
       ["Role", "Product, architecture and implementation"],
       ["Trust boundary", "Local device by default"],
-      ["Status", "Working application and release pipeline"],
+      ["Status", "v1.6.0 release candidate and signed release pipeline"],
     ],
     evidence: {
       title: "Evidence ledger",
       intro: "The current repository records these reproducible checks and boundaries:",
       items: [
-        ["Backend", "1,354 passing tests; 81.05% branch coverage in the documented v1.5 evidence run."],
-        ["Frontend + shell", "330 frontend tests across 64 files and 10 Rust tests; four viewport sizes are exercised."],
+        ["Backend", "1,369 tests pass in the v1.6.0 candidate; an independent review reran 42 portability and storage tests."],
+        ["Frontend + shell", "334 frontend tests across 64 files and 17 Rust library tests pass, including the native backup writer."],
+        ["Backup assurance", "Archives from versions 1–4 receive a full non-mutating preflight; the response contains bounded metadata, not archive content."],
         ["Scale fixture", "A 10,000-application agenda fixture records p95 at 68.670 ms against its 200 ms project budget."],
         ["Boundary", "Local receipts do not protect against a process that can write directly to the database; unsigned imports are quarantined."],
       ],
@@ -77,7 +78,7 @@ export const labsCases = {
     delivery: {
       title: "How the product is verified",
       paragraphs: [
-        "The repository tests Python services, React behaviour and Rust desktop integration. Database migrations are exercised as upgrade, downgrade and upgrade round trips, while document and backup workflows run against disposable local data.",
+        "The repository tests Python services, React behaviour and Rust desktop integration. Database migrations run as upgrade, downgrade and upgrade round trips. Backup tests inspect versions 1–4 without mutation, then exercise replacement, corruption detection and verified rollback against disposable local data.",
         "Release automation also checks dependency licenses, SBOMs, containers and high-severity vulnerability policy. Product-tour captures come from the real application with fictional data, and the recorder rejects browser errors, failed API responses and visible alerts.",
       ],
     },
@@ -102,15 +103,16 @@ export const labsCases = {
       ["Product", "Educational ML pipeline and browser lab"],
       ["Role", "ML protocol, Rust implementation and safety redesign"],
       ["Data", "Versioned synthetic fixtures"],
-      ["Status", "Reproducible model bundle and CLI"],
+      ["Status", "Reproducible v3 bundle, nested selection audit and CLI"],
     ],
     evidence: {
       title: "Evidence ledger",
-      intro: "The checked v3 artifact exposes strengths and weak results together:",
+      intro: "The checked artifacts expose the selection result, the frozen test and the weak cases together:",
       items: [
+        ["Selection protocol", "385 train-and-development rows in 77 families run through 11 outer and 5 inner group folds, for 506 fitted models."],
+        ["Selection result", "Out-of-fold accuracy is 62.597% and macro-F1 is 62.640%; the family-clustered 95% accuracy interval is 57.143–68.571%."],
         ["Frozen ID test", "82.857% accuracy and 82.278% macro-F1 on 70 synthetic English rows."],
-        ["Abstention", "62.857% ID coverage; 11.11% OOD-test coverage with frozen confidence 0.7 and margin 0.4 thresholds."],
-        ["Open-set result", "OOD AUROC is 0.80278, while FPR at 95% TPR is 0.7778."],
+        ["Open-set result", "The frozen policy covers 62.857% of ID rows and 11.11% of OOD rows; OOD AUROC is 0.80278 and FPR at 95% TPR is 0.7778."],
         ["Known weakness", "The 28-row contrast fixture reaches 42.86% pair accuracy; the project does not hide that failure."],
       ],
     },
@@ -170,13 +172,13 @@ export const labsCases = {
       title: "Reproduction and release checks",
       paragraphs: [
         "The model, policy, metrics and split plan live in a SHA-256-linked bundle. The CLI can rebuild the bundle, verify every contract and run bounded batch inference. A declared reporting precision keeps the v3 bundle byte-identical across supported release targets.",
-        "Rust and browser code run parity fixtures against the same model. Aggregate-only robustness audits test formatting invariants and controlled typographic changes without writing prompts or row-level predictions.",
+        "Rust and browser code run parity fixtures against the same model. A separate SHA-256-pinned selection report publishes every out-of-fold probability, fold assignment and candidate rank; the browser reconstructs its metrics and fails closed if the bytes or aggregates change.",
       ],
     },
     result: {
       title: "What the project demonstrates",
       paragraphs: [
-        "ELIZA Lab demonstrates a complete small-model workflow: validation, grouped splitting, training, calibration, open-set policy selection, frozen testing, artifact verification and local inference.",
+        "ELIZA Lab demonstrates a complete small-model workflow: nested group-aware selection, calibration, open-set policy selection, frozen testing, artifact verification and local inference.",
         "It is not a therapist, crisis detector or production language model. Its value is that a learner can inspect the experiment and reproduce the result instead of trusting a black-box demo.",
       ],
     },

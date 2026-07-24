@@ -1,5 +1,9 @@
 import { labsCases } from "./labs-content.mjs";
 import { labsLocales } from "./labs-locales.mjs";
+import {
+  assertDefinitionCatalog,
+  assertRawLocaleCatalog,
+} from "./content-contract.mjs";
 
 export const site = {
   name: "Ejupi Labs",
@@ -119,6 +123,18 @@ export const caseDefinitions = [
     stack: ["JavaScript", "Local storage", "Playwright", "Static web"],
   },
 ];
+
+export const protectedLegacySlugs = Object.freeze([
+  "ai-workflow-cloud-migration",
+  "archival-workflow-management",
+  "retail-erp-evolution",
+  "careeros-local",
+  "eliza-lab",
+  "djenis-ai-agent",
+  "dig-gopher-explorer",
+  "integradraw",
+  "vector-placement-operations",
+]);
 
 export const locales = {
   en: {
@@ -1355,7 +1371,27 @@ export const locales = {
   },
 };
 
-Object.assign(locales.en.cases, labsCases);
-for (const localeKey of ["it", "de", "fr"]) {
-  Object.assign(locales[localeKey].cases, labsLocales[localeKey]);
+assertDefinitionCatalog(caseDefinitions, {
+  localeOrder,
+  protectedLegacySlugs,
+});
+
+const rawCasesByLocale = {
+  en: { ...locales.en.cases, ...labsCases },
+  it: { ...locales.it.cases, ...labsLocales.it },
+  de: { ...locales.de.cases, ...labsLocales.de },
+  fr: { ...locales.fr.cases, ...labsLocales.fr },
+};
+
+const completeCasesByLocale = assertRawLocaleCatalog({
+  definitions: caseDefinitions,
+  localeOrder,
+  rawCasesByLocale,
+  allowedInheritedPathsByKind: {
+    labs: ["cardTitle", "readMinutes"],
+  },
+});
+
+for (const localeKey of localeOrder) {
+  locales[localeKey].cases = completeCasesByLocale[localeKey];
 }

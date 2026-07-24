@@ -1,23 +1,24 @@
 import { createHash } from "node:crypto";
 import { access, readFile, readdir } from "node:fs/promises";
 import { basename, extname, join, resolve } from "node:path";
-import { caseDefinitions, localeOrder, locales, site } from "../src/content.mjs";
+import {
+  caseDefinitions,
+  localeOrder,
+  locales,
+  protectedLegacySlugs,
+  site,
+} from "../src/content.mjs";
+import { assertProtectedLegacySlugs } from "../src/content-contract.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = join(root, "dist");
 const errors = [];
 
-const expectedSlugs = [
-  "ai-workflow-cloud-migration",
-  "archival-workflow-management",
-  "retail-erp-evolution",
-  "careeros-local",
-  "eliza-lab",
-  "djenis-ai-agent",
-  "dig-gopher-explorer",
-  "integradraw",
-  "vector-placement-operations",
-];
+const expectedSlugs = caseDefinitions.map(({ slug }) => slug);
+const articleCount = caseDefinitions.reduce(
+  (total, definition) => total + definition.availableLocales.length,
+  0,
+);
 
 function routeFor(localeKey, slug) {
   const prefix = locales[localeKey].prefix;
@@ -51,9 +52,7 @@ function count(source, expression) {
   return [...source.matchAll(expression)].length;
 }
 
-if (caseDefinitions.map(({ slug }) => slug).join("|") !== expectedSlugs.join("|")) {
-  errors.push("Case-study slugs changed from the approved stable routes.");
-}
+assertProtectedLegacySlugs(caseDefinitions, protectedLegacySlugs);
 
 for (const localeKey of localeOrder) {
   const locale = locales[localeKey];
@@ -62,11 +61,16 @@ for (const localeKey of localeOrder) {
     continue;
   }
 
-  for (const slug of expectedSlugs) {
+  const localeDefinitions = caseDefinitions.filter((definition) =>
+    definition.availableLocales.includes(localeKey),
+  );
+  const localeSlugs = localeDefinitions.map(({ slug }) => slug);
+
+  for (const slug of localeSlugs) {
     if (!locale.cases[slug]) errors.push(`Missing ${localeKey} content for ${slug}.`);
   }
 
-  const pages = [null, ...expectedSlugs];
+  const pages = [null, ...localeSlugs];
   for (const slug of pages) {
     const route = routeFor(localeKey, slug);
     const file = fileForRoute(route);
@@ -81,7 +85,13 @@ for (const localeKey of localeOrder) {
     if (!html.includes(`<html class="no-js" lang="${locale.lang}">`)) errors.push(`${label} has the wrong lang attribute.`);
     if (count(html, /<h1\b/g) !== 1) errors.push(`${label} must contain exactly one h1.`);
     if (!html.includes(`<link rel="canonical" href="${new URL(route, site.url).href}" />`)) errors.push(`${label} has the wrong canonical URL.`);
-    if (count(html, /rel="alternate" hreflang=/g) !== 5) errors.push(`${label} must expose four languages and x-default.`);
+    const definition = slug
+      ? caseDefinitions.find((item) => item.slug === slug)
+      : null;
+    const alternateCount = (definition?.availableLocales.length ?? localeOrder.length) + 1;
+    if (count(html, /rel="alternate" hreflang=/g) !== alternateCount) {
+      errors.push(`${label} must expose ${alternateCount - 1} languages and x-default.`);
+    }
     if (!html.includes('href="#main"')) errors.push(`${label} has no skip link.`);
     if (!html.includes('id="site-navigation"')) errors.push(`${label} menu is not associated with its toggle.`);
     if (!/href="\/assets\/styles\.[0-9a-f]{12}\.css"/u.test(html)) errors.push(`${label} has no fingerprinted stylesheet.`);
@@ -92,19 +102,42 @@ for (const localeKey of localeOrder) {
     if (/<img(?![^>]*\balt=)[^>]*>/i.test(html)) errors.push(`${label} contains an image without alt text.`);
 
     if (slug) {
-      const definition = caseDefinitions.find((item) => item.slug === slug);
       const expectedSections = definition?.kind === "labs" ? 8 : 7;
       if (count(html, /data-story-section/g) !== expectedSections) errors.push(`${label} must contain ${expectedSections} complete story sections.`);
       if (!html.includes("architecture-frame")) errors.push(`${label} is missing its architecture figure.`);
       if (!html.includes(locales[localeKey].ui.sourceNote)) errors.push(`${label} is missing its evidence boundary.`);
       if (definition?.kind === "labs" && !html.includes("evidence-ledger")) errors.push(`${label} is missing its evidence ledger.`);
       if (definition?.kind === "labs" && !html.includes(definition.projectUrl)) errors.push(`${label} is missing its working product link.`);
+    } else {
+      if (!/data-search-index-url="\/assets\/search\.[a-z]{2}\.[0-9a-f]{12}\.json"/u.test(html)) {
+        errors.push(`${label} has no fingerprinted full-text search index.`);
+      }
     }
   }
 
   const feedPath = join(dist, locale.prefix.replace(/^\//, ""), "feed.xml");
   if (!(await exists(feedPath))) errors.push(`Missing RSS feed for ${localeKey}.`);
-  else if (count(await readFile(feedPath, "utf8"), /<item>/g) !== 9) errors.push(`RSS feed ${localeKey} must contain nine items.`);
+  else if (count(await readFile(feedPath, "utf8"), /<item>/g) !== localeDefinitions.length) {
+    errors.push(`RSS feed ${localeKey} must contain ${localeDefinitions.length} items.`);
+  }
+
+  const openSearchPath = join(
+    dist,
+    locale.prefix.replace(/^\//, ""),
+    "opensearch.xml",
+  );
+  if (!(await exists(openSearchPath))) {
+    errors.push(`Missing OpenSearch description for ${localeKey}.`);
+  } else {
+    const openSearch = await readFile(openSearchPath, "utf8");
+    const expectedTemplate = `${new URL(routeFor(localeKey, null), site.url).href}?q={searchTerms}`;
+    if (!openSearch.includes(`template="${expectedTemplate}"`)) {
+      errors.push(`OpenSearch ${localeKey} must target its localized archive.`);
+    }
+    if (!openSearch.includes(`<Language>${locale.lang}</Language>`)) {
+      errors.push(`OpenSearch ${localeKey} has the wrong language.`);
+    }
+  }
 }
 
 const files = await allFiles(dist);
@@ -112,13 +145,20 @@ const rasterFiles = files.filter((file) => [".png", ".jpg", ".jpeg", ".gif", ".w
 if (rasterFiles.length > 0) errors.push(`Raster assets are not allowed: ${rasterFiles.join(", ")}`);
 
 const fingerprintedAssets = files.filter((file) =>
-  /^(?:styles\.[0-9a-f]{12}\.css|client\.[0-9a-f]{12}\.js)$/u.test(basename(file)),
+  /^(?:styles\.[0-9a-f]{12}\.css|client\.[0-9a-f]{12}\.js|search\.[a-z]{2}\.[0-9a-f]{12}\.json)$/u.test(
+    basename(file),
+  ),
 );
-if (fingerprintedAssets.length !== 2) {
-  errors.push(`Expected one fingerprinted stylesheet and one fingerprinted client script, found ${fingerprintedAssets.length}.`);
+const expectedFingerprintedAssets = 2 + localeOrder.length;
+if (fingerprintedAssets.length !== expectedFingerprintedAssets) {
+  errors.push(
+    `Expected ${expectedFingerprintedAssets} fingerprinted CSS, JavaScript and search assets, found ${fingerprintedAssets.length}.`,
+  );
 }
 for (const file of fingerprintedAssets) {
-  const match = basename(file).match(/\.(?<fingerprint>[0-9a-f]{12})\.(?:css|js)$/u);
+  const match = basename(file).match(
+    /\.(?<fingerprint>[0-9a-f]{12})\.(?:css|js|json)$/u,
+  );
   const contents = await readFile(file);
   const actual = createHash("sha256").update(contents).digest("hex").slice(0, 12);
   if (match?.groups?.fingerprint !== actual) {
@@ -127,17 +167,81 @@ for (const file of fingerprintedAssets) {
 }
 
 const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
-if (count(sitemap, /<url>/g) !== 40) errors.push("Sitemap must contain four indexes and thirty-six case-study URLs.");
-if (count(sitemap, /hreflang="x-default"/g) !== 40) errors.push("Every sitemap URL needs an x-default alternate.");
-
-const openSearch = await readFile(join(dist, "opensearch.xml"), "utf8");
-if (!openSearch.includes('template="https://blog.ejupilabs.com/?q={searchTerms}"')) {
-  errors.push("OpenSearch must target the canonical client-side archive search.");
+const canonicalPageCount = localeOrder.length + articleCount;
+if (count(sitemap, /<url>/g) !== canonicalPageCount) {
+  errors.push(`Sitemap must contain ${canonicalPageCount} canonical URLs.`);
+}
+if (count(sitemap, /hreflang="x-default"/g) !== canonicalPageCount) {
+  errors.push("Every sitemap URL needs an x-default alternate.");
 }
 
 const headers = await readFile(join(dist, "_headers"), "utf8");
 for (const header of ["Content-Security-Policy", "Permissions-Policy", "Referrer-Policy", "X-Content-Type-Options"]) {
   if (!headers.includes(header)) errors.push(`Missing security header: ${header}.`);
+}
+if (!headers.includes("connect-src 'self'")) {
+  errors.push("Content Security Policy must permit the same-origin lazy search index.");
+}
+const immutablePolicy = "Cache-Control: public, max-age=31536000, immutable";
+for (const assetPattern of [
+  "/assets/styles.*.css",
+  "/assets/client.*.js",
+  "/assets/search.*.json",
+]) {
+  if (!headers.includes(`${assetPattern}\n  ${immutablePolicy}`)) {
+    errors.push(`Fingerprint pattern ${assetPattern} must use a one-year immutable cache policy.`);
+  }
+}
+if (headers.includes(`/assets/*\n  ${immutablePolicy}`)) {
+  errors.push("Non-fingerprinted brand and font assets must remain revalidatable.");
+}
+
+const catalog = JSON.parse(await readFile(join(dist, "case-studies.json"), "utf8"));
+if (catalog.schemaVersion !== 1 || catalog.origin !== site.url) {
+  errors.push("Machine-readable case-study catalog has the wrong contract metadata.");
+}
+if (JSON.stringify(catalog.locales) !== JSON.stringify(localeOrder)) {
+  errors.push("Machine-readable case-study catalog has the wrong locale list.");
+}
+if (!Array.isArray(catalog.cases) || catalog.cases.length !== caseDefinitions.length) {
+  errors.push(`Machine-readable catalog must contain ${caseDefinitions.length} cases.`);
+} else {
+  for (const definition of caseDefinitions) {
+    const entry = catalog.cases.find(({ slug }) => slug === definition.slug);
+    if (!entry) {
+      errors.push(`Machine-readable catalog is missing ${definition.slug}.`);
+      continue;
+    }
+    if (
+      entry.kind !== definition.kind ||
+      JSON.stringify(entry.availableLocales) !== JSON.stringify(definition.availableLocales)
+    ) {
+      errors.push(`Machine-readable catalog metadata differs for ${definition.slug}.`);
+    }
+    for (const localeKey of definition.availableLocales) {
+      const expectedUrl = new URL(routeFor(localeKey, definition.slug), site.url).href;
+      if (entry.urls?.[localeKey] !== expectedUrl) {
+        errors.push(`Machine-readable catalog has the wrong ${localeKey} URL for ${definition.slug}.`);
+      }
+      if (
+        !entry.translations?.[localeKey]?.title ||
+        !entry.translations?.[localeKey]?.summary ||
+        !entry.translations?.[localeKey]?.category
+      ) {
+        errors.push(`Machine-readable catalog lacks ${localeKey} preview copy for ${definition.slug}.`);
+      }
+    }
+  }
+}
+
+const llms = await readFile(join(dist, "llms.txt"), "utf8");
+if (!llms.includes(`> ${caseDefinitions.length} documented engineering case studies.`)) {
+  errors.push("llms.txt case-study count is not derived from the catalog.");
+}
+for (const definition of caseDefinitions) {
+  if (!llms.includes(new URL(routeFor("en", definition.slug), site.url).href)) {
+    errors.push(`llms.txt is missing ${definition.slug}.`);
+  }
 }
 
 const manifest = JSON.parse(await readFile(join(dist, "site.webmanifest"), "utf8"));
@@ -147,5 +251,7 @@ if (errors.length > 0) {
   console.error(errors.map((error) => `- ${error}`).join("\n"));
   process.exitCode = 1;
 } else {
-  console.log(`Validated ${files.length} files, 40 canonical pages, 4 locales and 9 stable case-study routes.`);
+  console.log(
+    `Validated ${files.length} files, ${canonicalPageCount} canonical pages, ${localeOrder.length} locales and ${caseDefinitions.length} case-study routes.`,
+  );
 }

@@ -13,7 +13,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "npm run build && wrangler dev --local --port 8792",
+    command: "npm run build && node scripts/serve-dist.mjs --port 8792",
     url: "http://127.0.0.1:8792",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

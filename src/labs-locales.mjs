@@ -1,9 +1,11 @@
 import { labsCases } from "./labs-content.mjs";
 
-const localize = (slug, copy) => ({
-  ...(labsCases[slug] ?? (slug === "dig-gopher-explorer" ? labsCases.dig : undefined)),
-  ...copy,
-});
+const localize = (slug, copy) => {
+  if (!labsCases[slug]) {
+    throw new Error(`Unknown Labs case-study slug: ${slug}.`);
+  }
+  return copy;
+};
 
 export const labsLocales = {
   it: {
@@ -16,14 +18,15 @@ export const labsLocales = {
         ["Prodotto", "Utility desktop open source"],
         ["Ruolo", "Prodotto, architettura e implementazione"],
         ["Confine di fiducia", "Dispositivo locale per impostazione predefinita"],
-        ["Stato", "Applicazione funzionante e pipeline di rilascio"],
+        ["Stato", "Release candidate v1.6.0 e pipeline di rilascio firmata"],
       ],
       evidence: {
         title: "Registro delle evidenze",
         intro: "Il repository documenta questi controlli e limiti riproducibili:",
         items: [
-          ["Backend", "1.354 test superati; copertura dei branch dell’81,05% nell’esecuzione documentata per v1.5."],
-          ["Frontend + shell", "330 test frontend in 64 file e 10 test Rust; vengono verificate quattro dimensioni del viewport."],
+          ["Backend", "1.369 test superati nella candidate v1.6.0; una review indipendente ha rieseguito 42 test su portabilità e storage."],
+          ["Frontend + shell", "334 test frontend in 64 file e 17 test della libreria Rust superati, incluso il writer nativo dei backup."],
+          ["Verifica dei backup", "Gli archivi dalla versione 1 alla 4 ricevono un preflight completo e non mutante; la risposta contiene metadati limitati, non il contenuto dell’archivio."],
           ["Fixture di scala", "Una fixture agenda con 10.000 candidature registra un p95 di 68,670 ms rispetto al budget di progetto di 200 ms."],
           ["Limite", "Le ricevute locali non proteggono da un processo che può scrivere direttamente nel database; le importazioni non firmate vengono messe in quarantena."],
         ],
@@ -83,7 +86,7 @@ export const labsLocales = {
       delivery: {
         title: "Come viene verificato il prodotto",
         paragraphs: [
-          "Il repository testa i servizi Python, il comportamento React e l’integrazione desktop Rust. Le migrazioni del database vengono eseguite in cicli di upgrade, downgrade e nuovo upgrade, mentre i flussi per documenti e backup usano dati locali temporanei.",
+          "Il repository testa i servizi Python, il comportamento React e l’integrazione desktop Rust. Le migrazioni del database vengono eseguite in cicli di upgrade, downgrade e nuovo upgrade. I test dei backup ispezionano senza modifiche le versioni 1–4, poi verificano sostituzione, rilevamento della corruzione e rollback su dati locali temporanei.",
           "L’automazione dei rilasci controlla anche licenze delle dipendenze, SBOM, container e policy sulle vulnerabilità ad alta gravità. Le immagini del tour provengono dall’applicazione reale con dati fittizi e il registratore rifiuta errori del browser, risposte API fallite e avvisi visibili.",
         ],
       },
@@ -106,15 +109,16 @@ export const labsLocales = {
         ["Prodotto", "Pipeline ML didattica e laboratorio nel browser"],
         ["Ruolo", "Protocollo ML, implementazione Rust e riprogettazione della sicurezza"],
         ["Dati", "Fixture sintetiche versionate"],
-        ["Stato", "Bundle del modello riproducibile e CLI"],
+        ["Stato", "Bundle v3 riproducibile, audit annidato della selezione e CLI"],
       ],
       evidence: {
         title: "Registro delle evidenze",
-        intro: "L’artefatto v3 verificato espone insieme risultati solidi e debolezze:",
+        intro: "Gli artefatti verificati mostrano insieme il risultato di selezione, il test congelato e i casi deboli:",
         items: [
+          ["Protocollo di selezione", "385 righe di training e sviluppo in 77 famiglie attraversano 11 fold esterni e 5 interni per gruppi, per un totale di 506 modelli addestrati."],
+          ["Risultato di selezione", "L’accuracy out-of-fold è 62,597% e il macro-F1 62,640%; l’intervallo al 95% per famiglia dell’accuracy è 57,143–68,571%."],
           ["Test ID congelato", "Accuratezza dell’82,857% e macro-F1 dell’82,278% su 70 righe sintetiche in inglese."],
-          ["Astensione", "Copertura ID del 62,857%; copertura del test OOD dell’11,11% con soglie congelate di confidenza 0,7 e margine 0,4."],
-          ["Risultato open-set", "L’AUROC OOD è 0,80278, mentre l’FPR al 95% di TPR è 0,7778."],
+          ["Risultato open-set", "La policy congelata copre il 62,857% delle righe ID e l’11,11% delle righe OOD; l’AUROC OOD è 0,80278 e l’FPR al 95% di TPR è 0,7778."],
           ["Debolezza nota", "La fixture di contrasto da 28 righe raggiunge un’accuratezza per coppia del 42,86%; il progetto non nasconde questo limite."],
         ],
       },
@@ -174,13 +178,13 @@ export const labsLocales = {
         title: "Controlli di riproduzione e rilascio",
         paragraphs: [
           "Modello, policy, metriche e piano delle partizioni vivono in un bundle collegato tramite SHA-256. La CLI può ricostruire il bundle, verificare ogni contratto ed eseguire inferenza batch limitata. Una precisione di reporting dichiarata mantiene il bundle v3 identico byte per byte tra i target di rilascio supportati.",
-          "Il codice Rust e quello browser eseguono fixture di parità sullo stesso modello. Audit di robustezza solo aggregati verificano invarianti di formattazione e modifiche tipografiche controllate senza scrivere prompt o predizioni a livello di riga.",
+          "Il codice Rust e quello browser eseguono fixture di parità sullo stesso modello. Un report di selezione separato e vincolato tramite SHA-256 pubblica ogni probabilità out-of-fold, assegnazione ai fold e posizione dei candidati; il browser ricalcola le metriche e si blocca se cambiano byte o aggregati.",
         ],
       },
       result: {
         title: "Cosa dimostra il progetto",
         paragraphs: [
-          "ELIZA Lab dimostra un flusso completo per un piccolo modello: validazione, partizione per gruppi, training, calibrazione, selezione della policy open-set, test congelato, verifica degli artefatti e inferenza locale.",
+          "ELIZA Lab dimostra un flusso completo per un piccolo modello: selezione annidata per gruppi, calibrazione, scelta della policy open-set, test congelato, verifica degli artefatti e inferenza locale.",
           "Non è un terapeuta, un rilevatore di crisi o un modello linguistico di produzione. Il suo valore sta nella possibilità di ispezionare l’esperimento e riprodurre il risultato, invece di fidarsi di una demo opaca.",
         ],
       },
@@ -553,10 +557,11 @@ export const labsLocales = {
       category: "Local-first-Produkt",
       title: "Ein privater Karriere-Arbeitsbereich, der auf Belegen statt auf generierten Behauptungen beruht",
       summary: "CareerOS Local verbindet eine Tauri-Desktop-Anwendung, einen FastAPI-Sidecar, einen versionierten SQLite-Tresor und eine verpflichtende lokale LLM-Laufzeit. So bleiben Quelldaten, Dokumente und Analysen auf dem Gerät des Benutzers.",
-      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "Funktionsfähige Anwendung und Release-Pipeline"]],
+      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "v1.6.0-Release-Kandidat und signierte Release-Pipeline"]],
       evidence: { title: "Evidenzprotokoll", intro: "Das aktuelle Repository dokumentiert diese reproduzierbaren Prüfungen und Grenzen:", items: [
-        ["Backend", "1.354 bestandene Tests; 81,05% Branch-Coverage im dokumentierten v1.5-Nachweislauf."],
-        ["Frontend + Shell", "330 Frontend-Tests in 64 Dateien und 10 Rust-Tests; vier Viewport-Größen werden geprüft."],
+        ["Backend", "1.369 Tests bestehen im v1.6.0-Kandidaten; eine unabhängige Prüfung wiederholte 42 Portabilitäts- und Speichertests."],
+        ["Frontend + Shell", "334 Frontend-Tests in 64 Dateien und 17 Rust-Bibliothekstests bestehen, einschließlich des nativen Backup-Writers."],
+        ["Backup-Prüfung", "Archive der Versionen 1–4 durchlaufen einen vollständigen, nicht verändernden Preflight; die Antwort enthält begrenzte Metadaten statt Archivinhalten."],
         ["Skalierungs-Fixture", "Eine Agenda-Fixture mit 10.000 Bewerbungen erfasst einen p95 von 68,670 ms bei einem Projektbudget von 200 ms."],
         ["Grenze", "Lokale Belege schützen nicht vor einem Prozess, der direkt in die Datenbank schreiben kann; unsignierte Importe werden unter Quarantäne gestellt."],
       ]},
@@ -581,7 +586,7 @@ export const labsLocales = {
         { title: "Bewerbungen als Belege paketieren", body: "Versionierte Lebensläufe, Antworten, Anforderungszuordnungen und geprüfte Dateien lassen sich mit einem kanonischen SHA-256-Manifest exportieren.", tradeoff: "Ein Dossier ist bewusster aufgebaut als ein Ordner mit losen Dateien; dafür ist es reproduzierbar und prüfbar." },
       ]},
       delivery: { title: "Wie das Produkt verifiziert wird", paragraphs: [
-        "Das Repository testet Python-Dienste, React-Verhalten und die Rust-Desktop-Integration. Datenbankmigrationen durchlaufen Upgrade-, Downgrade- und erneute Upgrade-Zyklen; Dokument- und Backup-Abläufe arbeiten mit kurzlebigen lokalen Daten.",
+        "Das Repository testet Python-Dienste, React-Verhalten und die Rust-Desktop-Integration. Datenbankmigrationen durchlaufen Upgrade-, Downgrade- und erneute Upgrade-Zyklen. Backup-Tests prüfen die Versionen 1–4 ohne Änderungen und testen danach Austausch, Korruptionserkennung und verifizierten Rollback mit kurzlebigen lokalen Daten.",
         "Die Release-Automatisierung prüft außerdem Abhängigkeitslizenzen, SBOMs, Container und die Richtlinie für schwerwiegende Schwachstellen. Produkt-Touren werden in der echten Anwendung mit fiktiven Daten aufgenommen; der Recorder verwirft Browserfehler, fehlgeschlagene API-Antworten und sichtbare Warnungen.",
       ]},
       result: { title: "Was heute vorhanden ist", paragraphs: [
@@ -594,11 +599,12 @@ export const labsLocales = {
       category: "Machine Learning",
       title: "Aus einem riskanten Chatbot-Prototyp wird ein prüfbares Open-Set-ML-Experiment",
       summary: "ELIZA Lab ist eine Rust-Pipeline zum lokalen Trainieren, Kalibrieren und Untersuchen eines Intent-Klassifikators. Sie ersetzt die irreführende Idee eines Therapie-Bots durch ein reproduzierbares, nicht klinisches Experiment, das sich enthalten kann.",
-      facts: [["Produkt", "Lernorientierte ML-Pipeline und Browser-Labor"], ["Rolle", "ML-Protokoll, Rust-Implementierung und Sicherheitsneugestaltung"], ["Daten", "Versionierte synthetische Fixtures"], ["Status", "Reproduzierbares Modell-Bundle und CLI"]],
-      evidence: { title: "Evidenzprotokoll", intro: "Das geprüfte v3-Artefakt zeigt Stärken und schwache Ergebnisse gleichermaßen:", items: [
+      facts: [["Produkt", "Lernorientierte ML-Pipeline und Browser-Labor"], ["Rolle", "ML-Protokoll, Rust-Implementierung und Sicherheitsneugestaltung"], ["Daten", "Versionierte synthetische Fixtures"], ["Status", "Reproduzierbares v3-Bundle, verschachteltes Auswahl-Audit und CLI"]],
+      evidence: { title: "Evidenzprotokoll", intro: "Die geprüften Artefakte zeigen Auswahlresultat, eingefrorenen Test und Schwachstellen gemeinsam:", items: [
+        ["Auswahlprotokoll", "385 Trainings- und Entwicklungszeilen in 77 Familien durchlaufen 11 äußere und 5 innere Gruppen-Folds; dabei werden 506 Modelle trainiert."],
+        ["Auswahlergebnis", "Die Out-of-Fold-Accuracy beträgt 62,597% und der Macro-F1 62,640%; das familiengeclusterte 95%-Intervall der Accuracy reicht von 57,143 bis 68,571%."],
         ["Eingefrorener ID-Test", "82,857% Accuracy und 82,278% Macro-F1 auf 70 synthetischen englischen Zeilen."],
-        ["Enthaltung", "62,857% ID-Abdeckung; 11,11% OOD-Testabdeckung bei eingefrorenen Schwellen von 0,7 für Konfidenz und 0,4 für Margin."],
-        ["Open-Set-Ergebnis", "Die OOD AUROC beträgt 0,80278, während die FPR bei 95% TPR 0,7778 beträgt."],
+        ["Open-Set-Ergebnis", "Die eingefrorene Policy deckt 62,857% der ID- und 11,11% der OOD-Zeilen ab; die OOD AUROC beträgt 0,80278 und die FPR bei 95% TPR 0,7778."],
         ["Bekannte Schwäche", "Die Kontrast-Fixture mit 28 Zeilen erreicht 42,86% Paar-Accuracy; das Projekt verschweigt dieses Scheitern nicht."],
       ]},
       starting: { title: "Das Problem der ursprünglichen Idee", paragraphs: [
@@ -623,10 +629,10 @@ export const labsLocales = {
       ]},
       delivery: { title: "Reproduktions- und Release-Prüfungen", paragraphs: [
         "Modell, Richtlinie, Metriken und Teilungsplan liegen in einem durch SHA-256 verknüpften Bundle. Die CLI kann es neu aufbauen, alle Verträge prüfen und begrenzte Batch-Inferenz ausführen. Eine festgelegte Berichtspräzision hält das v3-Bundle auf unterstützten Release-Zielen bytegleich.",
-        "Rust- und Browser-Code führen Paritäts-Fixtures gegen dasselbe Modell aus. Rein aggregierte Robustheits-Audits prüfen Formatierungsinvarianten und kontrollierte typografische Änderungen, ohne Prompts oder zeilenbezogene Vorhersagen zu schreiben.",
+        "Rust- und Browser-Code führen Paritäts-Fixtures gegen dasselbe Modell aus. Ein separater, per SHA-256 gebundener Auswahlbericht veröffentlicht jede Out-of-Fold-Wahrscheinlichkeit, Fold-Zuordnung und Kandidatenrangfolge; der Browser berechnet die Metriken neu und schließt bei veränderten Bytes oder Aggregaten.",
       ]},
       result: { title: "Was das Projekt zeigt", paragraphs: [
-        "ELIZA Lab zeigt einen vollständigen Ablauf für ein kleines Modell: Validierung, gruppierte Teilung, Training, Kalibrierung, Open-Set-Richtlinienwahl, eingefrorene Tests, Artefaktprüfung und lokale Inferenz.",
+        "ELIZA Lab zeigt einen vollständigen Ablauf für ein kleines Modell: verschachtelte gruppenbewusste Auswahl, Kalibrierung, Open-Set-Richtlinienwahl, eingefrorene Tests, Artefaktprüfung und lokale Inferenz.",
         "Es ist weder Therapeut noch Krisenerkennung oder produktives Sprachmodell. Sein Wert liegt darin, dass Lernende das Experiment prüfen und das Ergebnis reproduzieren können, statt einer Black-Box-Demo zu vertrauen.",
       ]},
       scope: "Alle genannten Datensatzgrößen und Protokolldetails stammen aus der versionierten Repository-Dokumentation. Der synthetische Korpus belegt weder klinische Validität noch breite Sprachabdeckung oder Produktionsreife.",
@@ -801,10 +807,11 @@ export const labsLocales = {
       category: "Produit local-first",
       title: "Construire un espace de travail privé pour sa carrière, fondé sur des preuves plutôt que sur des affirmations générées",
       summary: "CareerOS Local associe une application de bureau Tauri, un sidecar FastAPI, un coffre SQLite versionné et un runtime LLM local obligatoire. Les faits sources, les documents et les analyses restent ainsi sur l’appareil de l’utilisateur.",
-      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "Application fonctionnelle et pipeline de publication"]],
+      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "Release candidate v1.6.0 et pipeline de publication signé"]],
       evidence: { title: "Registre des preuves", intro: "Le dépôt actuel consigne ces vérifications et limites reproductibles :", items: [
-        ["Backend", "1 354 tests réussis ; couverture des branches de 81,05 % lors de l’exécution documentée pour v1.5."],
-        ["Frontend + shell", "330 tests frontend répartis dans 64 fichiers et 10 tests Rust ; quatre tailles de viewport sont vérifiées."],
+        ["Backend", "1 369 tests réussis sur la candidate v1.6.0 ; une revue indépendante a rejoué 42 tests de portabilité et de stockage."],
+        ["Frontend + shell", "334 tests frontend dans 64 fichiers et 17 tests de bibliothèque Rust réussis, dont le writer natif de sauvegarde."],
+        ["Assurance des sauvegardes", "Les archives des versions 1 à 4 subissent un preflight complet sans mutation ; la réponse contient des métadonnées bornées, pas le contenu de l’archive."],
         ["Fixture à grande échelle", "Une fixture d’agenda de 10 000 candidatures mesure un p95 de 68,670 ms face au budget projet de 200 ms."],
         ["Limite", "Les reçus locaux ne protègent pas contre un processus capable d’écrire directement dans la base ; les imports non signés sont mis en quarantaine."],
       ]},
@@ -829,7 +836,7 @@ export const labsLocales = {
         { title: "Regrouper les candidatures comme preuves", body: "CV versionnés, réponses, correspondances d’exigences et fichiers vérifiés s’exportent avec un manifeste SHA-256 canonique.", tradeoff: "Un dossier demande plus de rigueur qu’un répertoire de fichiers épars ; il est aussi reproductible et vérifiable." },
       ]},
       delivery: { title: "Comment le produit est vérifié", paragraphs: [
-        "Le dépôt teste les services Python, le comportement React et l’intégration de bureau Rust. Les migrations suivent des cycles upgrade, downgrade puis upgrade, tandis que les workflows de documents et de sauvegardes utilisent des données locales temporaires.",
+        "Le dépôt teste les services Python, le comportement React et l’intégration de bureau Rust. Les migrations suivent des cycles upgrade, downgrade puis upgrade. Les tests inspectent les sauvegardes v1 à v4 sans mutation, puis vérifient remplacement, détection de corruption et rollback contrôlé sur des données locales temporaires.",
         "L’automatisation contrôle aussi les licences, les SBOM, les conteneurs et la politique de vulnérabilités critiques. Les captures du parcours produit proviennent de l’application réelle avec des données fictives ; l’enregistreur refuse les erreurs du navigateur, les réponses API en échec et les alertes visibles.",
       ]},
       result: { title: "Ce qui existe aujourd’hui", paragraphs: [
@@ -842,11 +849,12 @@ export const labsLocales = {
       category: "Machine learning",
       title: "Transformer un prototype de chatbot risqué en expérience ML open-set vérifiable",
       summary: "ELIZA Lab est un pipeline Rust pour entraîner, calibrer et examiner localement un classificateur d’intentions. Il remplace la prémisse trompeuse d’un bot thérapeutique par une expérience reproductible, non clinique et capable de s’abstenir.",
-      facts: [["Produit", "Pipeline ML pédagogique et laboratoire web"], ["Rôle", "Protocole ML, implémentation Rust et refonte de la sécurité"], ["Données", "Fixtures synthétiques versionnées"], ["État", "Bundle de modèle reproductible et CLI"]],
-      evidence: { title: "Registre des preuves", intro: "L’artefact v3 vérifié présente ses forces comme ses mauvais résultats :", items: [
+      facts: [["Produit", "Pipeline ML pédagogique et laboratoire web"], ["Rôle", "Protocole ML, implémentation Rust et refonte de la sécurité"], ["Données", "Fixtures synthétiques versionnées"], ["État", "Bundle v3 reproductible, audit de sélection imbriqué et CLI"]],
+      evidence: { title: "Registre des preuves", intro: "Les artefacts vérifiés présentent ensemble le résultat de sélection, le test gelé et les cas faibles :", items: [
+        ["Protocole de sélection", "385 lignes d’entraînement et de développement réparties en 77 familles passent par 11 folds externes et 5 internes groupés, soit 506 modèles ajustés."],
+        ["Résultat de sélection", "L’exactitude out-of-fold est de 62,597 % et le macro-F1 de 62,640 % ; l’intervalle à 95 % par famille pour l’exactitude va de 57,143 à 68,571 %."],
         ["Test ID gelé", "Exactitude de 82,857 % et macro-F1 de 82,278 % sur 70 lignes synthétiques en anglais."],
-        ["Abstention", "Couverture ID de 62,857 % ; couverture du test OOD de 11,11 % avec des seuils gelés de confiance 0.7 et de marge 0.4."],
-        ["Résultat open-set", "L’AUROC OOD est de 0.80278, tandis que le FPR à 95 % de TPR est de 0.7778."],
+        ["Résultat open-set", "La politique gelée couvre 62,857 % des lignes ID et 11,11 % des lignes OOD ; l’AUROC OOD est de 0.80278 et le FPR à 95 % de TPR de 0.7778."],
         ["Faiblesse connue", "La fixture de contraste de 28 lignes atteint 42,86 % d’exactitude par paire ; le projet ne masque pas cet échec."],
       ]},
       starting: { title: "Le problème de la prémisse initiale", paragraphs: [
@@ -871,10 +879,10 @@ export const labsLocales = {
       ]},
       delivery: { title: "Vérifications de reproduction et de publication", paragraphs: [
         "Modèle, politique, métriques et plan de partition résident dans un bundle lié par SHA-256. La CLI peut le reconstruire, vérifier les contrats et exécuter une inférence batch bornée. Une précision de reporting déclarée maintient le bundle v3 identique octet pour octet sur les cibles prises en charge.",
-        "Rust et le navigateur exécutent des fixtures de parité sur le même modèle. Des audits agrégés testent les invariants de formatage et des changements typographiques contrôlés sans écrire les prompts ni les prédictions ligne par ligne.",
+        "Rust et le navigateur exécutent des fixtures de parité sur le même modèle. Un rapport de sélection séparé, lié par SHA-256, publie chaque probabilité out-of-fold, affectation de fold et rang de candidat ; le navigateur recalcule ses métriques et échoue si les octets ou les agrégats changent.",
       ]},
       result: { title: "Ce que démontre le projet", paragraphs: [
-        "ELIZA Lab démontre un workflow complet pour petit modèle : validation, partition groupée, entraînement, calibration, politique open-set, test gelé, vérification d’artefact et inférence locale.",
+        "ELIZA Lab démontre un workflow complet pour petit modèle : sélection imbriquée par groupes, calibration, choix de politique open-set, test gelé, vérification d’artefact et inférence locale.",
         "Ce n’est ni un thérapeute, ni un détecteur de crise, ni un modèle de langage de production. Sa valeur tient à une expérience inspectable et reproductible plutôt qu’à une démo opaque.",
       ]},
       scope: "Toutes les tailles de dataset et tous les détails du protocole proviennent de la documentation versionnée. Le corpus synthétique n’établit ni validité clinique, ni large couverture linguistique, ni aptitude à la production.",

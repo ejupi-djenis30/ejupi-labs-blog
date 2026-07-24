@@ -1600,9 +1600,7 @@ li {
   }
 
   .architecture-frame {
-    margin-inline: -4vw;
-    border-right: 0;
-    border-left: 0;
+    margin-inline: 0;
   }
 }
 
