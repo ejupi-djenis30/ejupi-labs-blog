@@ -62,8 +62,11 @@ export const caseDefinitions = [
     categoryKey: "local-first-product",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-24",
+    updated: "2026-07-25",
     projectUrl: "https://ejupi-djenis30.github.io/careeros-local/",
+    sourceRef: "v1.6.0",
+    sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/commit/cd4ae45ba5580a4b4bbea94755a8db3f3e62533e",
+    verifiedAt: "2026-07-25",
     stack: ["Tauri 2", "React 19", "FastAPI", "SQLite", "llama.cpp"],
   },
   {
@@ -74,8 +77,11 @@ export const caseDefinitions = [
     categoryKey: "machine-learning",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-24",
+    updated: "2026-07-25",
     projectUrl: "https://ejupi-djenis30.github.io/PsychologistRustBot/",
+    sourceRef: "v1.5.0",
+    sourceUrl: "https://github.com/ejupi-djenis30/PsychologistRustBot/commit/79f5a5722289ce2c2c0801995ae2c91b48d9e1d2",
+    verifiedAt: "2026-07-25",
     stack: ["Rust", "TF-IDF", "Logistic regression", "Open-set ML"],
   },
   {
@@ -86,8 +92,11 @@ export const caseDefinitions = [
     categoryKey: "agent-systems",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-24",
+    updated: "2026-07-25",
     projectUrl: "https://ejupi-djenis30.github.io/DjenisAiAgent/",
+    sourceRef: "v0.2.2",
+    sourceUrl: "https://github.com/ejupi-djenis30/DjenisAiAgent/commit/afe50077755b4d8a82ef9ce1b4dd92587ab0dec1",
+    verifiedAt: "2026-07-25",
     stack: ["Python", "Gemini", "Windows UIA", "Selenium", "FastAPI"],
   },
   {
@@ -98,8 +107,11 @@ export const caseDefinitions = [
     categoryKey: "protocol-tooling",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-24",
+    updated: "2026-07-25",
     projectUrl: "https://ejupi-djenis30.github.io/Dig/",
+    sourceRef: "v2.1.4",
+    sourceUrl: "https://github.com/ejupi-djenis30/Dig/commit/eefc65c319c2fdb40e80827ba51b2acd20bc41bf",
+    verifiedAt: "2026-07-25",
     stack: ["Node.js", "TCP", "Gopher", "PWA"],
   },
   {
@@ -110,8 +122,11 @@ export const caseDefinitions = [
     categoryKey: "computational-mathematics",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-24",
+    updated: "2026-07-25",
     projectUrl: "https://ejupi-djenis30.github.io/IntegraDraw/",
+    sourceRef: "v1.1.2",
+    sourceUrl: "https://github.com/ejupi-djenis30/IntegraDraw/commit/fa7db6675f4b04d8c822fb464ca0d4b130488316",
+    verifiedAt: "2026-07-25",
     stack: ["Java 17", "TypeScript", "Canvas", "Numerical methods"],
   },
   {
@@ -122,11 +137,50 @@ export const caseDefinitions = [
     categoryKey: "operations-software",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-24",
+    updated: "2026-07-25",
     projectUrl: "https://ejupi-djenis30.github.io/vector-placement-operations/",
+    sourceRef: "v2.0.1",
+    sourceUrl: "https://github.com/ejupi-djenis30/vector-placement-operations/commit/aa25f7a15b940d07b9b0488591187500201c6266",
+    verifiedAt: "2026-07-25",
     stack: ["JavaScript", "Local storage", "Playwright", "Static web"],
   },
 ];
+
+export function relatedCaseDefinitions(
+  currentDefinition,
+  definitions = caseDefinitions,
+  { localeKey, limit = 2 } = {},
+) {
+  const currentNumber = Number(currentDefinition.number);
+  const currentStack = new Set(currentDefinition.stack.map((item) => item.toLowerCase()));
+
+  return definitions
+    .filter(
+      (definition) =>
+        definition.slug !== currentDefinition.slug &&
+        (!localeKey || definition.availableLocales.includes(localeKey)),
+    )
+    .map((definition) => {
+      const sharedStack = definition.stack.filter((item) =>
+        currentStack.has(item.toLowerCase()),
+      ).length;
+      const score =
+        (definition.categoryKey === currentDefinition.categoryKey ? 6 : 0) +
+        sharedStack * 2 +
+        (definition.kind === currentDefinition.kind ? 1 : 0);
+      return { definition, score };
+    })
+    .sort(
+      (first, second) =>
+        second.score - first.score ||
+        Math.abs(Number(first.definition.number) - currentNumber) -
+          Math.abs(Number(second.definition.number) - currentNumber) ||
+        first.definition.number.localeCompare(second.definition.number) ||
+        first.definition.slug.localeCompare(second.definition.slug),
+    )
+    .slice(0, limit)
+    .map(({ definition }) => definition);
+}
 
 export const protectedLegacySlugs = Object.freeze([
   "ai-workflow-cloud-migration",

@@ -1214,6 +1214,24 @@ li {
   line-height: 1.6;
 }
 
+.evidence-citation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  align-items: baseline;
+  margin: 1.25rem 0 0;
+  color: var(--muted) !important;
+  font-family: var(--mono);
+  font-size: 0.72rem !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.evidence-citation a {
+  color: var(--ink);
+  text-underline-offset: 0.22em;
+}
+
 .project-action {
   display: inline-flex;
   min-height: 56px;
@@ -1256,6 +1274,84 @@ li {
 .article-next a {
   font-size: clamp(2rem, 4vw, 4rem);
   text-decoration: none;
+}
+
+.article-related {
+  grid-template-columns: minmax(240px, 4fr) minmax(0, 8fr);
+  align-items: start;
+}
+
+.article-related__heading h2 {
+  max-width: 12ch;
+  font-size: clamp(2.4rem, 4vw, 4.5rem);
+}
+
+.article-related__list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+  list-style: none;
+}
+
+.article-related__list li {
+  border-bottom: 1px solid var(--ink);
+}
+
+.article-related__list a {
+  display: grid;
+  grid-template-columns: minmax(8rem, auto) minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.25rem 0;
+  font-size: inherit;
+}
+
+.article-related__list strong {
+  font-size: clamp(1.25rem, 2vw, 2rem);
+  font-weight: 560;
+  overflow-wrap: anywhere;
+}
+
+.article-related__list a > span:last-child {
+  color: var(--oxide);
+  font-size: 1.6rem;
+  transition: transform 180ms ease;
+}
+
+.article-related__list a:hover > span:last-child {
+  transform: translate(0.2rem, -0.2rem);
+}
+
+.methodology-hero {
+  padding-block: clamp(5rem, 10vw, 10rem);
+  border-bottom: 1px solid var(--ink);
+}
+
+.methodology-hero h1 {
+  max-width: 12ch;
+  margin: clamp(3rem, 7vw, 6rem) 0 2rem;
+  font-size: clamp(3.8rem, 8vw, 9rem);
+}
+
+.methodology-hero p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+  line-height: 1.5;
+}
+
+.methodology-body {
+  padding-block: clamp(5rem, 9vw, 9rem);
+}
+
+.methodology-body .story-section,
+.methodology-contact {
+  margin-left: clamp(0rem, 16vw, 16rem);
+}
+
+.methodology-contact {
+  margin-bottom: 0;
 }
 
 .not-found {
@@ -1610,6 +1706,19 @@ li {
   .evidence-ledger > div {
     grid-template-columns: 1fr;
     gap: 0.5rem;
+  }
+
+  .article-related__list a {
+    grid-template-columns: 1fr auto;
+  }
+
+  .article-related__list .section-label {
+    grid-column: 1 / -1;
+  }
+
+  .methodology-body .story-section,
+  .methodology-contact {
+    margin-left: 0;
   }
 
   .article-byline,

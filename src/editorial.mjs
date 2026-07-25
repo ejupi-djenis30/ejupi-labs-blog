@@ -17,6 +17,10 @@ export const editorialUi = {
     emptyTitle: "No case study matches those filters.",
     emptyBody: "Try a broader phrase, another collection or every topic.",
     evidence: "Evidence ledger",
+    verifiedSource: "Verified source",
+    verifiedOn: "Verified on",
+    related: "Related case studies",
+    methodology: "Methodology",
     openProject: "Open the working project",
     updated: "Updated",
     bylineBy: "By",
@@ -49,6 +53,10 @@ export const editorialUi = {
     emptyTitle: "Nessun case study corrisponde ai filtri.",
     emptyBody: "Prova una ricerca più ampia, un’altra raccolta o tutti gli argomenti.",
     evidence: "Registro delle evidenze",
+    verifiedSource: "Fonte verificata",
+    verifiedOn: "Verificata il",
+    related: "Case study correlati",
+    methodology: "Metodologia",
     openProject: "Apri il progetto funzionante",
     updated: "Aggiornato",
     bylineBy: "Di",
@@ -81,6 +89,10 @@ export const editorialUi = {
     emptyTitle: "Keine Fallstudie entspricht diesen Filtern.",
     emptyBody: "Versuchen Sie einen breiteren Begriff, eine andere Sammlung oder alle Themen.",
     evidence: "Evidenzprotokoll",
+    verifiedSource: "Geprüfte Quelle",
+    verifiedOn: "Geprüft am",
+    related: "Ähnliche Fallstudien",
+    methodology: "Methodik",
     openProject: "Funktionierendes Projekt öffnen",
     updated: "Aktualisiert",
     bylineBy: "Von",
@@ -113,6 +125,10 @@ export const editorialUi = {
     emptyTitle: "Aucune étude de cas ne correspond à ces filtres.",
     emptyBody: "Essayez une recherche plus large, une autre collection ou tous les thèmes.",
     evidence: "Registre des preuves",
+    verifiedSource: "Source vérifiée",
+    verifiedOn: "Vérifiée le",
+    related: "Études de cas associées",
+    methodology: "Méthodologie",
     openProject: "Ouvrir le projet fonctionnel",
     updated: "Mis à jour",
     bylineBy: "Par",
@@ -128,3 +144,138 @@ export const editorialUi = {
     processStateReturnLabel: "L’état du processus revient à la vue opérateur",
   },
 };
+
+export const methodology = Object.freeze({
+  published: "2026-07-25",
+  updated: "2026-07-25",
+  copy: {
+    en: {
+      eyebrow: "Editorial methodology",
+      title: "How I build this archive",
+      description: "The evidence, anonymisation and correction rules behind the Ejupi Labs case-study archive.",
+      intro: "Each article separates what can be checked from what must remain confidential. This page explains where I draw that line.",
+      sections: [
+        {
+          id: "labs-evidence",
+          title: "Labs evidence",
+          paragraphs: [
+            "Every Labs case study points to a public, immutable GitHub commit. Before publication, I check version references, test results and implementation details against that exact snapshot.",
+            "The working product page remains the primary project link. The evidence ledger records what I verified and where each claim stops.",
+          ],
+        },
+        {
+          id: "professional-anonymisation",
+          title: "Professional work",
+          paragraphs: [
+            "In the professional case studies, I describe engineering work I delivered in employment roles. I withhold company and client names, commercial terms, private repositories and identifying operational data.",
+            "I keep the technical sequence, decisions and constraints faithful. I leave out metrics or outcomes that I cannot support without exposing confidential information.",
+          ],
+        },
+        {
+          id: "corrections",
+          title: "Corrections",
+          paragraphs: [
+            "If a factual detail is wrong or no longer current, email info@ejupilabs.com. I review the source, correct the article and update its verification date.",
+          ],
+        },
+      ],
+      contactLabel: "Report a correction",
+    },
+    it: {
+      eyebrow: "Metodologia editoriale",
+      title: "Come costruisco questo archivio",
+      description: "Le regole su evidenze, anonimizzazione e correzioni dietro l’archivio dei case study di Ejupi Labs.",
+      intro: "Ogni articolo separa ciò che può essere verificato da ciò che deve restare confidenziale. Qui spiego dove traccio questo confine.",
+      sections: [
+        {
+          id: "labs-evidence",
+          title: "Evidenze dei progetti Labs",
+          paragraphs: [
+            "Ogni case study Labs rimanda a un commit GitHub pubblico e immutabile. Prima della pubblicazione verifico versioni, risultati dei test e dettagli implementativi su quello snapshot preciso.",
+            "La pagina del prodotto funzionante resta il link principale del progetto. Il registro delle evidenze indica cosa ho verificato e dove si ferma ogni affermazione.",
+          ],
+        },
+        {
+          id: "professional-anonymisation",
+          title: "Lavoro professionale",
+          paragraphs: [
+            "Nei case study professionali descrivo attività di ingegneria svolte in ruoli dipendenti. Ometto nomi di aziende e clienti, condizioni commerciali, repository privati e dati operativi identificativi.",
+            "Mantengo fedeli la sequenza tecnica, le decisioni e i vincoli. Escludo metriche o risultati che non potrei documentare senza rivelare informazioni confidenziali.",
+          ],
+        },
+        {
+          id: "corrections",
+          title: "Correzioni",
+          paragraphs: [
+            "Se un dettaglio è errato o non è più attuale, scrivi a info@ejupilabs.com. Verifico la fonte, correggo l’articolo e aggiorno la data di verifica.",
+          ],
+        },
+      ],
+      contactLabel: "Segnala una correzione",
+    },
+    de: {
+      eyebrow: "Redaktionelle Methodik",
+      title: "Wie ich dieses Archiv aufbaue",
+      description: "Die Regeln für Nachweise, Anonymisierung und Korrekturen im Fallstudien-Archiv von Ejupi Labs.",
+      intro: "Jeder Beitrag trennt überprüfbare Angaben von Informationen, die vertraulich bleiben müssen. Hier erkläre ich, wo ich diese Grenze ziehe.",
+      sections: [
+        {
+          id: "labs-evidence",
+          title: "Nachweise für Labs-Projekte",
+          paragraphs: [
+            "Jede Labs-Fallstudie verweist auf einen öffentlichen, unveränderlichen GitHub-Commit. Vor der Veröffentlichung prüfe ich Versionsangaben, Testergebnisse und Implementierungsdetails gegen genau diesen Stand.",
+            "Die funktionierende Produktseite bleibt der primäre Projektlink. Das Evidenzprotokoll zeigt, was ich geprüft habe und wo die jeweilige Aussage endet.",
+          ],
+        },
+        {
+          id: "professional-anonymisation",
+          title: "Berufliche Arbeit",
+          paragraphs: [
+            "In den beruflichen Fallstudien beschreibe ich Entwicklungsarbeit aus meinen Anstellungsverhältnissen. Unternehmens- und Kundennamen, Konditionen, private Repositories und identifizierende Betriebsdaten lasse ich weg.",
+            "Technischen Ablauf, Entscheidungen und Einschränkungen gebe ich sachlich korrekt wieder. Kennzahlen oder Ergebnisse, die sich nur durch vertrauliche Angaben belegen ließen, veröffentliche ich nicht.",
+          ],
+        },
+        {
+          id: "corrections",
+          title: "Korrekturen",
+          paragraphs: [
+            "Wenn eine Angabe falsch oder nicht mehr aktuell ist, schreiben Sie an info@ejupilabs.com. Ich prüfe die Quelle, korrigiere den Beitrag und aktualisiere das Prüfdatum.",
+          ],
+        },
+      ],
+      contactLabel: "Korrektur melden",
+    },
+    fr: {
+      eyebrow: "Méthodologie éditoriale",
+      title: "Comment je construis ces archives",
+      description: "Les règles de preuve, d’anonymisation et de correction des études de cas d’Ejupi Labs.",
+      intro: "Chaque article sépare ce qui peut être vérifié de ce qui doit rester confidentiel. Cette page explique où je place cette limite.",
+      sections: [
+        {
+          id: "labs-evidence",
+          title: "Preuves des projets Labs",
+          paragraphs: [
+            "Chaque étude de cas Labs renvoie vers un commit GitHub public et immuable. Avant publication, je vérifie les versions, les résultats de tests et les détails d’implémentation sur cet instantané précis.",
+            "La page du produit fonctionnel reste le lien principal du projet. Le registre des preuves indique ce que j’ai vérifié et où s’arrête chaque affirmation.",
+          ],
+        },
+        {
+          id: "professional-anonymisation",
+          title: "Travail professionnel",
+          paragraphs: [
+            "Dans les études de cas professionnelles, je décris le travail d’ingénierie réalisé dans le cadre de mes emplois. Je retire les noms d’entreprises et de clients, les conditions commerciales, les dépôts privés et les données d’exploitation identifiantes.",
+            "Je restitue fidèlement la séquence technique, les décisions et les contraintes. J’écarte les métriques ou résultats que je ne pourrais pas étayer sans révéler d’informations confidentielles.",
+          ],
+        },
+        {
+          id: "corrections",
+          title: "Corrections",
+          paragraphs: [
+            "Si un détail est erroné ou n’est plus à jour, écrivez à info@ejupilabs.com. Je vérifie la source, corrige l’article et actualise sa date de vérification.",
+          ],
+        },
+      ],
+      contactLabel: "Signaler une correction",
+    },
+  },
+});

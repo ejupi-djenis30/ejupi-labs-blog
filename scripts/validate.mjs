@@ -6,10 +6,11 @@ import {
   localeOrder,
   locales,
   protectedLegacySlugs,
+  relatedCaseDefinitions,
   site,
 } from "../src/content.mjs";
 import { assertProtectedLegacySlugs } from "../src/content-contract.mjs";
-import { editorialUi } from "../src/editorial.mjs";
+import { editorialUi, methodology } from "../src/editorial.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = join(root, "dist");
@@ -24,6 +25,10 @@ const articleCount = caseDefinitions.reduce(
 function routeFor(localeKey, slug) {
   const prefix = locales[localeKey].prefix;
   return slug ? `${prefix}/case-studies/${slug}/` : `${prefix}/` || "/";
+}
+
+function methodologyRoute(localeKey) {
+  return `${locales[localeKey].prefix}/methodology/`;
 }
 
 function localizedExternalRoute(origin, localeKey, fragment = "") {
@@ -100,6 +105,7 @@ for (const localeKey of localeOrder) {
     if (!html.includes('<link rel="manifest" href="/site.webmanifest" />')) errors.push(`${label} is missing the web manifest link.`);
     if (!html.includes(`href="${expectedStudioRoute}"`)) errors.push(`${label} has the wrong localized studio URL.`);
     if (!html.includes(`href="${expectedContactRoute}"`)) errors.push(`${label} has the wrong localized contact URL.`);
+    if (!html.includes(`href="${methodologyRoute(localeKey)}"`)) errors.push(`${label} is missing its localized methodology link.`);
     if (count(html, /<meta name="twitter:title" content="[^"]+" \/>/g) !== 1) errors.push(`${label} must contain one Twitter title.`);
     if (count(html, /<meta name="twitter:description" content="[^"]+" \/>/g) !== 1) errors.push(`${label} must contain one Twitter description.`);
     const definition = slug
@@ -131,6 +137,24 @@ for (const localeKey of localeOrder) {
       if (!html.includes(locales[localeKey].ui.sourceNote)) errors.push(`${label} is missing its evidence boundary.`);
       if (definition?.kind === "labs" && !html.includes("evidence-ledger")) errors.push(`${label} is missing its evidence ledger.`);
       if (definition?.kind === "labs" && !html.includes(definition.projectUrl)) errors.push(`${label} is missing its working product link.`);
+      if (definition?.kind === "labs") {
+        if (!html.includes('class="evidence-citation"')) errors.push(`${label} is missing its source citation.`);
+        if (!html.includes(`href="${definition.sourceUrl}"`)) errors.push(`${label} has the wrong immutable source URL.`);
+        if (!html.includes(definition.sourceRef)) errors.push(`${label} is missing its source reference.`);
+        if (!html.includes(`<time datetime="${definition.verifiedAt}">`)) errors.push(`${label} is missing its evidence verification date.`);
+      } else if (html.includes("evidence-citation")) {
+        errors.push(`${label} must not expose a Labs source citation.`);
+      }
+      const relatedSlugs = [...html.matchAll(/data-related-slug="(?<slug>[^"]+)"/gu)].map(
+        (match) => match.groups.slug,
+      );
+      const expectedRelatedSlugs = relatedCaseDefinitions(definition, caseDefinitions, {
+        localeKey,
+        limit: 2,
+      }).map(({ slug: relatedSlug }) => relatedSlug);
+      if (JSON.stringify(relatedSlugs) !== JSON.stringify(expectedRelatedSlugs)) {
+        errors.push(`${label} has the wrong related-case order.`);
+      }
       if (!html.includes('class="article-byline shell"')) errors.push(`${label} is missing its visible author byline.`);
       if (!html.includes(`rel="author" itemprop="url" href="${expectedAuthorRoute}"`)) errors.push(`${label} has the wrong byline author URL.`);
       if (!html.includes(editorial.authorRole)) errors.push(`${label} is missing its localized author role.`);
@@ -151,6 +175,35 @@ for (const localeKey of localeOrder) {
         errors.push(`${label} has no fingerprinted full-text search index.`);
       }
     }
+  }
+
+  const methodologyRoutePath = methodologyRoute(localeKey);
+  const methodologyFile = fileForRoute(methodologyRoutePath);
+  if (!(await exists(methodologyFile))) {
+    errors.push(`Missing generated methodology page: ${methodologyRoutePath}`);
+  } else {
+    const html = await readFile(methodologyFile, "utf8");
+    const label = `${localeKey}:methodology`;
+    const copy = methodology.copy[localeKey];
+    if (!html.startsWith("<!doctype html>")) errors.push(`${label} has no HTML doctype.`);
+    if (!html.includes(`<html class="no-js" lang="${locale.lang}">`)) errors.push(`${label} has the wrong lang attribute.`);
+    if (count(html, /<h1\b/g) !== 1) errors.push(`${label} must contain exactly one h1.`);
+    if (!html.includes(`<link rel="canonical" href="${new URL(methodologyRoutePath, site.url).href}" />`)) errors.push(`${label} has the wrong canonical URL.`);
+    if (!html.includes(`<link rel="author" href="${expectedAuthorRoute}" />`)) errors.push(`${label} has the wrong localized author URL.`);
+    const currentMethodologyLanguageLink = new RegExp(
+      `<a\\b(?=[^>]*\\bhref="${methodologyRoutePath}")(?=[^>]*\\baria-current="page")[^>]*>`,
+      "u",
+    );
+    if (!currentMethodologyLanguageLink.test(html)) errors.push(`${label} language switch is not on the current route.`);
+    if (count(html, /rel="alternate" hreflang=/g) !== localeOrder.length + 1) errors.push(`${label} must expose every language and x-default.`);
+    if (!html.includes('hreflang="x-default" href="https://blog.ejupilabs.com/methodology/"')) errors.push(`${label} has the wrong x-default route.`);
+    if (!html.includes('href="mailto:info@ejupilabs.com"')) errors.push(`${label} is missing the corrections contact.`);
+    if (!html.includes(copy.title)) errors.push(`${label} is missing its localized title.`);
+    for (const section of copy.sections) {
+      if (!html.includes(`id="${section.id}"`)) errors.push(`${label} is missing ${section.id}.`);
+    }
+    if (!html.includes('id="main" tabindex="-1"')) errors.push(`${label} main landmark is not focusable.`);
+    if (!html.includes(`href="${methodologyRoutePath}"`)) errors.push(`${label} is missing its localized footer link.`);
   }
 
   const feedPath = join(dist, locale.prefix.replace(/^\//, ""), "feed.xml");
@@ -205,7 +258,7 @@ for (const file of fingerprintedAssets) {
 }
 
 const sitemap = await readFile(join(dist, "sitemap.xml"), "utf8");
-const canonicalPageCount = localeOrder.length + articleCount;
+const canonicalPageCount = localeOrder.length * 2 + articleCount;
 if (count(sitemap, /<url>/g) !== canonicalPageCount) {
   errors.push(`Sitemap must contain ${canonicalPageCount} canonical URLs.`);
 }
@@ -276,6 +329,19 @@ if (!Array.isArray(catalog.cases) || catalog.cases.length !== caseDefinitions.le
     ) {
       errors.push(`Machine-readable catalog metadata differs for ${definition.slug}.`);
     }
+    if (definition.kind === "labs") {
+      for (const key of ["projectUrl", "sourceRef", "sourceUrl", "verifiedAt"]) {
+        if (entry[key] !== definition[key]) {
+          errors.push(`Machine-readable catalog has the wrong ${key} for ${definition.slug}.`);
+        }
+      }
+    } else if (
+      ["projectUrl", "sourceRef", "sourceUrl", "verifiedAt"].some(
+        (key) => entry[key] !== undefined,
+      )
+    ) {
+      errors.push(`Professional catalog entry ${definition.slug} exposes Labs source metadata.`);
+    }
     for (const localeKey of definition.availableLocales) {
       const expectedUrl = new URL(routeFor(localeKey, definition.slug), site.url).href;
       if (entry.urls?.[localeKey] !== expectedUrl) {
@@ -295,6 +361,9 @@ if (!Array.isArray(catalog.cases) || catalog.cases.length !== caseDefinitions.le
 const llms = await readFile(join(dist, "llms.txt"), "utf8");
 if (!llms.includes(`> ${caseDefinitions.length} documented engineering case studies.`)) {
   errors.push("llms.txt case-study count is not derived from the catalog.");
+}
+if (!llms.includes(new URL(methodologyRoute("en"), site.url).href)) {
+  errors.push("llms.txt is missing the editorial methodology page.");
 }
 for (const definition of caseDefinitions) {
   if (!llms.includes(new URL(routeFor("en", definition.slug), site.url).href)) {

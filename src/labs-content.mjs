@@ -10,13 +10,13 @@ export const labsCases = {
       ["Product", "Open-source desktop utility"],
       ["Role", "Product, architecture and implementation"],
       ["Trust boundary", "Local device by default"],
-      ["Status", "v1.6.0 release candidate and signed release pipeline"],
+      ["Status", "Signed v1.6.0 release with a verified release pipeline"],
     ],
     evidence: {
       title: "Evidence ledger",
       intro: "The current repository records these reproducible checks and boundaries:",
       items: [
-        ["Backend", "1,369 tests pass in the v1.6.0 candidate; an independent review reran 42 portability and storage tests."],
+        ["Backend", "1,369 tests pass for v1.6.0; an independent review reran 42 portability and storage tests."],
         ["Frontend + shell", "334 frontend tests across 64 files and 17 Rust library tests pass, including the native backup writer."],
         ["Backup assurance", "Archives from versions 1–4 receive a full non-mutating preflight; the response contains bounded metadata, not archive content."],
         ["Scale fixture", "A 10,000-application agenda fixture records p95 at 68.670 ms against its 200 ms project budget."],

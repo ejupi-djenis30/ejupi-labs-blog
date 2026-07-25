@@ -1,8 +1,14 @@
 import { createHash } from "node:crypto";
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { caseDefinitions, localeOrder, locales, site } from "../src/content.mjs";
-import { editorialUi } from "../src/editorial.mjs";
+import {
+  caseDefinitions,
+  localeOrder,
+  locales,
+  relatedCaseDefinitions,
+  site,
+} from "../src/content.mjs";
+import { editorialUi, methodology } from "../src/editorial.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const outputRoot = join(root, "dist");
@@ -93,6 +99,20 @@ function routeFor(localeKey, slug) {
   return slug ? `${prefix}/case-studies/${slug}/` : `${prefix}/` || "/";
 }
 
+function methodologyRoute(localeKey) {
+  return `${locales[localeKey].prefix}/methodology/`;
+}
+
+function pageRoute(localeKey, slug, pageKind = "case") {
+  return pageKind === "methodology"
+    ? methodologyRoute(localeKey)
+    : routeFor(localeKey, slug);
+}
+
+function localeKeysForPage(slug, pageKind = "case") {
+  return pageKind === "methodology" ? localeOrder : localeKeysForSlug(slug);
+}
+
 function localizedExternalRoute(origin, localeKey, fragment = "") {
   const normalizedOrigin = origin.replace(/\/+$/u, "");
   return `${normalizedOrigin}${locales[localeKey].prefix}/${fragment}`;
@@ -136,7 +156,14 @@ function caseCatalog() {
       published: definition.published,
       updated: definition.updated,
       stack: definition.stack,
-      ...(definition.projectUrl ? { projectUrl: definition.projectUrl } : {}),
+      ...(definition.projectUrl
+        ? {
+            projectUrl: definition.projectUrl,
+            sourceRef: definition.sourceRef,
+            sourceUrl: definition.sourceUrl,
+            verifiedAt: definition.verifiedAt,
+          }
+        : {}),
       urls: Object.fromEntries(
         definition.availableLocales.map((localeKey) => [
           localeKey,
@@ -171,13 +198,15 @@ async function write(relativePath, contents) {
   await writeFile(target, contents, "utf8");
 }
 
-function alternates(slug) {
-  return localeKeysForSlug(slug)
+function alternates(slug, pageKind = "case") {
+  return localeKeysForPage(slug, pageKind)
     .map((localeKey) => {
-      const href = absolute(routeFor(localeKey, slug));
+      const href = absolute(pageRoute(localeKey, slug, pageKind));
       return `<link rel="alternate" hreflang="${localeKey}" href="${href}" />`;
     })
-    .concat(`<link rel="alternate" hreflang="x-default" href="${absolute(routeFor("en", slug))}" />`)
+    .concat(
+      `<link rel="alternate" hreflang="x-default" href="${absolute(pageRoute("en", slug, pageKind))}" />`,
+    )
     .join("\n    ");
 }
 
@@ -186,13 +215,14 @@ function pageHead({
   title,
   description,
   slug = null,
+  pageKind = "case",
   type = "website",
   noIndex = false,
   published = site.published,
   updated = published,
 }) {
   const locale = locales[localeKey];
-  const canonical = absolute(routeFor(localeKey, slug));
+  const canonical = absolute(pageRoute(localeKey, slug, pageKind));
   const pageTitle = title === site.name ? title : `${title} — ${site.name}`;
 
   return `<!doctype html>
@@ -207,7 +237,7 @@ function pageHead({
   ${noIndex ? '<meta name="robots" content="noindex,follow" />' : ""}
   <link rel="canonical" href="${canonical}" />
   <link rel="author" href="${authorRouteFor(localeKey)}" />
-  ${alternates(slug)}
+  ${alternates(slug, pageKind)}
   <link rel="alternate" type="application/rss+xml" title="${escapeHtml(site.name)} — ${escapeHtml(locale.ui.home)}" href="${absolute(feedRoute(localeKey))}" />
   <link rel="search" type="application/opensearchdescription+xml" title="${escapeHtml(site.name)}" href="${searchDescriptionRoute(localeKey)}" />
   <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
@@ -228,19 +258,19 @@ function pageHead({
 </head>`;
 }
 
-function languageList(localeKey, slug) {
+function languageList(localeKey, slug, pageKind = "case") {
   const locale = locales[localeKey];
   return `<ul class="language-list" aria-label="${escapeHtml(locale.ui.languages)}">
-    ${localeKeysForSlug(slug)
+    ${localeKeysForPage(slug, pageKind)
       .map((key) => {
         const item = locales[key];
-        return `<li><a href="${routeFor(key, slug)}" lang="${item.lang}" hreflang="${item.lang}" aria-label="${escapeHtml(item.languageName)}"${key === localeKey ? ' aria-current="page"' : ""}>${item.label}</a></li>`;
+        return `<li><a href="${pageRoute(key, slug, pageKind)}" lang="${item.lang}" hreflang="${item.lang}" aria-label="${escapeHtml(item.languageName)}"${key === localeKey ? ' aria-current="page"' : ""}>${item.label}</a></li>`;
       })
       .join("\n    ")}
   </ul>`;
 }
 
-function header(localeKey, slug, onIndex = false) {
+function header(localeKey, slug, onIndex = false, pageKind = "case") {
   const locale = locales[localeKey];
   const homeRoute = routeFor(localeKey, null);
   return `<a class="skip-link" href="#main">${escapeHtml(locale.ui.skip)}</a>
@@ -255,7 +285,7 @@ function header(localeKey, slug, onIndex = false) {
       <a href="${homeRoute}"${onIndex ? ' aria-current="page"' : ""}>${escapeHtml(locale.ui.allWork)}</a>
       <a href="${studioRouteFor(localeKey)}">${escapeHtml(locale.ui.portfolio)}</a>
       <a href="${studioRouteFor(localeKey, "#contact")}">${escapeHtml(locale.ui.contact)}</a>
-      ${languageList(localeKey, slug)}
+      ${languageList(localeKey, slug, pageKind)}
     </nav>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="${escapeHtml(locale.ui.menuOpen)}" data-menu-toggle data-open-label="${escapeHtml(locale.ui.menuOpen)}" data-close-label="${escapeHtml(locale.ui.menuClose)}"><span aria-hidden="true"></span></button>
   </div>
@@ -264,6 +294,7 @@ function header(localeKey, slug, onIndex = false) {
 
 function footer(localeKey) {
   const locale = locales[localeKey];
+  const ui = editorialUi[localeKey];
   return `<footer class="site-footer">
   <div class="site-footer__inner shell">
     <div class="site-footer__brand">
@@ -273,6 +304,7 @@ function footer(localeKey) {
     <div class="site-footer__links">
       <nav aria-label="${escapeHtml(locale.ui.navigation)}">
         <a href="${routeFor(localeKey, null)}">${escapeHtml(locale.ui.allWork)}</a>
+        <a href="${methodologyRoute(localeKey)}">${escapeHtml(ui.methodology)}</a>
         <a href="${studioRouteFor(localeKey)}">${escapeHtml(locale.ui.portfolio)}</a>
         <a href="${studioRouteFor(localeKey, "#contact")}">${escapeHtml(locale.ui.contact)}</a>
         <a href="${feedRoute(localeKey)}">RSS</a>
@@ -496,15 +528,24 @@ function articlePage(localeKey, definition, index) {
   const facts = study.facts.map(([term, detail]) => `<div class="fact"><dt>${escapeHtml(term)}</dt><dd>${escapeHtml(detail)}</dd></div>`).join("");
   const constraints = study.constraints.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
   const decisions = study.decisions.items.map((decision, itemIndex) => `<article class="decision"><span class="decision-number">D${String(itemIndex + 1).padStart(2, "0")}</span><h3>${escapeHtml(decision.title)}</h3><p>${escapeHtml(decision.body)}</p><p class="decision-tradeoff">${escapeHtml(decision.tradeoff)}</p></article>`).join("");
-  const visibleDefinitions = definitionsForLocale(localeKey);
-  const visibleIndex = visibleDefinitions.findIndex(
-    (item) => item.slug === definition.slug,
+  const relatedDefinitions = relatedCaseDefinitions(definition, caseDefinitions, {
+    localeKey,
+    limit: 2,
+  });
+  const dateFormatter = new Intl.DateTimeFormat(`${locale.lang}-CH`, {
+    dateStyle: "long",
+    timeZone: "UTC",
+  });
+  const formattedDate = dateFormatter.format(
+    new Date(`${definition.published}T12:00:00Z`),
   );
-  const nextDefinition =
-    visibleDefinitions[(visibleIndex + 1) % visibleDefinitions.length];
-  const nextStudy = locale.cases[nextDefinition.slug];
-  const formattedDate = new Intl.DateTimeFormat(`${locale.lang}-CH`, { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${definition.published}T12:00:00Z`));
-  const formattedUpdated = new Intl.DateTimeFormat(`${locale.lang}-CH`, { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${definition.updated}T12:00:00Z`));
+  const formattedUpdated = dateFormatter.format(
+    new Date(`${definition.updated}T12:00:00Z`),
+  );
+  const formattedVerified = definition.verifiedAt
+    ? dateFormatter.format(new Date(`${definition.verifiedAt}T12:00:00Z`))
+    : "";
+  const sourceCommit = definition.sourceUrl?.split("/").at(-1);
   const evidence = study.evidence
     ? `<section class="story-section evidence-section" id="evidence" data-story-section>
         <h2>${heading(study.evidence.title)}</h2>
@@ -515,11 +556,22 @@ function articlePage(localeKey, definition, index) {
               `<div><dt>${escapeHtml(term)}</dt><dd>${escapeHtml(detail)}</dd></div>`,
           )
           .join("")}</dl>
+        <p class="evidence-citation">
+          <span>${escapeHtml(ui.verifiedSource)}</span>
+          <a href="${definition.sourceUrl}" rel="external">${escapeHtml(definition.sourceRef)} <span aria-hidden="true">· ${escapeHtml(sourceCommit.slice(0, 7))}</span></a>
+          <span>${escapeHtml(ui.verifiedOn)} <time datetime="${definition.verifiedAt}">${escapeHtml(formattedVerified)}</time></span>
+        </p>
       </section>`
     : "";
   const projectAction = definition.projectUrl
     ? `<a class="project-action" href="${definition.projectUrl}">${escapeHtml(ui.openProject)} <span aria-hidden="true">↗</span></a>`
     : "";
+  const relatedCases = relatedDefinitions
+    .map((relatedDefinition) => {
+      const relatedStudy = locale.cases[relatedDefinition.slug];
+      return `<li><a href="${routeFor(localeKey, relatedDefinition.slug)}" data-related-slug="${relatedDefinition.slug}"><span class="section-label">${escapeHtml(ui.caseLabel)} / ${relatedDefinition.number}</span><strong>${escapeHtml(relatedStudy.cardTitle)}</strong><span aria-hidden="true">↗</span></a></li>`;
+    })
+    .join("");
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -588,12 +640,75 @@ ${header(localeKey, definition.slug)}
         ${projectAction}
       </div>
     </div>
-    <nav class="article-next shell" aria-label="${escapeHtml(locale.ui.next)}"><div><span class="section-label">${escapeHtml(locale.ui.next)} / ${nextDefinition.number}</span><h2>${heading(nextStudy.cardTitle)}</h2></div><a href="${routeFor(localeKey, nextDefinition.slug)}" aria-label="${escapeHtml(locale.ui.next)}: ${escapeHtml(nextStudy.cardTitle)}">↗</a></nav>
+    <nav class="article-next article-related shell" aria-labelledby="related-cases-title" data-related-cases>
+      <div class="article-related__heading"><span class="section-label">${escapeHtml(ui.related)}</span><h2 id="related-cases-title">${heading(ui.related)}</h2></div>
+      <ol class="article-related__list">${relatedCases}</ol>
+    </nav>
   </article>
   <section class="site-cta">
     <div class="site-cta__copy"><h2>${heading(locale.index.ctaTitle)}</h2><p>${escapeHtml(locale.index.ctaBody)}</p></div>
     <div class="site-cta__action"><a href="${studioRouteFor(localeKey, "#contact")}">${escapeHtml(locale.ui.contact)} <span aria-hidden="true">↗</span></a></div>
   </section>
+</main>
+${footer(localeKey)}
+</body>
+</html>`;
+}
+
+function methodologyPage(localeKey) {
+  const locale = locales[localeKey];
+  const copy = methodology.copy[localeKey];
+  const sections = copy.sections
+    .map(
+      (section) =>
+        `<section class="story-section" id="${section.id}"><h2>${heading(section.title)}</h2>${paragraphs(section.paragraphs)}</section>`,
+    )
+    .join("");
+  const pageSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: copy.title,
+    description: copy.description,
+    url: absolute(methodologyRoute(localeKey)),
+    datePublished: methodology.published,
+    dateModified: methodology.updated,
+    inLanguage: locale.lang,
+    author: {
+      "@type": "Person",
+      "@id": site.author.id,
+      name: site.author.name,
+      url: authorRouteFor(localeKey),
+    },
+    isPartOf: {
+      "@type": "Blog",
+      name: `${site.name} — ${locale.ui.home}`,
+      url: absolute(routeFor(localeKey, null)),
+    },
+  };
+
+  return `${pageHead({
+    localeKey,
+    title: copy.title,
+    description: copy.description,
+    pageKind: "methodology",
+    published: methodology.published,
+    updated: methodology.updated,
+  })}
+<body>
+<script type="application/ld+json">${safeJson(pageSchema)}</script>
+${header(localeKey, null, false, "methodology")}
+<main id="main" tabindex="-1">
+  <article class="methodology-page">
+    <header class="methodology-hero shell">
+      <span class="eyebrow">${escapeHtml(copy.eyebrow)}</span>
+      <h1>${heading(copy.title)}</h1>
+      <p>${escapeHtml(copy.intro)}</p>
+    </header>
+    <div class="methodology-body shell">
+      ${sections}
+      <a class="project-action methodology-contact" href="mailto:info@ejupilabs.com">${escapeHtml(copy.contactLabel)} <span aria-hidden="true">↗</span></a>
+    </div>
+  </article>
 </main>
 ${footer(localeKey)}
 </body>
@@ -633,13 +748,27 @@ function rss(localeKey) {
 }
 
 function sitemap() {
-  const pages = [null, ...caseDefinitions.map((definition) => definition.slug)];
-  const urls = pages.flatMap((slug) => localeKeysForSlug(slug).map((localeKey) => {
-    const route = routeFor(localeKey, slug);
-    const links = localeKeysForSlug(slug).map((alternateLocale) => `<xhtml:link rel="alternate" hreflang="${alternateLocale}" href="${absolute(routeFor(alternateLocale, slug))}" />`).join("");
-    const updated = slug ? definitionForSlug(slug).updated : latestCatalogUpdate();
-    return `<url><loc>${absolute(route)}</loc><lastmod>${updated}</lastmod>${links}<xhtml:link rel="alternate" hreflang="x-default" href="${absolute(routeFor("en", slug))}" /></url>`;
-  }));
+  const pages = [
+    { slug: null, pageKind: "case", updated: latestCatalogUpdate() },
+    { slug: null, pageKind: "methodology", updated: methodology.updated },
+    ...caseDefinitions.map((definition) => ({
+      slug: definition.slug,
+      pageKind: "case",
+      updated: definition.updated,
+    })),
+  ];
+  const urls = pages.flatMap(({ slug, pageKind, updated }) =>
+    localeKeysForPage(slug, pageKind).map((localeKey) => {
+      const route = pageRoute(localeKey, slug, pageKind);
+      const links = localeKeysForPage(slug, pageKind)
+        .map(
+          (alternateLocale) =>
+            `<xhtml:link rel="alternate" hreflang="${alternateLocale}" href="${absolute(pageRoute(alternateLocale, slug, pageKind))}" />`,
+        )
+        .join("");
+      return `<url><loc>${absolute(route)}</loc><lastmod>${updated}</lastmod>${links}<xhtml:link rel="alternate" hreflang="x-default" href="${absolute(pageRoute("en", slug, pageKind))}" /></url>`;
+    }),
+  );
   return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${urls.join("")}</urlset>`;
 }
 
@@ -648,7 +777,7 @@ function llmsText() {
     const study = locales.en.cases[definition.slug];
     return `- [${study.title}](${absolute(routeFor("en", definition.slug))}): ${study.summary}`;
   }).join("\n");
-  return `# ${site.name} Case Studies\n\n> ${caseDefinitions.length} documented engineering case studies. Organisations, commercial details and unsupported metrics are omitted.\n\n## Case studies\n\n${studies}\n\n## Languages\n\n- [English](${absolute("/")})\n- [Italiano](${absolute("/it/")})\n- [Deutsch](${absolute("/de/")})\n- [Français](${absolute("/fr/")})\n\n## Machine-readable catalog\n\n- [Case-study catalog](${absolute("/case-studies.json")})\n\n## Main studio\n\n- [Ejupi Labs](${site.portfolioUrl})\n`;
+  return `# ${site.name} Case Studies\n\n> ${caseDefinitions.length} documented engineering case studies. Organisations, commercial details and unsupported metrics are omitted.\n\n## Case studies\n\n${studies}\n\n## Languages\n\n- [English](${absolute("/")})\n- [Italiano](${absolute("/it/")})\n- [Deutsch](${absolute("/de/")})\n- [Français](${absolute("/fr/")})\n\n## Methodology\n\n- [Editorial methodology](${absolute(methodologyRoute("en"))})\n\n## Machine-readable catalog\n\n- [Case-study catalog](${absolute("/case-studies.json")})\n\n## Main studio\n\n- [Ejupi Labs](${site.portfolioUrl})\n`;
 }
 
 function openSearch(localeKey) {
@@ -673,6 +802,12 @@ for (const localeKey of localeOrder) {
   const locale = locales[localeKey];
   await mkdir(dirname(outputPath(routeFor(localeKey, null))), { recursive: true });
   await writeFile(outputPath(routeFor(localeKey, null)), indexPage(localeKey), "utf8");
+  await mkdir(dirname(outputPath(methodologyRoute(localeKey))), { recursive: true });
+  await writeFile(
+    outputPath(methodologyRoute(localeKey)),
+    methodologyPage(localeKey),
+    "utf8",
+  );
   await write(`${locale.prefix.replace(/^\//, "")}${locale.prefix ? "/" : ""}404.html`, notFoundPage(localeKey));
   await write(feedRoute(localeKey).replace(/^\//, ""), rss(localeKey));
   await write(searchDescriptionRoute(localeKey).replace(/^\//, ""), openSearch(localeKey));
@@ -697,4 +832,4 @@ const articleCount = caseDefinitions.reduce(
   (total, definition) => total + definition.availableLocales.length,
   0,
 );
-console.log(`Built ${localeOrder.length + articleCount} canonical pages for ${caseDefinitions.length} case studies in ${outputRoot}`);
+console.log(`Built ${localeOrder.length * 2 + articleCount} canonical pages for ${caseDefinitions.length} case studies in ${outputRoot}`);

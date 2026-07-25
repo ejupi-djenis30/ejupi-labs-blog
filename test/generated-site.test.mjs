@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { caseDefinitions, localeOrder, locales, site } from "../src/content.mjs";
-import { editorialUi } from "../src/editorial.mjs";
+import {
+  caseDefinitions,
+  localeOrder,
+  locales,
+  relatedCaseDefinitions,
+  site,
+} from "../src/content.mjs";
+import { editorialUi, methodology } from "../src/editorial.mjs";
 
 test("English case-study index links to every canonical article", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
@@ -104,6 +110,7 @@ test("every generated HTML page exposes a focusable main landmark", async () => 
   const pages = [
     "../dist/index.html",
     "../dist/404.html",
+    "../dist/it/methodology/index.html",
     "../dist/fr/case-studies/retail-erp-evolution/index.html",
   ];
 
@@ -129,6 +136,96 @@ test("localized Labs articles keep canonical and hreflang routes aligned", async
   assert.match(html, /"@type":"BlogPosting"/);
 });
 
+test("Labs evidence ledgers cite immutable source snapshots without replacing product links", async () => {
+  for (const localeKey of localeOrder) {
+    const prefix = locales[localeKey].prefix.replace(/^\//u, "");
+    const outputDirectory = prefix ? `${prefix}/` : "";
+    for (const definition of caseDefinitions.filter(({ kind }) => kind === "labs")) {
+      const html = await readFile(
+        new URL(
+          `../dist/${outputDirectory}case-studies/${definition.slug}/index.html`,
+          import.meta.url,
+        ),
+        "utf8",
+      );
+      assert.match(html, /class="evidence-citation"/u);
+      assert.ok(html.includes(`href="${definition.sourceUrl}"`));
+      assert.ok(html.includes(definition.sourceRef));
+      assert.ok(html.includes(`<time datetime="${definition.verifiedAt}">`));
+      assert.ok(html.includes(`href="${definition.projectUrl}"`));
+    }
+  }
+
+  const professional = await readFile(
+    new URL(
+      "../dist/case-studies/archival-workflow-management/index.html",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+  assert.doesNotMatch(professional, /evidence-citation|github\.com\/[^\s"]+\/commit\//u);
+});
+
+test("every article renders the two locale-safe related cases in ranked order", async () => {
+  for (const localeKey of localeOrder) {
+    const prefix = locales[localeKey].prefix.replace(/^\//u, "");
+    const outputDirectory = prefix ? `${prefix}/` : "";
+    for (const definition of caseDefinitions) {
+      const html = await readFile(
+        new URL(
+          `../dist/${outputDirectory}case-studies/${definition.slug}/index.html`,
+          import.meta.url,
+        ),
+        "utf8",
+      );
+      const rendered = [...html.matchAll(/data-related-slug="(?<slug>[^"]+)"/gu)].map(
+        (match) => match.groups.slug,
+      );
+      const expected = relatedCaseDefinitions(definition, caseDefinitions, {
+        localeKey,
+        limit: 2,
+      }).map(({ slug }) => slug);
+      assert.deepEqual(rendered, expected, `${localeKey}/${definition.slug}`);
+      assert.ok(rendered.every((slug) => slug !== definition.slug));
+    }
+  }
+});
+
+test("methodology is a localized canonical page linked from every footer", async () => {
+  for (const localeKey of localeOrder) {
+    const locale = locales[localeKey];
+    const prefix = locale.prefix.replace(/^\//u, "");
+    const outputDirectory = prefix ? `${prefix}/` : "";
+    const route = `${locale.prefix}/methodology/`;
+    const html = await readFile(
+      new URL(`../dist/${outputDirectory}methodology/index.html`, import.meta.url),
+      "utf8",
+    );
+
+    assert.ok(html.includes(`<html class="no-js" lang="${locale.lang}">`));
+    assert.ok(html.includes(`<link rel="canonical" href="${site.url}${route}" />`));
+    assert.match(
+      html,
+      new RegExp(
+        `<a\\b(?=[^>]*\\bhref="${route}")(?=[^>]*\\baria-current="page")[^>]*>`,
+        "u",
+      ),
+    );
+    assert.ok(html.includes(methodology.copy[localeKey].title));
+    assert.ok(html.includes("mailto:info@ejupilabs.com"));
+    assert.match(
+      html,
+      /hreflang="x-default" href="https:\/\/blog\.ejupilabs\.com\/methodology\/"/u,
+    );
+
+    const index = await readFile(
+      new URL(`../dist/${outputDirectory}index.html`, import.meta.url),
+      "utf8",
+    );
+    assert.ok(index.includes(`href="${route}">${editorialUi[localeKey].methodology}</a>`));
+  }
+});
+
 test("sitemap and feed include the expanded editorial archive", async () => {
   const sitemap = await readFile(
     new URL("../dist/sitemap.xml", import.meta.url),
@@ -136,7 +233,9 @@ test("sitemap and feed include the expanded editorial archive", async () => {
   );
   const feed = await readFile(new URL("../dist/feed.xml", import.meta.url), "utf8");
   assert.match(sitemap, /\/fr\/case-studies\/vector-placement-operations\//);
+  assert.match(sitemap, /\/de\/methodology\//);
   assert.match(sitemap, /<lastmod>2026-07-24<\/lastmod>/);
+  assert.match(sitemap, /<lastmod>2026-07-25<\/lastmod>/);
   assert.match(feed, /<category>Machine learning<\/category>/);
   assert.match(feed, /\/case-studies\/careeros-local\//);
 });
@@ -156,6 +255,17 @@ test("machine-readable catalog derives routes and locales from the authoritative
     assert.ok(entry);
     assert.equal(entry.kind, definition.kind);
     assert.deepEqual(entry.availableLocales, definition.availableLocales);
+    if (definition.kind === "labs") {
+      assert.equal(entry.projectUrl, definition.projectUrl);
+      assert.equal(entry.sourceRef, definition.sourceRef);
+      assert.equal(entry.sourceUrl, definition.sourceUrl);
+      assert.equal(entry.verifiedAt, definition.verifiedAt);
+    } else {
+      assert.equal(entry.projectUrl, undefined);
+      assert.equal(entry.sourceRef, undefined);
+      assert.equal(entry.sourceUrl, undefined);
+      assert.equal(entry.verifiedAt, undefined);
+    }
     for (const localeKey of definition.availableLocales) {
       const prefix = locales[localeKey].prefix;
       assert.equal(
