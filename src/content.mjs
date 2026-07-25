@@ -10,7 +10,11 @@ export const site = {
   section: "Case Studies",
   url: "https://blog.ejupilabs.com",
   portfolioUrl: "https://ejupilabs.com",
-  author: "Ejupi Labs",
+  author: {
+    name: "Djenis Ejupi",
+    url: "https://djenis.ejupilabs.com/",
+    id: "https://djenis.ejupilabs.com/#person",
+  },
   published: "2026-07-24",
 };
 
