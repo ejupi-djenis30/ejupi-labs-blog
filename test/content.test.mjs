@@ -6,6 +6,7 @@ import {
   locales,
   protectedLegacySlugs,
 } from "../src/content.mjs";
+import { editorialUi } from "../src/editorial.mjs";
 import {
   assertDefinitionCatalog,
   assertLocalizedCopy,
@@ -95,4 +96,27 @@ test("a missing localized leaf fails closed with its exact content path", () => 
       }),
     /it\/careeros-local\.decisions\.items\[1\]\.tradeoff: missing localized content/u,
   );
+});
+
+test("editorial chrome and visible byline labels are complete in every locale", () => {
+  const requiredKeys = [
+    "bylineBy",
+    "authorRole",
+    "lastVerified",
+    "caseLabel",
+    "casesLabel",
+    "indexLabel",
+    "noteLabel",
+    "countryLabel",
+    "systemViewLabel",
+    "versionedDeliveryPathLabel",
+    "processStateReturnLabel",
+  ];
+
+  for (const localeKey of localeOrder) {
+    for (const key of requiredKeys) {
+      assert.equal(typeof editorialUi[localeKey]?.[key], "string");
+      assert.ok(editorialUi[localeKey][key].trim().length > 0, `${localeKey}.${key} is empty`);
+    }
+  }
 });

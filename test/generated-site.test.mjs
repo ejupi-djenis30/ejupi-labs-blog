@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { caseDefinitions, localeOrder, locales, site } from "../src/content.mjs";
+import { editorialUi } from "../src/editorial.mjs";
 
 test("English case-study index links to every canonical article", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
@@ -38,11 +39,65 @@ test("articles identify Djenis as the Person author and Ejupi Labs as publisher"
   assert.deepEqual(structuredData.publisher, {
     "@type": "Organization",
     name: "Ejupi Labs",
-    url: "https://ejupilabs.com",
+    url: "https://ejupilabs.com/",
   });
   assert.match(html, /<meta name="author" content="Djenis Ejupi" \/>/u);
+  assert.match(html, /<link rel="author" href="https:\/\/djenis\.ejupilabs\.com\/" \/>/u);
+  assert.match(html, /<meta name="twitter:title" content="[^"]+" \/>/u);
+  assert.match(html, /<meta name="twitter:description" content="[^"]+" \/>/u);
+  assert.match(html, /class="article-byline shell"/u);
   assert.match(html, /itemprop="author" itemscope itemtype="https:\/\/schema\.org\/Person" itemid="https:\/\/djenis\.ejupilabs\.com\/#person"/u);
-  assert.match(html, /<link itemprop="url" href="https:\/\/djenis\.ejupilabs\.com\/" \/>/u);
+  assert.match(html, /rel="author" itemprop="url" href="https:\/\/djenis\.ejupilabs\.com\/"/u);
+  assert.match(html, /itemprop="jobTitle">Author and engineer/u);
+  assert.match(html, /Last verified <time datetime="2026-07-24" itemprop="dateModified">/u);
+});
+
+test("localized chrome, bylines and cross-site routes stay in the selected language", async () => {
+  for (const localeKey of localeOrder) {
+    const locale = locales[localeKey];
+    const ui = editorialUi[localeKey];
+    const outputPrefix = locale.prefix.replace(/^\//u, "");
+    const outputDirectory = outputPrefix ? `${outputPrefix}/` : "";
+    const externalPrefix = locale.prefix;
+    const studioRoute = `${site.portfolioUrl}${externalPrefix}/`;
+    const contactRoute = `${site.portfolioUrl}${externalPrefix}/#contact`;
+    const authorRoute = `${site.author.url.replace(/\/+$/u, "")}${externalPrefix}/`;
+    const uppercase = (value) => value.toLocaleUpperCase(locale.lang);
+
+    const index = await readFile(
+      new URL(`../dist/${outputDirectory}index.html`, import.meta.url),
+      "utf8",
+    );
+    assert.ok(index.includes(`href="${studioRoute}"`));
+    assert.ok(index.includes(`href="${contactRoute}"`));
+    assert.ok(index.includes(`rel="author" href="${authorRoute}"`));
+    assert.ok(index.includes(uppercase(ui.indexLabel)));
+    assert.ok(index.includes(uppercase(ui.noteLabel)));
+    assert.ok(index.includes(uppercase(ui.casesLabel)));
+    assert.ok(index.includes(`${uppercase(ui.caseLabel)} / 01`));
+
+    const workflow = await readFile(
+      new URL(
+        `../dist/${outputDirectory}case-studies/archival-workflow-management/index.html`,
+        import.meta.url,
+      ),
+      "utf8",
+    );
+    assert.ok(workflow.includes(`rel="author" itemprop="url" href="${authorRoute}"`));
+    assert.ok(workflow.includes(ui.authorRole));
+    assert.ok(workflow.includes(`${ui.lastVerified} <time datetime="2026-07-24"`));
+    assert.ok(workflow.includes(uppercase(ui.systemViewLabel)));
+    assert.ok(workflow.includes(uppercase(ui.processStateReturnLabel)));
+
+    const delivery = await readFile(
+      new URL(
+        `../dist/${outputDirectory}case-studies/ai-workflow-cloud-migration/index.html`,
+        import.meta.url,
+      ),
+      "utf8",
+    );
+    assert.ok(delivery.includes(uppercase(ui.versionedDeliveryPathLabel)));
+  }
 });
 
 test("every generated HTML page exposes a focusable main landmark", async () => {

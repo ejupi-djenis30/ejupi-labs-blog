@@ -9,6 +9,7 @@ import {
   site,
 } from "../src/content.mjs";
 import { assertProtectedLegacySlugs } from "../src/content-contract.mjs";
+import { editorialUi } from "../src/editorial.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = join(root, "dist");
@@ -23,6 +24,11 @@ const articleCount = caseDefinitions.reduce(
 function routeFor(localeKey, slug) {
   const prefix = locales[localeKey].prefix;
   return slug ? `${prefix}/case-studies/${slug}/` : `${prefix}/` || "/";
+}
+
+function localizedExternalRoute(origin, localeKey, fragment = "") {
+  const normalizedOrigin = origin.replace(/\/+$/u, "");
+  return `${normalizedOrigin}${locales[localeKey].prefix}/${fragment}`;
 }
 
 function fileForRoute(route) {
@@ -65,6 +71,11 @@ for (const localeKey of localeOrder) {
     definition.availableLocales.includes(localeKey),
   );
   const localeSlugs = localeDefinitions.map(({ slug }) => slug);
+  const editorial = editorialUi[localeKey];
+  const expectedStudioRoute = localizedExternalRoute(site.portfolioUrl, localeKey);
+  const expectedContactRoute = localizedExternalRoute(site.portfolioUrl, localeKey, "#contact");
+  const expectedAuthorRoute = localizedExternalRoute(site.author.url, localeKey);
+  const uppercase = (value) => String(value).toLocaleUpperCase(locale.lang);
 
   for (const slug of localeSlugs) {
     if (!locale.cases[slug]) errors.push(`Missing ${localeKey} content for ${slug}.`);
@@ -85,12 +96,24 @@ for (const localeKey of localeOrder) {
     if (!html.includes(`<html class="no-js" lang="${locale.lang}">`)) errors.push(`${label} has the wrong lang attribute.`);
     if (count(html, /<h1\b/g) !== 1) errors.push(`${label} must contain exactly one h1.`);
     if (!html.includes(`<link rel="canonical" href="${new URL(route, site.url).href}" />`)) errors.push(`${label} has the wrong canonical URL.`);
+    if (!html.includes(`<link rel="author" href="${expectedAuthorRoute}" />`)) errors.push(`${label} has the wrong localized author URL.`);
+    if (!html.includes('<link rel="manifest" href="/site.webmanifest" />')) errors.push(`${label} is missing the web manifest link.`);
+    if (!html.includes(`href="${expectedStudioRoute}"`)) errors.push(`${label} has the wrong localized studio URL.`);
+    if (!html.includes(`href="${expectedContactRoute}"`)) errors.push(`${label} has the wrong localized contact URL.`);
+    if (count(html, /<meta name="twitter:title" content="[^"]+" \/>/g) !== 1) errors.push(`${label} must contain one Twitter title.`);
+    if (count(html, /<meta name="twitter:description" content="[^"]+" \/>/g) !== 1) errors.push(`${label} must contain one Twitter description.`);
     const definition = slug
       ? caseDefinitions.find((item) => item.slug === slug)
       : null;
     const alternateCount = (definition?.availableLocales.length ?? localeOrder.length) + 1;
     if (count(html, /rel="alternate" hreflang=/g) !== alternateCount) {
       errors.push(`${label} must expose ${alternateCount - 1} languages and x-default.`);
+    }
+    for (const availableLocaleKey of definition?.availableLocales ?? localeOrder) {
+      const languageName = locales[availableLocaleKey].languageName;
+      if (!html.includes(`aria-label="${languageName}"`)) {
+        errors.push(`${label} lacks the accessible ${languageName} language label.`);
+      }
     }
     if (!html.includes('href="#main"')) errors.push(`${label} has no skip link.`);
     if (!html.includes('id="site-navigation"')) errors.push(`${label} menu is not associated with its toggle.`);
@@ -108,7 +131,22 @@ for (const localeKey of localeOrder) {
       if (!html.includes(locales[localeKey].ui.sourceNote)) errors.push(`${label} is missing its evidence boundary.`);
       if (definition?.kind === "labs" && !html.includes("evidence-ledger")) errors.push(`${label} is missing its evidence ledger.`);
       if (definition?.kind === "labs" && !html.includes(definition.projectUrl)) errors.push(`${label} is missing its working product link.`);
+      if (!html.includes('class="article-byline shell"')) errors.push(`${label} is missing its visible author byline.`);
+      if (!html.includes(`rel="author" itemprop="url" href="${expectedAuthorRoute}"`)) errors.push(`${label} has the wrong byline author URL.`);
+      if (!html.includes(editorial.authorRole)) errors.push(`${label} is missing its localized author role.`);
+      if (!html.includes(`${editorial.lastVerified} <time datetime="${definition?.updated}"`)) errors.push(`${label} is missing its localized verification date.`);
+      if (!html.includes(uppercase(editorial.systemViewLabel))) errors.push(`${label} has an untranslated system-view label.`);
+      if (definition?.diagram === "workflow" && !html.includes(uppercase(editorial.processStateReturnLabel))) {
+        errors.push(`${label} has an untranslated workflow-return label.`);
+      }
+      if (definition?.diagram !== "workflow" && definition?.diagram !== "erp" && !html.includes(uppercase(editorial.versionedDeliveryPathLabel))) {
+        errors.push(`${label} has an untranslated delivery-path label.`);
+      }
     } else {
+      if (!html.includes(uppercase(editorial.indexLabel))) errors.push(`${label} has an untranslated index label.`);
+      if (!html.includes(uppercase(editorial.noteLabel))) errors.push(`${label} has an untranslated note label.`);
+      if (!html.includes(uppercase(editorial.casesLabel))) errors.push(`${label} has an untranslated case-count label.`);
+      if (!html.includes(uppercase(editorial.caseLabel))) errors.push(`${label} has an untranslated case-card label.`);
       if (!/data-search-index-url="\/assets\/search\.[a-z]{2}\.[0-9a-f]{12}\.json"/u.test(html)) {
         errors.push(`${label} has no fingerprinted full-text search index.`);
       }
@@ -175,12 +213,24 @@ if (count(sitemap, /hreflang="x-default"/g) !== canonicalPageCount) {
   errors.push("Every sitemap URL needs an x-default alternate.");
 }
 
-const headers = await readFile(join(dist, "_headers"), "utf8");
-for (const header of ["Content-Security-Policy", "Permissions-Policy", "Referrer-Policy", "X-Content-Type-Options"]) {
+const headers = (await readFile(join(dist, "_headers"), "utf8")).replace(/\r\n?/gu, "\n");
+for (const header of [
+  "Content-Security-Policy",
+  "Cross-Origin-Resource-Policy",
+  "Permissions-Policy",
+  "Referrer-Policy",
+  "X-Content-Type-Options",
+]) {
   if (!headers.includes(header)) errors.push(`Missing security header: ${header}.`);
 }
 if (!headers.includes("connect-src 'self'")) {
   errors.push("Content Security Policy must permit the same-origin lazy search index.");
+}
+if (!headers.includes("manifest-src 'self'")) {
+  errors.push("Content Security Policy must permit the same-origin web manifest.");
+}
+if (!headers.includes("Cross-Origin-Resource-Policy: same-origin")) {
+  errors.push("Cross-Origin Resource Policy must remain same-origin.");
 }
 const immutablePolicy = "Cache-Control: public, max-age=31536000, immutable";
 for (const assetPattern of [
@@ -194,6 +244,14 @@ for (const assetPattern of [
 }
 if (headers.includes(`/assets/*\n  ${immutablePolicy}`)) {
   errors.push("Non-fingerprinted brand and font assets must remain revalidatable.");
+}
+for (const [route, policy] of [
+  ["/site.webmanifest", "Cache-Control: public, max-age=3600, must-revalidate"],
+  ["/.well-known/security.txt", "Cache-Control: public, max-age=300, must-revalidate"],
+]) {
+  if (!headers.includes(`${route}\n  ${policy}`)) {
+    errors.push(`${route} must use its revalidation cache policy.`);
+  }
 }
 
 const catalog = JSON.parse(await readFile(join(dist, "case-studies.json"), "utf8"));
@@ -245,7 +303,40 @@ for (const definition of caseDefinitions) {
 }
 
 const manifest = JSON.parse(await readFile(join(dist, "site.webmanifest"), "utf8"));
-if (manifest.start_url !== "/") errors.push("Manifest start_url must be the canonical English root.");
+if (
+  manifest.id !== "/" ||
+  manifest.start_url !== "/" ||
+  manifest.scope !== "/" ||
+  manifest.lang !== "en" ||
+  manifest.display !== "standalone"
+) {
+  errors.push("The web manifest must remain scoped to the canonical English root.");
+}
+if (!manifest.icons?.some((icon) => icon.src === "/assets/brand/favicon.svg" && icon.sizes === "any")) {
+  errors.push("The web manifest must retain the scalable Ejupi Labs icon.");
+}
+
+const securityContact = (await readFile(join(dist, ".well-known", "security.txt"), "utf8"))
+  .replace(/\r\n?/gu, "\n");
+for (const requiredLine of [
+  "Contact: mailto:info@ejupilabs.com",
+  "Preferred-Languages: en, it, de, fr",
+  "Canonical: https://blog.ejupilabs.com/.well-known/security.txt",
+]) {
+  if (!securityContact.split("\n").includes(requiredLine)) {
+    errors.push(`security.txt is missing: ${requiredLine}`);
+  }
+}
+const expiresLine = securityContact.split("\n").find((line) => line.startsWith("Expires: "));
+const securityExpiry = Date.parse(expiresLine?.slice("Expires: ".length) ?? "");
+if (!Number.isFinite(securityExpiry) || securityExpiry <= Date.now()) {
+  errors.push("security.txt must contain a future RFC 3339 expiration date.");
+}
+
+const wranglerConfig = await readFile(join(root, "wrangler.jsonc"), "utf8");
+if (!/"compatibility_date"\s*:\s*"2026-07-21"/u.test(wranglerConfig)) {
+  errors.push("Wrangler compatibility_date must remain 2026-07-21.");
+}
 
 if (errors.length > 0) {
   console.error(errors.map((error) => `- ${error}`).join("\n"));

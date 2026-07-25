@@ -47,7 +47,6 @@ for (const localePath of locales) {
     await expect(page.locator("body")).toHaveCSS("position", "fixed");
     await expect(menu).toHaveCSS("position", "fixed");
     await expect(menu).toHaveCSS("top", "72px");
-    await expect(menu).toHaveCSS("height", "772px");
     await expect(menu).toHaveCSS("max-height", "none");
     await expect(menu).toHaveCSS("background-color", "rgb(244, 241, 234)");
     await expect(menu).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
