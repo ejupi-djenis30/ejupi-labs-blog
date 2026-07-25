@@ -189,7 +189,7 @@ function pageHead({
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${escapeHtml(pageTitle)}</title>
   <meta name="description" content="${escapeHtml(description)}" />
-  <meta name="author" content="${escapeHtml(site.author)}" />
+  <meta name="author" content="${escapeHtml(site.author.name)}" />
   <meta name="theme-color" content="#f4f1ea" />
   ${noIndex ? '<meta name="robots" content="noindex,follow" />' : ""}
   <link rel="canonical" href="${canonical}" />
@@ -509,7 +509,12 @@ function articlePage(localeKey, definition, index) {
     datePublished: definition.published,
     dateModified: definition.updated,
     inLanguage: locale.lang,
-    author: { "@type": "Organization", name: site.author },
+    author: {
+      "@type": "Person",
+      "@id": site.author.id,
+      name: site.author.name,
+      url: site.author.url,
+    },
     publisher: { "@type": "Organization", name: site.name, url: site.portfolioUrl },
     about: definition.stack,
     isPartOf: {
@@ -527,7 +532,10 @@ ${header(localeKey, definition.slug)}
   <article itemscope itemtype="https://schema.org/Article">
     <meta itemprop="datePublished" content="${definition.published}" />
     <meta itemprop="dateModified" content="${definition.updated}" />
-    <meta itemprop="author" content="${escapeHtml(site.author)}" />
+    <span itemprop="author" itemscope itemtype="https://schema.org/Person" itemid="${site.author.id}">
+      <meta itemprop="name" content="${escapeHtml(site.author.name)}" />
+      <link itemprop="url" href="${site.author.url}" />
+    </span>
     <header class="article-hero">
       <div class="article-hero__inner shell">
         <div class="article-hero__copy">

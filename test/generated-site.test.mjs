@@ -23,6 +23,28 @@ test("localized article keeps its language switch on the equivalent article", as
   assert.match(html, /hreflang="x-default" href="https:\/\/blog\.ejupilabs\.com\/case-studies\/archival-workflow-management\/"/);
 });
 
+test("articles identify Djenis as the Person author and Ejupi Labs as publisher", async () => {
+  const html = await readFile(new URL("../dist/case-studies/archival-workflow-management/index.html", import.meta.url), "utf8");
+  const structuredDataText = html.match(/<script type="application\/ld\+json">(?<json>.*?)<\/script>/su)?.groups?.json;
+  assert.ok(structuredDataText);
+
+  const structuredData = JSON.parse(structuredDataText);
+  assert.deepEqual(structuredData.author, {
+    "@type": "Person",
+    "@id": "https://djenis.ejupilabs.com/#person",
+    name: "Djenis Ejupi",
+    url: "https://djenis.ejupilabs.com/",
+  });
+  assert.deepEqual(structuredData.publisher, {
+    "@type": "Organization",
+    name: "Ejupi Labs",
+    url: "https://ejupilabs.com",
+  });
+  assert.match(html, /<meta name="author" content="Djenis Ejupi" \/>/u);
+  assert.match(html, /itemprop="author" itemscope itemtype="https:\/\/schema\.org\/Person" itemid="https:\/\/djenis\.ejupilabs\.com\/#person"/u);
+  assert.match(html, /<link itemprop="url" href="https:\/\/djenis\.ejupilabs\.com\/" \/>/u);
+});
+
 test("every generated HTML page exposes a focusable main landmark", async () => {
   const pages = [
     "../dist/index.html",
