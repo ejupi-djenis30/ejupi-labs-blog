@@ -52,7 +52,7 @@ test("every locale contains the same complete case-study structure", () => {
           definition.sourceUrl,
           /^https:\/\/github\.com\/[^/]+\/[^/]+\/commit\/[0-9a-f]{40}$/u,
         );
-        assert.equal(definition.verifiedAt, "2026-07-25");
+        assert.equal(definition.verifiedAt, definition.updated);
         if (localeKey !== "en") {
           assert.notEqual(
             study.summary,
@@ -187,6 +187,43 @@ test("Labs source metadata is required and must resolve to an immutable commit",
   );
 });
 
+test("VECTOR is presented as the bounded self-hosted v3 product in every locale", () => {
+  const definition = caseDefinitions.find(({ slug }) => slug === "vector-placement-operations");
+  assert.ok(definition);
+  assert.equal(definition.updated, "2026-07-26");
+  assert.equal(definition.verifiedAt, "2026-07-26");
+  assert.equal(definition.sourceRef, "v3.0.0");
+  assert.equal(
+    definition.sourceUrl,
+    "https://github.com/ejupi-djenis30/vector-placement-operations/commit/a32002bae031fbfc34b9fb70013dbf9cf4766b9f",
+  );
+  assert.deepEqual(definition.stack, ["Node.js", "Express", "SQLite", "Docker", "Playwright"]);
+
+  const deploymentClaims = {
+    en: /one school per installation/iu,
+    it: /una scuola per installazione/iu,
+    de: /eine schule pro installation/iu,
+    fr: /une école par installation/iu,
+  };
+
+  for (const localeKey of localeOrder) {
+    const study = locales[localeKey].cases[definition.slug];
+    const copy = JSON.stringify(study);
+    assert.match(study.summary, /3\.0\.0/u);
+    assert.match(study.facts.flat().join(" "), deploymentClaims[localeKey]);
+    assert.equal(study.evidence.items.length, 5);
+    assert.match(study.architecture.intro, /AES-GCM/u);
+    assert.match(copy, /SQLite/u);
+    assert.match(copy, /SaaS/u);
+  }
+
+  const english = JSON.stringify(locales.en.cases[definition.slug]);
+  assert.match(english, /10,000-row cap/u);
+  assert.match(english, /retention hold/iu);
+  assert.match(english, /compliance certification/iu);
+  assert.doesNotMatch(english, /browser-only|browser-local persistence|local storage|focused demonstrator/iu);
+});
+
 test("related case studies have a deterministic editorial order", () => {
   const expected = {
     "ai-workflow-cloud-migration": [
@@ -201,12 +238,12 @@ test("related case studies have a deterministic editorial order", () => {
       "archival-workflow-management",
       "ai-workflow-cloud-migration",
     ],
-    "careeros-local": ["djenis-ai-agent", "eliza-lab"],
+    "careeros-local": ["djenis-ai-agent", "vector-placement-operations"],
     "eliza-lab": ["careeros-local", "djenis-ai-agent"],
     "djenis-ai-agent": ["careeros-local", "eliza-lab"],
-    "dig-gopher-explorer": ["djenis-ai-agent", "integradraw"],
+    "dig-gopher-explorer": ["vector-placement-operations", "djenis-ai-agent"],
     integradraw: ["dig-gopher-explorer", "vector-placement-operations"],
-    "vector-placement-operations": ["integradraw", "dig-gopher-explorer"],
+    "vector-placement-operations": ["dig-gopher-explorer", "careeros-local"],
   };
 
   for (const localeKey of localeOrder) {
