@@ -5,7 +5,9 @@ import {
   localeOrder,
   locales,
   protectedLegacySlugs,
+  relatedCaseDefinitions,
 } from "../src/content.mjs";
+import { editorialUi, methodology } from "../src/editorial.mjs";
 import {
   assertDefinitionCatalog,
   assertLocalizedCopy,
@@ -26,13 +28,31 @@ test("every locale contains the same complete case-study structure", () => {
       const study = locale.cases[definition.slug];
       assert.ok(study, `${localeKey} is missing ${definition.slug}`);
       for (const section of expectedSections) assert.ok(study[section], `${localeKey}/${definition.slug} is missing ${section}`);
-      assert.equal(study.decisions.items.length, 3);
-      assert.equal(study.constraints.items.length, 4);
+      assert.equal(study.decisions.items.length, definition.kind === "professional" ? 4 : 3);
+      if (definition.kind === "professional") {
+        assert.ok(study.constraints.items.length >= 5);
+      } else {
+        assert.equal(study.constraints.items.length, 4);
+      }
       assert.equal(study.architecture.labels.length, 5);
       assert.ok(study.scope.length > 40);
+      if (definition.kind === "professional") {
+        for (const section of ["starting", "diagnosis", "delivery", "result"]) {
+          assert.ok(
+            study[section].paragraphs.length >= 3,
+            `${localeKey}/${definition.slug}.${section} needs the full reasoning`,
+          );
+        }
+      }
       if (definition.kind === "labs") {
         assert.ok(study.evidence.items.length >= 4);
         assert.ok(definition.projectUrl.startsWith("https://ejupi-djenis30.github.io/"));
+        assert.match(definition.sourceRef, /^v\d+\.\d+\.\d+$/u);
+        assert.match(
+          definition.sourceUrl,
+          /^https:\/\/github\.com\/[^/]+\/[^/]+\/commit\/[0-9a-f]{40}$/u,
+        );
+        assert.equal(definition.verifiedAt, definition.updated);
         if (localeKey !== "en") {
           assert.notEqual(
             study.summary,
@@ -42,6 +62,52 @@ test("every locale contains the same complete case-study structure", () => {
         }
       }
     }
+  }
+});
+
+test("professional cases preserve the documented constraints without exposing client identities", () => {
+  const localizedExpectations = {
+    en: {
+      archivalShell: /header[\s\S]*footer/iu,
+      clientContact: /direct contact with the client/iu,
+      compatibility: /backward-compatible/iu,
+    },
+    it: {
+      archivalShell: /header[\s\S]*footer/iu,
+      clientContact: /contatto diretto con il cliente/iu,
+      compatibility: /retrocompatibil/iu,
+    },
+    de: {
+      archivalShell: /Header[\s\S]*Footer/u,
+      clientContact: /direkt[\s\S]{0,80}Kund/iu,
+      compatibility: /rückwärtskompatibel/iu,
+    },
+    fr: {
+      archivalShell: /header[\s\S]*footer/iu,
+      clientContact: /contact direct avec le client/iu,
+      compatibility: /rétrocompatibl/iu,
+    },
+  };
+
+  for (const localeKey of localeOrder) {
+    const cloud = JSON.stringify(locales[localeKey].cases["ai-workflow-cloud-migration"]);
+    const archival = JSON.stringify(locales[localeKey].cases["archival-workflow-management"]);
+    const erp = JSON.stringify(locales[localeKey].cases["retail-erp-evolution"]);
+    const expectation = localizedExpectations[localeKey];
+
+    assert.match(archival, /single-spa/iu);
+    assert.match(archival, expectation.archivalShell);
+    assert.match(erp, /\.NET Framework 4\.8/u);
+    assert.match(erp, /Knockout/iu);
+    assert.match(erp, /jQuery/u);
+    assert.match(erp, /VB6/u);
+    assert.match(erp, expectation.clientContact);
+    assert.match(erp, expectation.compatibility);
+    assert.doesNotMatch(cloud, /\b\d+(?:[.,]\d+)?\s*%/u);
+    assert.doesNotMatch(
+      `${cloud}${archival}${erp}`,
+      /Jmatica|Archivio Centrale|Var4Retail|Sky Store|DHL|GLS/iu,
+    );
   }
 });
 
@@ -80,6 +146,137 @@ test("every case study declares stable editorial metadata", () => {
     assert.deepEqual(definition.availableLocales, localeOrder);
     assert.match(definition.published, /^\d{4}-\d{2}-\d{2}$/);
     assert.match(definition.updated, /^\d{4}-\d{2}-\d{2}$/);
+    if (definition.kind === "professional") {
+      assert.equal(definition.projectUrl, undefined);
+      assert.equal(definition.sourceRef, undefined);
+      assert.equal(definition.sourceUrl, undefined);
+      assert.equal(definition.verifiedAt, undefined);
+    }
+  }
+});
+
+test("Labs source metadata is required and must resolve to an immutable commit", () => {
+  const missingSourceRef = caseDefinitions.map((definition) =>
+    definition.slug === "careeros-local" ? structuredClone(definition) : definition,
+  );
+  delete missingSourceRef.find(({ slug }) => slug === "careeros-local").sourceRef;
+  assert.throws(
+    () =>
+      assertDefinitionCatalog(missingSourceRef, {
+        localeOrder,
+        protectedLegacySlugs,
+      }),
+    /sourceRef: expected a non-empty string/u,
+  );
+
+  const mutableSource = caseDefinitions.map((definition) =>
+    definition.slug === "careeros-local"
+      ? {
+          ...structuredClone(definition),
+          sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/tree/main",
+        }
+      : definition,
+  );
+  assert.throws(
+    () =>
+      assertDefinitionCatalog(mutableSource, {
+        localeOrder,
+        protectedLegacySlugs,
+      }),
+    /expected an immutable GitHub commit URL/u,
+  );
+});
+
+test("VECTOR is presented as the bounded self-hosted v3 product in every locale", () => {
+  const definition = caseDefinitions.find(({ slug }) => slug === "vector-placement-operations");
+  assert.ok(definition);
+  assert.equal(definition.updated, "2026-07-26");
+  assert.equal(definition.verifiedAt, "2026-07-26");
+  assert.equal(definition.sourceRef, "v3.0.0");
+  assert.equal(
+    definition.sourceUrl,
+    "https://github.com/ejupi-djenis30/vector-placement-operations/commit/a32002bae031fbfc34b9fb70013dbf9cf4766b9f",
+  );
+  assert.deepEqual(definition.stack, ["Node.js", "Express", "SQLite", "Docker", "Playwright"]);
+
+  const deploymentClaims = {
+    en: /one school per installation/iu,
+    it: /una scuola per installazione/iu,
+    de: /eine schule pro installation/iu,
+    fr: /une école par installation/iu,
+  };
+
+  for (const localeKey of localeOrder) {
+    const study = locales[localeKey].cases[definition.slug];
+    const copy = JSON.stringify(study);
+    assert.match(study.summary, /3\.0\.0/u);
+    assert.match(study.facts.flat().join(" "), deploymentClaims[localeKey]);
+    assert.equal(study.evidence.items.length, 5);
+    assert.match(study.architecture.intro, /AES-GCM/u);
+    assert.match(copy, /SQLite/u);
+    assert.match(copy, /SaaS/u);
+  }
+
+  const english = JSON.stringify(locales.en.cases[definition.slug]);
+  assert.match(english, /10,000-row cap/u);
+  assert.match(english, /retention hold/iu);
+  assert.match(english, /compliance certification/iu);
+  assert.doesNotMatch(english, /browser-only|browser-local persistence|local storage|focused demonstrator/iu);
+});
+
+test("related case studies have a deterministic editorial order", () => {
+  const expected = {
+    "ai-workflow-cloud-migration": [
+      "archival-workflow-management",
+      "retail-erp-evolution",
+    ],
+    "archival-workflow-management": [
+      "ai-workflow-cloud-migration",
+      "retail-erp-evolution",
+    ],
+    "retail-erp-evolution": [
+      "archival-workflow-management",
+      "ai-workflow-cloud-migration",
+    ],
+    "careeros-local": ["djenis-ai-agent", "vector-placement-operations"],
+    "eliza-lab": ["careeros-local", "djenis-ai-agent"],
+    "djenis-ai-agent": ["careeros-local", "eliza-lab"],
+    "dig-gopher-explorer": ["vector-placement-operations", "djenis-ai-agent"],
+    integradraw: ["dig-gopher-explorer", "vector-placement-operations"],
+    "vector-placement-operations": ["dig-gopher-explorer", "careeros-local"],
+  };
+
+  for (const localeKey of localeOrder) {
+    for (const definition of caseDefinitions) {
+      assert.deepEqual(
+        relatedCaseDefinitions(definition, caseDefinitions, {
+          localeKey,
+          limit: 2,
+        }).map(({ slug }) => slug),
+        expected[definition.slug],
+      );
+    }
+  }
+});
+
+test("methodology copy is complete and localized in every supported language", () => {
+  assert.match(methodology.published, /^\d{4}-\d{2}-\d{2}$/u);
+  assert.match(methodology.updated, /^\d{4}-\d{2}-\d{2}$/u);
+
+  for (const localeKey of localeOrder) {
+    const copy = methodology.copy[localeKey];
+    assert.ok(copy);
+    for (const key of ["eyebrow", "title", "description", "intro", "contactLabel"]) {
+      assert.equal(typeof copy[key], "string");
+      assert.ok(copy[key].trim());
+    }
+    assert.deepEqual(
+      copy.sections.map(({ id }) => id),
+      ["labs-evidence", "professional-anonymisation", "corrections"],
+    );
+    assert.ok(copy.sections.every(({ paragraphs }) => paragraphs.length > 0));
+    assert.ok(copy.sections.at(-1).paragraphs.join(" ").includes("info@ejupilabs.com"));
+    if (localeKey !== "en") assert.notEqual(copy.intro, methodology.copy.en.intro);
   }
 });
 
@@ -95,4 +292,36 @@ test("a missing localized leaf fails closed with its exact content path", () => 
       }),
     /it\/careeros-local\.decisions\.items\[1\]\.tradeoff: missing localized content/u,
   );
+});
+
+test("editorial chrome and visible byline labels are complete in every locale", () => {
+  const requiredKeys = [
+    "bylineBy",
+    "authorRole",
+    "verifiedSource",
+    "verifiedOn",
+    "related",
+    "methodology",
+    "personal",
+    "professionalShort",
+    "labsShort",
+    "searchLoading",
+    "searchFallback",
+    "lastVerified",
+    "caseLabel",
+    "casesLabel",
+    "indexLabel",
+    "noteLabel",
+    "countryLabel",
+    "systemViewLabel",
+    "versionedDeliveryPathLabel",
+    "processStateReturnLabel",
+  ];
+
+  for (const localeKey of localeOrder) {
+    for (const key of requiredKeys) {
+      assert.equal(typeof editorialUi[localeKey]?.[key], "string");
+      assert.ok(editorialUi[localeKey][key].trim().length > 0, `${localeKey}.${key} is empty`);
+    }
+  }
 });

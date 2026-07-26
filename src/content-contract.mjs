@@ -203,6 +203,7 @@ export function assertDefinitionCatalog(
     fail("caseDefinitions", "expected at least one definition.");
   }
 
+  const labsOnlyKeys = ["projectUrl", "sourceRef", "sourceUrl", "verifiedAt"];
   const slugs = new Set();
   const numbers = new Set();
   definitions.forEach((definition, index) => {
@@ -218,7 +219,7 @@ export function assertDefinitionCatalog(
       "published",
       "updated",
       "stack",
-      ...(definition.kind === "labs" ? ["projectUrl"] : []),
+      ...(definition.kind === "labs" ? labsOnlyKeys : []),
     ]);
     const unexpectedKeys = Object.keys(definition).filter((key) => !allowedKeys.has(key));
     if (unexpectedKeys.length > 0) {
@@ -268,8 +269,24 @@ export function assertDefinitionCatalog(
       fail(`${path}.updated`, "cannot be earlier than published.");
     }
     assertStringArray(definition.stack, `${path}.stack`);
+
     if (definition.kind === "labs") {
       assertNonEmptyString(definition.projectUrl, `${path}.projectUrl`);
+      assertNonEmptyString(definition.sourceRef, `${path}.sourceRef`);
+      assertNonEmptyString(definition.sourceUrl, `${path}.sourceUrl`);
+      if (!/^v\d+\.\d+\.\d+$/u.test(definition.sourceRef)) {
+        fail(`${path}.sourceRef`, "expected a semantic version reference.");
+      }
+      if (!DATE_PATTERN.test(definition.verifiedAt)) {
+        fail(`${path}.verifiedAt`, "expected YYYY-MM-DD.");
+      }
+      if (definition.verifiedAt < definition.published) {
+        fail(`${path}.verifiedAt`, "cannot be earlier than published.");
+      }
+      if (definition.verifiedAt > definition.updated) {
+        fail(`${path}.verifiedAt`, "cannot be later than updated.");
+      }
+
       let projectUrl;
       try {
         projectUrl = new URL(definition.projectUrl);
@@ -279,8 +296,28 @@ export function assertDefinitionCatalog(
       if (projectUrl.protocol !== "https:") {
         fail(`${path}.projectUrl`, "expected an HTTPS URL.");
       }
-    } else if (definition.projectUrl !== undefined) {
-      fail(`${path}.projectUrl`, "professional cases must not expose a project URL.");
+
+      let sourceUrl;
+      try {
+        sourceUrl = new URL(definition.sourceUrl);
+      } catch {
+        fail(`${path}.sourceUrl`, "expected an absolute URL.");
+      }
+      if (
+        sourceUrl.protocol !== "https:" ||
+        sourceUrl.hostname !== "github.com" ||
+        sourceUrl.search ||
+        sourceUrl.hash ||
+        !/^\/[^/]+\/[^/]+\/commit\/[0-9a-f]{40}$/u.test(sourceUrl.pathname)
+      ) {
+        fail(`${path}.sourceUrl`, "expected an immutable GitHub commit URL.");
+      }
+    } else {
+      for (const key of labsOnlyKeys) {
+        if (definition[key] !== undefined) {
+          fail(`${path}.${key}`, "professional cases must not expose Labs source metadata.");
+        }
+      }
     }
   });
 

@@ -69,6 +69,14 @@ test("case-study search is accent-insensitive and requires every query word", ()
   );
 });
 
+test("homepage search no longer depends on visible taxonomy controls", async () => {
+  const source = await readFile(new URL("../src/client.js", import.meta.url), "utf8");
+
+  assert.doesNotMatch(source, /data-case-type|data-case-topic/u);
+  assert.match(source, /url\.searchParams\.delete\("type"\)/u);
+  assert.match(source, /url\.searchParams\.delete\("topic"\)/u);
+});
+
 test("reading progress batches scroll work through requestAnimationFrame", async () => {
   const source = await readFile(new URL("../src/client.js", import.meta.url), "utf8");
 

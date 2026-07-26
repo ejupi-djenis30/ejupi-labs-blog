@@ -38,27 +38,23 @@ if (typeof document !== "undefined") {
 
   if (discovery instanceof HTMLElement && caseCards.length > 0) {
     const search = discovery.querySelector("[data-case-search]");
-    const topic = discovery.querySelector("[data-case-topic]");
-    const typeButtons = [
-      ...discovery.querySelectorAll("[data-case-type]"),
-    ].filter((element) => element instanceof HTMLButtonElement);
     const clearButtons = [
       ...document.querySelectorAll("[data-case-clear]"),
     ].filter((element) => element instanceof HTMLButtonElement);
     const count = discovery.querySelector("[data-case-count]");
     const countLabel = discovery.querySelector("[data-case-count-label]");
+    const searchState = discovery.querySelector("[data-search-state]");
     const empty = document.querySelector("[data-case-empty]");
     const searchIndexUrl = discovery.dataset.searchIndexUrl ?? "";
     const fullTextBySlug = new Map();
     let searchIndexState = "idle";
     let searchIndexPromise = null;
-    let selectedKind = "";
 
     if (
       search instanceof HTMLInputElement &&
-      topic instanceof HTMLSelectElement &&
       count instanceof HTMLElement &&
       countLabel instanceof HTMLElement &&
+      searchState instanceof HTMLElement &&
       empty instanceof HTMLElement
     ) {
       discovery.hidden = false;
@@ -66,31 +62,15 @@ if (typeof document !== "undefined") {
       function readUrlState() {
         const parameters = new URLSearchParams(window.location.search);
         search.value = parameters.get("q") ?? "";
-        const requestedKind = parameters.get("type") ?? "";
-        selectedKind = typeButtons.some(
-          (button) => button.dataset.caseType === requestedKind,
-        )
-          ? requestedKind
-          : "";
-        const requestedTopic = parameters.get("topic") ?? "";
-        topic.value = [...topic.options].some(
-          (option) => option.value === requestedTopic,
-        )
-          ? requestedTopic
-          : "";
       }
 
       function writeUrlState() {
         const url = new URL(window.location.href);
-        const values = {
-          q: search.value.trim(),
-          type: selectedKind,
-          topic: topic.value,
-        };
-        for (const [key, value] of Object.entries(values)) {
-          if (value) url.searchParams.set(key, value);
-          else url.searchParams.delete(key);
-        }
+        const query = search.value.trim();
+        if (query) url.searchParams.set("q", query);
+        else url.searchParams.delete("q");
+        url.searchParams.delete("type");
+        url.searchParams.delete("topic");
         window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
       }
 
@@ -100,6 +80,7 @@ if (typeof document !== "undefined") {
 
         searchIndexState = "loading";
         discovery.setAttribute("aria-busy", "true");
+        searchState.textContent = searchState.dataset.loading ?? "";
         searchIndexPromise = (async () => {
           try {
             if (!searchIndexUrl) throw new Error("Search index URL is missing.");
@@ -127,9 +108,11 @@ if (typeof document !== "undefined") {
               fullTextBySlug.set(entry.slug, entry.text);
             }
             searchIndexState = "loaded";
+            searchState.textContent = "";
           } catch {
             fullTextBySlug.clear();
             searchIndexState = "unavailable";
+            searchState.textContent = searchState.dataset.fallback ?? "";
           } finally {
             discovery.removeAttribute("aria-busy");
           }
@@ -139,6 +122,11 @@ if (typeof document !== "undefined") {
 
       function updateResults({ updateUrl = true } = {}) {
         const hasQuery = normalizeSearchValue(search.value).length > 0;
+        if (!hasQuery) {
+          searchState.textContent = "";
+        } else if (searchIndexState === "unavailable") {
+          searchState.textContent = searchState.dataset.fallback ?? "";
+        }
         if (hasQuery && (searchIndexState === "idle" || searchIndexState === "loading")) {
           if (updateUrl) writeUrlState();
           if (searchIndexState === "idle") {
@@ -153,25 +141,15 @@ if (typeof document !== "undefined") {
           const visible = matchesCaseStudy(
             {
               text: fullTextBySlug.get(slug) ?? card.textContent ?? "",
-              kind: card.dataset.kind ?? "",
-              topic: card.dataset.topic ?? "",
             },
             {
               query: search.value,
-              selectedKind,
-              selectedTopic: topic.value,
             },
           );
           card.hidden = !visible;
           if (visible) visibleCount += 1;
         }
 
-        for (const button of typeButtons) {
-          button.setAttribute(
-            "aria-pressed",
-            String(button.dataset.caseType === selectedKind),
-          );
-        }
         count.textContent = String(visibleCount);
         countLabel.textContent =
           visibleCount === 1
@@ -181,24 +159,15 @@ if (typeof document !== "undefined") {
         if (updateUrl) writeUrlState();
       }
 
-      function resetFilters({ focusSearch = true } = {}) {
+      function resetSearch({ focusSearch = true } = {}) {
         search.value = "";
-        topic.value = "";
-        selectedKind = "";
         updateResults();
         if (focusSearch) search.focus();
       }
 
       search.addEventListener("input", () => updateResults());
-      topic.addEventListener("change", () => updateResults());
-      for (const button of typeButtons) {
-        button.addEventListener("click", () => {
-          selectedKind = button.dataset.caseType ?? "";
-          updateResults();
-        });
-      }
       for (const button of clearButtons) {
-        button.addEventListener("click", () => resetFilters());
+        button.addEventListener("click", () => resetSearch());
       }
       document.addEventListener("keydown", (event) => {
         const target = event.target;

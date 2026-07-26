@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { caseDefinitions } from "../src/content.mjs";
+import { editorialUi } from "../src/editorial.mjs";
 
 const locales = ["/", "/it/", "/de/", "/fr/"];
 
@@ -47,7 +48,6 @@ for (const localePath of locales) {
     await expect(page.locator("body")).toHaveCSS("position", "fixed");
     await expect(menu).toHaveCSS("position", "fixed");
     await expect(menu).toHaveCSS("top", "72px");
-    await expect(menu).toHaveCSS("height", "772px");
     await expect(menu).toHaveCSS("max-height", "none");
     await expect(menu).toHaveCSS("background-color", "rgb(244, 241, 234)");
     await expect(menu).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
@@ -109,19 +109,56 @@ test("desktop navigation remains available after an open mobile menu is resized"
   expect(overflow).toBeLessThanOrEqual(0);
 });
 
-test("archive search, taxonomy, URL state and empty state stay in sync", async ({
+test("the editorial header leads directly into search and case studies", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  await expect(page.locator(".index-register, .intro-section, .principle-grid, .site-cta")).toHaveCount(0);
+  await expect(page.locator("[data-case-type], [data-case-topic]")).toHaveCount(0);
+  await expect(page.locator("[data-case-search]")).toBeVisible();
+  await expect(page.locator("[data-case-search]")).toBeInViewport();
+
+  const layout = await page.evaluate(() => {
+    const hero = document.querySelector(".index-hero");
+    const discovery = document.querySelector("[data-discovery]");
+    const caseList = document.querySelector("[data-case-list]");
+    if (!hero || !discovery || !caseList) return null;
+    const heroBox = hero.getBoundingClientRect();
+    const discoveryBox = discovery.getBoundingClientRect();
+    const listBox = caseList.getBoundingClientRect();
+    const heroBeforeDiscovery = Boolean(
+      hero.compareDocumentPosition(discovery) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    const discoveryBeforeCases = Boolean(
+      discovery.compareDocumentPosition(caseList) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    return {
+      heroHeight: heroBox.height,
+      ordered: heroBeforeDiscovery && discoveryBeforeCases,
+      discoveryTouchesList: Math.abs(discoveryBox.bottom - listBox.top) <= 1,
+    };
+  });
+
+  expect(layout).not.toBeNull();
+  expect(layout.heroHeight).toBeLessThan(630);
+  expect(layout.ordered).toBeTruthy();
+  expect(layout.discoveryTouchesList).toBe(true);
+});
+
+test("archive search, URL state and empty state stay in sync", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/?q=llama.cpp&type=labs");
+  await page.goto("/?q=llama.cpp");
 
   const cards = page.locator("[data-case-card]:visible");
   await expect(page.locator("[data-discovery]")).toBeVisible();
   await expect(page.locator("[data-case-search]")).toHaveValue("llama.cpp");
-  await expect(page.locator('[data-case-type="labs"]')).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
+  await expect(page.locator("[data-case-type], [data-case-topic]")).toHaveCount(0);
   await expect(cards).toHaveCount(1);
   await expect(page.locator("[data-case-count]")).toHaveText("1");
 
@@ -140,6 +177,102 @@ test("archive search, taxonomy, URL state and empty state stay in sync", async (
   await page.locator("body").click({ position: { x: 10, y: 200 } });
   await page.keyboard.press("/");
   await expect(page.locator("[data-case-search]")).toBeFocused();
+});
+
+test("archive previews adapt from three columns to two and one", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const columnCount = () =>
+    page.locator("[data-case-list]").evaluate(
+      (element) =>
+        getComputedStyle(element).gridTemplateColumns.split(" ").length,
+    );
+
+  await expect.poll(columnCount).toBe(3);
+  await page.setViewportSize({ width: 900, height: 900 });
+  await expect.poll(columnCount).toBe(2);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect.poll(columnCount).toBe(1);
+});
+
+for (const { width, localePath } of [
+  { width: 390, localePath: "/it/" },
+  { width: 320, localePath: "/de/" },
+]) {
+  test(`${width}px archive keeps search and previews compact`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto(localePath);
+
+    const discovery = page.locator("[data-discovery]");
+    await discovery.scrollIntoViewIfNeeded();
+    const geometry = await page.evaluate(() => {
+      const discoveryBox = document
+        .querySelector("[data-discovery]")
+        ?.getBoundingClientRect();
+      const searchBox = document
+        .querySelector("[data-case-search]")
+        ?.getBoundingClientRect();
+      const firstCard = document
+        .querySelector("[data-case-card]")
+        ?.getBoundingClientRect();
+      const list = document.querySelector("[data-case-list]");
+      const summary = document.querySelector(".case-card__summary");
+      return {
+        overflow:
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+        removedFilterCount: document.querySelectorAll(
+          "[data-case-type], [data-case-topic]",
+        ).length,
+        searchHeight: searchBox?.height ?? 0,
+        discoveryHeight: discoveryBox?.height ?? Infinity,
+        firstCardHeight: firstCard?.height ?? Infinity,
+        columns: list
+          ? getComputedStyle(list).gridTemplateColumns.split(" ").length
+          : 0,
+        summaryClamp: summary
+          ? getComputedStyle(summary).webkitLineClamp
+          : "",
+      };
+    });
+
+    expect(geometry.overflow).toBeLessThanOrEqual(0);
+    expect(geometry.removedFilterCount).toBe(0);
+    expect(geometry.searchHeight).toBeGreaterThanOrEqual(48);
+    expect(geometry.discoveryHeight).toBeLessThan(220);
+    expect(geometry.firstCardHeight).toBeLessThan(520);
+    expect(geometry.columns).toBe(1);
+    expect(geometry.summaryClamp).toBe("3");
+
+    await page.locator("[data-case-search]").fill("llama.cpp");
+    await expect(page.locator("[data-case-card]:visible")).toHaveCount(1);
+    await expect(page).toHaveURL(/q=llama\.cpp/u);
+  });
+}
+
+test("full-text search announces loading and a localized fallback", async ({
+  page,
+}) => {
+  let finishRequest;
+  await page.route(/\/assets\/search\.it\.[0-9a-f]{12}\.json$/u, async (route) => {
+    await new Promise((resolve) => {
+      finishRequest = resolve;
+    });
+    await route.abort();
+  });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/it/");
+  const state = page.locator("[data-search-state]");
+  await expect(state).toHaveAttribute("role", "status");
+  await page.locator("[data-case-search]").fill("cloud");
+  await expect(state).toHaveText(editorialUi.it.searchLoading);
+  await expect.poll(() => typeof finishRequest).toBe("function");
+  finishRequest();
+  await expect(state).toHaveText(editorialUi.it.searchFallback);
+  await expect(page.locator("[data-case-card]:visible").first()).toBeVisible();
 });
 
 test("full-text index stays lazy and finds copy that exists only inside an article", async ({

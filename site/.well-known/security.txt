@@ -1,0 +1,4 @@
+Contact: mailto:info@ejupilabs.com
+Expires: 2027-07-25T00:00:00Z
+Preferred-Languages: en, it, de, fr
+Canonical: https://blog.ejupilabs.com/.well-known/security.txt

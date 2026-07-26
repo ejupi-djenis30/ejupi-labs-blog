@@ -18,13 +18,13 @@ export const labsLocales = {
         ["Prodotto", "Utility desktop open source"],
         ["Ruolo", "Prodotto, architettura e implementazione"],
         ["Confine di fiducia", "Dispositivo locale per impostazione predefinita"],
-        ["Stato", "Release candidate v1.6.0 e pipeline di rilascio firmata"],
+        ["Stato", "Release v1.6.0 firmata con pipeline di rilascio verificata"],
       ],
       evidence: {
         title: "Registro delle evidenze",
         intro: "Il repository documenta questi controlli e limiti riproducibili:",
         items: [
-          ["Backend", "1.369 test superati nella candidate v1.6.0; una review indipendente ha rieseguito 42 test su portabilità e storage."],
+          ["Backend", "1.369 test superati per la v1.6.0; una review indipendente ha rieseguito 42 test su portabilità e storage."],
           ["Frontend + shell", "334 test frontend in 64 file e 17 test della libreria Rust superati, incluso il writer nativo dei backup."],
           ["Verifica dei backup", "Gli archivi dalla versione 1 alla 4 ricevono un preflight completo e non mutante; la risposta contiene metadati limitati, non il contenuto dell’archivio."],
           ["Fixture di scala", "Una fixture agenda con 10.000 candidature registra un p95 di 68,670 ms rispetto al budget di progetto di 200 ms."],
@@ -237,7 +237,7 @@ export const labsLocales = {
         ],
       },
       architecture: {
-        title: "Un ciclo osserva–decidi–autorizza–verifica",
+        title: "Un ciclo che osserva, decide, autorizza e verifica",
         intro:
           "La percezione acquisisce uno screenshot o l’albero di accessibilità. Gemini restituisce una singola chiamata di funzione dichiarata. Il livello di policy verifica supporto del runtime, livello e allowlist prima di eseguire uno strumento. L’osservazione risultante diventa l’evidenza del turno successivo.",
         labels: ["PERCEZIONE", "TOOL CALL GEMINI", "CONTROLLO POLICY", "AZIONE", "OSSERVAZIONE VERIFICATA"],
@@ -283,93 +283,94 @@ export const labsLocales = {
     }),
     "dig-gopher-explorer": localize("dig-gopher-explorer", {
       category: "Strumenti per protocolli",
-      title: "Rendere ispezionabile il protocollo Gopher senza nasconderne i limiti",
+      title: "Trasformare Gopher in uno strumento locale controllato e ispezionabile",
       summary:
-        "DIG affianca un vero client Gopher da terminale a un explorer deterministico nel browser. La CLI apre risorse gopher:// tramite TCP limitato; l’edizione web insegna lo stesso parser attraverso una fixture sicura.",
+        "DIG 3.0.0 è un vero client Gopher con tre superfici separate: una CLI su TCP, un explorer live nel browser dietro un gateway locale same-origin e un sito GitHub Pages basato solo su fixture. Il core condiviso interpreta risposte RFC 1436 e indirizzi RFC 4266 senza fingere che un browser statico possa aprire socket grezzi.",
       facts: [
-        ["Prodotto", "Client da terminale ed explorer del protocollo"],
-        ["Ruolo", "Core del protocollo, CLI ed esperienza browser"],
-        ["Runtime", "Node.js e web statico"],
-        ["Stato", "CLI installabile e app Pages disponibile offline"],
+        ["Prodotto", "CLI Gopher, gateway locale ed explorer nel browser"],
+        ["Protocollo", "Richieste, menu e testo RFC 1436; URL e ricerca RFC 4266"],
+        ["Sicurezza", "Policy fail-closed sulle destinazioni con DNS pinning"],
+        ["Stato", "Versione open source v3.0.0 con licenza MIT"],
       ],
       evidence: {
         title: "Registro delle evidenze",
-        intro: "Le affermazioni su protocollo e trasporto sono sostenute da limiti di progetto espliciti:",
+        intro: "Le affermazioni sulla v3.0.0 sono legate a controlli eseguibili e limiti visibili:",
         items: [
-          ["Verifica", "68 dichiarazioni di test Node.js e due dichiarazioni E2E nel browser nel rilascio sottoposto ad audit."],
-          ["Limiti richiesta", "Richiesta massima di 8 KiB, scadenza totale di 5 secondi, timeout di inattività di 2,5 secondi e limite predefinito di 10.000 voci di menu."],
-          ["Limiti risposta", "Soglia predefinita di 1 MiB per la risposta e soglia assoluta configurabile di 10 MiB."],
-          ["Limite", "Il TCP diretto non è cifrato; TLS, autenticazione, Gopher+, Telnet e download automatici non sono supportati."],
+          ["Verifica", "90 test Node.js e quattro E2E Chromium superati, incluso l’intero percorso live su una viewport esatta di 320 px."],
+          ["Policy di rete", "La modalità hosted richiede un token, rifiuta un hostname se anche una sola risposta DNS non è pubblica e si connette soltanto all’indirizzo già validato."],
+          ["Integrità dell’output", "La CLI scrive in un file temporaneo nella stessa cartella e rende visibile il percorso finale con un’operazione atomica; i byte binari non vengono mai stampati in un terminale interattivo."],
+          ["Runtime", "L’audit delle dipendenze rileva zero vulnerabilità e l’immagine Docker di produzione supera lo smoke test come processo non privilegiato."],
+          ["Confine pubblico", "GitHub Pages offre l’explorer soltanto con fixture incluse nel repository. Le richieste Gopher live richiedono il gateway same-origin."],
         ],
       },
       starting: {
-        title: "Perché ricostruire un piccolo client di protocollo",
+        title: "La distanza tra uno schema del protocollo e un client utile",
         paragraphs: [
-          "Il repository era nato come prototipo visuale Flutter, ma il problema utile era più profondo: interpretare fedelmente un menu Gopher, mostrare il significato di ogni campo e permettere a chi usa il terminale di aprire una risorsa reale senza un comportamento di rete illimitato.",
-          "I browser non possono creare la connessione TCP grezza richiesta da Gopher. Invece di nascondere il limite, il progetto usa un parser in due contesti trasparenti: TCP reale nella CLI e una fixture deterministica nell’explorer pubblico.",
+          "L’interfaccia precedente poteva illustrare un menu Gopher, ma non provava le parti importanti: come un selector diventa byte su un socket, dove termina il framing del testo o cosa accade se un server remoto si blocca, dichiara un tipo errato o restituisce dati binari.",
+          "La versione 3.0.0 ricostruisce il progetto attorno al percorso reale della richiesta. La CLI apre connessioni TCP limitate. Il browser locale usa lo stesso client tramite un gateway same-origin. Il sito Pages resta basato solo su fixture perché JavaScript nel browser non può creare il socket TCP grezzo richiesto da Gopher.",
         ],
       },
       constraints: {
-        title: "I confini del protocollo",
-        intro: "Anche un piccolo client richiede regole esplicite per rete e rendering:",
+        title: "Regole che l’implementazione non può confondere",
+        intro: "Il protocollo è semplice; il confine di fiducia non lo è:",
         items: [
-          "Le richieste hanno scadenza assoluta, timeout di inattività, limite di 8 KiB e dimensione della risposta vincolata.",
-          "I byte binari restano binari e non vengono mai stampati direttamente in un terminale interattivo.",
-          "Le sequenze di controllo del terminale vengono neutralizzate prima che testo non attendibile arrivi sullo schermo.",
-          "Le righe di menu malformate restano visibili, così l’explorer non trasforma errori di parsing in dati plausibili.",
+          "Il parsing RFC 4266 deve conservare selector e query, mentre framing RFC 1436, terminatori del testo, dot-stuffing e tipi binari mantengono regole distinte sulla rete e nell’output.",
+          "Ogni operazione di rete deve avere scadenza totale, timeout di inattività, limite della richiesta, limite della risposta e tetto alle voci di menu.",
+          "Le richieste hosted devono bloccarsi su risposte DNS private, loopback o miste e devono connettersi all’indirizzo validato senza risolvere di nuovo il nome.",
+          "Il testo non attendibile non deve controllare il terminale e le risposte binarie non possono essere decodificate o stampate come testo.",
         ],
       },
       diagnosis: {
-        title: "Un parser, due trasporti",
+        title: "Un gateway locale, non un proxy aperto",
         paragraphs: [
-          "Il parser e le regole URL sono utili indipendentemente dalla connessione di rete. Mantenerli nel sito statico rende il protocollo comprensibile e testabile nel browser senza introdurre un proxy che cambierebbe il modello di sicurezza.",
-          "La CLI aggiunge il confine di trasporto mancante: TCP limitato, connessioni dirette non cifrate e gestione esplicita degli elementi menu, testo, ricerca e binari.",
+          "Mettere un proxy HTTP aperto a Internet dietro l’explorer renderebbe la pagina comoda e creerebbe contemporaneamente un servizio SSRF. DIG mantiene invece il gateway vicino all’utente, accetta chiamate API soltanto dalla propria origine browser e non concede accesso CORS ad altri siti.",
+          "La modalità hosted è esplicita, non dedotta. Richiede un token, blocca le destinazioni private e vincola il risultato DNS validato alla connessione TCP. L’accesso locale a indirizzi privati esiste soltanto dietro un flag esplicito e un avviso visibile.",
         ],
       },
       architecture: {
-        title: "Il percorso della richiesta",
+        title: "Un solo percorso di fetch, due interfacce live",
         intro:
-          "Un URL gopher:// diventa host, porta e selector. La CLI invia il selector tramite TCP limitato e passa i byte restituiti all’interpretazione condivisa di menu e testo. Il browser parte dallo stesso confine di parsing con una fixture inclusa nel repository.",
-        labels: ["URL GOPHER", "CONTRATTO URL", "TCP LIMITATO", "PARSER MENU", "TERMINALE O WEB"],
-        caption: "Il browser illustra il protocollo; soltanto la CLI oltrepassa il confine TCP.",
+          "Un URL Gopher e l’eventuale query di ricerca passano attraverso validazione dell’URL, policy sulla destinazione e una connessione TCP limitata e vincolata all’indirizzo validato. La risposta entra quindi nel parser RFC condiviso. La CLI la presenta o la salva direttamente; il gateway same-origin restituisce un risultato tipizzato all’explorer.",
+        labels: ["URL + QUERY", "POLICY DESTINAZIONE", "TCP VINCOLATO", "PARSER RFC", "CLI + EXPLORER"],
+        caption: "CLI ed explorer locale condividono il percorso reale del protocollo; Pages si ferma al confine delle fixture.",
       },
       decisions: {
-        title: "Le scelte che mantengono leggibile il client",
-        intro: "Il progetto preferisce un comportamento del protocollo visibile a una comodità opaca.",
+        title: "Scelte che rendono visibile il confine",
+        intro: "Ogni superficie dichiara con chiarezza cosa può raggiungere e cosa conserva.",
         items: [
           {
-            title: "Conservare i selector",
-            body: "Gli URL di ricerca RFC 4266 vengono interpretati senza ridurre i segmenti punto del selector che appartengono al percorso del protocollo remoto.",
-            tradeoff: "I selector Gopher non si comportano come i consueti percorsi HTTP, quindi la distinzione deve restare esplicita.",
+            title: "Risolvere una volta e connettersi a ciò che è stato verificato",
+            body: "La policy hosted rifiuta l’intero hostname se una risposta DNS non è pubblica. Una risoluzione valida restituisce l’indirizzo esatto usato dal client TCP, chiudendo il consueto divario tra controllo e connessione.",
+            tradeoff: "Il rifiuto delle risposte miste può bloccare configurazioni DNS insolite ma legittime; è più sicuro che indovinare quale risposta intendesse usare un attaccante.",
           },
           {
-            title: "Fallire in sicurezza nel terminale",
-            body: "Il testo viene ripulito dalle sequenze di controllo del terminale, mentre le risorse binarie devono essere reindirizzate a un file.",
-            tradeoff: "Il client rifiuta alcuni percorsi di output comodi perché l’integrità del terminale viene prima.",
+            title: "Mantenere le richieste live same-origin",
+            body: "Il gateway serve interfaccia e API JSON, verificando origine, formato del body, frequenza e dimensioni prima di ogni richiesta Gopher. Pages offre lo stesso explorer su fixture, senza accesso live o cross-origin.",
+            tradeoff: "Una risorsa live richiede il gateway locale o ospitato consapevolmente; il sito pubblico resta statico invece di diventare un’API proxy riutilizzabile.",
           },
           {
-            title: "Mantenere deterministica la demo web",
-            body: "GitHub Pages usa una fixture inclusa e non sostiene mai di connettersi a un server Gopher reale.",
-            tradeoff: "L’explorer è uno strumento didattico, non un client di rete nel browser.",
+            title: "Conservare i byte della risposta",
+            body: "L’ispezione raw è facoltativa per testo e menu. Le risorse binarie conservano byte esatti, dimensione e digest SHA-256; il browser le scarica e la CLI le salva atomicamente.",
+            tradeoff: "L’esattezza richiede percorsi separati per testo e binario, ma evita corruzione UTF-8 silenziosa e file finali incompleti.",
           },
         ],
       },
       delivery: {
-        title: "Integrità del rilascio",
+        title: "Come viene verificata la v3.0.0",
         paragraphs: [
-          "I candidati al rilascio vengono compilati due volte; gli archivi npm e le evidenze SBOM normalizzate devono coincidere byte per byte. Uno smoke test con prefisso pulito esegue il comando pubblicato prima del rilascio.",
-          "La pubblicazione con tag verifica versione, discendenza dal main revisionato, checksum, attestazioni e inventario immutabile del rilascio. Nulla di questo amplia l’ambito del protocollo: Gopher+, TLS, Telnet, autenticazione e download automatici restano esclusi.",
+          "I 90 test Node.js coprono parsing RFC, fixture TCP reali, policy di rete, contratto HTTP, output atomico della CLI, asset statici e regole di rilascio. Quattro flussi Chromium guidano l’explorer attraverso il gateway locale, includendo ricerca, cronologia, preferiti, ispezione raw, esportazione, download binario e layout a 320 px.",
+          "Il gate di rilascio esegue anche un audit delle dipendenze con zero vulnerabilità e avvia l’immagine Docker non privilegiata per uno smoke test runtime. Il progetto è distribuito sotto MIT; la build Pages resta statica, mentre il container avvia soltanto il gateway hosted autenticato.",
         ],
       },
       result: {
-        title: "Cosa possono ispezionare gli utenti",
+        title: "Cosa funziona oggi",
         paragraphs: [
-          "Dal terminale si possono aprire menu, testi e ricerche Gopher reali attraverso un trasporto limitato. Nel browser si può esplorare una fixture accessibile da tastiera e controllare tipo, selector, host e porta a ogni passaggio.",
-          "Il progetto è volutamente circoscritto. Proprio questa scelta rende facili da trovare il confine di rete, il comportamento del parser e le funzionalità non supportate.",
+          "Dal terminale si possono recuperare menu, testi, ricerche e tipi binari comuni reali, verificare hash e dimensioni oppure salvare i byte esatti senza esporre un file finale parziale. Nell’explorer locale lo stesso percorso live aggiunge cronologia, preferiti, moduli di ricerca, ispezione della risposta raw, esportazione JSON e download binario.",
+          "DIG non trasforma Gopher in HTTP. Il traffico verso un server Gopher resta in chiaro, Pages non recupera risorse live e Gopher+, TLS, sessioni Telnet e crawling ricorsivo rimangono fuori dal contratto supportato.",
         ],
       },
       scope:
-        "L’implementazione copre il comportamento documentato di richiesta base, menu, testo e ricerca. Il traffico Gopher diretto non è cifrato e gli ottetti arbitrari non UTF-8 nei selector non rientrano nell’ambito attuale.",
+        "Questo case study descrive l’implementazione verificata della v3.0.0: framing RFC 1436 per menu e testo, URL e ricerca RFC 4266, tipi binari comuni, TCP limitato, gateway same-origin ed explorer Pages basato solo su fixture. UTF-8 è la codifica supportata per i campi URL; il progetto non offre autenticazione del server né trasporto Gopher cifrato.",
     }),
     integradraw: localize("integradraw", {
       category: "Matematica computazionale",
@@ -462,94 +463,95 @@ export const labsLocales = {
         "IntegraDraw è uno strumento didattico esplorativo. Non offre integrazione simbolica, dimostrazioni, gestione garantita delle discontinuità né risultati esatti per funzioni arbitrarie.",
     }),
     "vector-placement-operations": localize("vector-placement-operations", {
-      category: "Software operativo",
-      title: "Ricostruire una dashboard per i tirocini attorno a un modello dati piccolo e verificabile",
+      category: "Software gestionale scolastico",
+      title: "Progettare un sistema per i tirocini che la scuola possa gestire in autonomia",
       summary:
-        "VECTOR trasforma una coorte fittizia di tirocini in una console operativa solo browser. Ricerca, filtri di stato, viste dei progressi e aggiornamenti delle tappe funzionano localmente, senza account, backend o servizio di analytics.",
+        "VECTOR 3.0.0 è un sistema white-label per la gestione dei tirocini che ogni scuola può eseguire sulla propria infrastruttura. Riunisce coorti, studenti, aziende ospitanti, assegnazioni, ore, verifiche ed evidenze in un flusso con regole di accesso applicate dalle API.",
       facts: [
-        ["Prodotto", "Dashboard operativa per i tirocini"],
-        ["Ruolo", "Ricostruzione del prodotto e frontend engineering"],
-        ["Dati", "Solo record fittizi"],
-        ["Stato", "Applicazione statica funzionante"],
+        ["Prodotto", "Gestione white-label dei tirocini in self-hosting"],
+        ["Ruolo", "Prodotto, architettura e implementazione clean-room"],
+        ["Distribuzione", "Una scuola per installazione"],
+        ["Stato", "Versione open source 3.0.0 con licenza MIT"],
       ],
       evidence: {
         title: "Registro delle evidenze",
-        intro: "L’edizione pubblica include una fixture volutamente piccola e verificabile:",
+        intro: "Il repository della versione 3.0.0 lega le promesse del prodotto a controlli concreti:",
         items: [
-          ["Fixture", "Sei tirocini fittizi distribuiti in quattro stati; due attivi e due in revisione."],
-          ["Vista derivata", "La fixture verificata riporta un completamento aggregato del 67% su obiettivi di 160/180 ore."],
-          ["Verifica", "30 dichiarazioni di test Node.js e cinque E2E nel browser, inclusi mobile a 390 px e controllo esatto dell’overflow a 320 px."],
-          ["Limite", "Tutta la persistenza appartiene a un singolo browser. Il progetto non è un sistema di tirocinio multiutente in produzione."],
+          ["Accesso", "I permessi di amministratori, coordinatori, tutor e lettori vengono verificati dal server. L’amministratore iniziale deve sostituire la password temporanea prima di accedere ai dati operativi."],
+          ["Record", "SQLite funziona in modalità WAL con migrazioni esplicite. Il controllo delle revisioni impedisce che un operatore sovrascriva in silenzio le modifiche di un altro."],
+          ["Flusso", "Requisiti di idoneità e transizioni regolano i tirocini, le ore verificate o annullate, i check-in e le evidenze, che possono essere sostituite senza cancellarne la storia."],
+          ["Governance", "I metadati di audit non contengono campi personali. La retention rispetta i blocchi applicati agli studenti e richiede l’impronta esatta dell’anteprima prima di eliminare record in lotti limitati."],
+          ["Distribuzione", "Il percorso di rilascio crea un artefatto sorgente riproducibile, lo verifica dopo l’estrazione e prova backup, ispezione, ripristino e compattazione sull’applicazione pacchettizzata."],
         ],
       },
       starting: {
-        title: "La domanda di prodotto",
+        title: "Il problema operativo",
         paragraphs: [
-          "Coordinare i tirocini coinvolge persone, organizzazioni ospitanti, supervisori, tappe e ore. Una console utile deve rispondere rapidamente a domande operative semplici: chi è bloccato, cosa scade e quale record richiede attenzione.",
-          "Il concetto accademico originale è stato ricostruito come applicazione statica volutamente limitata. I dati pubblici sono fittizi, le modifiche restano nel browser e ogni stato della demo può essere ripristinato.",
+          "Gestire i tirocini non significa soltanto mostrare una dashboard. Una scuola deve coordinare coorti, studenti, aziende ospitanti, tutor, date, ore, check-in ed evidenze firmate. Ruoli diversi devono vedere parti diverse dello stesso record, e una correzione non deve cancellare ciò che è successo prima.",
+          "La precedente implementazione accademica non poteva essere riutilizzata come base di prodotto. Ho ricostruito VECTOR da zero, prendendo come riferimento soltanto il dominio dei tirocini. Nel nuovo repository non sono entrati codice legacy, dati personali, nomi o risorse grafiche del progetto precedente.",
         ],
       },
       constraints: {
-        title: "Cosa promette l’edizione pubblica",
-        intro: "La ricostruzione mantiene un confine piccolo e ispezionabile:",
+        title: "Cosa deve garantire un sistema gestito dalla scuola",
+        intro: "L’architettura parte da quattro vincoli pratici:",
         items: [
-          "Ogni persona e organizzazione nel dataset distribuito è fittizia.",
-          "La ricerca e i filtri di stato lavorano su un unico modello esplicito di tirocinio.",
-          "Gli aggiornamenti delle tappe persistono soltanto nel local storage del browser e possono essere azzerati.",
-          "Non esistono account, database, endpoint di analytics o API remote di scrittura.",
+          "Ogni installazione appartiene a una sola scuola, che controlla database, identità visiva, backup e distribuzione.",
+          "Permessi e ambito dei tutor devono essere applicati dal server prima di selezionare, contare o esportare i record.",
+          "Ore verificate ed evidenze firmate richiedono percorsi di correzione espliciti che conservino il record originale.",
+          "Import, export, retention e ripristino devono essere limitati, verificabili e ripetibili in sicurezza dopo un errore.",
         ],
       },
       diagnosis: {
-        title: "Modellare il processo prima della dashboard",
+        title: "Definire prima il confine di proprietà",
         paragraphs: [
-          "Una dashboard diventa fragile quando totali, etichette e stato delle righe derivano ciascuno lo stato in modo diverso. Il primo compito è stato rendere lo stato del tirocinio e il calcolo delle ore un unico modello verificato.",
-          "L’interfaccia è poi diventata una proiezione di quel modello: metriche della coorte, filtri e progressi individuali usano le stesse funzioni, mentre la persistenza locale conserva soltanto lo stato di lavoro fittizio.",
+          "Spostare più stato nel browser avrebbe comunque lasciato irrisolte le domande difficili. Avrebbe potuto nascondere i controlli di ruolo nell’interfaccia, caricare l’intera scuola in memoria e trattare un campo modificato come se il valore precedente non fosse mai esistito.",
+          "VECTOR assegna ogni installazione a una scuola invece di costruire un servizio condiviso multi-tenant. La responsabilità operativa è chiara e backup, retention e personalizzazione white-label restano più semplici da controllare. Il progetto distribuisce software, non una piattaforma cloud gestita.",
         ],
       },
       architecture: {
-        title: "Un confine di prodotto statico completo",
+        title: "Un server compatto con confini espliciti",
         intro:
-          "Un dataset fittizio incluso nel repository alimenta il modello dei tirocini. Ricerca, filtri, riepiloghi della coorte e transizioni delle tappe leggono lo stesso stato derivato. Il browser conserva le modifiche localmente; il reset ripristina la fixture originale.",
-        labels: ["DATI FITTIZI", "MODELLO TIROCINI", "RICERCA + FILTRI", "TAPPE", "LOCAL STORAGE"],
-        caption: "Un unico modello locale al browser alimenta il riepilogo e la vista del singolo tirocinio.",
+          "L’ambiente nel browser comunica con un’API Express che gestisce autenticazione, ruoli e transizioni. SQLite conserva i record di una scuola in modalità WAL. I cursori opachi AES-GCM legano la paginazione alla scuola, all’ambito e ai filtri attivi; le ricerche limitate evitano di caricare intere tabelle nei moduli.",
+        labels: ["AMBIENTE WEB", "POLICY LAYER EXPRESS", "SQLITE WAL", "AUDIT + RETENTION", "BACKUP + RELEASE"],
+        caption: "Il server decide cosa un operatore può vedere e modificare; il browser presenta quella decisione.",
       },
       decisions: {
-        title: "Le scelte che rendono affidabile la demo",
-        intro: "L’app pubblica fa meno, ma ogni interazione visibile è reale.",
+        title: "Le scelte che rendono più sicuro il lavoro quotidiano",
+        intro: "Il prodotto preferisce regole visibili a uno stato nascosto ma comodo.",
         items: [
           {
-            title: "Distribuire record fittizi",
-            body: "L’intera coorte è progettata per la dimostrazione, quindi l’applicazione non richiede esportazioni di produzione censurate.",
-            tradeoff: "La demo non può sostenere di rappresentare il processo o il volume dati di un’istituzione reale.",
+            title: "Applicare l’ambito prima della paginazione",
+            body: "Ogni elenco applica scuola e ruolo prima del limite. I cursori opachi autenticati legano quell’ambito ai filtri e a una posizione di ordinamento stabile. Le ricerche restituiscono soltanto pochi record idonei.",
+            tradeoff: "L’interfaccia non può scaricare una tabella illimitata in una sola richiesta. L’estrazione completa passa da un export filtrato separato, con un limite di 10.000 righe.",
           },
           {
-            title: "Derivare le metriche dal modello",
-            body: "Calcoli di stato e ore sono condivisi da schede, filtri e record individuali e coperti da test Node.js.",
-            tradeoff: "I nuovi stati del flusso devono aggiornare il contratto del modello prima di apparire nell’interfaccia.",
+            title: "Correggere le evidenze senza riscrivere la storia",
+            body: "Le regole di idoneità governano le transizioni del tirocinio. Le ore vengono verificate o annullate; un documento firmato si corregge sostituendolo con un nuovo record invece di modificare l’evidenza sul posto.",
+            tradeoff: "L’operatore deve compiere un passaggio esplicito, ma chi controlla può ricostruire l’intera sequenza delle decisioni.",
           },
           {
-            title: "Mantenere locale la persistenza",
-            body: "Le modifiche alle tappe sopravvivono a un refresh tramite local storage e il reset ripristina la fixture originale.",
-            tradeoff: "Questa edizione non offre collaborazione, autenticazione o sincronizzazione tra dispositivi.",
+            title: "Bloccare in sicurezza le operazioni massive",
+            body: "Gli import CSV convalidano l’intero file in un’unica transazione. Le anteprime di retention mostrano record bloccati, lavoro residuo e un’impronta esatta; l’esecuzione rifiuta anteprime obsolete ed elimina in lotti limitati.",
+            tradeoff: "Le modifiche amministrative più grandi richiedono un’anteprima deliberata e talvolta più esecuzioni. È preferibile a un import parziale o a una cancellazione di massa non verificata.",
           },
         ],
       },
       delivery: {
-        title: "Verifica del sito statico",
+        title: "Self-hosting e ripristino",
         paragraphs: [
-          "Il server locale riproduce l’esatto percorso base di GitHub Pages, così le regressioni dei link assoluti falliscono prima del deploy. I test Node.js coprono il modello dati e Playwright verifica l’esperienza nel browser.",
-          "I rilasci stabili includono archivi ZIP e TAR deterministici con inventario, SBOM CycloneDX, evidenza del commit sorgente e checksum SHA-256.",
+          "Ogni scuola può impostare nome, colori, logo e contatti di supporto, con revisioni che proteggono le modifiche simultanee. L’immagine Docker usa un utente non privilegiato e supporta un filesystem root in sola lettura. I comandi di health e doctor segnalano problemi di configurazione e storage prima dell’uso normale.",
+          "Gli strumenti di backup creano uno snapshot SQLite privato, lo ispezionano senza avviare l’applicazione, lo ripristinano tramite manutenzione controllata e compattano i dati quando serve. La pipeline crea due volte il pacchetto sorgente, ne verifica inventario e commit, cerca segreti e prova installazione e accettazione dall’artefatto estratto.",
         ],
       },
       result: {
-        title: "Cosa supporta la console",
+        title: "Cosa supporta VECTOR oggi",
         paragraphs: [
-          "Un operatore può cercare per studente, organizzazione ospitante o supervisore, filtrare la coorte per stato, esaminare i progressi, avanzare una tappa e ritrovare lo stesso stato locale dopo un refresh.",
-          "VECTOR è una demo mirata, non un servizio ospitato per i tirocini. Il suo valore è un modello di interazione coerente e funzionante con un confine dati insolitamente chiaro.",
+          "Una scuola può gestire coorti, studenti, aziende ospitanti, periodi e assegnazioni; verificare ore; registrare check-in; conservare la storia dei documenti; esaminare eventi di audit nel proprio ambito; importare dati in modo atomico ed esportare una vista operativa filtrata. Gli amministratori possono inoltre bloccare la retention per uno studente prima che i record più vecchi vengano rimossi.",
+          "VECTOR è software open source in self-hosting. Non è un SaaS gestito e non dichiara certificazioni di conformità, alta disponibilità o SSO. Per un’istituzione che ne abbia bisogno, questi aspetti restano lavoro di prodotto e di distribuzione.",
         ],
       },
       scope:
-        "L’applicazione pubblica usa record fittizi e persistenza locale al browser. Non afferma operatività multiutente, controlli privacy di produzione, integrazioni istituzionali o risultati reali di tirocinio.",
+        "Questo case study descrive l’architettura della versione 3.0.0 presente nel repository e i relativi controlli di self-hosting. GitHub Pages presenta il prodotto senza dati operativi; l’applicazione vera e propria parte dal pacchetto server. Non vengono rappresentati dati scolastici reali, integrazioni istituzionali o risultati dei tirocini.",
     }),
   },
   de: {
@@ -557,9 +559,9 @@ export const labsLocales = {
       category: "Local-first-Produkt",
       title: "Ein privater Karriere-Arbeitsbereich, der auf Belegen statt auf generierten Behauptungen beruht",
       summary: "CareerOS Local verbindet eine Tauri-Desktop-Anwendung, einen FastAPI-Sidecar, einen versionierten SQLite-Tresor und eine verpflichtende lokale LLM-Laufzeit. So bleiben Quelldaten, Dokumente und Analysen auf dem Gerät des Benutzers.",
-      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "v1.6.0-Release-Kandidat und signierte Release-Pipeline"]],
+      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "Signiertes v1.6.0-Release mit geprüfter Release-Pipeline"]],
       evidence: { title: "Evidenzprotokoll", intro: "Das aktuelle Repository dokumentiert diese reproduzierbaren Prüfungen und Grenzen:", items: [
-        ["Backend", "1.369 Tests bestehen im v1.6.0-Kandidaten; eine unabhängige Prüfung wiederholte 42 Portabilitäts- und Speichertests."],
+        ["Backend", "1.369 Tests bestehen für v1.6.0; eine unabhängige Prüfung wiederholte 42 Portabilitäts- und Speichertests."],
         ["Frontend + Shell", "334 Frontend-Tests in 64 Dateien und 17 Rust-Bibliothekstests bestehen, einschließlich des nativen Backup-Writers."],
         ["Backup-Prüfung", "Archive der Versionen 1–4 durchlaufen einen vollständigen, nicht verändernden Preflight; die Antwort enthält begrenzte Metadaten statt Archivinhalten."],
         ["Skalierungs-Fixture", "Eine Agenda-Fixture mit 10.000 Bewerbungen erfasst einen p95 von 68,670 ms bei einem Projektbudget von 200 ms."],
@@ -609,7 +611,7 @@ export const labsLocales = {
       ]},
       starting: { title: "Das Problem der ursprünglichen Idee", paragraphs: [
         "Das Repository begann als Telegram-„Psychologen“-Bot. Es speicherte sensible Gespräche und stellte generierte Antworten als etwas dar, das einer Betreuung näherkam, als es die Software rechtfertigen konnte.",
-        "Ich habe die nützliche technische Frage beibehalten – wie ein kleiner Textklassifikator lernt und scheitert –, aber Konten, Transkripte, Diagnosen und therapeutische Aussagen entfernt. Das neue Projekt macht Modell, Datenteilung, Kalibrierungsrichtlinie und Sicherheitsgrenze sichtbar.",
+        "Eine nützliche technische Frage blieb: Wie lernt ein kleiner Textklassifikator, und wo scheitert er? Konten, Transkripte, Diagnosen und therapeutische Aussagen habe ich entfernt. Das neue Projekt macht Modell, Datenteilung, Kalibrierungsrichtlinie und Sicherheitsgrenze sichtbar.",
       ]},
       constraints: { title: "Was ein glaubwürdiges Experiment braucht", intro: "Die Neugestaltung musste Evaluationslecks und Unsicherheit schwerer zu verbergen machen:", items: [
         "Verwandte Prompts müssen gruppiert bleiben, damit Paraphrasen nicht zwischen Training und Test wechseln.",
@@ -662,7 +664,7 @@ export const labsLocales = {
         "Das Modell soll entscheiden, welche deklarierte Aktion es anfordern möchte. Es soll nicht bestimmen, ob diese erlaubt ist, wie lange sie laufen darf oder wie viel Ausgabe in den nächsten Prompt gelangt.",
         "Ich habe diese Entscheidungen in ein richtliniengeschütztes Tool-Register und eine begrenzte Orchestrierungsschicht verlegt. Unbekannte Werkzeuge schlagen fehl, Wiederholungen und Aufgabendauer sind beschränkt, und Audit-Ereignisse werden vor dem Schreiben redigiert.",
       ]},
-      architecture: { title: "Ein Beobachten–Entscheiden–Prüfen–Verifizieren-Zyklus", intro: "Die Wahrnehmung erfasst Screenshot oder Accessibility Tree. Gemini liefert genau einen deklarierten Funktionsaufruf. Die Policy-Schicht prüft Laufzeitunterstützung, Stufe und Allowlists, bevor ein Werkzeug läuft. Die resultierende Beobachtung wird zur Evidenz des nächsten Turns.", labels: ["WAHRNEHMUNG", "GEMINI TOOL CALL", "POLICY-GATE", "AKTION", "VERIFIZIERTE BEOBACHTUNG"], caption: "Das Modell schlägt vor; die Laufzeit entscheidet, welche Befugnis tatsächlich besteht." },
+      architecture: { title: "Ein Zyklus, der beobachtet, entscheidet, prüft und verifiziert", intro: "Die Wahrnehmung erfasst Screenshot oder Accessibility Tree. Gemini liefert genau einen deklarierten Funktionsaufruf. Die Policy-Schicht prüft Laufzeitunterstützung, Stufe und Allowlists, bevor ein Werkzeug läuft. Die resultierende Beobachtung wird zur Evidenz des nächsten Turns.", labels: ["WAHRNEHMUNG", "GEMINI TOOL CALL", "POLICY-GATE", "AKTION", "VERIFIZIERTE BEOBACHTUNG"], caption: "Das Modell schlägt vor; die Laufzeit entscheidet, welche Befugnis tatsächlich besteht." },
       decisions: { title: "Entscheidungen zur Verringerung der Angriffsfläche", intro: "Fähigkeiten sind Konfiguration und Code, keine Prompt-Etikette.", items: [
         { title: "Das Register zur Laufzeit aufbauen", body: "Nicht unterstützte Werkzeuge werden weggelassen, statt sie anzubieten und erst nach der Auswahl durch das Modell scheitern zu lassen.", tradeoff: "Das Modell sieht weniger Werkzeuge; das ist besser, als in jeder Umgebung dieselben Befugnisse vorzutäuschen." },
         { title: "Unabhängige Gates verwenden", body: "Systemwerkzeuge verlangen die Stufe system und ein separates Bestätigungsflag für gefährliche Aktionen sowie Allowlists für Pfade, Anwendungen und Programme.", tradeoff: "Die Einrichtung dauert länger, aber ein einziger breiter Schalter kann nicht alle folgenreichen Aktionen freigeben." },
@@ -680,44 +682,94 @@ export const labsLocales = {
     }),
     "dig-gopher-explorer": localize("dig-gopher-explorer", {
       category: "Protokollwerkzeuge",
-      title: "Das Gopher-Protokoll prüfbar machen, ohne seine rauen Kanten zu verstecken",
-      summary: "DIG verbindet einen echten Terminal-Gopher-Client mit einem deterministischen Browser-Explorer. Die CLI öffnet gopher://-Ressourcen über begrenztes TCP; die Webausgabe vermittelt denselben Parser anhand einer sicheren Fixture.",
-      facts: [["Produkt", "Terminal-Client und Protokoll-Explorer"], ["Rolle", "Protokollkern, CLI und Browser-Erlebnis"], ["Laufzeit", "Node.js und statisches Web"], ["Status", "Installierbare CLI und offlinefähige Pages-App"]],
-      evidence: { title: "Evidenzprotokoll", intro: "Protokoll- und Transportaussagen werden durch ausdrückliche Projektgrenzen gestützt:", items: [
-        ["Verifikation", "68 Node.js-Testdeklarationen und zwei Browser-E2E-Deklarationen im auditierten Release."],
-        ["Anfragegrenzen", "8 KiB Anfragegrenze, 5 Sekunden Gesamtablaufzeit, 2,5 Sekunden Idle-Timeout und standardmäßig höchstens 10.000 Menüeinträge."],
-        ["Antwortgrenzen", "Standardmäßig 1 MiB Antwortobergrenze und absolut konfigurierbar höchstens 10 MiB."],
-        ["Grenze", "Direktes TCP ist unverschlüsselt; TLS, Authentifizierung, Gopher+, Telnet und automatische Downloads werden nicht unterstützt."],
-      ]},
-      starting: { title: "Warum einen kleinen Protokoll-Client neu bauen", paragraphs: [
-        "Das Repository begann als visueller Flutter-Prototyp, doch die nützliche Aufgabe lag tiefer: ein Gopher-Menü korrekt parsen, jedes Feld erklären und eine reale Ressource im Terminal ohne unbegrenztes Netzwerkverhalten öffnen.",
-        "Browser können die für Gopher nötige rohe TCP-Verbindung nicht herstellen. Statt diese Grenze zu kaschieren, nutzt das Projekt einen Parser in zwei ehrlichen Kontexten: echtes TCP in der CLI und eine deterministische Fixture im öffentlichen Explorer.",
-      ]},
-      constraints: { title: "Die Protokollgrenzen", intro: "Auch ein kleiner Client braucht klare Netzwerk- und Darstellungsregeln:", items: [
-        "Anfragen besitzen absolute Frist, Idle-Timeout, 8 KiB Obergrenze und eine begrenzte Antwortgröße.",
-        "Binäre Bytes bleiben binär und werden nie direkt in ein interaktives Terminal geschrieben.",
-        "Terminal-Steuersequenzen werden neutralisiert, bevor nicht vertrauenswürdiger Text den Bildschirm erreicht.",
-        "Fehlerhafte Menüzeilen bleiben sichtbar, damit der Explorer Parsing-Fehler nicht in plausible Daten verwandelt.",
-      ]},
-      diagnosis: { title: "Ein Parser, zwei Transporte", paragraphs: [
-        "Parser und URL-Regeln sind unabhängig von der Netzwerkverbindung nützlich. In der statischen Site machen sie das Protokoll im Browser verständlich und testbar, ohne einen Proxy einzuführen, der das Sicherheitsmodell verändern würde.",
-        "Die CLI ergänzt die fehlende Transportgrenze: begrenztes TCP, direkte unverschlüsselte Verbindungen und ausdrückliche Behandlung von Menü-, Text-, Such- und Binäreinträgen.",
-      ]},
-      architecture: { title: "Der Anfragepfad", intro: "Eine gopher://-URL wird zu Host, Port und Selector. Die CLI sendet den Selector über begrenztes TCP und übergibt die zurückgegebenen Bytes an die gemeinsame Menü-/Textauswertung. Der Browser beginnt an derselben Parsing-Grenze mit einer eingecheckten Fixture.", labels: ["GOPHER-URL", "URL-VERTRAG", "BEGRENZTES TCP", "MENÜ-PARSER", "TERMINAL ODER WEB"], caption: "Der Browser vermittelt das Protokoll; nur die CLI überschreitet die TCP-Grenze." },
-      decisions: { title: "Entscheidungen für einen verständlichen Client", intro: "Das Projekt bevorzugt sichtbares Protokollverhalten gegenüber bequemer Magie.", items: [
-        { title: "Selectors bewahren", body: "RFC 4266-Such-URLs werden geparst, ohne Selector-Punktsegmente zu reduzieren, die zum entfernten Protokollpfad gehören.", tradeoff: "Gopher-Selectors verhalten sich nicht wie vertraute HTTP-Pfade; der Unterschied muss sichtbar bleiben." },
-        { title: "Im Terminal sicher scheitern", body: "Text wird von Terminal-Steuersequenzen bereinigt; binäre Ressourcen müssen in eine Datei umgeleitet werden.", tradeoff: "Der Client verweigert einige bequeme Ausgabewege, weil die Integrität des Terminals wichtiger ist." },
-        { title: "Die Web-Demo deterministisch halten", body: "GitHub Pages nutzt eine mitgelieferte Fixture und behauptet nie, einen echten Gopher-Server zu erreichen.", tradeoff: "Der Explorer ist eine Lernoberfläche, kein Netzwerk-Client im Browser." },
-      ]},
-      delivery: { title: "Release-Integrität", paragraphs: [
-        "Release-Kandidaten werden zweimal gebaut; npm-Archive und normalisierte SBOM-Evidenz müssen bytegleich sein. Ein Smoke-Test mit sauberem Präfix führt den veröffentlichten Befehl vor dem Release aus.",
-        "Die getaggte Veröffentlichung prüft Version, Abstammung von geprüftem main, Checksummen, Attestierungen und unveränderliches Release-Inventar. Der Protokollumfang wächst dadurch nicht: Gopher+, TLS, Telnet, Authentifizierung und automatische Downloads bleiben ausgeschlossen.",
-      ]},
-      result: { title: "Was Benutzer untersuchen können", paragraphs: [
-        "Im Terminal lassen sich echte Gopher-Menüs, Texte und Suchen über einen begrenzten Transport öffnen. Im Browser lässt sich eine tastaturbedienbare Fixture durchlaufen und bei jedem Schritt Typ, Selector, Host und Port prüfen.",
-        "Das Projekt ist bewusst eng gefasst. Dadurch sind Netzwerkgrenze, Parser-Verhalten und nicht unterstützte Funktionen leicht zu finden.",
-      ]},
-      scope: "Die Implementierung deckt das dokumentierte Verhalten für Basisanfragen, Menüs, Text und Suche ab. Direkter Gopher-Verkehr ist unverschlüsselt; beliebige nicht UTF-8-kodierte Selector-Oktette liegen außerhalb des aktuellen Umfangs.",
+      title: "Gopher als klar begrenzte, prüfbare lokale Arbeitsumgebung",
+      summary:
+        "DIG 3.0.0 ist ein echter Gopher-Client mit drei klar getrennten Oberflächen: einer CLI über TCP, einem Live-Explorer hinter einem lokalen Same-Origin-Gateway und einer GitHub-Pages-Ausgabe ausschließlich mit Fixtures. Der gemeinsame Kern verarbeitet RFC-1436-Antworten und RFC-4266-Adressen, ohne vorzugeben, dass eine statische Browserseite rohe Sockets öffnen kann.",
+      facts: [
+        ["Produkt", "Gopher-CLI, lokales Gateway und Browser-Explorer"],
+        ["Protokoll", "RFC-1436-Anfragen, Menüs und Text; RFC-4266-URLs und Suche"],
+        ["Sicherheit", "Fail-closed-Zielrichtlinie mit DNS-Pinning"],
+        ["Status", "Open-Source-Version 3.0.0 unter der MIT-Lizenz"],
+      ],
+      evidence: {
+        title: "Evidenzprotokoll",
+        intro: "Die Aussagen zu Version 3.0.0 sind an ausführbare Prüfungen und sichtbare Grenzen gebunden:",
+        items: [
+          ["Verifikation", "90 Node.js-Tests und vier Chromium-E2E-Tests bestehen, einschließlich des vollständigen Live-Pfads bei exakt 320 px Viewport-Breite."],
+          ["Netzrichtlinie", "Der Hosted-Modus verlangt ein Zugriffstoken, verwirft einen Hostnamen, sobald eine DNS-Antwort nicht öffentlich ist, und verbindet sich nur mit der bereits geprüften Adresse."],
+          ["Ausgabeintegrität", "Die CLI schreibt über eine temporäre Datei im selben Verzeichnis und macht den Zielpfad atomar sichtbar; binäre Bytes gelangen nie in ein interaktives Terminal."],
+          ["Laufzeit", "Das Abhängigkeitsaudit meldet null Schwachstellen, und das produktive Docker-Image besteht den Laufzeit-Smoke-Test als unprivilegierter Prozess."],
+          ["Öffentliche Grenze", "GitHub Pages liefert den Explorer ausschließlich mit eingecheckten Fixtures aus. Live-Gopher-Anfragen benötigen das Same-Origin-Gateway."],
+        ],
+      },
+      starting: {
+        title: "Der Abstand zwischen Protokollskizze und brauchbarem Client",
+        paragraphs: [
+          "Die frühere Oberfläche konnte ein Gopher-Menü veranschaulichen, belegte aber nicht die entscheidenden Teile: wie ein Selector als Bytes auf dem Socket landet, wo Text-Framing endet oder was geschieht, wenn ein Server hängt, einen falschen Typ meldet oder Binärdaten zurückgibt.",
+          "Version 3.0.0 baut das Projekt um den echten Anfragepfad neu auf. Die CLI öffnet begrenzte TCP-Verbindungen. Der lokale Browser verwendet denselben Client über ein Same-Origin-Gateway. Pages bleibt auf Fixtures beschränkt, weil Browser-JavaScript den für Gopher nötigen rohen TCP-Socket nicht erstellen kann.",
+        ],
+      },
+      constraints: {
+        title: "Regeln, die die Implementierung nicht verwischen darf",
+        intro: "Das Protokoll ist einfach; die Vertrauensgrenze ist es nicht:",
+        items: [
+          "Die RFC-4266-Auswertung muss Selector und Suche erhalten, während RFC-1436-Framing, Textabschluss, Dot-Stuffing und Binärtypen getrennte Übertragungs- und Ausgaberegeln behalten.",
+          "Jeder Netzwerkzugriff benötigt Gesamtfrist, Idle-Timeout, Anfragegrenze, Antwortgrenze und eine Obergrenze für Menüeinträge.",
+          "Gehostete Abrufe müssen bei privaten, Loopback- oder gemischten DNS-Antworten geschlossen scheitern und sich ohne erneute Auflösung mit der geprüften Adresse verbinden.",
+          "Nicht vertrauenswürdiger Text darf das Terminal nicht steuern, und Binärantworten dürfen weder dekodiert noch wie Text ausgegeben werden.",
+        ],
+      },
+      diagnosis: {
+        title: "Ein lokales Gateway, kein offener Proxy",
+        paragraphs: [
+          "Ein frei erreichbarer HTTP-Proxy hinter dem Explorer wäre bequem und gleichzeitig ein SSRF-Dienst. DIG hält das Gateway deshalb beim Benutzer, akzeptiert API-Aufrufe nur von seiner eigenen Browser-Origin und gewährt anderen Sites keinen CORS-Zugriff.",
+          "Der Hosted-Modus wird ausdrücklich gewählt. Er verlangt ein Token, blockiert private Ziele und bindet das geprüfte DNS-Ergebnis an die TCP-Verbindung. Lokaler Zugriff auf private Adressen existiert nur hinter einem ausdrücklichen Flag und einer sichtbaren Warnung.",
+        ],
+      },
+      architecture: {
+        title: "Ein Abrufpfad, zwei Live-Oberflächen",
+        intro:
+          "Eine Gopher-URL und eine optionale Suchanfrage durchlaufen URL-Prüfung, Zielrichtlinie und eine begrenzte TCP-Verbindung zur fest geprüften Adresse. Danach verarbeitet der gemeinsame RFC-Parser die Antwort. Die CLI zeigt oder speichert sie direkt; das Same-Origin-Gateway liefert dem Browser-Explorer ein typisiertes Ergebnis.",
+        labels: ["URL + SUCHE", "ZIELRICHTLINIE", "GEPINNTES TCP", "RFC-PARSER", "CLI + EXPLORER"],
+        caption: "CLI und lokaler Explorer teilen den echten Protokollpfad; Pages endet an der Fixture-Grenze.",
+      },
+      decisions: {
+        title: "Entscheidungen, die die Grenze sichtbar machen",
+        intro: "Jede Oberfläche sagt klar, was sie erreichen und was sie speichern kann.",
+        items: [
+          {
+            title: "Einmal auflösen und genau das geprüfte Ziel verwenden",
+            body: "Die Hosted-Richtlinie verwirft den gesamten Hostnamen, sobald eine DNS-Antwort nicht öffentlich ist. Eine erfolgreiche Auflösung gibt exakt die Adresse zurück, die der TCP-Client verwendet, und schließt damit die Lücke zwischen Prüfung und Verbindung.",
+            tradeoff: "Die strikte Ablehnung gemischter Antworten kann ungewöhnliche, legitime DNS-Konfigurationen blockieren; sie ist sicherer, als die Absicht eines Angreifers zu erraten.",
+          },
+          {
+            title: "Live-Anfragen auf Same-Origin begrenzen",
+            body: "Das Gateway liefert Oberfläche und JSON-API gemeinsam aus und prüft Origin, Body-Form, Rate und Größe vor jedem Gopher-Abruf. Pages bietet denselben Explorer über Fixtures, ohne Live- oder Cross-Origin-Zugriff.",
+            tradeoff: "Eine Live-Ressource braucht das lokale oder bewusst gehostete Gateway; die öffentliche Site bleibt statisch statt zu einer wiederverwendbaren Proxy-API zu werden.",
+          },
+          {
+            title: "Antwortbytes unverändert erhalten",
+            body: "Rohdatenansicht ist bei Text und Menüs optional. Binärressourcen behalten exakte Bytes, Bytezahl und SHA-256-Digest; der Browser lädt sie herunter und die CLI speichert sie atomar.",
+            tradeoff: "Exaktheit braucht getrennte Text- und Binärpfade, verhindert aber stille UTF-8-Verfälschung und unvollständige Zieldateien.",
+          },
+        ],
+      },
+      delivery: {
+        title: "Wie Version 3.0.0 geprüft wird",
+        paragraphs: [
+          "Die 90 Node.js-Tests decken RFC-Parsing, echte TCP-Fixtures, Netzrichtlinie, HTTP-Vertrag, atomare CLI-Ausgabe, statische Assets und Release-Regeln ab. Vier Chromium-Abläufe steuern den Explorer über das lokale Gateway und prüfen Suche, Verlauf, Lesezeichen, Rohdatenansicht, Export, Binärdownload und das 320-px-Layout.",
+          "Das Release-Gate führt außerdem ein Abhängigkeitsaudit mit null Schwachstellen aus und startet das unprivilegierte Docker-Image für einen Laufzeit-Smoke-Test. Das Projekt steht unter MIT; Pages bleibt statisch, während der Container ausschließlich das authentifizierte Hosted-Gateway startet.",
+        ],
+      },
+      result: {
+        title: "Was heute funktioniert",
+        paragraphs: [
+          "Im Terminal lassen sich reale Menüs, Texte, Suchergebnisse und gängige Binärtypen abrufen, Hashes und Größen prüfen oder exakte Bytes speichern, ohne eine teilweise geschriebene Zieldatei offenzulegen. Der lokale Explorer ergänzt denselben Live-Pfad um Verlauf, Lesezeichen, Suchformulare, Rohdatenprüfung, JSON-Export und Binärdownload.",
+          "DIG macht aus Gopher kein HTTP. Der Verkehr zum Gopher-Server bleibt unverschlüsselt, Pages ruft keine Live-Ressourcen ab, und Gopher+, TLS, Telnet-Sitzungen sowie rekursives Crawling bleiben außerhalb des unterstützten Vertrags.",
+        ],
+      },
+      scope:
+        "Diese Fallstudie beschreibt die geprüfte Implementierung von Version 3.0.0: RFC-1436-Framing für Menüs und Text, RFC-4266-URLs und Suche, gängige Binärtypen, begrenztes TCP, ein Same-Origin-Gateway und den fixturebasierten Pages-Explorer. UTF-8 ist die unterstützte Kodierung für URL-Felder; Serverauthentifizierung und verschlüsselter Gopher-Transport gehören nicht zum Projekt.",
     }),
     integradraw: localize("integradraw", {
       category: "Computergestützte Mathematik",
@@ -761,45 +813,46 @@ export const labsLocales = {
       scope: "IntegraDraw ist ein exploratives Lernwerkzeug. Es bietet weder symbolische Integration noch Beweise, garantierte Behandlung von Unstetigkeiten oder ein exaktes Ergebnis für beliebige Funktionen.",
     }),
     "vector-placement-operations": localize("vector-placement-operations", {
-      category: "Betriebssoftware",
-      title: "Ein Placement-Dashboard rund um ein kleines, testbares Datenmodell neu aufbauen",
-      summary: "VECTOR macht aus einer fiktiven Placement-Kohorte ein rein browserbasiertes Operations-Board. Suche, Statusfilter, Fortschrittsansichten und Meilensteinänderungen laufen lokal ohne Konto, Backend oder Analytics-Dienst.",
-      facts: [["Produkt", "Placement-Operations-Dashboard"], ["Rolle", "Produktrekonstruktion und Frontend Engineering"], ["Daten", "Ausschließlich fiktive Datensätze"], ["Status", "Funktionsfähige statische Anwendung"]],
-      evidence: { title: "Evidenzprotokoll", intro: "Die öffentliche Ausgabe liefert eine bewusst kleine, testbare Fixture:", items: [
-        ["Fixture", "Sechs fiktive Placements in vier Statuszuständen; zwei aktiv und zwei in Prüfung."],
-        ["Abgeleitete Ansicht", "Die geprüfte Fixture weist 67% Gesamtfortschritt aus 160/180-Stunden-Zielen aus."],
-        ["Verifikation", "30 Node.js- und fünf Browser-E2E-Deklarationen, darunter 390 px Mobile und exakte Overflow-Prüfung bei 320 px."],
-        ["Grenze", "Die gesamte Persistenz gehört zu einem Browser. Das Projekt ist kein produktives Placement-System für mehrere Benutzer."],
+      category: "Schulische Betriebssoftware",
+      title: "Ein selbst betriebenes Praktikumssystem entwickeln, das der Schule gehört",
+      summary: "VECTOR 3.0.0 ist ein White-Label-System für Praktikumsabläufe, das eine Schule auf der eigenen Infrastruktur betreiben kann. Kohorten, Schüler, Betriebe, Einsätze, Stunden, Check-ins und Nachweise laufen in einem servergestützten Arbeitsablauf zusammen; die API setzt die Zugriffsregeln durch.",
+      facts: [["Produkt", "Selbst betriebene White-Label-Praktikumsverwaltung"], ["Rolle", "Clean-Room-Produkt, Architektur und Implementierung"], ["Betrieb", "Eine Schule pro Installation"], ["Status", "Open-Source-Version 3.0.0 unter der MIT-Lizenz"]],
+      evidence: { title: "Evidenzprotokoll", intro: "Das Repository der Version 3.0.0 verknüpft seine Produktversprechen mit konkreten Kontrollen:", items: [
+        ["Zugriff", "Berechtigungen für Administratoren, Koordinatoren, Tutoren und Leser werden auf dem Server geprüft. Der erste Administrator muss das temporäre Passwort ändern, bevor operative Daten zugänglich sind."],
+        ["Datensätze", "SQLite läuft im WAL-Modus hinter expliziten Migrationen. Revisionsprüfungen verhindern, dass ein Operator die Änderungen eines anderen unbemerkt überschreibt."],
+        ["Ablauf", "Bereitschaftsregeln und Zustandswechsel steuern Einsätze, bestätigte oder stornierte Stunden, Check-ins und Nachweise, die ohne Verlust ihrer Historie ersetzt werden können."],
+        ["Governance", "Audit-Metadaten enthalten keine personenbezogenen Felder. Aufbewahrungsläufe beachten Sperren auf Schülerebene und verlangen vor begrenzten Löschbatches den exakten Fingerabdruck der Vorschau."],
+        ["Auslieferung", "Der Release-Pfad erzeugt ein reproduzierbares Quellartefakt, prüft es nach dem Entpacken und testet Sicherung, Inspektion, Wiederherstellung und Datenbankverdichtung an der paketierten Anwendung."],
       ]},
-      starting: { title: "Die Produktfrage", paragraphs: [
-        "Placement-Koordination umfasst Menschen, aufnehmende Organisationen, Betreuer, Meilensteine und Stunden. Ein nützliches Board muss einfache betriebliche Fragen schnell beantworten: Wer ist blockiert, was ist fällig und welcher Datensatz braucht Aufmerksamkeit?",
-        "Das ursprüngliche akademische Konzept wurde als bewusst begrenzte statische Anwendung neu gebaut. Öffentliche Daten sind fiktiv, Änderungen bleiben im Browser und jeder Demo-Zustand kann zurückgesetzt werden.",
+      starting: { title: "Das operative Problem", paragraphs: [
+        "Praktikumsverwaltung ist mehr als ein Dashboard. Eine Schule koordiniert Kohorten, Schüler, Betriebe, Tutoren, Termine, Stunden, Check-ins und unterschriebene Nachweise. Unterschiedliche Rollen benötigen unterschiedliche Ausschnitte desselben Datensatzes, und eine Korrektur darf den früheren Stand nicht auslöschen.",
+        "Die frühere akademische Implementierung eignete sich nicht als Produktbasis. Ich habe VECTOR von Grund auf neu gebaut und nur den Praktikumsbereich als fachliche Referenz verwendet. Weder Legacy-Code noch personenbezogene Datensätze, Namen oder Assets gelangten in das neue Repository.",
       ]},
-      constraints: { title: "Was die öffentliche Ausgabe verspricht", intro: "Die Rekonstruktion hält ihre Grenze klein und prüfbar:", items: [
-        "Jede Person und Organisation im ausgelieferten Datensatz ist fiktiv.",
-        "Suche und Statusfilter arbeiten auf einem einzigen ausdrücklichen Placement-Modell.",
-        "Meilensteinänderungen bleiben nur im lokalen Browser-Speicher und lassen sich zurücksetzen.",
-        "Es gibt weder Konto, Datenbank, Analytics-Endpunkt noch entfernte Schreib-API.",
+      constraints: { title: "Was ein schuleigenes System gewährleisten muss", intro: "Die Architektur beginnt mit vier praktischen Vorgaben:", items: [
+        "Jede Installation gehört zu genau einer Schule, die Datenbank, Erscheinungsbild, Sicherungen und Betrieb kontrolliert.",
+        "Berechtigungen und Tutorenzuständigkeit müssen auf dem Server greifen, bevor Datensätze ausgewählt, gezählt oder exportiert werden.",
+        "Bestätigte Stunden und unterschriebene Nachweise benötigen ausdrückliche Korrekturwege, die den ursprünglichen Datensatz erhalten.",
+        "Import, Export, Aufbewahrung und Wiederherstellung müssen begrenzt, prüfbar und nach einem Fehler sicher wiederholbar sein.",
       ]},
-      diagnosis: { title: "Den Betrieb vor dem Dashboard modellieren", paragraphs: [
-        "Ein Dashboard wird brüchig, wenn Summen, Labels und Zeilenzustand den Status jeweils anders herleiten. Zuerst mussten Placement-Zustand und Stundenberechnung zu einem getesteten Modell werden.",
-        "Die Oberfläche wurde dann zur Projektion dieses Modells: Kohortenmetriken, Filter und individueller Fortschritt nutzen dieselben Funktionen; lokal gespeichert wird nur der fiktive Arbeitszustand.",
+      diagnosis: { title: "Zuerst die Eigentumsgrenze festlegen", paragraphs: [
+        "Mehr Zustand im Browser hätte die schwierigen Fragen offengelassen. Rollenprüfungen könnten in der Oberfläche verborgen bleiben, die gesamte Schule könnte in den Speicher geladen und ein geändertes Feld so behandelt werden, als hätte der frühere Wert nie existiert.",
+        "VECTOR verwendet eine Schule pro Installation, statt einen gemeinsamen mandantenfähigen Dienst aufzubauen. Die operative Verantwortung bleibt eindeutig; Sicherung, Aufbewahrung und White-Label-Konfiguration lassen sich leichter nachvollziehen. Das Projekt liefert Software aus, keine verwaltete Cloud-Plattform.",
       ]},
-      architecture: { title: "Eine vollständige statische Produktgrenze", intro: "Ein eingecheckter fiktiver Datensatz speist das Placement-Modell. Suche, Filter, Kohortenübersichten und Meilensteinübergänge lesen denselben abgeleiteten Zustand. Der Browser speichert Änderungen lokal; Reset stellt die ursprüngliche Fixture wieder her.", labels: ["FIKTIVE DATEN", "PLACEMENT-MODELL", "SUCHE + FILTER", "MEILENSTEINE", "LOCAL STORAGE"], caption: "Ein einziges browserlokales Modell treibt Zusammenfassung und individuelle Placement-Ansicht." },
-      decisions: { title: "Entscheidungen für eine vertrauenswürdige Demo", intro: "Die öffentliche App leistet weniger, aber jede sichtbare Interaktion ist echt.", items: [
-        { title: "Fiktive Datensätze ausliefern", body: "Die gesamte Kohorte wurde für die Demonstration entworfen; die Anwendung benötigt keine redigierten Produktionsdaten.", tradeoff: "Die Demo kann weder Prozess noch Datenvolumen einer realen Institution beanspruchen." },
-        { title: "Metriken aus dem Modell ableiten", body: "Status- und Stundenberechnungen werden von Karten, Filtern und Einzeldatensätzen gemeinsam genutzt und durch Node.js-Tests abgedeckt.", tradeoff: "Neue Workflow-Zustände müssen zuerst den Modellvertrag erweitern, bevor sie in der Oberfläche erscheinen." },
-        { title: "Persistenz lokal halten", body: "Meilensteinänderungen überstehen einen Refresh im local storage; Reset stellt die ursprüngliche Fixture wieder her.", tradeoff: "Diese Ausgabe bietet keine Zusammenarbeit, Authentifizierung oder geräteübergreifende Synchronisierung." },
+      architecture: { title: "Ein kompakter Server mit klaren Grenzen", intro: "Der Browser-Arbeitsbereich spricht mit einer Express-API, die Anmeldung, Rollen und Zustandswechsel verwaltet. SQLite speichert die Datensätze einer Schule im WAL-Modus. Undurchsichtige AES-GCM-Cursor binden die Seitennavigation an Schule, Zuständigkeit und aktive Filter; begrenzte Suchendpunkte verhindern, dass Formulare ganze Tabellen laden.", labels: ["BROWSER-ARBEITSBEREICH", "EXPRESS POLICY LAYER", "SQLITE WAL", "AUDIT + AUFBEWAHRUNG", "SICHERUNG + RELEASE"], caption: "Der Server entscheidet, was ein Operator sehen und ändern darf; der Browser stellt diese Entscheidung dar." },
+      decisions: { title: "Entscheidungen für einen sichereren Arbeitsalltag", intro: "Das Produkt bevorzugt sichtbare Regeln gegenüber bequemem, verborgenem Zustand.", items: [
+        { title: "Zuständigkeit vor Seitennavigation", body: "Jede Liste wendet Schule und Rolle vor dem Limit an. Authentifizierte undurchsichtige Cursor binden diesen Geltungsbereich an Filter und eine stabile Sortierposition. Suchendpunkte liefern nur eine kleine Menge geeigneter Datensätze.", tradeoff: "Die Oberfläche kann keine unbegrenzte Tabelle in einer Anfrage laden. Die vollständige Entnahme erfolgt über einen getrennten, gefilterten Export mit höchstens 10.000 Zeilen." },
+        { title: "Nachweise korrigieren, ohne Historie umzuschreiben", body: "Bereitschaftsregeln steuern die Zustandswechsel eines Einsatzes. Stunden werden bestätigt oder storniert; ein unterschriebenes Dokument wird durch einen neuen Datensatz ersetzt, nicht nachträglich verändert.", tradeoff: "Der Operator muss einen ausdrücklichen Korrekturschritt ausführen, dafür bleibt die Abfolge der Entscheidungen nachvollziehbar." },
+        { title: "Massenänderungen geschlossen abbrechen", body: "CSV-Importe validieren die gesamte Datei innerhalb einer Transaktion. Aufbewahrungsvorschauen zeigen gesperrte Datensätze, verbleibende Arbeit und einen exakten Fingerabdruck; die Ausführung lehnt veraltete Vorschauen ab und löscht in begrenzten Batches.", tradeoff: "Große Verwaltungsänderungen benötigen eine bewusste Vorschau und manchmal mehrere Läufe. Das ist besser als ein Teilimport oder eine ungeprüfte Massenlöschung." },
       ]},
-      delivery: { title: "Verifikation der statischen Site", paragraphs: [
-        "Der lokale Server bildet den genauen GitHub-Pages-Basispfad ab, damit Fehler absoluter Links vor dem Deployment auffallen. Node.js-Tests prüfen das Datenmodell und Playwright die Browser-Erfahrung.",
-        "Stabile Releases paketieren deterministische ZIP- und TAR-Archive mit Inventar, CycloneDX SBOM, Quell-Commit-Evidenz und SHA-256-Prüfsummen.",
+      delivery: { title: "Self-Hosting und Wiederherstellung", paragraphs: [
+        "Schulen können Name, Farben, Logo und Supportdaten mit Revisionsschutz für gleichzeitige Änderungen festlegen. Das Docker-Image läuft als unprivilegierter Benutzer und unterstützt ein schreibgeschütztes Root-Dateisystem. Health- und Doctor-Befehle zeigen Konfigurations- und Speicherprobleme vor dem normalen Betrieb.",
+        "Die Backup-Werkzeuge erstellen einen privaten SQLite-Snapshot, prüfen ihn ohne Anwendungsstart, stellen ihn über einen geschützten Wartungspfad wieder her und verdichten die Datenbank bei Bedarf. Die Release-Automatisierung baut das Quellpaket zweimal, prüft Inventar und Commit, sucht nach Geheimnissen, installiert aus dem entpackten Artefakt und führt dort die Abnahme aus.",
       ]},
-      result: { title: "Was das Board unterstützt", paragraphs: [
-        "Ein Operator kann nach Student, Host oder Betreuer suchen, die Kohorte nach Status filtern, Fortschritt prüfen, einen Meilenstein weiterschalten und nach einem Refresh denselben lokalen Zustand vorfinden.",
-        "VECTOR ist ein fokussierter Demonstrator, kein gehosteter Placement-Dienst. Sein Wert liegt in einem kohärenten, funktionierenden Interaktionsmodell mit ungewöhnlich klarer Datengrenze.",
+      result: { title: "Was VECTOR heute unterstützt", paragraphs: [
+        "Eine Schule kann Kohorten, Schüler, Betriebe, Zeiträume und Einsätze verwalten; Stunden bestätigen; Check-ins erfassen; Dokumenthistorien bewahren; zuständige Audit-Ereignisse prüfen; Daten atomar importieren und einen gefilterten operativen Stand exportieren. Administratoren können einen Schüler außerdem von der Aufbewahrungslöschung ausnehmen, bevor ältere Datensätze entfernt werden.",
+        "VECTOR ist selbst betriebene Open-Source-Software. Es ist kein verwaltetes SaaS und beansprucht weder Compliance-Zertifizierung noch Hochverfügbarkeit oder SSO. Für Institutionen mit solchen Anforderungen bleiben diese Punkte Produkt- und Betriebsarbeit.",
       ]},
-      scope: "Die öffentliche Anwendung nutzt fiktive Datensätze und browserlokale Persistenz. Sie beansprucht weder Mehrbenutzerbetrieb noch produktive Datenschutzkontrollen, institutionelle Integrationen oder reale Placement-Ergebnisse.",
+      scope: "Diese Fallstudie beschreibt die eingecheckte Architektur der Version 3.0.0 und ihre Self-Hosting-Kontrollen. GitHub Pages präsentiert das Produkt ohne operative Daten; die eigentliche Anwendung läuft aus dem Serverpaket. Reale Schuldaten, institutionelle Integrationen und Praktikumsergebnisse werden nicht dargestellt.",
     }),
   },
   fr: {
@@ -807,9 +860,9 @@ export const labsLocales = {
       category: "Produit local-first",
       title: "Construire un espace de travail privé pour sa carrière, fondé sur des preuves plutôt que sur des affirmations générées",
       summary: "CareerOS Local associe une application de bureau Tauri, un sidecar FastAPI, un coffre SQLite versionné et un runtime LLM local obligatoire. Les faits sources, les documents et les analyses restent ainsi sur l’appareil de l’utilisateur.",
-      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "Release candidate v1.6.0 et pipeline de publication signé"]],
+      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "Version v1.6.0 signée avec pipeline de publication vérifié"]],
       evidence: { title: "Registre des preuves", intro: "Le dépôt actuel consigne ces vérifications et limites reproductibles :", items: [
-        ["Backend", "1 369 tests réussis sur la candidate v1.6.0 ; une revue indépendante a rejoué 42 tests de portabilité et de stockage."],
+        ["Backend", "1 369 tests réussis pour la v1.6.0 ; une revue indépendante a rejoué 42 tests de portabilité et de stockage."],
         ["Frontend + shell", "334 tests frontend dans 64 fichiers et 17 tests de bibliothèque Rust réussis, dont le writer natif de sauvegarde."],
         ["Assurance des sauvegardes", "Les archives des versions 1 à 4 subissent un preflight complet sans mutation ; la réponse contient des métadonnées bornées, pas le contenu de l’archive."],
         ["Fixture à grande échelle", "Une fixture d’agenda de 10 000 candidatures mesure un p95 de 68,670 ms face au budget projet de 200 ms."],
@@ -859,7 +912,7 @@ export const labsLocales = {
       ]},
       starting: { title: "Le problème de la prémisse initiale", paragraphs: [
         "Le dépôt a commencé comme bot Telegram « psychologue ». Il conservait des conversations sensibles et présentait ses réponses générées comme plus proches d’un soin que le logiciel ne pouvait le justifier.",
-        "J’ai gardé la question technique utile — comment un petit classificateur apprend et échoue — mais supprimé comptes, transcriptions, diagnostics et allégations thérapeutiques. Le nouveau projet expose le modèle, la partition des données, la politique de calibration et la limite de sécurité.",
+        "J’ai gardé une question technique utile : comment un petit classificateur apprend-il, et où échoue-t-il ? J’ai supprimé les comptes, les transcriptions, les diagnostics et les allégations thérapeutiques. Le nouveau projet expose le modèle, la partition des données, la politique de calibration et la limite de sécurité.",
       ]},
       constraints: { title: "Ce qu’exige une expérience crédible", intro: "La refonte devait rendre les fuites d’évaluation et l’incertitude plus difficiles à cacher :", items: [
         "Les prompts apparentés restent groupés pour empêcher les paraphrases de passer entre entraînement et test.",
@@ -901,7 +954,7 @@ export const labsLocales = {
       starting: { title: "Le problème d’automatisation", paragraphs: ["Une boucle computer use devient dangereuse si suggestion du modèle et autorité du programme se confondent. Un prompt décrit un objectif ; il ne doit pas accorder silencieusement l’accès aux fichiers, au shell ou au bureau.", "Le projet devait n’exposer que les capacités réellement disponibles, appliquer le niveau de permission choisi par l’opérateur et exiger une observation après chaque action."] },
       constraints: { title: "Les limites imposées par le runtime", intro: "L’agent repose sur des limites explicites :", items: ["Le niveau observe par défaut fournit des contrôles du runtime et un accès en lecture seule aux chemins approuvés.", "Les outils bureau, navigateur, fichiers et système n’apparaissent que si runtime et niveau de permission les autorisent.", "Il n’existe pas de shell généraliste. Le lanceur borné invoque directement un seul exécutable en allowlist et refuse pipelines, substitutions et chaînage.", "Une tâche n’est terminée qu’après une observation post-action vérifiée."] },
       diagnosis: { title: "Séparer raisonnement et autorité", paragraphs: ["Le modèle choisit l’action déclarée qu’il souhaite demander. Il ne décide ni de sa permission, ni de sa durée, ni de la quantité de sortie ajoutée au prompt suivant.", "J’ai placé ces décisions dans un registre d’outils protégé par politique et une orchestration bornée. Les outils inconnus échouent, les tentatives et la durée sont limitées, et les événements d’audit sont expurgés avant écriture."] },
-      architecture: { title: "Une boucle observer–décider–autoriser–vérifier", intro: "La perception capture une image ou l’arbre d’accessibilité. Gemini renvoie un appel de fonction déclaré. La politique vérifie runtime, niveau et allowlists avant exécution. L’observation obtenue devient la preuve du tour suivant.", labels: ["PERCEPTION", "GEMINI TOOL CALL", "CONTRÔLE DE POLITIQUE", "ACTION", "OBSERVATION VÉRIFIÉE"], caption: "Le modèle propose ; le runtime décide de l’autorité réelle." },
+      architecture: { title: "Une boucle qui observe, décide, autorise et vérifie", intro: "La perception capture une image ou l’arbre d’accessibilité. Gemini renvoie un appel de fonction déclaré. La politique vérifie runtime, niveau et allowlists avant exécution. L’observation obtenue devient la preuve du tour suivant.", labels: ["PERCEPTION", "GEMINI TOOL CALL", "CONTRÔLE DE POLITIQUE", "ACTION", "OBSERVATION VÉRIFIÉE"], caption: "Le modèle propose ; le runtime décide de l’autorité réelle." },
       decisions: { title: "Les choix qui réduisent la surface d’attaque", intro: "Les capacités relèvent de la configuration et du code, pas de la politesse du prompt.", items: [
         { title: "Construire le registre au runtime", body: "Les outils indisponibles sont omis au lieu d’être annoncés puis de tomber en échec après leur sélection.", tradeoff: "Le modèle voit moins d’outils, ce qui vaut mieux que de prétendre chaque environnement aussi puissant." },
         { title: "Utiliser des contrôles indépendants", body: "Les outils système exigent le niveau system, une confirmation séparée et des allowlists de chemins, applications et exécutables.", tradeoff: "La configuration prend plus de temps, mais un seul interrupteur ne peut pas exposer toutes les actions sensibles." },
@@ -912,17 +965,95 @@ export const labsLocales = {
       scope: "Cette étude reflète l’alpha documentée. Elle ne revendique ni fonctionnement autonome sûr, ni protection complète contre les options propres à un programme autorisé, ni compatibilité avec toutes les applications Windows.",
     }),
     "dig-gopher-explorer": localize("dig-gopher-explorer", {
-      category: "Outils de protocole", title: "Rendre le protocole Gopher inspectable sans en masquer les aspérités", summary: "DIG associe un vrai client Gopher en terminal à un explorateur web déterministe. La CLI ouvre des ressources gopher:// sur un TCP borné ; l’édition web enseigne le même parser avec une fixture sûre.",
-      facts: [["Produit", "Client terminal et explorateur de protocole"], ["Rôle", "Cœur du protocole, CLI et expérience web"], ["Runtime", "Node.js et web statique"], ["État", "CLI installable et application Pages hors ligne"]],
-      evidence: { title: "Registre des preuves", intro: "Les affirmations sur le protocole et le transport reposent sur des limites explicites :", items: [["Vérification", "68 déclarations de tests Node.js et deux E2E web dans la version auditée."], ["Limites de requête", "Plafond de 8 KiB, délai total de 5 secondes, inactivité de 2.5 secondes et limite par défaut de 10 000 entrées de menu."], ["Limites de réponse", "Plafond par défaut de 1 MiB et plafond absolu configurable de 10 MiB."], ["Limite", "Le TCP direct n’est pas chiffré ; TLS, authentification, Gopher+, Telnet et téléchargements automatiques ne sont pas pris en charge."]] },
-      starting: { title: "Pourquoi reconstruire un petit client de protocole", paragraphs: ["Le dépôt était un prototype visuel Flutter, mais la vraie question était plus basse couche : parser fidèlement un menu Gopher, expliquer chaque champ et ouvrir une ressource réelle sans réseau non borné.", "Un navigateur ne peut pas établir la connexion TCP brute de Gopher. Le projet assume cette limite avec un parser dans deux contextes : TCP réel dans la CLI et fixture déterministe dans l’explorateur."] },
-      constraints: { title: "Les limites du protocole", intro: "Même un petit client exige des règles réseau et de rendu explicites :", items: ["Les requêtes ont délai absolu, timeout d’inactivité, plafond de 8 KiB et réponse bornée.", "Les octets binaires restent binaires et ne sont jamais imprimés dans un terminal interactif.", "Les séquences de contrôle sont neutralisées avant l’affichage de texte non fiable.", "Les lignes de menu mal formées restent visibles afin de ne pas transformer une erreur en donnée plausible."] },
-      diagnosis: { title: "Un parser, deux transports", paragraphs: ["Le parser et les règles URL sont utiles sans connexion. Dans le site statique, ils rendent le protocole compréhensible et testable sans proxy qui modifierait le modèle de sécurité.", "La CLI ajoute le transport manquant : TCP borné, connexion directe non chiffrée et traitement explicite des menus, textes, recherches et binaires."] },
-      architecture: { title: "Le chemin de la requête", intro: "Une URL gopher:// devient hôte, port et selector. La CLI envoie le selector sur TCP borné puis confie les octets au traitement partagé. Le navigateur commence à la même frontière avec une fixture versionnée.", labels: ["URL GOPHER", "CONTRAT URL", "TCP BORNÉ", "PARSER DE MENU", "TERMINAL OU WEB"], caption: "Le navigateur explique le protocole ; seule la CLI franchit la frontière TCP." },
-      decisions: { title: "Les choix qui gardent le client lisible", intro: "Le comportement visible du protocole prime sur la magie pratique.", items: [{ title: "Préserver les selectors", body: "Les URL de recherche RFC 4266 sont analysées sans réduire les segments point du selector distant.", tradeoff: "Les selectors Gopher ne suivent pas les habitudes HTTP ; la différence doit rester explicite." }, { title: "Échouer sans risque dans le terminal", body: "Le texte est nettoyé des séquences de contrôle et les ressources binaires doivent être redirigées vers un fichier.", tradeoff: "Le client refuse des sorties pratiques pour protéger l’intégrité du terminal." }, { title: "Garder la démo déterministe", body: "GitHub Pages utilise une fixture incluse et ne prétend jamais joindre un serveur Gopher réel.", tradeoff: "L’explorateur enseigne ; ce n’est pas un client réseau web." }] },
-      delivery: { title: "Intégrité des publications", paragraphs: ["Les candidats sont construits deux fois ; archives npm et preuves SBOM normalisées doivent être identiques octet pour octet. Un smoke test exécute la commande publiée dans un préfixe propre.", "La publication taguée valide version, ascendance depuis main révisé, checksums, attestations et inventaire immuable. Gopher+, TLS, Telnet, authentification et téléchargements automatiques restent hors périmètre."] },
-      result: { title: "Ce que l’on peut inspecter", paragraphs: ["Le terminal ouvre menus, textes et recherches Gopher réels sur un transport borné. Le navigateur parcourt une fixture au clavier et expose type, selector, hôte et port.", "Le projet est volontairement étroit, ce qui rend sa frontière réseau, son parser et ses fonctions absentes faciles à comprendre."] },
-      scope: "L’implémentation couvre requête de base, menu, texte et recherche documentés. Le trafic direct n’est pas chiffré et les octets de selector arbitraires non UTF-8 restent hors périmètre.",
+      category: "Outils de protocole",
+      title: "Faire de Gopher un outil local borné et inspectable",
+      summary:
+        "DIG 3.0.0 est un vrai client Gopher décliné en trois surfaces bien séparées : une CLI sur TCP, un explorateur web connecté derrière une passerelle locale same-origin et un site GitHub Pages alimenté uniquement par des fixtures. Le cœur partagé traite les réponses RFC 1436 et les adresses RFC 4266 sans prétendre qu’une page statique peut ouvrir des sockets bruts.",
+      facts: [
+        ["Produit", "CLI Gopher, passerelle locale et explorateur web"],
+        ["Protocole", "Requêtes, menus et texte RFC 1436 ; URL et recherche RFC 4266"],
+        ["Sécurité", "Politique de destination restrictive avec DNS pinning"],
+        ["État", "Version open source 3.0.0 sous licence MIT"],
+      ],
+      evidence: {
+        title: "Registre des preuves",
+        intro: "Les affirmations sur la version 3.0.0 reposent sur des contrôles exécutables et des limites visibles :",
+        items: [
+          ["Vérification", "90 tests Node.js et quatre E2E Chromium réussissent, y compris le parcours connecté complet dans une fenêtre de 320 px exactement."],
+          ["Politique réseau", "Le mode hébergé exige un jeton d’accès, refuse un nom d’hôte dès qu’une réponse DNS n’est pas publique et se connecte uniquement à l’adresse déjà validée."],
+          ["Intégrité des sorties", "La CLI écrit dans un fichier temporaire du même répertoire puis rend le chemin final visible de façon atomique ; aucun octet binaire n’est imprimé dans un terminal interactif."],
+          ["Runtime", "L’audit des dépendances signale zéro vulnérabilité et l’image Docker de production réussit son smoke test en tant que processus non privilégié."],
+          ["Frontière publique", "GitHub Pages sert l’explorateur uniquement avec des fixtures versionnées. Les requêtes Gopher réelles passent nécessairement par la passerelle same-origin."],
+        ],
+      },
+      starting: {
+        title: "L’écart entre un schéma de protocole et un client utile",
+        paragraphs: [
+          "L’ancienne interface pouvait illustrer un menu Gopher, mais pas prouver l’essentiel : comment un selector devient des octets sur un socket, où se termine le framing du texte ou ce qui se passe lorsqu’un serveur distant se bloque, annonce un mauvais type ou renvoie du binaire.",
+          "La version 3.0.0 reconstruit le projet autour du véritable chemin de requête. La CLI ouvre des connexions TCP bornées. Le navigateur local utilise le même client par une passerelle same-origin. Pages reste limité aux fixtures, car le JavaScript du navigateur ne peut pas créer le socket TCP brut dont Gopher a besoin.",
+        ],
+      },
+      constraints: {
+        title: "Les règles que l’implémentation ne peut pas brouiller",
+        intro: "Le protocole est simple ; sa frontière de confiance ne l’est pas :",
+        items: [
+          "Le traitement RFC 4266 doit préserver selector et recherche, tandis que framing RFC 1436, fin de texte, dot-stuffing et types binaires gardent des règles distinctes sur le réseau et en sortie.",
+          "Toute opération réseau doit avoir une échéance totale, un délai d’inactivité, une limite de requête, une limite de réponse et un plafond d’entrées de menu.",
+          "Les accès hébergés doivent refuser les réponses DNS privées, loopback ou mixtes, puis se connecter à l’adresse validée sans résoudre le nom une seconde fois.",
+          "Un texte non fiable ne doit pas piloter le terminal, et une réponse binaire ne doit être ni décodée ni imprimée comme du texte.",
+        ],
+      },
+      diagnosis: {
+        title: "Une passerelle locale, pas un proxy ouvert",
+        paragraphs: [
+          "Placer un proxy HTTP ouvert à Internet derrière l’explorateur rendrait la page pratique tout en créant un service SSRF. DIG garde donc la passerelle près de l’utilisateur, n’accepte les appels API que depuis sa propre origine web et n’accorde aucun accès CORS aux autres sites.",
+          "Le mode hébergé se choisit explicitement. Il exige un jeton, bloque les destinations privées et lie le résultat DNS validé à la connexion TCP. L’accès local aux adresses privées n’existe que derrière une option explicite et un avertissement visible.",
+        ],
+      },
+      architecture: {
+        title: "Un chemin d’accès, deux interfaces connectées",
+        intro:
+          "Une URL Gopher et son éventuelle recherche passent par la validation d’adresse, la politique de destination et une connexion TCP bornée vers l’adresse épinglée. La réponse entre ensuite dans le parser RFC partagé. La CLI l’affiche ou l’enregistre directement ; la passerelle same-origin renvoie un résultat typé à l’explorateur.",
+        labels: ["URL + RECHERCHE", "POLITIQUE CIBLE", "TCP ÉPINGLÉ", "PARSER RFC", "CLI + EXPLORATEUR"],
+        caption: "La CLI et l’explorateur local partagent le vrai chemin du protocole ; Pages s’arrête à la frontière des fixtures.",
+      },
+      decisions: {
+        title: "Les choix qui rendent la frontière visible",
+        intro: "Chaque surface indique clairement ce qu’elle peut atteindre et ce qu’elle conserve.",
+        items: [
+          {
+            title: "Résoudre une fois, puis joindre la cible contrôlée",
+            body: "La politique hébergée rejette tout le nom d’hôte dès qu’une réponse DNS n’est pas publique. Une résolution valide fournit exactement l’adresse utilisée par le client TCP, ce qui ferme l’écart habituel entre contrôle et connexion.",
+            tradeoff: "Le rejet strict des réponses mixtes peut bloquer une configuration DNS inhabituelle mais légitime ; il est plus sûr que de deviner la réponse voulue par un attaquant.",
+          },
+          {
+            title: "Garder les requêtes réelles sur la même origine",
+            body: "La passerelle sert l’interface et l’API JSON, puis contrôle origine, forme du corps, débit et taille avant tout accès Gopher. Pages propose le même explorateur sur fixtures, sans accès réel ni cross-origin.",
+            tradeoff: "Une ressource réelle exige la passerelle locale ou volontairement hébergée ; le site public reste statique au lieu de devenir une API de proxy réutilisable.",
+          },
+          {
+            title: "Préserver les octets de la réponse",
+            body: "L’inspection brute reste facultative pour le texte et les menus. Les ressources binaires conservent leurs octets exacts, leur taille et leur empreinte SHA-256 ; le navigateur les télécharge et la CLI les enregistre atomiquement.",
+            tradeoff: "L’exactitude impose des chemins séparés pour le texte et le binaire, mais évite la corruption UTF-8 silencieuse et les fichiers cibles incomplets.",
+          },
+        ],
+      },
+      delivery: {
+        title: "Comment la version 3.0.0 est vérifiée",
+        paragraphs: [
+          "Les 90 tests Node.js couvrent le parsing RFC, de vraies fixtures TCP, la politique réseau, le contrat HTTP, la sortie atomique de la CLI, les ressources statiques et les règles de publication. Quatre parcours Chromium utilisent l’explorateur par la passerelle locale et vérifient recherche, historique, favoris, inspection brute, export, téléchargement binaire et mise en page à 320 px.",
+          "Le contrôle de publication exécute aussi un audit des dépendances avec zéro vulnérabilité et démarre l’image Docker non privilégiée pour un smoke test du runtime. Le projet est distribué sous MIT ; Pages reste statique, tandis que le conteneur ne lance que la passerelle hébergée authentifiée.",
+        ],
+      },
+      result: {
+        title: "Ce qui fonctionne aujourd’hui",
+        paragraphs: [
+          "Dans le terminal, on peut récupérer de vrais menus, textes, résultats de recherche et types binaires courants, vérifier taille et empreinte ou enregistrer les octets exacts sans exposer un fichier cible partiel. L’explorateur local ajoute au même parcours l’historique, les favoris, les formulaires de recherche, l’inspection brute, l’export JSON et le téléchargement binaire.",
+          "DIG ne transforme pas Gopher en HTTP. Le trafic vers le serveur Gopher reste en clair, Pages ne récupère aucune ressource réelle, et Gopher+, TLS, les sessions Telnet ainsi que le crawling récursif restent hors du contrat pris en charge.",
+        ],
+      },
+      scope:
+        "Cette étude décrit l’implémentation vérifiée de la version 3.0.0 : framing RFC 1436 des menus et textes, URL et recherche RFC 4266, types binaires courants, TCP borné, passerelle same-origin et explorateur Pages sur fixtures. UTF-8 est l’encodage pris en charge pour les champs URL ; le projet ne fournit ni authentification du serveur ni transport Gopher chiffré.",
     }),
     integradraw: localize("integradraw", {
       category: "Mathématiques computationnelles", title: "Maintenir deux outils d’intégration numérique cohérents grâce à un corpus partagé", summary: "IntegraDraw est un atelier Java desktop et TypeScript Canvas qui compare sommes des milieux et des trapèzes à une référence Simpson. Les deux runtimes partagent des cas versionnés et des tolérances explicites.",
@@ -938,17 +1069,17 @@ export const labsLocales = {
       scope: "IntegraDraw est un outil pédagogique exploratoire. Il ne fournit ni intégration symbolique, ni preuve, ni gestion garantie des discontinuités, ni résultat exact pour une fonction arbitraire.",
     }),
     "vector-placement-operations": localize("vector-placement-operations", {
-      category: "Logiciel opérationnel", title: "Reconstruire un tableau de placements autour d’un petit modèle de données testable", summary: "VECTOR transforme une cohorte fictive en tableau opérationnel dans le navigateur. Recherche, filtres, progression et jalons fonctionnent localement, sans compte, backend ni analytics.",
-      facts: [["Produit", "Tableau d’opérations de placement"], ["Rôle", "Reconstruction produit et frontend engineering"], ["Données", "Enregistrements fictifs uniquement"], ["État", "Application statique fonctionnelle"]],
-      evidence: { title: "Registre des preuves", intro: "L’édition publique fournit une fixture volontairement petite et testable :", items: [["Fixture", "Six placements fictifs dans quatre états ; deux actifs et deux en révision."], ["Vue dérivée", "La fixture vérifiée indique 67 % d’avancement agrégé sur des objectifs de 160/180 heures."], ["Vérification", "30 déclarations Node.js et cinq E2E web, dont mobile à 390 px et contrôle exact du débordement à 320 px."], ["Limite", "Toute la persistance appartient à un navigateur. Ce n’est pas un système de placement multi-utilisateur."]] },
-      starting: { title: "La question produit", paragraphs: ["La coordination implique personnes, organismes d’accueil, superviseurs, jalons et heures. Un bon tableau répond vite : qui est bloqué, quelle échéance arrive et quel dossier demande une action ?", "Le concept académique a été reconstruit comme application statique bornée. Les données sont fictives, les changements restent dans le navigateur et chaque état se réinitialise."] },
-      constraints: { title: "Ce que promet l’édition publique", intro: "La reconstruction garde une frontière petite et vérifiable :", items: ["Chaque personne et organisation est fictive.", "Recherche et filtres utilisent un seul modèle explicite.", "Les jalons persistent uniquement dans local storage et se réinitialisent.", "Aucun compte, base, endpoint analytics ou API distante d’écriture n’existe."] },
-      diagnosis: { title: "Modéliser l’opération avant le tableau", paragraphs: ["Un tableau devient fragile si totaux, libellés et lignes calculent l’état différemment. J’ai d’abord réuni état et calcul d’heures dans un modèle testé.", "L’interface projette ensuite ce modèle : métriques, filtres et progression partagent les mêmes fonctions ; seule la fixture de travail fictive persiste localement."] },
-      architecture: { title: "Une frontière de produit statique complète", intro: "Un dataset fictif alimente le modèle. Recherche, filtres, synthèses et transitions lisent le même état dérivé. Le navigateur conserve les changements ; reset restaure la fixture.", labels: ["DONNÉES FICTIVES", "MODÈLE DE PLACEMENT", "RECHERCHE + FILTRES", "JALONS", "LOCAL STORAGE"], caption: "Un modèle local pilote synthèse et vue individuelle." },
-      decisions: { title: "Les choix qui rendent la démo fiable", intro: "L’application en fait moins, mais chaque interaction visible est réelle.", items: [{ title: "Fournir des données fictives", body: "La cohorte entière est conçue pour la démonstration, sans export de production expurgé.", tradeoff: "La démo ne représente ni processus ni volume d’une institution réelle." }, { title: "Dériver les métriques du modèle", body: "État et heures sont partagés par cartes, filtres et dossiers, avec tests Node.js.", tradeoff: "Tout nouvel état doit d’abord modifier le contrat du modèle." }, { title: "Garder la persistance locale", body: "Les jalons survivent au refresh et reset restaure la fixture.", tradeoff: "Pas de collaboration, authentification ou synchronisation multi-appareil." }] },
-      delivery: { title: "Vérification du site statique", paragraphs: ["Le serveur local reproduit le chemin GitHub Pages exact, afin de détecter les liens absolus avant déploiement. Node.js teste le modèle et Playwright l’expérience web.", "Les releases produisent des archives ZIP et TAR déterministes avec inventaire, CycloneDX SBOM, commit source et checksums SHA-256."] },
-      result: { title: "Ce que permet le tableau", paragraphs: ["Un opérateur recherche étudiant, organisme ou superviseur, filtre la cohorte, examine la progression, avance un jalon et retrouve l’état après refresh.", "VECTOR est un démonstrateur ciblé, pas un service hébergé. Sa valeur est un modèle d’interaction cohérent avec une frontière de données claire."] },
-      scope: "L’application utilise des données fictives et une persistance locale. Elle ne revendique ni multi-utilisateur, ni contrôles de production, ni intégrations institutionnelles, ni résultats réels.",
+      category: "Logiciel de gestion scolaire", title: "Concevoir un système de stages que chaque école peut héberger et maîtriser", summary: "VECTOR 3.0.0 est un système white label de gestion des stages qu’une école peut exploiter sur sa propre infrastructure. Cohortes, élèves, organismes d’accueil, affectations, heures, suivis et justificatifs partagent un même flux côté serveur, avec des règles d’accès appliquées par l’API.",
+      facts: [["Produit", "Gestion white label des stages en auto-hébergement"], ["Rôle", "Produit, architecture et implémentation en clean room"], ["Déploiement", "Une école par installation"], ["État", "Version open source 3.0.0 sous licence MIT"]],
+      evidence: { title: "Registre des preuves", intro: "Le dépôt de la version 3.0.0 rattache ses promesses produit à des contrôles concrets :", items: [["Accès", "Le serveur vérifie les droits des administrateurs, coordinateurs, tuteurs et lecteurs. L’administrateur initial doit remplacer son mot de passe temporaire avant d’accéder aux données opérationnelles."], ["Données", "SQLite fonctionne en mode WAL derrière des migrations explicites. Les contrôles de révision empêchent un opérateur d’écraser silencieusement les changements d’un autre."], ["Flux", "Les critères de préparation et les transitions couvrent les stages, les heures validées ou annulées, les suivis et les justificatifs, qui peuvent être remplacés sans effacer leur historique."], ["Gouvernance", "Les métadonnées d’audit excluent les champs personnels. La rétention respecte les blocages placés sur les élèves et exige l’empreinte exacte de l’aperçu avant chaque lot de suppression limité."], ["Livraison", "Le parcours de publication construit une archive source reproductible, la vérifie après extraction et teste sauvegarde, inspection, restauration et compactage sur l’application empaquetée."]] },
+      starting: { title: "Le problème opérationnel", paragraphs: ["La gestion des stages ne se résume pas à un tableau de bord. Une école coordonne des cohortes, des élèves, des organismes, des tuteurs, des dates, des heures, des suivis et des justificatifs signés. Chaque rôle a besoin d’une vue différente du même dossier, et une correction ne doit pas effacer ce qui l’a précédée.", "L’ancienne implémentation scolaire ne pouvait pas servir de base à un produit. J’ai reconstruit VECTOR depuis zéro en ne gardant que la compréhension du métier. Aucun code historique, dossier personnel, nom ou asset de l’ancien projet n’a été repris dans le nouveau dépôt."] },
+      constraints: { title: "Ce qu’un système maîtrisé par l’école doit garantir", intro: "L’architecture part de quatre contraintes concrètes :", items: ["Chaque installation appartient à une seule école, qui contrôle sa base, son identité visuelle, ses sauvegardes et son déploiement.", "Les droits et le périmètre des tuteurs doivent être appliqués par le serveur avant toute sélection, tout comptage ou tout export.", "Les heures validées et les justificatifs signés ont besoin de parcours de correction explicites qui préservent le dossier initial.", "Imports, exports, rétention et restauration doivent être bornés, vérifiables et relançables sans risque après un échec."] },
+      diagnosis: { title: "Définir d’abord la frontière de propriété", paragraphs: ["Déplacer davantage d’état dans le navigateur aurait laissé les questions difficiles intactes. Les contrôles de rôle auraient pu rester cachés dans l’interface, toute l’école être chargée en mémoire et un champ modifié être traité comme si sa valeur précédente n’avait jamais existé.", "VECTOR consacre chaque installation à une seule école au lieu de construire un service multi-tenant partagé. La responsabilité opérationnelle est nette, et les sauvegardes, la rétention et le white label restent plus simples à raisonner. Le projet distribue un logiciel, pas une plateforme cloud administrée."] },
+      architecture: { title: "Un serveur compact aux frontières explicites", intro: "L’espace de travail web appelle une API Express qui gère authentification, rôles et transitions. SQLite conserve les dossiers d’une école en mode WAL. Des curseurs opaques AES-GCM lient la pagination à l’école, au périmètre et aux filtres actifs ; des recherches bornées évitent de charger des tables entières dans les formulaires.", labels: ["ESPACE DE TRAVAIL WEB", "POLICY LAYER EXPRESS", "SQLITE WAL", "AUDIT + RÉTENTION", "SAUVEGARDE + RELEASE"], caption: "Le serveur décide ce qu’un opérateur peut consulter et modifier ; le navigateur présente cette décision." },
+      decisions: { title: "Les choix qui sécurisent le travail quotidien", intro: "Le produit préfère des règles visibles à un état caché mais pratique.", items: [{ title: "Appliquer le périmètre avant la pagination", body: "Chaque liste applique l’école et le rôle avant sa limite. Les curseurs opaques authentifiés lient ce périmètre aux filtres et à une position de tri stable. Les recherches ne renvoient qu’un petit ensemble de dossiers admissibles.", tradeoff: "L’interface ne peut pas télécharger une table sans limite en une requête. L’extraction complète passe par un export filtré séparé, plafonné à 10 000 lignes." }, { title: "Corriger les justificatifs sans réécrire l’historique", body: "Les critères de préparation gouvernent les transitions du stage. Les heures sont validées ou annulées ; un document signé est corrigé par un nouveau dossier qui le remplace, jamais par une modification sur place.", tradeoff: "L’opérateur suit une étape explicite, mais le contrôle peut reconstituer toute la suite des décisions." }, { title: "Faire échouer proprement les opérations massives", body: "Un import CSV valide le fichier entier dans une seule transaction. L’aperçu de rétention montre dossiers bloqués, travail restant et empreinte exacte ; l’exécution refuse un aperçu périmé et supprime par lots bornés.", tradeoff: "Les changements administratifs importants demandent un aperçu délibéré et parfois plusieurs passages. Cela vaut mieux qu’un import partiel ou une suppression massive non relue." }] },
+      delivery: { title: "Auto-hébergement et restauration", paragraphs: ["Chaque école peut définir nom, couleurs, logo et coordonnées de support avec des révisions qui protègent les modifications concurrentes. L’image Docker s’exécute sans privilège et accepte un système de fichiers racine en lecture seule. Les commandes health et doctor signalent les problèmes de configuration et de stockage avant l’usage courant.", "Les outils créent un instantané SQLite privé, l’inspectent sans démarrer l’application, le restaurent par un parcours de maintenance protégé et compactent les données conservées si nécessaire. L’automatisation construit deux fois l’archive source, vérifie inventaire et commit, recherche les secrets, installe depuis l’artefact extrait et y exécute le parcours d’acceptation."] },
+      result: { title: "Ce que VECTOR prend en charge aujourd’hui", paragraphs: ["Une école peut gérer cohortes, élèves, organismes, périodes et affectations ; valider les heures ; enregistrer les suivis ; préserver l’historique des documents ; examiner les événements d’audit dans son périmètre ; importer les données de façon atomique et exporter une vue opérationnelle filtrée. Un administrateur peut aussi placer un élève sous blocage de rétention avant la suppression d’anciens dossiers.", "VECTOR est un logiciel open source auto-hébergé. Ce n’est pas un SaaS administré et il ne revendique ni certification de conformité, ni haute disponibilité, ni SSO. Une institution qui en a besoin devra encore traiter ces sujets côté produit et déploiement."] },
+      scope: "Cette étude décrit l’architecture versionnée 3.0.0 et ses contrôles d’auto-hébergement. GitHub Pages présente le produit sans données opérationnelles ; l’application elle-même s’exécute depuis le paquet serveur. Aucun dossier scolaire réel, aucune intégration institutionnelle et aucun résultat de stage n’y sont représentés.",
     }),
   },
 };
