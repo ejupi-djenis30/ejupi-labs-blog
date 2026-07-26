@@ -101,7 +101,12 @@ test("localized chrome, bylines and cross-site routes stay in the selected langu
     assert.ok(index.includes(`class="personal-link" href="${authorRoute}"`));
     assert.ok(index.includes(`>${ui.personal}</a>`));
     assert.ok(index.includes(`${uppercase(ui.caseLabel)} / 01`));
-    assert.ok(index.replace(/<[^>]+>/gu, "").includes(ui.emptyTitle));
+    assert.ok(ui.emptyTitle.endsWith("."));
+    assert.ok(
+      index.includes(
+        `<h2>${ui.emptyTitle.slice(0, -1)}<span class="title-stop">.</span></h2>`,
+      ),
+    );
 
     const workflow = await readFile(
       new URL(
