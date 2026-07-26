@@ -109,19 +109,56 @@ test("desktop navigation remains available after an open mobile menu is resized"
   expect(overflow).toBeLessThanOrEqual(0);
 });
 
-test("archive search, taxonomy, URL state and empty state stay in sync", async ({
+test("the editorial header leads directly into search and case studies", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  await expect(page.locator(".index-register, .intro-section, .principle-grid, .site-cta")).toHaveCount(0);
+  await expect(page.locator("[data-case-type], [data-case-topic]")).toHaveCount(0);
+  await expect(page.locator("[data-case-search]")).toBeVisible();
+  await expect(page.locator("[data-case-search]")).toBeInViewport();
+
+  const layout = await page.evaluate(() => {
+    const hero = document.querySelector(".index-hero");
+    const discovery = document.querySelector("[data-discovery]");
+    const caseList = document.querySelector("[data-case-list]");
+    if (!hero || !discovery || !caseList) return null;
+    const heroBox = hero.getBoundingClientRect();
+    const discoveryBox = discovery.getBoundingClientRect();
+    const listBox = caseList.getBoundingClientRect();
+    const heroBeforeDiscovery = Boolean(
+      hero.compareDocumentPosition(discovery) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    const discoveryBeforeCases = Boolean(
+      discovery.compareDocumentPosition(caseList) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    return {
+      heroHeight: heroBox.height,
+      ordered: heroBeforeDiscovery && discoveryBeforeCases,
+      discoveryTouchesList: Math.abs(discoveryBox.bottom - listBox.top) <= 1,
+    };
+  });
+
+  expect(layout).not.toBeNull();
+  expect(layout.heroHeight).toBeLessThan(630);
+  expect(layout.ordered).toBeTruthy();
+  expect(layout.discoveryTouchesList).toBe(true);
+});
+
+test("archive search, URL state and empty state stay in sync", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/?q=llama.cpp&type=labs");
+  await page.goto("/?q=llama.cpp");
 
   const cards = page.locator("[data-case-card]:visible");
   await expect(page.locator("[data-discovery]")).toBeVisible();
   await expect(page.locator("[data-case-search]")).toHaveValue("llama.cpp");
-  await expect(page.locator('[data-case-type="labs"]')).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
+  await expect(page.locator("[data-case-type], [data-case-topic]")).toHaveCount(0);
   await expect(cards).toHaveCount(1);
   await expect(page.locator("[data-case-count]")).toHaveText("1");
 
@@ -164,21 +201,18 @@ for (const { width, localePath } of [
   { width: 390, localePath: "/it/" },
   { width: 320, localePath: "/de/" },
 ]) {
-  test(`${width}px archive keeps filters and previews compact`, async ({ page }) => {
+  test(`${width}px archive keeps search and previews compact`, async ({ page }) => {
     await page.setViewportSize({ width, height: 844 });
     await page.goto(localePath);
 
     const discovery = page.locator("[data-discovery]");
     await discovery.scrollIntoViewIfNeeded();
     const geometry = await page.evaluate(() => {
-      const controls = [...document.querySelectorAll("[data-case-type]")].map(
-        (element) => {
-          const { top, height } = element.getBoundingClientRect();
-          return { top, height };
-        },
-      );
       const discoveryBox = document
         .querySelector("[data-discovery]")
+        ?.getBoundingClientRect();
+      const searchBox = document
+        .querySelector("[data-case-search]")
         ?.getBoundingClientRect();
       const firstCard = document
         .querySelector("[data-case-card]")
@@ -189,14 +223,10 @@ for (const { width, localePath } of [
         overflow:
           document.documentElement.scrollWidth -
           document.documentElement.clientWidth,
-        controlsShareRow:
-          controls.length === 3 &&
-          Math.max(...controls.map(({ top }) => top)) -
-            Math.min(...controls.map(({ top }) => top)) <=
-            1,
-        minimumControlHeight: Math.min(
-          ...controls.map(({ height }) => height),
-        ),
+        removedFilterCount: document.querySelectorAll(
+          "[data-case-type], [data-case-topic]",
+        ).length,
+        searchHeight: searchBox?.height ?? 0,
         discoveryHeight: discoveryBox?.height ?? Infinity,
         firstCardHeight: firstCard?.height ?? Infinity,
         columns: list
@@ -209,17 +239,16 @@ for (const { width, localePath } of [
     });
 
     expect(geometry.overflow).toBeLessThanOrEqual(0);
-    expect(geometry.controlsShareRow).toBe(true);
-    expect(geometry.minimumControlHeight).toBeGreaterThanOrEqual(44);
-    expect(geometry.discoveryHeight).toBeLessThan(400);
+    expect(geometry.removedFilterCount).toBe(0);
+    expect(geometry.searchHeight).toBeGreaterThanOrEqual(48);
+    expect(geometry.discoveryHeight).toBeLessThan(220);
     expect(geometry.firstCardHeight).toBeLessThan(520);
     expect(geometry.columns).toBe(1);
     expect(geometry.summaryClamp).toBe("3");
 
-    await page.locator('[data-case-type="labs"]').click();
-    await expect(page.locator("[data-case-card]:visible")).toHaveCount(
-      caseDefinitions.filter(({ kind }) => kind === "labs").length,
-    );
+    await page.locator("[data-case-search]").fill("llama.cpp");
+    await expect(page.locator("[data-case-card]:visible")).toHaveCount(1);
+    await expect(page).toHaveURL(/q=llama\.cpp/u);
   });
 }
 

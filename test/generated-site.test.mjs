@@ -20,9 +20,20 @@ test("English case-study index links to every canonical article", async () => {
   }
   assert.match(html, /data-case-search/);
   assert.match(html, /data-search-state/);
-  assert.match(html, /data-case-type="labs"/);
+  assert.match(html, /data-case-count/);
+  assert.match(html, /data-case-clear/);
+  assert.doesNotMatch(html, /data-case-type|data-case-topic/u);
   assert.match(html, /"@type":"Blog"/);
   assert.doesNotMatch(html, /card-schematic|case-card__rail/u);
+  assert.doesNotMatch(html, /index-register|intro-section|principle-grid|site-cta/u);
+  const heroPosition = html.indexOf('class="index-hero shell"');
+  const discoveryPosition = html.indexOf("data-discovery");
+  const caseListPosition = html.indexOf("data-case-list");
+  assert.ok(heroPosition >= 0);
+  assert.ok(discoveryPosition >= 0);
+  assert.ok(caseListPosition >= 0);
+  assert.ok(heroPosition < discoveryPosition);
+  assert.ok(discoveryPosition < caseListPosition);
   const cards = [...html.matchAll(/<article class="case-card"[\s\S]*?<\/article>/gu)];
   assert.equal(cards.length, caseDefinitions.length);
   for (const card of cards) {
@@ -65,6 +76,7 @@ test("articles identify Djenis as the Person author and Ejupi Labs as publisher"
   assert.match(html, /rel="author" itemprop="url" href="https:\/\/djenis\.ejupilabs\.com\/"/u);
   assert.match(html, /itemprop="jobTitle">Author and engineer/u);
   assert.match(html, /Last verified <time datetime="2026-07-24" itemprop="dateModified">/u);
+  assert.match(html, /class="site-cta"/u);
 });
 
 test("localized chrome, bylines and cross-site routes stay in the selected language", async () => {
@@ -88,10 +100,8 @@ test("localized chrome, bylines and cross-site routes stay in the selected langu
     assert.ok(index.includes(`rel="author" href="${authorRoute}"`));
     assert.ok(index.includes(`class="personal-link" href="${authorRoute}"`));
     assert.ok(index.includes(`>${ui.personal}</a>`));
-    assert.ok(index.includes(uppercase(ui.indexLabel)));
-    assert.ok(index.includes(uppercase(ui.noteLabel)));
-    assert.ok(index.includes(uppercase(ui.casesLabel)));
     assert.ok(index.includes(`${uppercase(ui.caseLabel)} / 01`));
+    assert.ok(index.replace(/<[^>]+>/gu, "").includes(ui.emptyTitle));
 
     const workflow = await readFile(
       new URL(

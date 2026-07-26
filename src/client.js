@@ -38,10 +38,6 @@ if (typeof document !== "undefined") {
 
   if (discovery instanceof HTMLElement && caseCards.length > 0) {
     const search = discovery.querySelector("[data-case-search]");
-    const topic = discovery.querySelector("[data-case-topic]");
-    const typeButtons = [
-      ...discovery.querySelectorAll("[data-case-type]"),
-    ].filter((element) => element instanceof HTMLButtonElement);
     const clearButtons = [
       ...document.querySelectorAll("[data-case-clear]"),
     ].filter((element) => element instanceof HTMLButtonElement);
@@ -53,11 +49,9 @@ if (typeof document !== "undefined") {
     const fullTextBySlug = new Map();
     let searchIndexState = "idle";
     let searchIndexPromise = null;
-    let selectedKind = "";
 
     if (
       search instanceof HTMLInputElement &&
-      topic instanceof HTMLSelectElement &&
       count instanceof HTMLElement &&
       countLabel instanceof HTMLElement &&
       searchState instanceof HTMLElement &&
@@ -68,31 +62,15 @@ if (typeof document !== "undefined") {
       function readUrlState() {
         const parameters = new URLSearchParams(window.location.search);
         search.value = parameters.get("q") ?? "";
-        const requestedKind = parameters.get("type") ?? "";
-        selectedKind = typeButtons.some(
-          (button) => button.dataset.caseType === requestedKind,
-        )
-          ? requestedKind
-          : "";
-        const requestedTopic = parameters.get("topic") ?? "";
-        topic.value = [...topic.options].some(
-          (option) => option.value === requestedTopic,
-        )
-          ? requestedTopic
-          : "";
       }
 
       function writeUrlState() {
         const url = new URL(window.location.href);
-        const values = {
-          q: search.value.trim(),
-          type: selectedKind,
-          topic: topic.value,
-        };
-        for (const [key, value] of Object.entries(values)) {
-          if (value) url.searchParams.set(key, value);
-          else url.searchParams.delete(key);
-        }
+        const query = search.value.trim();
+        if (query) url.searchParams.set("q", query);
+        else url.searchParams.delete("q");
+        url.searchParams.delete("type");
+        url.searchParams.delete("topic");
         window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
       }
 
@@ -163,25 +141,15 @@ if (typeof document !== "undefined") {
           const visible = matchesCaseStudy(
             {
               text: fullTextBySlug.get(slug) ?? card.textContent ?? "",
-              kind: card.dataset.kind ?? "",
-              topic: card.dataset.topic ?? "",
             },
             {
               query: search.value,
-              selectedKind,
-              selectedTopic: topic.value,
             },
           );
           card.hidden = !visible;
           if (visible) visibleCount += 1;
         }
 
-        for (const button of typeButtons) {
-          button.setAttribute(
-            "aria-pressed",
-            String(button.dataset.caseType === selectedKind),
-          );
-        }
         count.textContent = String(visibleCount);
         countLabel.textContent =
           visibleCount === 1
@@ -191,24 +159,15 @@ if (typeof document !== "undefined") {
         if (updateUrl) writeUrlState();
       }
 
-      function resetFilters({ focusSearch = true } = {}) {
+      function resetSearch({ focusSearch = true } = {}) {
         search.value = "";
-        topic.value = "";
-        selectedKind = "";
         updateResults();
         if (focusSearch) search.focus();
       }
 
       search.addEventListener("input", () => updateResults());
-      topic.addEventListener("change", () => updateResults());
-      for (const button of typeButtons) {
-        button.addEventListener("click", () => {
-          selectedKind = button.dataset.caseType ?? "";
-          updateResults();
-        });
-      }
       for (const button of clearButtons) {
-        button.addEventListener("click", () => resetFilters());
+        button.addEventListener("click", () => resetSearch());
       }
       document.addEventListener("keydown", (event) => {
         const target = event.target;

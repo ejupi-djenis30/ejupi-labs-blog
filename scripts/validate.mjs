@@ -135,6 +135,7 @@ for (const localeKey of localeOrder) {
       const expectedSections = definition?.kind === "labs" ? 8 : 7;
       if (count(html, /data-story-section/g) !== expectedSections) errors.push(`${label} must contain ${expectedSections} complete story sections.`);
       if (!html.includes("architecture-frame")) errors.push(`${label} is missing its architecture figure.`);
+      if (!html.includes('class="site-cta"')) errors.push(`${label} is missing its article CTA.`);
       if (!html.includes(locales[localeKey].ui.sourceNote)) errors.push(`${label} is missing its evidence boundary.`);
       if (definition?.kind === "labs" && !html.includes("evidence-ledger")) errors.push(`${label} is missing its evidence ledger.`);
       if (definition?.kind === "labs" && !html.includes(definition.projectUrl)) errors.push(`${label} is missing its working product link.`);
@@ -168,12 +169,33 @@ for (const localeKey of localeOrder) {
         errors.push(`${label} has an untranslated delivery-path label.`);
       }
     } else {
-      if (!html.includes(uppercase(editorial.indexLabel))) errors.push(`${label} has an untranslated index label.`);
-      if (!html.includes(uppercase(editorial.noteLabel))) errors.push(`${label} has an untranslated note label.`);
-      if (!html.includes(uppercase(editorial.casesLabel))) errors.push(`${label} has an untranslated case-count label.`);
       if (!html.includes(uppercase(editorial.caseLabel))) errors.push(`${label} has an untranslated case-card label.`);
       if (!/data-search-index-url="\/assets\/search\.[a-z]{2}\.[0-9a-f]{12}\.json"/u.test(html)) {
         errors.push(`${label} has no fingerprinted full-text search index.`);
+      }
+      for (const removedBlock of [
+        "index-register",
+        "intro-section",
+        "principle-grid",
+        "site-cta",
+        "data-case-type",
+        "data-case-topic",
+      ]) {
+        if (html.includes(removedBlock)) errors.push(`${label} still contains the removed ${removedBlock} block.`);
+      }
+      if (count(html, /data-case-search/g) !== 1) errors.push(`${label} must expose exactly one case-study search field.`);
+      if (!html.includes("data-case-count")) errors.push(`${label} is missing its live result count.`);
+      if (!html.includes("data-case-clear")) errors.push(`${label} is missing its search reset control.`);
+      const heroPosition = html.indexOf('class="index-hero shell"');
+      const discoveryPosition = html.indexOf("data-discovery");
+      const caseListPosition = html.indexOf("data-case-list");
+      if (
+        heroPosition < 0 ||
+        discoveryPosition < 0 ||
+        caseListPosition < 0 ||
+        !(heroPosition < discoveryPosition && discoveryPosition < caseListPosition)
+      ) {
+        errors.push(`${label} must lead directly from the editorial header to discovery and case studies.`);
       }
     }
   }

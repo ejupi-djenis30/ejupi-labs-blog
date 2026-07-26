@@ -120,7 +120,7 @@ export const labsCases = {
       title: "The problem with the original premise",
       paragraphs: [
         "The repository began as a Telegram “psychologist” bot. It stored sensitive conversations and framed generated responses as something closer to care than the software could justify.",
-        "I kept the useful engineering question—how a small text classifier learns and fails—but removed accounts, transcripts, diagnosis and therapeutic claims. The new project makes the model, data split, calibration policy and safety boundary visible.",
+        "I kept one useful engineering question: how does a small text classifier learn, and where does it fail? I removed accounts, transcripts, diagnosis and therapeutic claims. The new project makes the model, data split, calibration policy and safety boundary visible.",
       ],
     },
     constraints: {
@@ -233,7 +233,7 @@ export const labsCases = {
       ],
     },
     architecture: {
-      title: "An observe–decide–gate–verify loop",
+      title: "A loop that observes, decides, gates and verifies",
       intro:
         "Perception captures a screenshot or accessibility tree. Gemini returns one declared function call. The policy layer checks runtime support, tier and allowlists before a tool runs. The resulting observation becomes the next turn’s evidence.",
       labels: ["PERCEPTION", "GEMINI TOOL CALL", "POLICY GATE", "ACTION", "VERIFIED OBSERVATION"],

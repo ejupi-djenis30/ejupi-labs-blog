@@ -223,7 +223,7 @@ function pageHead({
 }) {
   const locale = locales[localeKey];
   const canonical = absolute(pageRoute(localeKey, slug, pageKind));
-  const pageTitle = title === site.name ? title : `${title} — ${site.name}`;
+  const pageTitle = title === site.name ? title : `${title} | ${site.name}`;
 
   return `<!doctype html>
 <html class="no-js" lang="${locale.lang}">
@@ -238,7 +238,7 @@ function pageHead({
   <link rel="canonical" href="${canonical}" />
   <link rel="author" href="${authorRouteFor(localeKey)}" />
   ${alternates(slug, pageKind)}
-  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(site.name)} — ${escapeHtml(locale.ui.home)}" href="${absolute(feedRoute(localeKey))}" />
+  <link rel="alternate" type="application/rss+xml" title="${escapeHtml(site.name)} | ${escapeHtml(locale.ui.home)}" href="${absolute(feedRoute(localeKey))}" />
   <link rel="search" type="application/opensearchdescription+xml" title="${escapeHtml(site.name)}" href="${searchDescriptionRoute(localeKey)}" />
   <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
   <link rel="manifest" href="/site.webmanifest" />
@@ -277,7 +277,7 @@ function header(localeKey, slug, onIndex = false, pageKind = "case") {
 <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
 <header class="site-header">
   <div class="header-inner shell">
-    <a class="brand" href="${homeRoute}" aria-label="${escapeHtml(site.name)} — ${escapeHtml(locale.ui.home)}">
+    <a class="brand" href="${homeRoute}" aria-label="${escapeHtml(site.name)}, ${escapeHtml(locale.ui.home)}">
       <img src="/assets/brand/ejupi-labs-primary-carbon.svg" width="958" height="295" alt="Ejupi Labs" />
       <span class="brand-label">Case<br />Studies</span>
     </a>
@@ -343,28 +343,15 @@ function indexPage(localeKey) {
   const locale = locales[localeKey];
   const ui = editorialUi[localeKey];
   const visibleDefinitions = definitionsForLocale(localeKey);
-  const register = visibleDefinitions
-    .map((definition) => `<div class="register-node"><span>${definition.number}</span><strong>${escapeHtml(locale.cases[definition.slug].cardTitle)}</strong></div>`)
-    .join("");
-  const principles = locale.index.principles
-    .map((principle) => `<article class="principle"><span>${principle.number}</span><h3>${escapeHtml(principle.title)}</h3><p>${escapeHtml(principle.body)}</p></article>`)
-    .join("");
 
-  const topicOptions = [...new Map(visibleDefinitions.map((definition) => [
-    definition.categoryKey,
-    locale.cases[definition.slug].category,
-  ])).entries()]
-    .sort((first, second) => first[1].localeCompare(second[1], locale.lang))
-    .map(([value, label]) => `<option value="${value}">${escapeHtml(label)}</option>`)
-    .join("");
   const dynamicEyebrow = locale.index.eyebrow.replace(
-    /01—\d+$/u,
-    `01—${String(visibleDefinitions.length).padStart(2, "0")}`,
+    /01\s*\/\s*\d+$/u,
+    `01 / ${String(visibleDefinitions.length).padStart(2, "0")}`,
   );
   const blogSchema = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    name: `${site.name} — ${locale.ui.home}`,
+    name: `${site.name} | ${locale.ui.home}`,
     url: absolute(routeFor(localeKey, null)),
     inLanguage: locale.lang,
     description: locale.index.description,
@@ -382,51 +369,18 @@ function indexPage(localeKey) {
 <script type="application/ld+json">${safeJson(blogSchema)}</script>
 ${header(localeKey, null, true)}
 <main id="main" tabindex="-1" itemscope itemtype="https://schema.org/Blog">
-  <section class="index-hero">
+  <section class="index-hero shell">
+    <span class="eyebrow">${escapeHtml(dynamicEyebrow)}</span>
     <div class="index-hero__copy">
-      <span class="eyebrow">${escapeHtml(dynamicEyebrow)}</span>
-      <div>
-        <h1 itemprop="name">${heading(locale.index.title)}</h1>
-        <p class="index-hero__lead" itemprop="description">${escapeHtml(locale.index.description)}</p>
-      </div>
-    </div>
-    <aside class="index-register" aria-label="${escapeHtml(locale.ui.allWork)}">
-      <div class="index-register__head"><span>${escapeHtml(ui.indexLabel.toLocaleUpperCase(locale.lang))}</span><span>${String(visibleDefinitions.length).padStart(2, "0")} ${escapeHtml(ui.casesLabel.toLocaleUpperCase(locale.lang))}</span></div>
-      <div class="index-register__map">${register}</div>
-      <div class="index-register__foot"><span>${escapeHtml(ui.countryLabel.toLocaleUpperCase(locale.lang))}</span><span>2026</span></div>
-    </aside>
-  </section>
-  <section class="intro-section shell" aria-labelledby="intro-title">
-    <div class="intro-grid">
-      <span class="section-label">00 / ${escapeHtml(ui.noteLabel.toLocaleUpperCase(locale.lang))}</span>
-      <div class="intro-grid__body">
-        <h2 id="intro-title">${heading(locale.index.introTitle)}</h2>
-        <p>${escapeHtml(locale.index.introBody)}</p>
-        <div class="principle-grid">${principles}</div>
-      </div>
+      <h1 itemprop="name">${heading(locale.index.title)}</h1>
+      <p class="index-hero__lead" itemprop="description">${escapeHtml(locale.index.description)}</p>
     </div>
   </section>
-  <section class="case-index shell" aria-labelledby="case-index-title">
-    <div class="case-index__head"><span class="section-label" id="case-index-title">${escapeHtml(ui.archive)}</span><span class="section-label">${String(visibleDefinitions.length).padStart(2, "0")} ${escapeHtml(ui.casesLabel.toLocaleUpperCase(locale.lang))}</span></div>
+  <section class="case-index shell" aria-label="${escapeHtml(ui.archive)}">
     <div class="discovery" data-discovery data-search-index-url="${searchAssetUrls[localeKey]}" hidden>
       <div class="discovery__search">
         <label for="case-search">${escapeHtml(ui.searchLabel)}</label>
         <input id="case-search" type="search" inputmode="search" autocomplete="off" placeholder="${escapeHtml(ui.searchPlaceholder)}" aria-controls="case-results" data-case-search />
-      </div>
-      <fieldset class="discovery__types">
-        <legend>${escapeHtml(ui.typeLabel)}</legend>
-        <div class="filter-buttons" data-case-types>
-          <button type="button" data-case-type="" aria-controls="case-results" aria-pressed="true">${escapeHtml(ui.all)}</button>
-          <button type="button" data-case-type="professional" aria-label="${escapeHtml(ui.professional)}" aria-controls="case-results" aria-pressed="false">${escapeHtml(ui.professionalShort)}</button>
-          ${visibleDefinitions.some((definition) => definition.kind === "labs") ? `<button type="button" data-case-type="labs" aria-label="${escapeHtml(ui.labs)}" aria-controls="case-results" aria-pressed="false">${escapeHtml(ui.labsShort)}</button>` : ""}
-        </div>
-      </fieldset>
-      <div class="discovery__topic">
-        <label for="case-topic">${escapeHtml(ui.topicLabel)}</label>
-        <select id="case-topic" aria-controls="case-results" data-case-topic>
-          <option value="">${escapeHtml(ui.everyTopic)}</option>
-          ${topicOptions}
-        </select>
       </div>
       <div class="discovery__status">
         <p aria-live="polite" aria-atomic="true"><strong data-case-count>${visibleDefinitions.length}</strong> <span data-case-count-label data-singular="${escapeHtml(ui.result)}" data-plural="${escapeHtml(ui.results)}">${escapeHtml(ui.results)}</span></p>
@@ -441,13 +395,6 @@ ${header(localeKey, null, true)}
       <p>${escapeHtml(ui.emptyBody)}</p>
       <button class="text-link" type="button" data-case-clear>${escapeHtml(ui.clear)} <span aria-hidden="true">↺</span></button>
     </div>
-  </section>
-  <section class="site-cta">
-    <div class="site-cta__copy">
-      <h2>${heading(locale.index.ctaTitle)}</h2>
-      <p>${escapeHtml(locale.index.ctaBody)}</p>
-    </div>
-    <div class="site-cta__action"><a href="${studioRouteFor(localeKey, "#contact")}">${escapeHtml(locale.ui.contact)} <span aria-hidden="true">↗</span></a></div>
   </section>
 </main>
 ${footer(localeKey)}
@@ -590,7 +537,7 @@ function articlePage(localeKey, definition, index) {
     about: definition.stack,
     isPartOf: {
       "@type": "Blog",
-      name: `${site.name} — ${locale.ui.home}`,
+      name: `${site.name} | ${locale.ui.home}`,
       url: absolute(routeFor(localeKey, null)),
     },
   };
@@ -680,7 +627,7 @@ function methodologyPage(localeKey) {
     },
     isPartOf: {
       "@type": "Blog",
-      name: `${site.name} — ${locale.ui.home}`,
+      name: `${site.name} | ${locale.ui.home}`,
       url: absolute(routeFor(localeKey, null)),
     },
   };
@@ -743,7 +690,7 @@ function rss(localeKey) {
       definition.updated > current ? definition.updated : current,
     site.published,
   );
-  return `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>${escapeXml(site.name)} — ${escapeXml(locale.ui.home)}</title><link>${absolute(routeFor(localeKey, null))}</link><description>${escapeXml(locale.index.description)}</description><language>${locale.lang}</language><lastBuildDate>${new Date(`${latest}T12:00:00Z`).toUTCString()}</lastBuildDate><atom:link href="${absolute(feedRoute(localeKey))}" rel="self" type="application/rss+xml" />${items}</channel></rss>`;
+  return `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>${escapeXml(site.name)} | ${escapeXml(locale.ui.home)}</title><link>${absolute(routeFor(localeKey, null))}</link><description>${escapeXml(locale.index.description)}</description><language>${locale.lang}</language><lastBuildDate>${new Date(`${latest}T12:00:00Z`).toUTCString()}</lastBuildDate><atom:link href="${absolute(feedRoute(localeKey))}" rel="self" type="application/rss+xml" />${items}</channel></rss>`;
 }
 
 function sitemap() {
@@ -822,7 +769,7 @@ await write("sitemap.xml", sitemap());
 await write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${absolute("/sitemap.xml")}\n`);
 await write("llms.txt", llmsText());
 await write("case-studies.json", `${JSON.stringify(caseCatalog(), null, 2)}\n`);
-await write("site.webmanifest", `${JSON.stringify({ id: "/", name: `${site.name} — Case Studies`, short_name: "Ejupi Labs", lang: "en", start_url: "/", scope: "/", display: "standalone", background_color: "#f4f1ea", theme_color: "#f4f1ea", icons: [{ src: "/assets/brand/favicon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }] }, null, 2)}\n`);
+await write("site.webmanifest", `${JSON.stringify({ id: "/", name: `${site.name} | Case Studies`, short_name: "Ejupi Labs", lang: "en", start_url: "/", scope: "/", display: "standalone", background_color: "#f4f1ea", theme_color: "#f4f1ea", icons: [{ src: "/assets/brand/favicon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }] }, null, 2)}\n`);
 
 const sourceHeaders = await readFile(join(sourceRoot, "_headers"), "utf8");
 if (!sourceHeaders.includes("Content-Security-Policy")) throw new Error("Security headers are missing.");

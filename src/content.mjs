@@ -227,10 +227,10 @@ export const locales = {
       notFoundAction: "Go to the case studies",
     },
     index: {
-      title: "Engineering decisions, shown in context.",
+      title: "What I built, and why.",
       description:
-        "Nine detailed case studies: three anonymised professional systems and six open-source Labs projects. Each one explains the constraints, the decisions, what was built and where the evidence stops.",
-      eyebrow: "Engineering case studies / 01—09",
+        "This archive contains nine case studies. Three cover anonymised professional systems and six cover open-source Labs projects. I explain the constraints, the decisions I made and what the evidence supports.",
+      eyebrow: "Engineering case studies / 01 / 09",
       introTitle: "Work worth explaining",
       introBody:
         "A stack list tells you very little. This archive separates professional work from Labs projects, then follows the decisions, verification and limits behind each system.",
@@ -566,10 +566,10 @@ export const locales = {
       notFoundAction: "Vai ai case study",
     },
     index: {
-      title: "Decisioni tecniche, spiegate nel loro contesto.",
+      title: "Cosa ho costruito e perché.",
       description:
-        "Nove case study concreti: tre sistemi professionali anonimizzati e sei progetti open source di Labs. Ogni caso spiega i vincoli, le decisioni, ciò che è stato costruito e fin dove arrivano le prove.",
-      eyebrow: "Case study di engineering / 01—09",
+        "Questo archivio raccoglie nove case study. Tre riguardano sistemi professionali anonimizzati e sei progetti open source di Labs. Spiego i vincoli, le decisioni che ho preso e ciò che le prove possono sostenere.",
+      eyebrow: "Case study di engineering / 01 / 09",
       introTitle: "Lavoro che vale la pena spiegare",
       introBody:
         "Un elenco di tecnologie dice poco. L’archivio separa lavoro professionale e progetti Labs, poi segue decisioni, verifiche e limiti di ogni sistema.",
@@ -905,10 +905,10 @@ export const locales = {
       notFoundAction: "Zu den Fallstudien",
     },
     index: {
-      title: "Technische Entscheidungen, im Zusammenhang gezeigt.",
+      title: "Was ich gebaut habe und warum.",
       description:
-        "Neun konkrete Fallstudien: drei anonymisierte berufliche Systeme und sechs Open-Source-Projekte aus Labs. Jede zeigt die Rahmenbedingungen, die Entscheidungen, das gebaute Ergebnis und die Grenzen der Belege.",
-      eyebrow: "Engineering-Fallstudien / 01—09",
+        "Dieses Archiv enthält neun Fallstudien. Drei behandeln anonymisierte berufliche Systeme, sechs weitere Open-Source-Projekte aus Labs. Ich erkläre die Bedingungen, meine Entscheidungen und was die Belege tatsächlich stützen.",
+      eyebrow: "Engineering-Fallstudien / 01 / 09",
       introTitle: "Arbeit, die eine Erklärung verdient",
       introBody:
         "Eine Technologieliste sagt wenig aus. Das Archiv trennt berufliche Arbeit und Labs-Projekte und folgt dann Entscheidungen, Prüfungen und Grenzen jedes Systems.",
@@ -1244,10 +1244,10 @@ export const locales = {
       notFoundAction: "Voir les études de cas",
     },
     index: {
-      title: "Les décisions techniques, avec leur contexte.",
+      title: "Ce que j’ai construit et pourquoi.",
       description:
-        "Neuf études de cas concrètes : trois systèmes professionnels anonymisés et six projets open source de Labs. Chacune explique les contraintes, les décisions, ce qui a été construit et les limites des preuves.",
-      eyebrow: "Études de cas d’ingénierie / 01—09",
+        "Ces archives réunissent neuf études de cas. Trois portent sur des systèmes professionnels anonymisés et six sur des projets open source de Labs. J’explique les contraintes, mes décisions et ce que les preuves permettent réellement d’affirmer.",
+      eyebrow: "Études de cas d’ingénierie / 01 / 09",
       introTitle: "Un travail qui mérite d’être expliqué",
       introBody:
         "Une liste de technologies dit peu de choses. L’archive sépare le travail professionnel des projets Labs, puis suit les décisions, la vérification et les limites de chaque système.",
