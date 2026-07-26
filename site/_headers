@@ -8,6 +8,27 @@
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
 
+/
+  Content-Language: en
+
+/case-studies/*
+  Content-Language: en
+
+/methodology/
+  Content-Language: en
+
+/404.html
+  Content-Language: en
+
+/it/*
+  Content-Language: it
+
+/de/*
+  Content-Language: de
+
+/fr/*
+  Content-Language: fr
+
 /assets/styles.*.css
   Cache-Control: public, max-age=31536000, immutable
 

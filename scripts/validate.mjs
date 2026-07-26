@@ -102,6 +102,7 @@ for (const localeKey of localeOrder) {
     if (count(html, /<h1\b/g) !== 1) errors.push(`${label} must contain exactly one h1.`);
     if (!html.includes(`<link rel="canonical" href="${new URL(route, site.url).href}" />`)) errors.push(`${label} has the wrong canonical URL.`);
     if (!html.includes(`<link rel="author" href="${expectedAuthorRoute}" />`)) errors.push(`${label} has the wrong localized author URL.`);
+    if (!html.includes(`class="personal-link" href="${expectedAuthorRoute}"`)) errors.push(`${label} is missing its visible localized personal link.`);
     if (!html.includes('<link rel="manifest" href="/site.webmanifest" />')) errors.push(`${label} is missing the web manifest link.`);
     if (!html.includes(`href="${expectedStudioRoute}"`)) errors.push(`${label} has the wrong localized studio URL.`);
     if (!html.includes(`href="${expectedContactRoute}"`)) errors.push(`${label} has the wrong localized contact URL.`);
@@ -267,6 +268,22 @@ if (count(sitemap, /hreflang="x-default"/g) !== canonicalPageCount) {
 }
 
 const headers = (await readFile(join(dist, "_headers"), "utf8")).replace(/\r\n?/gu, "\n");
+for (const [route, language] of [
+  ["/", "en"],
+  ["/case-studies/*", "en"],
+  ["/methodology/", "en"],
+  ["/404.html", "en"],
+  ["/it/*", "it"],
+  ["/de/*", "de"],
+  ["/fr/*", "fr"],
+]) {
+  if (!headers.includes(`${route}\n  Content-Language: ${language}`)) {
+    errors.push(`${route} must declare Content-Language: ${language}.`);
+  }
+}
+if (/^\/\*\n(?:  .+\n)*?  Content-Language:/mu.test(headers)) {
+  errors.push("The global header rule must not duplicate localized Content-Language values.");
+}
 for (const header of [
   "Content-Security-Policy",
   "Cross-Origin-Resource-Policy",

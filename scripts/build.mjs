@@ -284,7 +284,7 @@ function header(localeKey, slug, onIndex = false, pageKind = "case") {
     <nav class="site-nav" id="site-navigation" aria-label="${escapeHtml(locale.ui.navigation)}" data-menu data-open="false">
       <a href="${homeRoute}"${onIndex ? ' aria-current="page"' : ""}>${escapeHtml(locale.ui.allWork)}</a>
       <a href="${studioRouteFor(localeKey)}">${escapeHtml(locale.ui.portfolio)}</a>
-      <a href="${studioRouteFor(localeKey, "#contact")}">${escapeHtml(locale.ui.contact)}</a>
+      <a class="personal-link" href="${authorRouteFor(localeKey)}">${escapeHtml(editorialUi[localeKey].personal)}</a>
       ${languageList(localeKey, slug, pageKind)}
     </nav>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="${escapeHtml(locale.ui.menuOpen)}" data-menu-toggle data-open-label="${escapeHtml(locale.ui.menuOpen)}" data-close-label="${escapeHtml(locale.ui.menuClose)}"><span aria-hidden="true"></span></button>
@@ -306,6 +306,7 @@ function footer(localeKey) {
         <a href="${routeFor(localeKey, null)}">${escapeHtml(locale.ui.allWork)}</a>
         <a href="${methodologyRoute(localeKey)}">${escapeHtml(ui.methodology)}</a>
         <a href="${studioRouteFor(localeKey)}">${escapeHtml(locale.ui.portfolio)}</a>
+        <a class="personal-link" href="${authorRouteFor(localeKey)}">${escapeHtml(ui.personal)}</a>
         <a href="${studioRouteFor(localeKey, "#contact")}">${escapeHtml(locale.ui.contact)}</a>
         <a href="${feedRoute(localeKey)}">RSS</a>
       </nav>
@@ -322,21 +323,18 @@ function caseCard(localeKey, definition) {
   const collectionLabel =
     definition.kind === "labs" ? ui.labsCase : ui.professionalCase;
   return `<article class="case-card" data-case-card data-case-slug="${definition.slug}" data-kind="${definition.kind}" data-topic="${definition.categoryKey}" itemscope itemtype="https://schema.org/Article">
-  <div class="case-card__rail">
+  <div class="case-card__meta meta-line">
     <span class="card-number">${escapeHtml(ui.caseLabel.toLocaleUpperCase(locale.lang))} / ${definition.number}</span>
-    <div class="card-schematic" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-    <span class="meta-line">${escapeHtml(study.category)}</span>
+    <span>${escapeHtml(collectionLabel)}</span>
   </div>
-  <div class="case-card__body">
-    <div>
-      <div class="case-card__meta meta-line"><span>${escapeHtml(collectionLabel)}</span><span>${study.readMinutes} ${escapeHtml(locale.ui.readTime)}</span></div>
-      <h2 itemprop="headline">${heading(study.cardTitle)}</h2>
-      <p class="case-card__summary" itemprop="description">${escapeHtml(study.summary)}</p>
-    </div>
-    <div class="case-card__foot">
-      <div class="tag-list" aria-label="${escapeHtml(locale.ui.stack)}">${definition.stack.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
-      <a class="text-link" href="${routeFor(localeKey, definition.slug)}" itemprop="url">${escapeHtml(locale.ui.readCase)} <span aria-hidden="true">↗</span></a>
-    </div>
+  <div class="case-card__copy">
+    <div class="case-card__category meta-line"><span>${escapeHtml(study.category)}</span><span>${study.readMinutes} ${escapeHtml(locale.ui.readTime)}</span></div>
+    <h2 itemprop="headline">${heading(study.cardTitle)}</h2>
+    <p class="case-card__summary" itemprop="description">${escapeHtml(study.summary)}</p>
+  </div>
+  <div class="case-card__foot">
+    <div class="tag-list" aria-label="${escapeHtml(locale.ui.stack)}">${definition.stack.slice(0, 3).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+    <a class="text-link" href="${routeFor(localeKey, definition.slug)}" itemprop="url">${escapeHtml(locale.ui.readCase)} <span aria-hidden="true">↗</span></a>
   </div>
 </article>`;
 }
@@ -419,8 +417,8 @@ ${header(localeKey, null, true)}
         <legend>${escapeHtml(ui.typeLabel)}</legend>
         <div class="filter-buttons" data-case-types>
           <button type="button" data-case-type="" aria-controls="case-results" aria-pressed="true">${escapeHtml(ui.all)}</button>
-          <button type="button" data-case-type="professional" aria-controls="case-results" aria-pressed="false">${escapeHtml(ui.professional)}</button>
-          ${visibleDefinitions.some((definition) => definition.kind === "labs") ? `<button type="button" data-case-type="labs" aria-controls="case-results" aria-pressed="false">${escapeHtml(ui.labs)}</button>` : ""}
+          <button type="button" data-case-type="professional" aria-label="${escapeHtml(ui.professional)}" aria-controls="case-results" aria-pressed="false">${escapeHtml(ui.professionalShort)}</button>
+          ${visibleDefinitions.some((definition) => definition.kind === "labs") ? `<button type="button" data-case-type="labs" aria-label="${escapeHtml(ui.labs)}" aria-controls="case-results" aria-pressed="false">${escapeHtml(ui.labsShort)}</button>` : ""}
         </div>
       </fieldset>
       <div class="discovery__topic">
@@ -432,6 +430,7 @@ ${header(localeKey, null, true)}
       </div>
       <div class="discovery__status">
         <p aria-live="polite" aria-atomic="true"><strong data-case-count>${visibleDefinitions.length}</strong> <span data-case-count-label data-singular="${escapeHtml(ui.result)}" data-plural="${escapeHtml(ui.results)}">${escapeHtml(ui.results)}</span></p>
+        <p class="discovery__message" role="status" aria-live="polite" aria-atomic="true" data-search-state data-loading="${escapeHtml(ui.searchLoading)}" data-fallback="${escapeHtml(ui.searchFallback)}"></p>
         <button class="text-button" type="button" data-case-clear>${escapeHtml(ui.clear)}</button>
       </div>
     </div>

@@ -47,6 +47,7 @@ if (typeof document !== "undefined") {
     ].filter((element) => element instanceof HTMLButtonElement);
     const count = discovery.querySelector("[data-case-count]");
     const countLabel = discovery.querySelector("[data-case-count-label]");
+    const searchState = discovery.querySelector("[data-search-state]");
     const empty = document.querySelector("[data-case-empty]");
     const searchIndexUrl = discovery.dataset.searchIndexUrl ?? "";
     const fullTextBySlug = new Map();
@@ -59,6 +60,7 @@ if (typeof document !== "undefined") {
       topic instanceof HTMLSelectElement &&
       count instanceof HTMLElement &&
       countLabel instanceof HTMLElement &&
+      searchState instanceof HTMLElement &&
       empty instanceof HTMLElement
     ) {
       discovery.hidden = false;
@@ -100,6 +102,7 @@ if (typeof document !== "undefined") {
 
         searchIndexState = "loading";
         discovery.setAttribute("aria-busy", "true");
+        searchState.textContent = searchState.dataset.loading ?? "";
         searchIndexPromise = (async () => {
           try {
             if (!searchIndexUrl) throw new Error("Search index URL is missing.");
@@ -127,9 +130,11 @@ if (typeof document !== "undefined") {
               fullTextBySlug.set(entry.slug, entry.text);
             }
             searchIndexState = "loaded";
+            searchState.textContent = "";
           } catch {
             fullTextBySlug.clear();
             searchIndexState = "unavailable";
+            searchState.textContent = searchState.dataset.fallback ?? "";
           } finally {
             discovery.removeAttribute("aria-busy");
           }
@@ -139,6 +144,11 @@ if (typeof document !== "undefined") {
 
       function updateResults({ updateUrl = true } = {}) {
         const hasQuery = normalizeSearchValue(search.value).length > 0;
+        if (!hasQuery) {
+          searchState.textContent = "";
+        } else if (searchIndexState === "unavailable") {
+          searchState.textContent = searchState.dataset.fallback ?? "";
+        }
         if (hasQuery && (searchIndexState === "idle" || searchIndexState === "loading")) {
           if (updateUrl) writeUrlState();
           if (searchIndexState === "idle") {

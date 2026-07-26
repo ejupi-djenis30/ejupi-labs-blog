@@ -19,8 +19,17 @@ test("English case-study index links to every canonical article", async () => {
     assert.match(html, new RegExp(`href="/case-studies/${definition.slug}/"`));
   }
   assert.match(html, /data-case-search/);
+  assert.match(html, /data-search-state/);
   assert.match(html, /data-case-type="labs"/);
   assert.match(html, /"@type":"Blog"/);
+  assert.doesNotMatch(html, /card-schematic|case-card__rail/u);
+  const cards = [...html.matchAll(/<article class="case-card"[\s\S]*?<\/article>/gu)];
+  assert.equal(cards.length, caseDefinitions.length);
+  for (const card of cards) {
+    const tags = card[0].match(/<div class="tag-list"[^>]*>(?<tags>[\s\S]*?)<\/div>/u)?.groups?.tags;
+    assert.ok(tags);
+    assert.ok((tags.match(/<span>/gu) ?? []).length <= 3);
+  }
 });
 
 test("localized article keeps its language switch on the equivalent article", async () => {
@@ -77,6 +86,8 @@ test("localized chrome, bylines and cross-site routes stay in the selected langu
     assert.ok(index.includes(`href="${studioRoute}"`));
     assert.ok(index.includes(`href="${contactRoute}"`));
     assert.ok(index.includes(`rel="author" href="${authorRoute}"`));
+    assert.ok(index.includes(`class="personal-link" href="${authorRoute}"`));
+    assert.ok(index.includes(`>${ui.personal}</a>`));
     assert.ok(index.includes(uppercase(ui.indexLabel)));
     assert.ok(index.includes(uppercase(ui.noteLabel)));
     assert.ok(index.includes(uppercase(ui.casesLabel)));

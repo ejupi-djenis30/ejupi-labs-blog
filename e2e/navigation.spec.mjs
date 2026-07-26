@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { caseDefinitions } from "../src/content.mjs";
+import { editorialUi } from "../src/editorial.mjs";
 
 const locales = ["/", "/it/", "/de/", "/fr/"];
 
@@ -139,6 +140,110 @@ test("archive search, taxonomy, URL state and empty state stay in sync", async (
   await page.locator("body").click({ position: { x: 10, y: 200 } });
   await page.keyboard.press("/");
   await expect(page.locator("[data-case-search]")).toBeFocused();
+});
+
+test("archive previews adapt from three columns to two and one", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  const columnCount = () =>
+    page.locator("[data-case-list]").evaluate(
+      (element) =>
+        getComputedStyle(element).gridTemplateColumns.split(" ").length,
+    );
+
+  await expect.poll(columnCount).toBe(3);
+  await page.setViewportSize({ width: 900, height: 900 });
+  await expect.poll(columnCount).toBe(2);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect.poll(columnCount).toBe(1);
+});
+
+for (const { width, localePath } of [
+  { width: 390, localePath: "/it/" },
+  { width: 320, localePath: "/de/" },
+]) {
+  test(`${width}px archive keeps filters and previews compact`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto(localePath);
+
+    const discovery = page.locator("[data-discovery]");
+    await discovery.scrollIntoViewIfNeeded();
+    const geometry = await page.evaluate(() => {
+      const controls = [...document.querySelectorAll("[data-case-type]")].map(
+        (element) => {
+          const { top, height } = element.getBoundingClientRect();
+          return { top, height };
+        },
+      );
+      const discoveryBox = document
+        .querySelector("[data-discovery]")
+        ?.getBoundingClientRect();
+      const firstCard = document
+        .querySelector("[data-case-card]")
+        ?.getBoundingClientRect();
+      const list = document.querySelector("[data-case-list]");
+      const summary = document.querySelector(".case-card__summary");
+      return {
+        overflow:
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+        controlsShareRow:
+          controls.length === 3 &&
+          Math.max(...controls.map(({ top }) => top)) -
+            Math.min(...controls.map(({ top }) => top)) <=
+            1,
+        minimumControlHeight: Math.min(
+          ...controls.map(({ height }) => height),
+        ),
+        discoveryHeight: discoveryBox?.height ?? Infinity,
+        firstCardHeight: firstCard?.height ?? Infinity,
+        columns: list
+          ? getComputedStyle(list).gridTemplateColumns.split(" ").length
+          : 0,
+        summaryClamp: summary
+          ? getComputedStyle(summary).webkitLineClamp
+          : "",
+      };
+    });
+
+    expect(geometry.overflow).toBeLessThanOrEqual(0);
+    expect(geometry.controlsShareRow).toBe(true);
+    expect(geometry.minimumControlHeight).toBeGreaterThanOrEqual(44);
+    expect(geometry.discoveryHeight).toBeLessThan(400);
+    expect(geometry.firstCardHeight).toBeLessThan(520);
+    expect(geometry.columns).toBe(1);
+    expect(geometry.summaryClamp).toBe("3");
+
+    await page.locator('[data-case-type="labs"]').click();
+    await expect(page.locator("[data-case-card]:visible")).toHaveCount(
+      caseDefinitions.filter(({ kind }) => kind === "labs").length,
+    );
+  });
+}
+
+test("full-text search announces loading and a localized fallback", async ({
+  page,
+}) => {
+  let finishRequest;
+  await page.route(/\/assets\/search\.it\.[0-9a-f]{12}\.json$/u, async (route) => {
+    await new Promise((resolve) => {
+      finishRequest = resolve;
+    });
+    await route.abort();
+  });
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/it/");
+  const state = page.locator("[data-search-state]");
+  await expect(state).toHaveAttribute("role", "status");
+  await page.locator("[data-case-search]").fill("cloud");
+  await expect(state).toHaveText(editorialUi.it.searchLoading);
+  await expect.poll(() => typeof finishRequest).toBe("function");
+  finishRequest();
+  await expect(state).toHaveText(editorialUi.it.searchFallback);
+  await expect(page.locator("[data-case-card]:visible").first()).toBeVisible();
 });
 
 test("full-text index stays lazy and finds copy that exists only inside an article", async ({
