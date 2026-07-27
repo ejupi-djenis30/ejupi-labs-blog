@@ -119,7 +119,7 @@ test("protected public routes cannot be removed but new cases are allowed", () =
   const futureCase = {
     ...structuredClone(caseDefinitions[0]),
     slug: "future-case-study",
-    number: "10",
+    number: "11",
     published: "2026-08-01",
     updated: "2026-08-01",
   };
@@ -224,6 +224,43 @@ test("VECTOR is presented as the bounded self-hosted v3 product in every locale"
   assert.doesNotMatch(english, /browser-only|browser-local persistence|local storage|focused demonstrator/iu);
 });
 
+
+test("JDoor preserves co-authorship, authorized use and the requested Labs topology", () => {
+  const definition = caseDefinitions.find(({ slug }) => slug === "jdoor-security-lab");
+  assert.ok(definition);
+  assert.equal(definition.number, "10");
+  assert.equal(definition.projectUrl, "https://ejupi-djenis30.github.io/jdoor/");
+  assert.equal(definition.sourceRef, "v1.0.0");
+  assert.equal(
+    definition.sourceUrl,
+    "https://github.com/NobodyToListen/JDoor/commit/ac94dd82cdff17551826b7254165d123190aeec7",
+  );
+
+  const coCreationClaims = {
+    en: /co-created|both school-project creators/iu,
+    it: /co-creato|entrambi i creatori/iu,
+    de: /gemeinsam entwickelt|beiden urhebern/iu,
+    fr: /co-créé|deux créateurs/iu,
+  };
+  const authorizedUseClaims = {
+    en: /authorized/iu,
+    it: /autorizzat/iu,
+    de: /autorisiert/iu,
+    fr: /autoris/iu,
+  };
+
+  for (const localeKey of localeOrder) {
+    const study = locales[localeKey].cases[definition.slug];
+    const copy = JSON.stringify(study);
+    assert.equal(study.evidence.items.length, 4);
+    assert.equal(study.constraints.items.length, 4);
+    assert.equal(study.architecture.labels.length, 5);
+    assert.equal(study.decisions.items.length, 3);
+    assert.match(copy, coCreationClaims[localeKey]);
+    assert.match(copy, authorizedUseClaims[localeKey]);
+  }
+});
+
 test("related case studies have a deterministic editorial order", () => {
   const expected = {
     "ai-workflow-cloud-migration": [
@@ -244,6 +281,7 @@ test("related case studies have a deterministic editorial order", () => {
     "dig-gopher-explorer": ["vector-placement-operations", "djenis-ai-agent"],
     integradraw: ["dig-gopher-explorer", "vector-placement-operations"],
     "vector-placement-operations": ["dig-gopher-explorer", "careeros-local"],
+    "jdoor-security-lab": ["vector-placement-operations", "integradraw"],
   };
 
   for (const localeKey of localeOrder) {

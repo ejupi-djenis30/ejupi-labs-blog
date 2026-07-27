@@ -144,6 +144,21 @@ export const caseDefinitions = [
     verifiedAt: "2026-07-26",
     stack: ["Node.js", "Express", "SQLite", "Docker", "Playwright"],
   },
+  {
+    slug: "jdoor-security-lab",
+    number: "10",
+    diagram: "jdoor",
+    kind: "labs",
+    categoryKey: "secure-remote-assistance",
+    availableLocales: ["en", "it", "de", "fr"],
+    published: "2026-07-26",
+    updated: "2026-07-26",
+    projectUrl: "https://ejupi-djenis30.github.io/jdoor/",
+    sourceRef: "v1.0.0",
+    sourceUrl: "https://github.com/NobodyToListen/JDoor/commit/ac94dd82cdff17551826b7254165d123190aeec7",
+    verifiedAt: "2026-07-26",
+    stack: ["Java 21", "Swing", "TLS", "Maven", "JUnit"],
+  },
 ];
 
 export function relatedCaseDefinitions(
@@ -192,6 +207,7 @@ export const protectedLegacySlugs = Object.freeze([
   "dig-gopher-explorer",
   "integradraw",
   "vector-placement-operations",
+  "jdoor-security-lab",
 ]);
 
 export const locales = {
@@ -229,8 +245,8 @@ export const locales = {
     index: {
       title: "What I built, and why.",
       description:
-        "This archive contains nine case studies. Three cover anonymised professional systems and six cover open-source Labs projects. I explain the constraints, the decisions I made and what the evidence supports.",
-      eyebrow: "Engineering case studies / 01 / 09",
+        "This archive contains ten case studies. Three cover anonymised professional systems and seven cover open-source Labs projects. I explain the constraints, the decisions I made and what the evidence supports.",
+      eyebrow: "Engineering case studies / 01 / 10",
       introTitle: "Work worth explaining",
       introBody:
         "A stack list tells you very little. This archive separates professional work from Labs projects, then follows the decisions, verification and limits behind each system.",
@@ -568,8 +584,8 @@ export const locales = {
     index: {
       title: "Cosa ho costruito e perché.",
       description:
-        "Questo archivio raccoglie nove case study. Tre riguardano sistemi professionali anonimizzati e sei progetti open source di Labs. Spiego i vincoli, le decisioni che ho preso e ciò che le prove possono sostenere.",
-      eyebrow: "Case study di engineering / 01 / 09",
+        "Questo archivio raccoglie dieci case study. Tre riguardano sistemi professionali anonimizzati e sette progetti open source di Labs. Spiego i vincoli, le decisioni che ho preso e ciò che le prove possono sostenere.",
+      eyebrow: "Case study di engineering / 01 / 10",
       introTitle: "Lavoro che vale la pena spiegare",
       introBody:
         "Un elenco di tecnologie dice poco. L’archivio separa lavoro professionale e progetti Labs, poi segue decisioni, verifiche e limiti di ogni sistema.",
@@ -907,8 +923,8 @@ export const locales = {
     index: {
       title: "Was ich gebaut habe und warum.",
       description:
-        "Dieses Archiv enthält neun Fallstudien. Drei behandeln anonymisierte berufliche Systeme, sechs weitere Open-Source-Projekte aus Labs. Ich erkläre die Bedingungen, meine Entscheidungen und was die Belege tatsächlich stützen.",
-      eyebrow: "Engineering-Fallstudien / 01 / 09",
+        "Dieses Archiv enthält zehn Fallstudien. Drei behandeln anonymisierte berufliche Systeme, sieben weitere Open-Source-Projekte aus Labs. Ich erkläre die Bedingungen, meine Entscheidungen und was die Belege tatsächlich stützen.",
+      eyebrow: "Engineering-Fallstudien / 01 / 10",
       introTitle: "Arbeit, die eine Erklärung verdient",
       introBody:
         "Eine Technologieliste sagt wenig aus. Das Archiv trennt berufliche Arbeit und Labs-Projekte und folgt dann Entscheidungen, Prüfungen und Grenzen jedes Systems.",
@@ -1246,8 +1262,8 @@ export const locales = {
     index: {
       title: "Ce que j’ai construit et pourquoi.",
       description:
-        "Ces archives réunissent neuf études de cas. Trois portent sur des systèmes professionnels anonymisés et six sur des projets open source de Labs. J’explique les contraintes, mes décisions et ce que les preuves permettent réellement d’affirmer.",
-      eyebrow: "Études de cas d’ingénierie / 01 / 09",
+        "Ces archives réunissent dix études de cas. Trois portent sur des systèmes professionnels anonymisés et sept sur des projets open source de Labs. J’explique les contraintes, mes décisions et ce que les preuves permettent réellement d’affirmer.",
+      eyebrow: "Études de cas d’ingénierie / 01 / 10",
       introTitle: "Un travail qui mérite d’être expliqué",
       introBody:
         "Une liste de technologies dit peu de choses. L’archive sépare le travail professionnel des projets Labs, puis suit les décisions, la vérification et les limites de chaque système.",

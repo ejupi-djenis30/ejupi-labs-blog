@@ -15,6 +15,7 @@ The site is intentionally static. A small Node.js generator builds every route, 
 - `/case-studies/dig-gopher-explorer/`
 - `/case-studies/integradraw/`
 - `/case-studies/vector-placement-operations/`
+- `/case-studies/jdoor-security-lab/`
 - Localised equivalents under `/it/`, `/de/` and `/fr/`
 
 English is the canonical default at the root. Every page includes canonical URLs, reciprocal `hreflang` links, an `x-default` reference and structured Blog or BlogPosting data. The build also creates four RSS feeds, a multilingual sitemap, localised OpenSearch descriptors, `robots.txt`, `llms.txt`, the machine-readable `/case-studies.json` catalog, local font assets and nearest-match 404 pages.

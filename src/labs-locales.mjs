@@ -553,6 +553,108 @@ export const labsLocales = {
       scope:
         "Questo case study descrive l’architettura della versione 3.0.0 presente nel repository e i relativi controlli di self-hosting. GitHub Pages presenta il prodotto senza dati operativi; l’applicazione vera e propria parte dal pacchetto server. Non vengono rappresentati dati scolastici reali, integrazioni istituzionali o risultati dei tirocini.",
     }),
+    "jdoor-security-lab": localize("jdoor-security-lab", {
+      category: "Assistenza remota sicura",
+      title: "Trasformare un prototipo scolastico di controllo remoto in assistenza basata sul consenso",
+      summary:
+        "JDoor nasce nel 2022 come progetto scolastico di networking co-creato da Djenis Ejupi e NobodyToListen. In seguito Djenis ne ha ricostruito il modello di sicurezza, il ciclo di sessione, la UX, i test e il percorso di rilascio come JDoor Assist: uno strumento desktop visibile e view-only per impostazione predefinita, destinato al supporto autorizzato su reti locali fidate.",
+      facts: [
+        ["Prodotto", "Assistenza remota LAN basata sul consenso"],
+        ["Origine", "Progetto scolastico del 2022 co-creato da Djenis Ejupi e NobodyToListen"],
+        ["Modernizzazione", "Sicurezza, UX di prodotto, test e release engineering di Djenis"],
+        ["Stato", "Snapshot sorgente v1.0.0 versionato sotto GPL-3.0"],
+      ],
+      evidence: {
+        title: "Registro delle evidenze",
+        intro: "Il repository v1.0.0 rende verificabili questi controlli e limiti:",
+        items: [
+          [
+            "Sicurezza della sessione",
+            "L’host crea un certificato P-256 effimero, condivide il suo pin SHA-256 esatto insieme a un token casuale monouso da 128 bit e richiede un’approvazione locale visibile prima dell’ingresso del viewer.",
+          ],
+          [
+            "Confine del protocollo",
+            "Un protocollo binario versionato valida direzione, tipo, dimensioni, UTF-8 e grandezza dei payload. Entra un solo viewer alla volta, i frame sono limitati e l’input remoto viene ignorato finché l’host non abilita il controllo.",
+          ],
+          [
+            "Gate di verifica",
+            "Il gate Maven Wrapper esegue la suite JUnit, le soglie JaCoCo e i controlli Spotless, poi produce un JAR eseguibile con dipendenze e una SBOM CycloneDX. L’integrazione copre token non valido, avvio view-only, streaming, permessi e rilascio dell’input.",
+          ],
+          [
+            "Limite",
+            "JDoor Assist opera direttamente in LAN sul display primario. Non offre relay, account, attraversamento NAT, trasferimento file o accesso non presidiato; le app image community documentate non sono ancora firmate.",
+          ],
+        ],
+      },
+      starting: {
+        title: "Conservare l’origine, cambiare il modello di fiducia",
+        paragraphs: [
+          "JDoor originale era un progetto scolastico del 2022 che Djenis ha realizzato con un amico, pubblicato come NobodyToListen. Dimostrava networking Java, cattura dello schermo e input remoto. Questa origine condivisa resta nella storia del progetto: il lavoro successivo non presenta il prototipo scolastico come opera individuale.",
+          "Una dimostrazione non è ancora un prodotto di assistenza. Il vecchio design trattava una connessione in ingresso come canale di controllo, senza pairing autenticato forte, stato view-only o ciclo completo per tasti bloccati, errori delle socket e arresto. La modernizzazione è quindi partita restringendo ciò che l’applicazione può fare.",
+        ],
+      },
+      constraints: {
+        title: "Regole per l’assistenza autorizzata",
+        intro: "Il prodotto ricostruito segue quattro vincoli non negoziabili:",
+        items: [
+          "Ogni sessione serve esclusivamente a un supporto autorizzato e avviato da entrambe le persone: l’host resta visibile, approva localmente ogni viewer e non espone mai accesso non presidiato o in background.",
+          "Il percorso di rete può essere osservato o modificato, quindi il viewer deve autenticare il certificato effimero esatto e presentare il token monouso a breve scadenza ricevuto fuori banda.",
+          "Visione dello schermo e controllo remoto sono permessi distinti; il controllo parte disabilitato, l’host può revocarlo subito e revoca o disconnessione rilasciano tasti e pulsanti tracciati.",
+          "L’input di protocollo non è fidato: messaggi, immagini, timeout, worker e cleanup richiedono limiti espliciti, regole direzionali e chiusura deterministica.",
+        ],
+      },
+      diagnosis: {
+        title: "Assistenza remota, non amministrazione remota",
+        paragraphs: [
+          "La scelta centrale non era nascondere o ampliare il vecchio percorso di controllo. Era sostituirlo con un confine di prodotto che rende il consenso visibile ed elimina dal design persistenza, esecuzione di shell e accesso non presidiato.",
+          "Per la modernizzazione, Djenis ha separato identità TLS e pairing, protocollo framed, stato di sessione, cattura, policy di input, audit e presentazione Swing. Autenticazione, approvazione, visione e controllo diventano stati distinti, non effetti collaterali dell’apertura di una socket.",
+        ],
+      },
+      architecture: {
+        title: "Una sessione costruita attorno al consenso esplicito",
+        intro:
+          "L’interfaccia host crea un’identità effimera e un link monouso. Il viewer fissa quel certificato, presenta il token e attende l’approvazione locale. Solo dopo il canale limitato trasporta i frame; mouse e tastiera vengono applicati soltanto mentre la sessione host attiva possiede un permesso di controllo esplicito.",
+        labels: ["UI HOST", "SESSIONE + CONSENSO", "TLS CON PIN", "PROTOCOLLO LIMITATO", "UI VIEWER"],
+        caption: "I frame raggiungono un solo viewer approvato; l’input torna indietro soltanto durante il permesso visibile dell’host.",
+      },
+      decisions: {
+        title: "Le decisioni che hanno cambiato il prodotto",
+        intro: "Ogni scelta rimuove un privilegio implicito del prototipo originale.",
+        items: [
+          {
+            title: "Autenticare la sessione esatta",
+            body: "Ogni avvio host crea in memoria certificato e token. Il link trasporta l’impronta del certificato, mentre il dialogo di approvazione mostra nome del viewer, indirizzo e codice di verifica.",
+            tradeoff: "Il link completo richiede un canale fuori banda fidato e la connettività LAN resta responsabilità dell’utente, perché non esistono account o relay.",
+          },
+          {
+            title: "Separare visione e controllo",
+            body: "L’approvazione avvia uno stream view-only. Un toggle dell’host assegna il controllo alla sessione corrente; revoca, perdita del focus, disconnessione e arresto rilasciano lo stato dell’input remoto.",
+            tradeoff: "L’host deve restare presente e decidere il permesso; la comodità dell’accesso non presidiato è esclusa intenzionalmente.",
+          },
+          {
+            title: "Mantenere stretti protocollo e rilascio",
+            body: "Il formato wire supporta pairing, frame, input limitato, stato dei permessi, heartbeat e disconnessione. L’automazione verifica test, copertura, formattazione, pacchetti, SBOM e provenienza del rilascio.",
+            tradeoff: "Clipboard, file, audio, relay pubblico e identità enterprise restano fuori scope; i pacchetti community non firmati richiedono ancora verifica di checksum e provenienza.",
+          },
+        ],
+      },
+      delivery: {
+        title: "Dal codice scolastico a un rilascio verificabile",
+        paragraphs: [
+          "Il progetto Java 21 usa Maven Wrapper, test di integrazione JUnit, JaCoCo e Spotless. L’applicazione shaded viene provata attraverso la CLI, mentre il repository documenta architettura, privacy, ipotesi di minaccia, segnalazione di sicurezza e regole per i contributi.",
+          "La CI verifica Linux e Windows, CodeQL esegue analisi statica pianificata e i job di rilascio creano app image jpackage per Windows, macOS e Linux con checksum, inventario CycloneDX e attestazioni di provenienza. Il progetto dichiara chiaramente che i pacchetti community non sono ancora firmati dalle piattaforme.",
+        ],
+      },
+      result: {
+        title: "Cos’è oggi JDoor Assist",
+        paragraphs: [
+          "JDoor Assist è un’applicazione desktop funzionante con flussi launcher, host e viewer; link monouso a scadenza; pin del certificato; approvazione locale; streaming view-only; permesso di controllo esplicito; cleanup dell’input; audit del ciclo di vita e comandi visibili di disconnessione.",
+          "Il prototipo del 2022 resta attribuito a entrambi i creatori del progetto scolastico. La modernizzazione successiva di sicurezza, prodotto, UX, test e rilascio è il contributo di Djenis, e il risultato resta limitato all’assistenza visibile tra persone autorizzate su una rete locale fidata.",
+        ],
+      },
+      scope:
+        "Questo case study descrive lo snapshot sorgente v1.0.0 verificato e il comportamento direct-LAN documentato. JDoor Assist è destinato soltanto a supporto autorizzato e visibile: non è un relay internet, uno strumento di amministrazione non presidiata né una certificazione di sicurezza indipendente. Non promette attraversamento NAT, cattura multi-display, firma delle piattaforme o protezione dopo la compromissione di uno dei due endpoint.",
+    }),
   },
   de: {
     "careeros-local": localize("careeros-local", {
@@ -854,6 +956,108 @@ export const labsLocales = {
       ]},
       scope: "Diese Fallstudie beschreibt die eingecheckte Architektur der Version 3.0.0 und ihre Self-Hosting-Kontrollen. GitHub Pages präsentiert das Produkt ohne operative Daten; die eigentliche Anwendung läuft aus dem Serverpaket. Reale Schuldaten, institutionelle Integrationen und Praktikumsergebnisse werden nicht dargestellt.",
     }),
+    "jdoor-security-lab": localize("jdoor-security-lab", {
+      category: "Sichere Fernunterstützung",
+      title: "Einen schulischen Fernsteuerungsprototyp in zustimmungsbasierte Unterstützung verwandeln",
+      summary:
+        "JDoor begann 2022 als gemeinsam von Djenis Ejupi und NobodyToListen entwickeltes Schulprojekt zum Thema Netzwerke. Später baute Djenis Sicherheitsmodell, Sitzungslebenszyklus, Produkt-UX, Tests und Release-Weg als JDoor Assist neu auf: ein sichtbares Desktop-Werkzeug, das standardmäßig nur Ansicht erlaubt und für autorisierte Hilfe in vertrauenswürdigen lokalen Netzen gedacht ist.",
+      facts: [
+        ["Produkt", "Zustimmungsbasierte Fernunterstützung im LAN"],
+        ["Ursprung", "2022 von Djenis Ejupi und NobodyToListen gemeinsam entwickeltes Schulprojekt"],
+        ["Modernisierung", "Sicherheit, Produkt-UX, Tests und Release Engineering durch Djenis"],
+        ["Status", "Versionierter v1.0.0-Quellstand unter GPL-3.0"],
+      ],
+      evidence: {
+        title: "Evidenzprotokoll",
+        intro: "Das v1.0.0-Repository macht diese Kontrollen und Grenzen prüfbar:",
+        items: [
+          [
+            "Sitzungssicherheit",
+            "Der Host erzeugt ein kurzlebiges P-256-Zertifikat, teilt dessen exakten SHA-256-Pin zusammen mit einem zufälligen einmaligen 128-Bit-Token und verlangt eine sichtbare lokale Freigabe, bevor ein Viewer die Sitzung betritt.",
+          ],
+          [
+            "Protokollgrenze",
+            "Ein versioniertes Binärprotokoll prüft Richtung, Typ, Abmessungen, UTF-8 und Nutzlastgröße. Es wird jeweils nur ein Viewer zugelassen, Frames sind begrenzt und entfernte Eingaben werden ignoriert, bis der Host die Steuerung freigibt.",
+          ],
+          [
+            "Prüfgate",
+            "Das Maven-Wrapper-Gate führt die JUnit-Suite, JaCoCo-Schwellen und Spotless-Prüfungen aus und baut danach ein ausführbares Shaded JAR sowie eine CycloneDX-SBOM. Die Integration deckt ungültige Token, Nur-Ansicht-Start, Streaming, Berechtigungswechsel und Eingabefreigabe ab.",
+          ],
+          [
+            "Grenze",
+            "JDoor Assist arbeitet direkt im LAN mit dem primären Bildschirm. Es bietet weder Relay noch Konten, NAT-Traversal, Dateiübertragung oder unbeaufsichtigten Zugriff; die dokumentierten Community-App-Images sind derzeit nicht signiert.",
+          ],
+        ],
+      },
+      starting: {
+        title: "Den Ursprung bewahren, das Vertrauensmodell ändern",
+        paragraphs: [
+          "Das ursprüngliche JDoor war ein Schulprojekt von 2022, das Djenis mit einem Freund entwickelte, veröffentlicht als NobodyToListen. Es demonstrierte Java-Netzwerkprogrammierung, Bildschirmaufnahme und entfernte Eingaben. Dieser gemeinsame Ursprung bleibt Teil der Projektdokumentation; die spätere Arbeit stellt den Unterrichtsprototyp nicht als Einzelarbeit dar.",
+          "Eine Demonstration ist noch kein Support-Produkt. Der alte Entwurf behandelte eine eingehende Verbindung als Steuerkanal, ohne stark authentifizierte Kopplung, Nur-Ansicht-Zustand oder vollständigen Lebenszyklus für hängen gebliebene Tasten, Socketfehler und Herunterfahren. Die Modernisierung begann deshalb damit, die erlaubten Fähigkeiten einzuschränken.",
+        ],
+      },
+      constraints: {
+        title: "Regeln für autorisierte Unterstützung",
+        intro: "Das neu aufgebaute Produkt folgt vier nicht verhandelbaren Vorgaben:",
+        items: [
+          "Jede Sitzung dient ausschließlich autorisierter, von beiden Personen eingeleiteter Hilfe: Der Host bleibt sichtbar, genehmigt jeden Viewer lokal und stellt niemals unbeaufsichtigten oder versteckten Hintergrundzugriff bereit.",
+          "Der Netzwerkpfad kann beobachtet oder verändert werden; deshalb muss der Viewer das exakte kurzlebige Zertifikat authentifizieren und das außerhalb des Netzes erhaltene, kurz gültige Einmal-Token vorlegen.",
+          "Bildansicht und Fernsteuerung sind getrennte Berechtigungen; die Steuerung beginnt deaktiviert, der Host kann sie sofort entziehen und Widerruf oder Trennung geben verfolgte Tasten und Maustasten frei.",
+          "Protokolleingaben sind nicht vertrauenswürdig: Nachrichten, Bilder, Timeouts, Worker und Cleanup benötigen ausdrückliche Grenzen, Richtungsregeln und deterministisches Schließen.",
+        ],
+      },
+      diagnosis: {
+        title: "Fernunterstützung statt Fernadministration",
+        paragraphs: [
+          "Die zentrale Entscheidung bestand nicht darin, den alten Steuerpfad zu verstecken oder auszubauen. Er wurde durch eine Produktgrenze ersetzt, die Zustimmung sichtbar macht und Persistenz, Shell-Ausführung sowie unbeaufsichtigten Zugriff aus dem Entwurf entfernt.",
+          "Für die Modernisierung trennte Djenis TLS-Identität und Pairing, gerahmtes Protokoll, Sitzungszustand, Aufnahme, Eingaberichtlinie, Audit-Ereignisse und Swing-Oberfläche. Authentifizierung, Genehmigung, Ansicht und Steuerung sind damit getrennte Zustände statt Nebenwirkungen eines geöffneten Sockets.",
+        ],
+      },
+      architecture: {
+        title: "Eine Sitzung rund um ausdrückliche Zustimmung",
+        intro:
+          "Die Host-Oberfläche erzeugt eine kurzlebige Identität und einen Einmal-Link. Der Viewer pinnt dieses Zertifikat, übermittelt das Token und wartet auf die lokale Genehmigung. Erst danach trägt der begrenzte Kanal Bildschirmframes; Maus- und Tastaturnachrichten werden nur angewendet, solange die aktive Host-Sitzung eine ausdrückliche Steuerfreigabe besitzt.",
+        labels: ["HOST-UI", "ZUSTIMMUNGSSITZUNG", "GEPINNTES TLS", "BEGRENZTER WIRE", "VIEWER-UI"],
+        caption: "Frames erreichen einen genehmigten Viewer; Eingaben fließen nur während der sichtbaren Steuerfreigabe des Hosts zurück.",
+      },
+      decisions: {
+        title: "Entscheidungen, die das Produkt verändert haben",
+        intro: "Jede Entscheidung entfernt ein implizites Privileg des ursprünglichen Prototyps.",
+        items: [
+          {
+            title: "Die genaue Sitzung authentifizieren",
+            body: "Jeder Host-Start erzeugt Zertifikat und Token im Speicher. Der Pairing-Link trägt den Zertifikat-Fingerabdruck; der Genehmigungsdialog zeigt Viewer-Name, Adresse und Prüfcode.",
+            tradeoff: "Der vollständige Link braucht einen vertrauenswürdigen Übertragungsweg außerhalb der Sitzung, und die direkte LAN-Verbindung bleibt Aufgabe der Benutzer, weil es weder Konten noch Relay gibt.",
+          },
+          {
+            title: "Ansicht und Steuerung trennen",
+            body: "Die Genehmigung startet einen Nur-Ansicht-Stream. Ein Host-Schalter erteilt der aktuellen Sitzung Steuerung; Widerruf, Fokusverlust, Trennung und Herunterfahren geben entfernte Eingaben frei.",
+            tradeoff: "Der Host muss anwesend bleiben und die Berechtigung entscheiden; unbeaufsichtigte Bequemlichkeit ist absichtlich ausgeschlossen.",
+          },
+          {
+            title: "Protokoll und Release eng halten",
+            body: "Das Wire-Format unterstützt Pairing, Frames, begrenzte Eingaben, Berechtigungsstatus, Heartbeat und Trennung. Die Automatisierung prüft Tests, Abdeckung, Formatierung, Pakete, SBOM und Release-Provenienz.",
+            tradeoff: "Zwischenablage, Dateien, Audio, öffentliches Relay und Unternehmensidentität bleiben außerhalb des Umfangs; unsignierte Community-Pakete erfordern weiterhin Prüfsummen- und Provenienzkontrolle.",
+          },
+        ],
+      },
+      delivery: {
+        title: "Vom Schulcode zum prüfbaren Release",
+        paragraphs: [
+          "Das Java-21-Projekt nutzt Maven Wrapper, JUnit-Integrationstests, JaCoCo und Spotless. Die Shaded-Anwendung wird über ihre CLI geprüft; daneben dokumentiert das Repository Architektur, Datenschutz, Bedrohungsannahmen, Sicherheitsmeldungen und Beitragserwartungen.",
+          "CI prüft Linux- und Windows-Pfade, CodeQL führt geplante statische Analysen aus und Release-Jobs erzeugen jpackage-App-Images für Windows, macOS und Linux mit Prüfsummen, CycloneDX-Inventar und Provenienz-Attestierungen. Das Projekt erklärt ausdrücklich, dass Community-Pakete noch nicht plattformsigniert sind.",
+        ],
+      },
+      result: {
+        title: "Was JDoor Assist heute ist",
+        paragraphs: [
+          "JDoor Assist ist eine funktionsfähige Desktop-Anwendung mit Launcher-, Host- und Viewer-Abläufen, ablaufendem Einmal-Link, Zertifikat-Pinning, lokaler Genehmigung, Nur-Ansicht-Streaming, ausdrücklicher Steuerfreigabe, Eingabe-Cleanup, Lebenszyklus-Audit und sichtbaren Trennfunktionen.",
+          "Der Prototyp von 2022 bleibt beiden Urhebern des Schulprojekts zugeschrieben. Die spätere Modernisierung von Sicherheit, Produkt, UX, Tests und Release ist Djenis’ Beitrag; ihr Ergebnis bleibt bewusst auf sichtbare Hilfe zwischen autorisierten Personen in einem vertrauenswürdigen lokalen Netz begrenzt.",
+        ],
+      },
+      scope:
+        "Diese Fallstudie beschreibt den geprüften v1.0.0-Quellstand und das dokumentierte direkte LAN-Verhalten. JDoor Assist ist ausschließlich für autorisierte, sichtbare Unterstützung bestimmt; es ist weder Internet-Relay noch Werkzeug für unbeaufsichtigte Administration oder eine unabhängige Sicherheitszertifizierung. NAT-Traversal, Mehrbildschirmaufnahme, Plattformsignierung und Schutz nach Kompromittierung eines Endpunkts werden nicht versprochen.",
+    }),
   },
   fr: {
     "careeros-local": localize("careeros-local", {
@@ -1080,6 +1284,108 @@ export const labsLocales = {
       delivery: { title: "Auto-hébergement et restauration", paragraphs: ["Chaque école peut définir nom, couleurs, logo et coordonnées de support avec des révisions qui protègent les modifications concurrentes. L’image Docker s’exécute sans privilège et accepte un système de fichiers racine en lecture seule. Les commandes health et doctor signalent les problèmes de configuration et de stockage avant l’usage courant.", "Les outils créent un instantané SQLite privé, l’inspectent sans démarrer l’application, le restaurent par un parcours de maintenance protégé et compactent les données conservées si nécessaire. L’automatisation construit deux fois l’archive source, vérifie inventaire et commit, recherche les secrets, installe depuis l’artefact extrait et y exécute le parcours d’acceptation."] },
       result: { title: "Ce que VECTOR prend en charge aujourd’hui", paragraphs: ["Une école peut gérer cohortes, élèves, organismes, périodes et affectations ; valider les heures ; enregistrer les suivis ; préserver l’historique des documents ; examiner les événements d’audit dans son périmètre ; importer les données de façon atomique et exporter une vue opérationnelle filtrée. Un administrateur peut aussi placer un élève sous blocage de rétention avant la suppression d’anciens dossiers.", "VECTOR est un logiciel open source auto-hébergé. Ce n’est pas un SaaS administré et il ne revendique ni certification de conformité, ni haute disponibilité, ni SSO. Une institution qui en a besoin devra encore traiter ces sujets côté produit et déploiement."] },
       scope: "Cette étude décrit l’architecture versionnée 3.0.0 et ses contrôles d’auto-hébergement. GitHub Pages présente le produit sans données opérationnelles ; l’application elle-même s’exécute depuis le paquet serveur. Aucun dossier scolaire réel, aucune intégration institutionnelle et aucun résultat de stage n’y sont représentés.",
+    }),
+    "jdoor-security-lab": localize("jdoor-security-lab", {
+      category: "Assistance à distance sécurisée",
+      title: "Transformer un prototype scolaire de contrôle à distance en assistance fondée sur le consentement",
+      summary:
+        "JDoor est né en 2022 comme projet scolaire de réseau co-créé par Djenis Ejupi et NobodyToListen. Djenis a ensuite reconstruit son modèle de sécurité, son cycle de session, son UX produit, ses tests et sa chaîne de publication sous le nom JDoor Assist : un outil de bureau visible, en consultation seule par défaut, destiné à l’assistance autorisée sur des réseaux locaux de confiance.",
+      facts: [
+        ["Produit", "Assistance LAN fondée sur le consentement"],
+        ["Origine", "Projet scolaire de 2022 co-créé par Djenis Ejupi et NobodyToListen"],
+        ["Modernisation", "Sécurité, UX produit, tests et release engineering par Djenis"],
+        ["État", "Instantané source v1.0.0 versionné sous GPL-3.0"],
+      ],
+      evidence: {
+        title: "Registre des preuves",
+        intro: "Le dépôt v1.0.0 rend ces contrôles et limites vérifiables :",
+        items: [
+          [
+            "Sécurité de session",
+            "L’hôte crée un certificat P-256 éphémère, partage son pin SHA-256 exact avec un jeton aléatoire à usage unique de 128 bits et exige une approbation locale visible avant qu’un viewer n’entre dans la session.",
+          ],
+          [
+            "Frontière du protocole",
+            "Un protocole binaire versionné valide direction, type, dimensions, UTF-8 et taille de charge. Un seul viewer est admis, les images sont bornées et les entrées distantes sont ignorées tant que l’hôte n’active pas le contrôle.",
+          ],
+          [
+            "Gate de vérification",
+            "Le gate Maven Wrapper exécute la suite JUnit, les seuils JaCoCo et les contrôles Spotless, puis produit un JAR exécutable avec dépendances et une SBOM CycloneDX. L’intégration couvre jeton invalide, démarrage en consultation seule, streaming, permissions et libération des entrées.",
+          ],
+          [
+            "Limite",
+            "JDoor Assist fonctionne directement en LAN sur l’écran principal. Il ne fournit ni relais, ni comptes, ni traversée NAT, ni transfert de fichiers, ni accès sans surveillance ; les app images communautaires documentées ne sont pas encore signées.",
+          ],
+        ],
+      },
+      starting: {
+        title: "Préserver l’origine, changer le modèle de confiance",
+        paragraphs: [
+          "Le JDoor d’origine était un projet scolaire de 2022 que Djenis a réalisé avec un ami, publié sous le nom NobodyToListen. Il démontrait le réseau en Java, la capture d’écran et les entrées distantes. Cette origine commune reste dans l’historique : le travail ultérieur ne présente pas le prototype scolaire comme une réalisation individuelle.",
+          "Une démonstration n’est pas encore un produit d’assistance. L’ancien design traitait une connexion entrante comme un canal de contrôle, sans appairage fortement authentifié, état de consultation seule ni cycle complet pour les touches bloquées, erreurs de socket et arrêts. La modernisation a donc commencé par limiter ce que l’application est autorisée à faire.",
+        ],
+      },
+      constraints: {
+        title: "Règles de l’assistance autorisée",
+        intro: "Le produit reconstruit suit quatre contraintes non négociables :",
+        items: [
+          "Chaque session sert exclusivement une assistance autorisée et initiée par les deux personnes : l’hôte reste visible, approuve localement chaque viewer et n’expose jamais d’accès sans surveillance ou en arrière-plan.",
+          "Le chemin réseau peut être observé ou modifié ; le viewer doit donc authentifier le certificat éphémère exact et présenter le jeton à usage unique de courte durée reçu hors bande.",
+          "Consultation de l’écran et contrôle distant sont deux permissions distinctes ; le contrôle démarre désactivé, l’hôte peut le retirer immédiatement et la révocation ou la déconnexion libère touches et boutons suivis.",
+          "Les entrées du protocole ne sont pas fiables : messages, images, délais, workers et nettoyage exigent des bornes explicites, des règles directionnelles et une fermeture déterministe.",
+        ],
+      },
+      diagnosis: {
+        title: "Assistance à distance, pas administration distante",
+        paragraphs: [
+          "La décision centrale n’était pas de masquer ou d’étendre l’ancien chemin de contrôle. Il fallait le remplacer par une frontière produit qui rend le consentement visible et retire du design persistance, exécution de shell et accès sans surveillance.",
+          "Pour la modernisation, Djenis a séparé identité TLS et appairage, protocole encadré, état de session, capture, politique d’entrée, événements d’audit et présentation Swing. Authentification, approbation, consultation et contrôle deviennent des états distincts, non des effets secondaires de l’ouverture d’une socket.",
+        ],
+      },
+      architecture: {
+        title: "Une session construite autour d’un consentement explicite",
+        intro:
+          "L’interface hôte crée une identité éphémère et un lien à usage unique. Le viewer épingle ce certificat, présente le jeton et attend l’approbation locale. Le canal borné ne transporte les images qu’ensuite ; souris et clavier ne sont appliqués que lorsque la session hôte active possède une autorisation de contrôle explicite.",
+        labels: ["UI HÔTE", "SESSION + CONSENTEMENT", "TLS ÉPINGLÉ", "PROTOCOLE BORNÉ", "UI VIEWER"],
+        caption: "Les images atteignent un seul viewer approuvé ; les entrées ne reviennent que pendant l’autorisation visible de l’hôte.",
+      },
+      decisions: {
+        title: "Les décisions qui ont changé le produit",
+        intro: "Chaque décision retire un privilège implicite du prototype d’origine.",
+        items: [
+          {
+            title: "Authentifier la session exacte",
+            body: "Chaque démarrage hôte crée certificat et jeton en mémoire. Le lien d’appairage transporte l’empreinte du certificat, tandis que la boîte d’approbation affiche nom du viewer, adresse et code de vérification.",
+            tradeoff: "Le lien complet exige un canal hors bande de confiance et la connectivité LAN directe reste à la charge des utilisateurs, puisqu’il n’existe ni compte ni relais.",
+          },
+          {
+            title: "Séparer consultation et contrôle",
+            body: "L’approbation démarre un flux en consultation seule. Un bouton hôte accorde le contrôle à la session courante ; révocation, perte de focus, déconnexion et arrêt libèrent l’état des entrées distantes.",
+            tradeoff: "L’hôte doit rester présent et décider de la permission ; la commodité d’un accès sans surveillance est volontairement exclue.",
+          },
+          {
+            title: "Garder protocole et publication étroits",
+            body: "Le format wire prend en charge appairage, images, entrées bornées, état des permissions, heartbeat et déconnexion. L’automatisation vérifie tests, couverture, formatage, paquets, SBOM et provenance de publication.",
+            tradeoff: "Presse-papiers, fichiers, audio, relais public et identité d’entreprise restent hors périmètre ; les paquets communautaires non signés exigent encore la vérification des sommes et de la provenance.",
+          },
+        ],
+      },
+      delivery: {
+        title: "Du code scolaire à une version vérifiable",
+        paragraphs: [
+          "Le projet Java 21 utilise Maven Wrapper, des tests d’intégration JUnit, JaCoCo et Spotless. L’application shaded est exercée par sa CLI, et le dépôt documente architecture, confidentialité, hypothèses de menace, signalement de sécurité et attentes de contribution.",
+          "La CI vérifie les parcours Linux et Windows, CodeQL exécute une analyse statique planifiée et les jobs de publication créent des app images jpackage pour Windows, macOS et Linux avec sommes de contrôle, inventaire CycloneDX et attestations de provenance. Le projet précise que les paquets communautaires ne sont pas encore signés par les plateformes.",
+        ],
+      },
+      result: {
+        title: "Ce qu’est JDoor Assist aujourd’hui",
+        paragraphs: [
+          "JDoor Assist est une application de bureau fonctionnelle avec parcours launcher, hôte et viewer ; lien temporaire à usage unique ; épinglage du certificat ; approbation locale ; streaming en consultation seule ; autorisation explicite du contrôle ; nettoyage des entrées ; audit du cycle de vie et commandes visibles de déconnexion.",
+          "Le prototype de 2022 reste attribué aux deux créateurs du projet scolaire. La modernisation ultérieure de la sécurité, du produit, de l’UX, des tests et de la publication est la contribution de Djenis, et son résultat reste volontairement limité à une assistance visible entre personnes autorisées sur un réseau local de confiance.",
+        ],
+      },
+      scope:
+        "Cette étude couvre l’instantané source v1.0.0 vérifié et son comportement LAN direct documenté. JDoor Assist est réservé à une assistance autorisée et visible ; ce n’est ni un relais Internet, ni un outil d’administration sans surveillance, ni une certification indépendante de sécurité. Il ne promet pas traversée NAT, capture multi-écran, signature de plateforme ou protection après compromission d’un terminal.",
     }),
   },
 };
