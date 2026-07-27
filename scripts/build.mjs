@@ -235,9 +235,9 @@ function pageHead({
   <meta name="author" content="${escapeHtml(site.author.name)}" />
   <meta name="theme-color" content="#f4f1ea" />
   ${noIndex ? '<meta name="robots" content="noindex,follow" />' : ""}
-  <link rel="canonical" href="${canonical}" />
+  ${noIndex ? "" : `<link rel="canonical" href="${canonical}" />`}
   <link rel="author" href="${authorRouteFor(localeKey)}" />
-  ${alternates(slug, pageKind)}
+  ${noIndex ? "" : alternates(slug, pageKind)}
   <link rel="alternate" type="application/rss+xml" title="${escapeHtml(site.name)} | ${escapeHtml(locale.ui.home)}" href="${absolute(feedRoute(localeKey))}" />
   <link rel="search" type="application/opensearchdescription+xml" title="${escapeHtml(site.name)}" href="${searchDescriptionRoute(localeKey)}" />
   <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
@@ -248,7 +248,7 @@ function pageHead({
   <meta property="og:type" content="${type}" />
   <meta property="og:title" content="${escapeHtml(pageTitle)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
-  <meta property="og:url" content="${canonical}" />
+  ${noIndex ? "" : `<meta property="og:url" content="${canonical}" />`}
   <meta property="og:locale" content="${locale.locale}" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="${escapeHtml(pageTitle)}" />
@@ -279,12 +279,12 @@ function header(localeKey, slug, onIndex = false, pageKind = "case") {
   <div class="header-inner shell">
     <a class="brand" href="${homeRoute}" aria-label="${escapeHtml(site.name)}, ${escapeHtml(locale.ui.home)}">
       <img src="/assets/brand/ejupi-labs-primary-carbon.svg" width="958" height="295" alt="Ejupi Labs" />
-      <span class="brand-label">Case<br />Studies</span>
+      <span class="brand-label">${escapeHtml(locale.ui.home)}</span>
     </a>
     <nav class="site-nav" id="site-navigation" aria-label="${escapeHtml(locale.ui.navigation)}" data-menu data-open="false">
       <a href="${homeRoute}"${onIndex ? ' aria-current="page"' : ""}>${escapeHtml(locale.ui.allWork)}</a>
       <a href="${studioRouteFor(localeKey)}">${escapeHtml(locale.ui.portfolio)}</a>
-      <a class="personal-link" href="${authorRouteFor(localeKey)}">${escapeHtml(editorialUi[localeKey].personal)}</a>
+      <a class="personal-link" href="${authorRouteFor(localeKey)}" rel="author">${escapeHtml(editorialUi[localeKey].personal)}</a>
       ${languageList(localeKey, slug, pageKind)}
     </nav>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="${escapeHtml(locale.ui.menuOpen)}" data-menu-toggle data-open-label="${escapeHtml(locale.ui.menuOpen)}" data-close-label="${escapeHtml(locale.ui.menuClose)}"><span aria-hidden="true"></span></button>
@@ -306,7 +306,7 @@ function footer(localeKey) {
         <a href="${routeFor(localeKey, null)}">${escapeHtml(locale.ui.allWork)}</a>
         <a href="${methodologyRoute(localeKey)}">${escapeHtml(ui.methodology)}</a>
         <a href="${studioRouteFor(localeKey)}">${escapeHtml(locale.ui.portfolio)}</a>
-        <a class="personal-link" href="${authorRouteFor(localeKey)}">${escapeHtml(ui.personal)}</a>
+        <a class="personal-link" href="${authorRouteFor(localeKey)}" rel="author">${escapeHtml(ui.personal)}</a>
         <a href="${studioRouteFor(localeKey, "#contact")}">${escapeHtml(locale.ui.contact)}</a>
         <a href="${feedRoute(localeKey)}">RSS</a>
       </nav>
@@ -379,13 +379,13 @@ ${header(localeKey, null, true)}
   <section class="case-index shell" aria-label="${escapeHtml(ui.archive)}">
     <div class="discovery" data-discovery data-search-index-url="${searchAssetUrls[localeKey]}" hidden>
       <div class="discovery__search">
-        <label for="case-search">${escapeHtml(ui.searchLabel)}</label>
-        <input id="case-search" type="search" inputmode="search" autocomplete="off" placeholder="${escapeHtml(ui.searchPlaceholder)}" aria-controls="case-results" data-case-search />
+        <label for="case-search"><span>${escapeHtml(ui.searchLabel)}</span><kbd class="discovery__shortcut" aria-hidden="true">/</kbd></label>
+        <input id="case-search" type="search" inputmode="search" autocomplete="off" placeholder="${escapeHtml(ui.searchPlaceholder)}" aria-controls="case-results" aria-keyshortcuts="/" data-case-search />
       </div>
       <div class="discovery__status">
         <p aria-live="polite" aria-atomic="true"><strong data-case-count>${visibleDefinitions.length}</strong> <span data-case-count-label data-singular="${escapeHtml(ui.result)}" data-plural="${escapeHtml(ui.results)}">${escapeHtml(ui.results)}</span></p>
         <p class="discovery__message" role="status" aria-live="polite" aria-atomic="true" data-search-state data-loading="${escapeHtml(ui.searchLoading)}" data-fallback="${escapeHtml(ui.searchFallback)}"></p>
-        <button class="text-button" type="button" data-case-clear>${escapeHtml(ui.clear)}</button>
+        <button class="text-button" type="button" data-case-clear disabled>${escapeHtml(ui.clear)}</button>
       </div>
     </div>
     <div class="case-list" id="case-results" data-case-list>${visibleDefinitions.map((definition) => caseCard(localeKey, definition)).join("")}</div>
@@ -769,7 +769,7 @@ await write("sitemap.xml", sitemap());
 await write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${absolute("/sitemap.xml")}\n`);
 await write("llms.txt", llmsText());
 await write("case-studies.json", `${JSON.stringify(caseCatalog(), null, 2)}\n`);
-await write("site.webmanifest", `${JSON.stringify({ id: "/", name: `${site.name} | Case Studies`, short_name: "Ejupi Labs", lang: "en", start_url: "/", scope: "/", display: "standalone", background_color: "#f4f1ea", theme_color: "#f4f1ea", icons: [{ src: "/assets/brand/favicon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }] }, null, 2)}\n`);
+await write("site.webmanifest", `${JSON.stringify({ id: "/", name: `${site.name} | Case Studies`, short_name: "Ejupi Labs", description: locales.en.index.description, lang: "en", start_url: "/", scope: "/", display: "standalone", background_color: "#f4f1ea", theme_color: "#f4f1ea", icons: [{ src: "/assets/brand/favicon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }] }, null, 2)}\n`);
 
 const sourceHeaders = await readFile(join(sourceRoot, "_headers"), "utf8");
 if (!sourceHeaders.includes("Content-Security-Policy")) throw new Error("Security headers are missing.");

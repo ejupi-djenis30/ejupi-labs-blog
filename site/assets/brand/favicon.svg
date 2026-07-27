@@ -3,12 +3,12 @@
   <desc id="desc">Ejupi Labs EL monogram: a bold E, a slim L and the Signal Oxide node.</desc>
   <rect width="512" height="512" fill="#0E1111"/>
   <g fill="#F4F1EA">
-    <rect x="40" y="100" width="64" height="312"/>
-    <rect x="40" y="100" width="186" height="60"/>
-    <rect x="40" y="226" width="166" height="58"/>
-    <rect x="40" y="352" width="186" height="60"/>
-    <rect x="270" y="100" width="30" height="312"/>
-    <rect x="270" y="382" width="112" height="30"/>
+    <rect x="116.46218" y="109.84273" width="38.714424" height="286.30588"/>
+    <rect x="116.46218" y="109.84273" width="138.45164" height="38.33094"/>
+    <rect x="116.46218" y="240.14859" width="122.10128" height="25.694118"/>
+    <rect x="116.46218" y="357.81769" width="138.45164" height="38.33094"/>
+    <rect x="290.88461" y="109.84273" width="24.525547" height="286.30588"/>
+    <rect x="290.88461" y="357.52325" width="91.562042" height="38.625385"/>
   </g>
-  <rect x="422" y="354" width="58" height="58" fill="#E97A4A"/>
+  <rect x="415.1474" y="356.39883" width="38.301506" height="41.334988" fill="#E97A4A"/>
 </svg>

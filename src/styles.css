@@ -192,6 +192,7 @@ li {
 }
 
 .brand-label {
+  max-width: 9rem;
   margin-left: 0.9rem;
   padding-left: 0.9rem;
   border-left: 1px solid var(--rule);
@@ -381,13 +382,26 @@ li {
 }
 
 .discovery label {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 0.65rem;
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.discovery__shortcut {
+  min-width: 1.7rem;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  color: var(--muted);
+  font: inherit;
+  text-align: center;
 }
 
 .discovery__search input {
@@ -458,6 +472,12 @@ li {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
+}
+
+.text-button:disabled {
+  border-bottom-color: transparent;
+  cursor: default;
+  opacity: 0.42;
 }
 
 .case-empty {
