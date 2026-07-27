@@ -46,7 +46,10 @@ test("every locale contains the same complete case-study structure", () => {
       }
       if (definition.kind === "labs") {
         assert.ok(study.evidence.items.length >= 4);
-        assert.ok(definition.projectUrl.startsWith("https://ejupi-djenis30.github.io/"));
+        assert.ok(
+          definition.projectUrl.startsWith("https://ejupi-djenis30.github.io/") ||
+            definition.projectUrl === "https://jdoor.ejupilabs.com/",
+        );
         assert.match(definition.sourceRef, /^v\d+\.\d+\.\d+$/u);
         assert.match(
           definition.sourceUrl,
@@ -229,7 +232,7 @@ test("JDoor preserves co-authorship, authorized use and the requested Labs topol
   const definition = caseDefinitions.find(({ slug }) => slug === "jdoor-security-lab");
   assert.ok(definition);
   assert.equal(definition.number, "10");
-  assert.equal(definition.projectUrl, "https://ejupi-djenis30.github.io/jdoor/");
+  assert.equal(definition.projectUrl, "https://jdoor.ejupilabs.com/");
   assert.equal(definition.sourceRef, "v1.0.0");
   assert.equal(
     definition.sourceUrl,
