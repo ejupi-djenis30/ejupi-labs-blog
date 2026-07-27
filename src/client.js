@@ -122,6 +122,7 @@ if (typeof document !== "undefined") {
 
       function updateResults({ updateUrl = true } = {}) {
         const hasQuery = normalizeSearchValue(search.value).length > 0;
+        for (const button of clearButtons) button.disabled = !hasQuery;
         if (!hasQuery) {
           searchState.textContent = "";
         } else if (searchIndexState === "unavailable") {

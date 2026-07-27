@@ -119,6 +119,11 @@ test("the editorial header leads directly into search and case studies", async (
   await expect(page.locator("[data-case-type], [data-case-topic]")).toHaveCount(0);
   await expect(page.locator("[data-case-search]")).toBeVisible();
   await expect(page.locator("[data-case-search]")).toBeInViewport();
+  await expect(page.locator("[data-case-search]")).toHaveAttribute(
+    "aria-keyshortcuts",
+    "/",
+  );
+  await expect(page.locator(".discovery__status [data-case-clear]")).toBeDisabled();
 
   const layout = await page.evaluate(() => {
     const hero = document.querySelector(".index-hero");
@@ -163,6 +168,7 @@ test("archive search, URL state and empty state stay in sync", async ({
   await expect(page.locator("[data-case-count]")).toHaveText("1");
 
   await page.locator("[data-case-search]").fill("phrase-that-does-not-exist");
+  await expect(page.locator(".discovery__status [data-case-clear]")).toBeEnabled();
   await expect(cards).toHaveCount(0);
   await expect(page.locator("[data-case-empty]")).toBeVisible();
   await expect(page).toHaveURL(/q=phrase-that-does-not-exist/);

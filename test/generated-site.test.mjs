@@ -74,7 +74,7 @@ test("articles identify Djenis as the Person author and Ejupi Labs as publisher"
   assert.match(html, /class="article-byline shell"/u);
   assert.match(html, /itemprop="author" itemscope itemtype="https:\/\/schema\.org\/Person" itemid="https:\/\/djenis\.ejupilabs\.com\/#person"/u);
   assert.match(html, /rel="author" itemprop="url" href="https:\/\/djenis\.ejupilabs\.com\/"/u);
-  assert.match(html, /itemprop="jobTitle">Author and engineer/u);
+  assert.match(html, /itemprop="jobTitle">Engineer and case-study author/u);
   assert.match(html, /Last verified <time datetime="2026-07-24" itemprop="dateModified">/u);
   assert.match(html, /class="site-cta"/u);
 });
@@ -143,6 +143,21 @@ test("every generated HTML page exposes a focusable main landmark", async () => 
   for (const page of pages) {
     const html = await readFile(new URL(page, import.meta.url), "utf8");
     assert.match(html, /<main\b[^>]*\bid="main"[^>]*\btabindex="-1"|<main\b[^>]*\btabindex="-1"[^>]*\bid="main"/);
+  }
+});
+
+test("localized 404 pages do not claim a canonical or share URL", async () => {
+  for (const localeKey of localeOrder) {
+    const prefix = locales[localeKey].prefix.replace(/^\//u, "");
+    const html = await readFile(
+      new URL(`../dist/${prefix ? `${prefix}/` : ""}404.html`, import.meta.url),
+      "utf8",
+    );
+    assert.match(html, /<meta name="robots" content="noindex,follow" \/>/);
+    assert.doesNotMatch(
+      html,
+      /rel="canonical"|<link rel="alternate" hreflang=|property="og:url"/,
+    );
   }
 });
 
