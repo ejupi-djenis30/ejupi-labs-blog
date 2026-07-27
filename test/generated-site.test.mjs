@@ -10,6 +10,37 @@ import {
 } from "../src/content.mjs";
 import { editorialUi, methodology } from "../src/editorial.mjs";
 
+function socialImageUrl(localeKey) {
+  return `${site.url}/assets/social/case-studies-${localeKey}.png`;
+}
+
+function assertSocialPreview(html, localeKey) {
+  const imageUrl = socialImageUrl(localeKey);
+  assert.ok(
+    html.includes(`<meta property="og:image" content="${imageUrl}" />`),
+  );
+  assert.match(html, /<meta property="og:image:type" content="image\/png" \/>/u);
+  assert.match(html, /<meta property="og:image:width" content="1200" \/>/u);
+  assert.match(html, /<meta property="og:image:height" content="630" \/>/u);
+  assert.ok(
+    html.includes(
+      `<meta property="og:image:alt" content="${locales[localeKey].ui.socialImageAlt}" />`,
+    ),
+  );
+  assert.match(
+    html,
+    /<meta name="twitter:card" content="summary_large_image" \/>/u,
+  );
+  assert.ok(
+    html.includes(`<meta name="twitter:image" content="${imageUrl}" />`),
+  );
+  assert.ok(
+    html.includes(
+      `<meta name="twitter:image:alt" content="${locales[localeKey].ui.socialImageAlt}" />`,
+    ),
+  );
+}
+
 test("English case-study index links to every canonical article", async () => {
   const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
   assert.match(html, /href="\/assets\/styles\.[0-9a-f]{12}\.css"/);
@@ -43,6 +74,26 @@ test("English case-study index links to every canonical article", async () => {
   }
 });
 
+test("canonical pages expose locale-matched large social previews", async () => {
+  for (const localeKey of localeOrder) {
+    const prefix = locales[localeKey].prefix.replace(/^\//u, "");
+    const outputDirectory = prefix ? `${prefix}/` : "";
+    const definition = caseDefinitions.find(({ availableLocales }) =>
+      availableLocales.includes(localeKey),
+    );
+    assert.ok(definition);
+    const pages = [
+      `../dist/${outputDirectory}index.html`,
+      `../dist/${outputDirectory}methodology/index.html`,
+      `../dist/${outputDirectory}case-studies/${definition.slug}/index.html`,
+    ];
+
+    for (const page of pages) {
+      assertSocialPreview(await readFile(new URL(page, import.meta.url), "utf8"), localeKey);
+    }
+  }
+});
+
 test("localized article keeps its language switch on the equivalent article", async () => {
   const html = await readFile(new URL("../dist/de/case-studies/archival-workflow-management/index.html", import.meta.url), "utf8");
   assert.match(html, /href="\/it\/case-studies\/archival-workflow-management\/"/);
@@ -67,6 +118,10 @@ test("articles identify Djenis as the Person author and Ejupi Labs as publisher"
     name: "Ejupi Labs",
     url: "https://ejupilabs.com/",
   });
+  assert.equal(
+    structuredData.image,
+    "https://blog.ejupilabs.com/assets/social/case-studies-en.png",
+  );
   assert.match(html, /<meta name="author" content="Djenis Ejupi" \/>/u);
   assert.match(html, /<link rel="author" href="https:\/\/djenis\.ejupilabs\.com\/" \/>/u);
   assert.match(html, /<meta name="twitter:title" content="[^"]+" \/>/u);
@@ -156,7 +211,7 @@ test("localized 404 pages do not claim a canonical or share URL", async () => {
     assert.match(html, /<meta name="robots" content="noindex,follow" \/>/);
     assert.doesNotMatch(
       html,
-      /rel="canonical"|<link rel="alternate" hreflang=|property="og:url"/,
+      /rel="canonical"|<link rel="alternate" hreflang=|property="og:url"|property="og:image"|name="twitter:image"/,
     );
   }
 });

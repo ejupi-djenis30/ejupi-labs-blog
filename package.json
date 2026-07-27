@@ -6,10 +6,12 @@
   "type": "module",
   "scripts": {
     "clean": "node scripts/clean.mjs",
+    "generate:social": "node scripts/generate-social-previews.mjs",
+    "check:social": "node scripts/generate-social-previews.mjs --check",
     "new:case": "node scripts/new-case.mjs",
     "build": "node scripts/build.mjs",
     "validate": "node scripts/validate.mjs",
-    "test": "npm run build && npm run validate && node --test",
+    "test": "npm run check:social && npm run build && npm run validate && node --test",
     "test:e2e": "playwright test",
     "check": "npm run test && npm run test:e2e && wrangler deploy --dry-run",
     "dev": "npm run build && wrangler dev",
@@ -17,6 +19,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.61.1",
+    "sharp": "0.35.0",
     "wrangler": "4.113.0"
   },
   "overrides": {

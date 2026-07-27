@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "dimensions": {
+    "width": 1200,
+    "height": 630
+  },
+  "brandSourceSha256": "6e9ad88410217a43ee4f58e54665360c35fdf643e62444c2a889e014e8899d22",
+  "fontSourceSha256": {
+    "regular": "f28af62faa9eec1e5482cf6e2a3e06bc865fa2fa6937bd56c14d2be23c9b4c46",
+    "semibold": "04235f235483213906d69cafb7a87ee197adaffacb081c8a7f809d00f9b353cd"
+  },
+  "assets": {
+    "en": {
+      "source": "design/social/case-studies-en.svg",
+      "output": "site/assets/social/case-studies-en.png",
+      "sourceSha256": "245c840dee8edfd22a1be1cfafbdd7ab2e8c5989e4714894ba0c70dc15e43d66",
+      "outputSha256": "bab04ea6118c2bf16ee052102ef73e1816032fd9efc2faab831adbe1ad93fbca"
+    },
+    "it": {
+      "source": "design/social/case-studies-it.svg",
+      "output": "site/assets/social/case-studies-it.png",
+      "sourceSha256": "3a70205b4e87b3d38d9e7fee8c526c0d36083a7337af08836e3f387b1193cc28",
+      "outputSha256": "21002696816afb5b81c3819e7244264aa01735a00c8e1dd1cd3f4667f66ad0c5"
+    },
+    "de": {
+      "source": "design/social/case-studies-de.svg",
+      "output": "site/assets/social/case-studies-de.png",
+      "sourceSha256": "c7ef12e7cba6a8f22ceeac7097fff8c27ebe9eff6c2bd292ce60d4d324226892",
+      "outputSha256": "dfea348840d4be1ea6ef1c4cf1bedaa89409d1ae0b4604d712045776fcba61fa"
+    },
+    "fr": {
+      "source": "design/social/case-studies-fr.svg",
+      "output": "site/assets/social/case-studies-fr.png",
+      "sourceSha256": "578736e106a5f3616564d5ff9fa31166557d5358377bbf49c869ed1823e504c8",
+      "outputSha256": "afd9c9581181d18fe92aaded46acdc00f6b39cacd858cc823b9cd88be5be3ede"
+    }
+  }
+}
