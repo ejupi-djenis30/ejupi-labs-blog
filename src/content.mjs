@@ -153,7 +153,7 @@ export const caseDefinitions = [
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-26",
     updated: "2026-07-26",
-    projectUrl: "https://ejupi-djenis30.github.io/jdoor/",
+    projectUrl: "https://jdoor.ejupilabs.com/",
     sourceRef: "v1.0.0",
     sourceUrl: "https://github.com/NobodyToListen/JDoor/commit/ac94dd82cdff17551826b7254165d123190aeec7",
     verifiedAt: "2026-07-26",
