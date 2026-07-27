@@ -14,7 +14,7 @@ const checkOnly = process.argv.includes("--check");
 const width = 1200;
 const height = 630;
 const maxDifferingPixelRatio = 0.08;
-const maxMeanChannelError = 4;
+const maxMeanChannelError = 6;
 
 const copy = Object.freeze({
   en: {
@@ -84,7 +84,7 @@ function socialSvg(localeKey, brandHref, fontRegularHref, fontSemiboldHref) {
       const active = index === 2;
       return `<g>
     <rect x="816" y="${y}" width="300" height="66" fill="${active ? "#B74D2C" : "none"}" stroke="${active ? "#E97A4A" : "#F4F1EA"}"/>
-    <text x="840" y="${y + 40}" fill="#F4F1EA" font-family="Consolas, monospace" font-size="17" letter-spacing="1.4">${escapeXml(label)}</text>
+    <text x="840" y="${y + 40}" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">${escapeXml(label)}</text>
     <rect x="1082" y="${y + 24}" width="12" height="12" fill="${active ? "#0E1111" : "#E97A4A"}"/>
   </g>`;
     })

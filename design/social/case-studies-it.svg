@@ -38,22 +38,22 @@
   <path d="M816 74H1148" stroke="#F4F1EA" stroke-opacity=".24"/>
   <g>
     <rect x="816" y="112" width="300" height="66" fill="none" stroke="#F4F1EA"/>
-    <text x="840" y="152" fill="#F4F1EA" font-family="Consolas, monospace" font-size="17" letter-spacing="1.4">VINCOLO</text>
+    <text x="840" y="152" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">VINCOLO</text>
     <rect x="1082" y="136" width="12" height="12" fill="#E97A4A"/>
   </g>
   <g>
     <rect x="816" y="220" width="300" height="66" fill="none" stroke="#F4F1EA"/>
-    <text x="840" y="260" fill="#F4F1EA" font-family="Consolas, monospace" font-size="17" letter-spacing="1.4">DECISIONE</text>
+    <text x="840" y="260" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">DECISIONE</text>
     <rect x="1082" y="244" width="12" height="12" fill="#E97A4A"/>
   </g>
   <g>
     <rect x="816" y="328" width="300" height="66" fill="#B74D2C" stroke="#E97A4A"/>
-    <text x="840" y="368" fill="#F4F1EA" font-family="Consolas, monospace" font-size="17" letter-spacing="1.4">SISTEMA</text>
+    <text x="840" y="368" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">SISTEMA</text>
     <rect x="1082" y="352" width="12" height="12" fill="#0E1111"/>
   </g>
   <g>
     <rect x="816" y="436" width="300" height="66" fill="none" stroke="#F4F1EA"/>
-    <text x="840" y="476" fill="#F4F1EA" font-family="Consolas, monospace" font-size="17" letter-spacing="1.4">EVIDENZA</text>
+    <text x="840" y="476" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">EVIDENZA</text>
     <rect x="1082" y="460" width="12" height="12" fill="#E97A4A"/>
   </g>
   <path d="M966 178V216M966 286V324M966 394V432" stroke="#E97A4A" stroke-width="2" marker-end="url(#arrow)"/>
