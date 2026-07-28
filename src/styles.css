@@ -781,7 +781,7 @@ li {
 }
 
 .article-byline__role,
-.article-byline__verified {
+.article-byline__updated {
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.7rem;
@@ -789,7 +789,7 @@ li {
   text-transform: uppercase;
 }
 
-.article-byline__verified {
+.article-byline__updated {
   flex: 0 0 auto;
 }
 
@@ -942,6 +942,91 @@ li {
   text-transform: uppercase;
 }
 
+.technology-rationale-section {
+  max-width: none;
+}
+
+.technology-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 3rem;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+}
+
+.technology-choice {
+  min-width: 0;
+  background: var(--paper-raised);
+}
+
+.technology-choice__header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  min-height: 13rem;
+  align-content: space-between;
+  padding: clamp(1.4rem, 2.7vw, 2.5rem);
+  border-bottom: 1px solid var(--ink);
+}
+
+.technology-choice__number,
+.technology-choice__label,
+.technology-choice__reasoning dt,
+.decision-tradeoff strong {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.07em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.technology-choice__number {
+  color: var(--oxide);
+}
+
+.technology-choice__label {
+  color: var(--muted);
+  text-align: right;
+}
+
+.technology-choice h3 {
+  grid-column: 1 / -1;
+  max-width: 17ch;
+  margin: clamp(2.5rem, 5vw, 5rem) 0 0;
+  font-size: clamp(1.9rem, 3.4vw, 3.7rem);
+  line-height: 0.98;
+  overflow-wrap: anywhere;
+}
+
+.technology-choice__reasoning {
+  margin: 0;
+}
+
+.technology-choice__reasoning > div {
+  display: grid;
+  grid-template-columns: minmax(9.5rem, 1.4fr) minmax(0, 4fr);
+  gap: 1.25rem;
+  padding: 1.25rem clamp(1.4rem, 2.7vw, 2.5rem);
+  border-bottom: 1px solid var(--rule);
+}
+
+.technology-choice__reasoning > div:last-child {
+  border-bottom: 0;
+}
+
+.technology-choice__reasoning dt {
+  color: var(--oxide);
+}
+
+.technology-choice__reasoning dd {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1.58;
+}
+
 .decision-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -972,10 +1057,16 @@ li {
 }
 
 .decision-tradeoff {
+  display: grid;
+  gap: 0.6rem;
   margin-top: 2rem;
   padding-top: 1rem;
   border-top: 1px solid var(--rule);
   color: var(--muted) !important;
+}
+
+.decision-tradeoff strong {
+  color: var(--oxide);
 }
 
 .scope-note {
@@ -1252,6 +1343,7 @@ li {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .technology-choice-grid,
   .decision-grid {
     grid-template-columns: 1fr;
   }
@@ -1456,6 +1548,20 @@ li {
     font-size: clamp(2rem, 10vw, 3rem);
   }
 
+  .technology-choice__header {
+    min-height: 0;
+  }
+
+  .technology-choice h3 {
+    max-width: none;
+    margin-top: 2rem;
+  }
+
+  .technology-choice__reasoning > div {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
   .discovery {
     gap: 0.65rem;
     padding: 1rem;
@@ -1590,6 +1696,12 @@ li {
   .article-hero__facts {
     grid-template-columns: repeat(2, 1fr);
     border: 1px solid #000;
+  }
+
+  .technology-choice,
+  .decision {
+    break-inside: avoid;
+    background: #fff;
   }
 
   a {

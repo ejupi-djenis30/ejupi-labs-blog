@@ -19,31 +19,31 @@ const maxMeanChannelError = 6;
 const copy = Object.freeze({
   en: {
     label: "ENGINEERING CASE STUDIES",
-    headline: ["Engineering work,", "explained."],
-    size: 66,
-    nodes: ["CONSTRAINT", "DECISION", "SYSTEM", "EVIDENCE"],
-    system: "SYSTEM VIEW / ARCHIVE",
+    headline: ["Engineering decisions,", "explained."],
+    size: 54,
+    nodes: ["CONSTRAINT", "CHOICE", "ALTERNATIVE", "COST"],
+    system: "DECISION VIEW / ARCHIVE",
   },
   it: {
     label: "CASE STUDY DI INGEGNERIA",
-    headline: ["Progetti di ingegneria,", "spiegati."],
-    size: 55,
-    nodes: ["VINCOLO", "DECISIONE", "SISTEMA", "EVIDENZA"],
-    system: "VISTA SISTEMA / ARCHIVIO",
+    headline: ["Decisioni tecniche,", "spiegate."],
+    size: 61,
+    nodes: ["VINCOLO", "SCELTA", "ALTERNATIVA", "COSTO"],
+    system: "VISTA DECISIONI / ARCHIVIO",
   },
   de: {
     label: "ENGINEERING-FALLSTUDIEN",
-    headline: ["Engineering-Arbeit,", "erklärt."],
-    size: 61,
-    nodes: ["ANFORDERUNG", "ENTSCHEIDUNG", "SYSTEM", "NACHWEIS"],
-    system: "SYSTEMANSICHT / ARCHIV",
+    headline: ["Technische Entscheidungen,", "erklärt."],
+    size: 48,
+    nodes: ["ANFORDERUNG", "WAHL", "ALTERNATIVE", "PREIS"],
+    system: "ENTSCHEIDUNGSANSICHT / ARCHIV",
   },
   fr: {
     label: "ÉTUDES DE CAS D’INGÉNIERIE",
-    headline: ["Le travail d’ingénierie,", "expliqué."],
-    size: 54,
-    nodes: ["CONTRAINTE", "DÉCISION", "SYSTÈME", "PREUVE"],
-    system: "VUE SYSTÈME / ARCHIVES",
+    headline: ["Les décisions techniques,", "expliquées."],
+    size: 50,
+    nodes: ["CONTRAINTE", "CHOIX", "ALTERNATIVE", "COÛT"],
+    system: "VUE DES DÉCISIONS / ARCHIVES",
   },
 });
 const localeKeys = Object.freeze([...localeOrder]);
@@ -92,7 +92,7 @@ function socialSvg(localeKey, brandHref, fontRegularHref, fontSemiboldHref) {
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">
   <title id="title">Ejupi Labs — ${escapeXml(item.label)}</title>
-  <desc id="desc">Ejupi Labs wordmark, editorial headline and a four-stage system diagram.</desc>
+  <desc id="desc">Ejupi Labs wordmark, editorial headline and a four-stage decision diagram.</desc>
   <defs>
     <style>
       @font-face {

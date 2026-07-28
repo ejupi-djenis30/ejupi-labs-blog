@@ -483,6 +483,7 @@ function articlePage(localeKey, definition, index) {
     ["constraints", study.constraints.title],
     ["diagnosis", study.diagnosis.title],
     ["architecture", study.architecture.title],
+    ["technology-rationale", study.technology.title],
     ["decisions", study.decisions.title],
     ["delivery", study.delivery.title],
     ["result", study.result.title],
@@ -491,7 +492,23 @@ function articlePage(localeKey, definition, index) {
   const toc = sectionEntries.map(([id, title], itemIndex) => `<li><a href="#${id}" data-toc-link><span>${String(itemIndex + 1).padStart(2, "0")}</span><span>${escapeHtml(title)}</span></a></li>`).join("");
   const facts = study.facts.map(([term, detail]) => `<div class="fact"><dt>${escapeHtml(term)}</dt><dd>${escapeHtml(detail)}</dd></div>`).join("");
   const constraints = study.constraints.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
-  const decisions = study.decisions.items.map((decision, itemIndex) => `<article class="decision"><span class="decision-number">D${String(itemIndex + 1).padStart(2, "0")}</span><h3>${escapeHtml(decision.title)}</h3><p>${escapeHtml(decision.body)}</p><p class="decision-tradeoff">${escapeHtml(decision.tradeoff)}</p></article>`).join("");
+  const technologyChoices = study.technology.items
+    .map(
+      (choice, itemIndex) => `<article class="technology-choice">
+        <header class="technology-choice__header">
+          <span class="technology-choice__number">T${String(itemIndex + 1).padStart(2, "0")}</span>
+          <span class="technology-choice__label">${escapeHtml(ui.choiceLabel)}</span>
+          <h3>${escapeHtml(choice.choice)}</h3>
+        </header>
+        <dl class="technology-choice__reasoning">
+          <div><dt>${escapeHtml(ui.whyLabel)}</dt><dd>${escapeHtml(choice.why)}</dd></div>
+          <div><dt>${escapeHtml(ui.alternativeLabel)}</dt><dd>${escapeHtml(choice.alternative)}</dd></div>
+          <div><dt>${escapeHtml(ui.costLabel)}</dt><dd>${escapeHtml(choice.cost)}</dd></div>
+        </dl>
+      </article>`,
+    )
+    .join("");
+  const decisions = study.decisions.items.map((decision, itemIndex) => `<article class="decision"><span class="decision-number">D${String(itemIndex + 1).padStart(2, "0")}</span><h3>${escapeHtml(decision.title)}</h3><p>${escapeHtml(decision.body)}</p><p class="decision-tradeoff"><strong>${escapeHtml(ui.tradeoffLabel)}</strong><span>${escapeHtml(decision.tradeoff)}</span></p></article>`).join("");
   const relatedDefinitions = relatedCaseDefinitions(definition, caseDefinitions, {
     localeKey,
     limit: 2,
@@ -584,7 +601,7 @@ ${header(localeKey, definition.slug)}
         <span class="article-byline__identity">${escapeHtml(ui.bylineBy)} <a rel="author" itemprop="url" href="${authorRouteFor(localeKey)}"><span itemprop="name">${escapeHtml(site.author.name)}</span></a></span>
         <span class="article-byline__role" itemprop="jobTitle">${escapeHtml(ui.authorRole)}</span>
       </span>
-      <span class="article-byline__verified">${escapeHtml(ui.lastVerified)} <time datetime="${definition.updated}" itemprop="dateModified">${escapeHtml(formattedUpdated)}</time></span>
+      <span class="article-byline__updated">${escapeHtml(ui.updated)} <time datetime="${definition.updated}" itemprop="dateModified">${escapeHtml(formattedUpdated)}</time></span>
     </div>
     <div class="article-meta-bar shell">
       <div class="article-meta-bar__group"><span>${escapeHtml(locale.ui.published)} <time datetime="${definition.published}">${escapeHtml(formattedDate)}</time></span><span>${study.readMinutes} ${escapeHtml(locale.ui.readTime)}</span></div>
@@ -597,6 +614,7 @@ ${header(localeKey, definition.slug)}
         <section class="story-section" id="constraints" data-story-section><h2>${heading(study.constraints.title)}</h2><p>${escapeHtml(study.constraints.intro)}</p><ol class="constraint-list">${constraints}</ol></section>
         <section class="story-section" id="diagnosis" data-story-section><h2>${heading(study.diagnosis.title)}</h2>${paragraphs(study.diagnosis.paragraphs)}</section>
         <section class="story-section architecture-section" id="architecture" data-story-section><h2>${heading(study.architecture.title)}</h2><p>${escapeHtml(study.architecture.intro)}</p><figure class="architecture-frame">${architectureSvg(localeKey, definition.diagram, study.architecture.labels, `${study.architecture.title}. ${study.architecture.caption}`)}<figcaption>${escapeHtml(study.architecture.caption)}</figcaption></figure></section>
+        <section class="story-section technology-rationale-section" id="technology-rationale" data-story-section><h2>${heading(study.technology.title)}</h2><p>${escapeHtml(study.technology.intro)}</p><div class="technology-choice-grid">${technologyChoices}</div></section>
         <section class="story-section architecture-section" id="decisions" data-story-section><h2>${heading(study.decisions.title)}</h2><p>${escapeHtml(study.decisions.intro)}</p><div class="decision-grid">${decisions}</div></section>
         <section class="story-section" id="delivery" data-story-section><h2>${heading(study.delivery.title)}</h2>${paragraphs(study.delivery.paragraphs)}</section>
         <section class="story-section" id="result" data-story-section><h2>${heading(study.result.title)}</h2>${paragraphs(study.result.paragraphs)}</section>
@@ -743,7 +761,7 @@ function llmsText() {
     const study = locales.en.cases[definition.slug];
     return `- [${study.title}](${absolute(routeFor("en", definition.slug))}): ${study.summary}`;
   }).join("\n");
-  return `# ${site.name} Case Studies\n\n> ${caseDefinitions.length} documented engineering case studies. Organisations, commercial details and unsupported metrics are omitted.\n\n## Case studies\n\n${studies}\n\n## Languages\n\n- [English](${absolute("/")})\n- [Italiano](${absolute("/it/")})\n- [Deutsch](${absolute("/de/")})\n- [Français](${absolute("/fr/")})\n\n## Methodology\n\n- [Editorial methodology](${absolute(methodologyRoute("en"))})\n\n## Machine-readable catalog\n\n- [Case-study catalog](${absolute("/case-studies.json")})\n\n## Main studio\n\n- [Ejupi Labs](${site.portfolioUrl})\n`;
+  return `# ${site.name} Case Studies\n\n> ${caseDefinitions.length} documented engineering case studies. Each distinguishes the chosen technical boundary, why it fit, the strongest credible alternative and the cost accepted. Organisations, commercial details and unsupported metrics are omitted.\n\n## Case studies\n\n${studies}\n\n## Languages\n\n- [English](${absolute("/")})\n- [Italiano](${absolute("/it/")})\n- [Deutsch](${absolute("/de/")})\n- [Français](${absolute("/fr/")})\n\n## Methodology\n\n- [Editorial methodology](${absolute(methodologyRoute("en"))})\n\n## Machine-readable catalog\n\n- [Case-study catalog](${absolute("/case-studies.json")})\n\n## Main studio\n\n- [Ejupi Labs](${site.portfolioUrl})\n`;
 }
 
 function openSearch(localeKey) {

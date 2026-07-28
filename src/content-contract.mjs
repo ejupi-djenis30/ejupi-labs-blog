@@ -74,6 +74,20 @@ export function assertCompleteCaseStudy(study, { kind, path }) {
   });
   assertNonEmptyString(study.architecture.caption, `${path}.architecture.caption`);
 
+  if (!isPlainObject(study.technology)) fail(`${path}.technology`, "expected an object.");
+  assertNonEmptyString(study.technology.title, `${path}.technology.title`);
+  assertNonEmptyString(study.technology.intro, `${path}.technology.intro`);
+  if (!Array.isArray(study.technology.items) || study.technology.items.length !== 4) {
+    fail(`${path}.technology.items`, "expected exactly four technology choices.");
+  }
+  study.technology.items.forEach((choice, index) => {
+    const choicePath = `${path}.technology.items[${index}]`;
+    if (!isPlainObject(choice)) fail(choicePath, "expected an object.");
+    for (const key of ["choice", "why", "alternative", "cost"]) {
+      assertNonEmptyString(choice[key], `${choicePath}.${key}`);
+    }
+  });
+
   if (!isPlainObject(study.decisions)) fail(`${path}.decisions`, "expected an object.");
   assertNonEmptyString(study.decisions.title, `${path}.decisions.title`);
   assertNonEmptyString(study.decisions.intro, `${path}.decisions.intro`);

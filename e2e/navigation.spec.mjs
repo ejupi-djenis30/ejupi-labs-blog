@@ -297,7 +297,7 @@ test("full-text index stays lazy and finds copy that exists only inside an artic
   );
   expect(searchRequests).toEqual([]);
 
-  await page.locator("[data-case-search]").fill("manual gate is slower");
+  await page.locator("[data-case-search]").fill("artifact evidence traffic authority");
   await expect(page.locator("[data-case-card]:visible")).toHaveCount(1);
   await expect(
     page.locator(
@@ -313,6 +313,8 @@ test("localized Labs article exposes evidence and its working product page", asy
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/de/case-studies/eliza-lab/");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await expect(page.locator("#technology-rationale")).toBeVisible();
+  await expect(page.locator(".technology-choice")).toHaveCount(4);
   await expect(page.locator("#evidence")).toBeVisible();
   expect(await page.locator(".evidence-ledger > div").count()).toBeGreaterThanOrEqual(4);
   await expect(page.locator(".project-action")).toHaveAttribute(

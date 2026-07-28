@@ -50,6 +50,16 @@ function localizedDraft(locale, slug, kind) {
       ),
       caption: todo(locale, "architecture caption"),
     },
+    technology: {
+      title: todo(locale, "technology rationale title"),
+      intro: todo(locale, "technology rationale introduction"),
+      items: Array.from({ length: 4 }, (_item, index) => ({
+        choice: todo(locale, `technology choice ${index + 1}`),
+        why: todo(locale, `technology choice ${index + 1} contextual fit`),
+        alternative: todo(locale, `technology choice ${index + 1} rejected alternative`),
+        cost: todo(locale, `technology choice ${index + 1} accepted cost`),
+      })),
+    },
     decisions: {
       title: todo(locale, "decisions title"),
       intro: todo(locale, "decisions introduction"),

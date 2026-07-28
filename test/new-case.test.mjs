@@ -13,6 +13,7 @@ test("new-case scaffold stays unpublished and contains all four complete locale 
   assert.deepEqual(Object.keys(draft.locales), ["en", "it", "de", "fr"]);
   for (const locale of draft.definition.availableLocales) {
     assert.equal(draft.locales[locale].architecture.labels.length, 5);
+    assert.equal(draft.locales[locale].technology.items.length, 4);
     assert.equal(draft.locales[locale].decisions.items.length, 3);
     assert.equal(draft.locales[locale].evidence.items.length, 4);
   }

@@ -66,7 +66,7 @@ wrangler.jsonc      Assets-only Worker and custom-domain configuration
 
 ## Content rules
 
-The case studies describe engineering decisions supported by the source portfolio or checked repository evidence. They do not invent client names, team sizes or commercial outcomes. Approximate delivery windows and project measurements appear only where a source record supports them. Every Labs article includes an evidence ledger and an explicit limitation; every article states its evidence boundary.
+The case studies describe engineering decisions supported by the source portfolio or checked repository evidence. Each one separates the selected technical boundary, why it fit the actual constraints, the strongest credible alternative and the cost deliberately accepted. These comparisons are contextual rather than universal technology rankings. The articles do not invent client names, team sizes or commercial outcomes. Approximate delivery windows and project measurements appear only where a source record supports them. Every Labs article includes an evidence ledger and an explicit limitation; every article states its evidence boundary.
 
 `npm run new:case` writes only to `drafts/`. Production does not read that directory. Publishing remains an explicit review step: add the approved definition and all four complete locale copies to the source catalog, then run the full checks.
 

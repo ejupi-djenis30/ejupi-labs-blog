@@ -175,9 +175,19 @@ for (const localeKey of localeOrder) {
     if (/<img(?![^>]*\balt=)[^>]*>/i.test(html)) errors.push(`${label} contains an image without alt text.`);
 
     if (slug) {
-      const expectedSections = definition?.kind === "labs" ? 8 : 7;
+      const expectedSections = definition?.kind === "labs" ? 9 : 8;
       if (count(html, /data-story-section/g) !== expectedSections) errors.push(`${label} must contain ${expectedSections} complete story sections.`);
       if (!html.includes("architecture-frame")) errors.push(`${label} is missing its architecture figure.`);
+      if (count(html, /class="technology-choice"/g) !== 4) errors.push(`${label} must contain four explicit technology rationales.`);
+      for (const rationaleLabel of [
+        editorial.choiceLabel,
+        editorial.whyLabel,
+        editorial.alternativeLabel,
+        editorial.costLabel,
+        editorial.tradeoffLabel,
+      ]) {
+        if (!html.includes(rationaleLabel)) errors.push(`${label} is missing the localized rationale label ${rationaleLabel}.`);
+      }
       if (!html.includes('class="site-cta"')) errors.push(`${label} is missing its article CTA.`);
       if (!html.includes(locales[localeKey].ui.sourceNote)) errors.push(`${label} is missing its evidence boundary.`);
       if (definition?.kind === "labs" && !html.includes("evidence-ledger")) errors.push(`${label} is missing its evidence ledger.`);
@@ -203,7 +213,7 @@ for (const localeKey of localeOrder) {
       if (!html.includes('class="article-byline shell"')) errors.push(`${label} is missing its visible author byline.`);
       if (!html.includes(`rel="author" itemprop="url" href="${expectedAuthorRoute}"`)) errors.push(`${label} has the wrong byline author URL.`);
       if (!html.includes(editorial.authorRole)) errors.push(`${label} is missing its localized author role.`);
-      if (!html.includes(`${editorial.lastVerified} <time datetime="${definition?.updated}"`)) errors.push(`${label} is missing its localized verification date.`);
+      if (!html.includes(`${editorial.updated} <time datetime="${definition?.updated}"`)) errors.push(`${label} is missing its localized editorial update date.`);
       if (!html.includes(uppercase(editorial.systemViewLabel))) errors.push(`${label} has an untranslated system-view label.`);
       if (definition?.diagram === "workflow" && !html.includes(uppercase(editorial.processStateReturnLabel))) {
         errors.push(`${label} has an untranslated workflow-return label.`);
