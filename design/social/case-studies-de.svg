@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Ejupi Labs — ENGINEERING-FALLSTUDIEN</title>
-  <desc id="desc">Ejupi Labs wordmark, editorial headline and a four-stage system diagram.</desc>
+  <desc id="desc">Ejupi Labs wordmark, editorial headline and a four-stage decision diagram.</desc>
   <defs>
     <style>
       @font-face {
@@ -30,11 +30,11 @@
   <path d="M54 199H714" stroke="#0E1111" stroke-opacity=".24"/>
   <rect x="54" y="217" width="12" height="12" fill="#B74D2C"/>
   <text x="82" y="229" fill="#626966" font-family="Instrument Sans" font-size="17" letter-spacing="1.6">ENGINEERING-FALLSTUDIEN / 01—10</text>
-  <text x="52" y="337" fill="#0E1111" font-family="Instrument Sans" font-size="61" font-weight="600" letter-spacing="-2.2">Engineering-Arbeit,</text>
-  <text x="52" y="419" fill="#B74D2C" font-family="Instrument Sans" font-size="61" font-weight="600" letter-spacing="-2.2">erklärt.</text>
+  <text x="52" y="337" fill="#0E1111" font-family="Instrument Sans" font-size="48" font-weight="600" letter-spacing="-2.2">Technische Entscheidungen,</text>
+  <text x="52" y="419" fill="#B74D2C" font-family="Instrument Sans" font-size="48" font-weight="600" letter-spacing="-2.2">erklärt.</text>
   <text x="54" y="568" fill="#626966" font-family="Instrument Sans" font-size="16" letter-spacing="1.8">BLOG.EJUPILABS.COM</text>
   <rect x="770" width="430" height="630" fill="#0E1111"/>
-  <text x="816" y="54" fill="#AEB4B0" font-family="Instrument Sans" font-size="16" letter-spacing="1.6">SYSTEMANSICHT / ARCHIV</text>
+  <text x="816" y="54" fill="#AEB4B0" font-family="Instrument Sans" font-size="16" letter-spacing="1.6">ENTSCHEIDUNGSANSICHT / ARCHIV</text>
   <path d="M816 74H1148" stroke="#F4F1EA" stroke-opacity=".24"/>
   <g>
     <rect x="816" y="112" width="300" height="66" fill="none" stroke="#F4F1EA"/>
@@ -43,17 +43,17 @@
   </g>
   <g>
     <rect x="816" y="220" width="300" height="66" fill="none" stroke="#F4F1EA"/>
-    <text x="840" y="260" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">ENTSCHEIDUNG</text>
+    <text x="840" y="260" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">WAHL</text>
     <rect x="1082" y="244" width="12" height="12" fill="#E97A4A"/>
   </g>
   <g>
     <rect x="816" y="328" width="300" height="66" fill="#B74D2C" stroke="#E97A4A"/>
-    <text x="840" y="368" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">SYSTEM</text>
+    <text x="840" y="368" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">ALTERNATIVE</text>
     <rect x="1082" y="352" width="12" height="12" fill="#0E1111"/>
   </g>
   <g>
     <rect x="816" y="436" width="300" height="66" fill="none" stroke="#F4F1EA"/>
-    <text x="840" y="476" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">NACHWEIS</text>
+    <text x="840" y="476" fill="#F4F1EA" font-family="Instrument Sans" font-size="17" letter-spacing="1.4">PREIS</text>
     <rect x="1082" y="460" width="12" height="12" fill="#E97A4A"/>
   </g>
   <path d="M966 178V216M966 286V324M966 394V432" stroke="#E97A4A" stroke-width="2" marker-end="url(#arrow)"/>

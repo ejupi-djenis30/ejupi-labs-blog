@@ -14,6 +14,7 @@ export const labsLocales = {
       title: "Costruire uno spazio di lavoro privato per la carriera basato sui fatti, non su affermazioni generate",
       summary:
         "CareerOS Local combina un’app desktop Tauri, un sidecar FastAPI, un archivio SQLite versionato e un runtime LLM locale obbligatorio. Il risultato è uno strumento per la carriera che conserva sul dispositivo dell’utente fonti, documenti e analisi.",
+      readMinutes: "13",
       facts: [
         ["Prodotto", "Utility desktop open source"],
         ["Ruolo", "Prodotto, architettura e implementazione"],
@@ -62,6 +63,16 @@ export const labsLocales = {
         labels: ["TAURI + REACT", "FASTAPI", "ARCHIVIO SQLITE", "LLM LOCALE", "DOCUMENTI + OFFERTE"],
         caption: "Evidenze e stato dei flussi restano persistenti; l’inferenza locale riceve un contesto esplicito per ogni attività.",
       },
+      technology: {
+        title: "Perché queste tecnologie",
+        intro: "Ogni componente mantiene il prodotto locale, verificabile e abbastanza semplice da distribuire.",
+        items: [
+          { choice: "Tauri per la shell desktop.", why: "È adatto a un’app locale che deve integrare finestre native, file e supervisione dei servizi senza incorporare un intero browser.", alternative: "Electron avrebbe ampliato peso e superficie del runtime; una soluzione solo browser non potrebbe governare con la stessa affidabilità sidecar e artefatti locali.", cost: "Accettiamo un confine Rust aggiuntivo e packaging specifico per piattaforma." },
+          { choice: "Un sidecar FastAPI per i servizi applicativi.", why: "Mantiene in Python i flussi di documenti e analisi, ma li espone alla shell tramite una API loopback stretta e verificabile.", alternative: "Riscrivere tutto in Rust avrebbe duplicato l’ecosistema Python; spostare la logica nel browser avrebbe indebolito il controllo sul dato locale.", cost: "Accettiamo di avviare, monitorare e versionare un secondo processo." },
+          { choice: "SQLite come archivio versionato.", why: "Transazioni, migrazioni e un singolo file si adattano a uno spazio di lavoro personale posseduto localmente, non a un servizio condiviso ospitato.", alternative: "Un database server locale aggiungerebbe processo e credenziali da amministrare; un archivio cloud introdurrebbe rete e confine del fornitore. Nessuno dei due risponde a un requisito di servizio condiviso previsto dal progetto.", cost: "Accettiamo limiti di concorrenza e la responsabilità di progettare migrazioni e backup locali." },
+          { choice: "Un runtime locale compatibile con llama.cpp.", why: "L’analisi resta entro il confine dichiarato del dispositivo e può essere vincolata a modelli e attività approvati.", alternative: "Una API LLM cloud trasferirebbe dati professionali fuori dal dispositivo e renderebbe privacy e comportamento dipendenti da un servizio remoto.", cost: "Accettiamo installazione iniziale, requisiti hardware, latenza locale e compatibilità non universale dei modelli." },
+        ],
+      },
       decisions: {
         title: "Le scelte che lo rendono uno strumento vero",
         intro: "Il prodotto utile è l’intero flusso costruito attorno al modello.",
@@ -72,9 +83,9 @@ export const labsLocales = {
             tradeoff: "Richiede più struttura di un profilo libero, ma rende possibili correzioni e verifiche.",
           },
           {
-            title: "Richiedere l’analisi locale",
-            body: "Il matching delle opportunità e il coaching restano bloccati finché il runtime locale approvato non è pronto. L’applicazione non invia mai l’attività a un modello remoto come fallback di comodo.",
-            tradeoff: "La prima configurazione è più impegnativa e l’hardware conta, ma il confine di privacy resta reale.",
+            title: "Tenere il modello a valle delle evidenze",
+            body: "Matching e coaching interpretano soltanto il registro verificabile e producono suggerimenti separati. L’output del modello non diventa mai, da solo, fonte ufficiale né sovrascrive i fatti di partenza.",
+            tradeoff: "Ogni proposta utile richiede conferma o una modifica esplicita del dato sorgente; la velocità dell’automazione resta subordinata alla tracciabilità.",
           },
           {
             title: "Trattare le candidature come evidenze",
@@ -105,6 +116,7 @@ export const labsLocales = {
       title: "Trasformare un prototipo di chatbot rischioso in un esperimento ML open-set verificabile",
       summary:
         "ELIZA Lab è una pipeline di machine learning in Rust per addestrare, calibrare e analizzare localmente un classificatore di intenti. Sostituisce l’equivoco presupposto di un bot terapeutico con un esperimento riproducibile, non clinico e capace di astenersi.",
+      readMinutes: "14",
       facts: [
         ["Prodotto", "Pipeline ML didattica e laboratorio nel browser"],
         ["Ruolo", "Protocollo ML, implementazione Rust e riprogettazione della sicurezza"],
@@ -153,19 +165,29 @@ export const labsLocales = {
         labels: ["DATI SINTETICI", "DIVISIONE PER GRUPPI", "TF-IDF + LOGREG", "CALIBRAZIONE", "ASTENSIONE + TRACCIA"],
         caption: "Training, calibrazione, selezione della policy e valutazione finale restano distinti.",
       },
+      technology: {
+        title: "Perché queste tecnologie",
+        intro: "Lo stack privilegia un esperimento riproducibile e ispezionabile rispetto alla massima capacità apparente.",
+        items: [
+          { choice: "Rust per pipeline e CLI.", why: "Tipi, build bloccate e un binario portabile rendono espliciti i ruoli dei dati e riproducibili i percorsi di verifica.", alternative: "Un notebook o una pipeline solo Python favorirebbero l’esplorazione, ma lascerebbero più stato implicito e maggiore deriva dell’ambiente.", cost: "Accettiamo più lavoro di implementazione e un ecosistema ML meno ampio." },
+          { choice: "TF-IDF con regressione logistica multinomiale.", why: "È proporzionata a un corpus sintetico piccolo e permette di ispezionare pesi, margini e calibrazione.", alternative: "Un transformer sarebbe più opaco, costoso e sovradimensionato rispetto alle evidenze disponibili.", cost: "Accettiamo una comprensione semantica e una copertura linguistica limitate." },
+          { choice: "Un protocollo annidato consapevole dei gruppi.", why: "Tiene unite le famiglie di prompt e separa scelta del modello, calibrazione e test finale.", alternative: "Una divisione casuale lascerebbe filtrare parafrasi correlate e produrrebbe metriche ingannevolmente ottimistiche.", cost: "Accettiamo 506 addestramenti, più contabilità sperimentale e intervalli di incertezza visibili." },
+          { choice: "Astensione calibrata.", why: "Un sistema open-set deve poter rifiutare evidenze deboli o fuori distribuzione invece di simulare certezza.", alternative: "Forzare sempre una classe produrrebbe una risposta anche quando nessuna etichetta è sostenuta dai dati.", cost: "Accettiamo copertura inferiore, selezione delle soglie più complessa e nessuna pretesa che l’astensione elimini il rischio." },
+        ],
+      },
       decisions: {
         title: "Le scelte che mantengono onesto il risultato",
         intro: "Il progetto considera il protocollo di valutazione parte integrante del software.",
         items: [
           {
-            title: "Congelare le famiglie semantiche",
-            body: "La fixture supervisionata contiene 525 righe in 105 famiglie di prompt della stessa dimensione. ID di gruppo espliciti mantengono unite le formulazioni correlate durante la partizione.",
-            tradeoff: "La fixture è volutamente sintetica e limitata; garantisce riproducibilità, non validità sul linguaggio clinico reale.",
+            title: "Limitare le conclusioni ai dati sintetici",
+            body: "Risultati, intervalli ed errori descrivono esclusivamente le fixture sintetiche versionate dell’esperimento. Non vengono estesi a conversazioni reali, contesti clinici o copertura linguistica generale.",
+            tradeoff: "La conclusione è più stretta e meno spettacolare, ma resta proporzionata alle evidenze effettivamente osservate.",
           },
           {
-            title: "Separare gli esempi ignoti dai test finali",
-            body: "Popolazioni distinte per sviluppo OOD e test OOD permettono di scegliere la policy di astensione prima della valutazione finale.",
-            tradeoff: "Il protocollo richiede più fixture e tracciamento, ma la misurazione finale non fa più parte della taratura.",
+            title: "Pubblicare l’intero percorso di selezione",
+            body: "Bundle, piano delle partizioni, probabilità out-of-fold, assegnazioni dei fold e graduatoria dei candidati vengono congelati e collegati tramite SHA-256, così il risultato scelto può essere ricostruito.",
+            tradeoff: "L’artefatto è più impegnativo da produrre e revisionare, ma impedisce che una sola metrica finale nasconda il percorso di selezione.",
           },
           {
             title: "Spiegare il margine reale",
@@ -196,6 +218,7 @@ export const labsLocales = {
       title: "Costruire un’automazione del computer che espone i propri permessi prima di agire",
       summary:
         "DjenisAiAgent osserva un’interfaccia Windows o browser, richiede una singola azione Gemini strutturata, la verifica rispetto ai permessi del runtime e inserisce il risultato verificato nel turno successivo.",
+      readMinutes: "12",
       facts: [
         ["Prodotto", "Agente sperimentale per l’uso del computer"],
         ["Ruolo", "Architettura, livello di policy e implementazione"],
@@ -243,6 +266,16 @@ export const labsLocales = {
         labels: ["PERCEZIONE", "TOOL CALL GEMINI", "CONTROLLO POLICY", "AZIONE", "OSSERVAZIONE VERIFICATA"],
         caption: "Il modello propone; il runtime decide quale autorità esiste davvero.",
       },
+      technology: {
+        title: "Perché queste tecnologie",
+        intro: "Le tecnologie separano il ragionamento del modello dall’autorità effettiva del computer.",
+        items: [
+          { choice: "Python per l’orchestrazione.", why: "È adatto a integrare rapidamente Gemini, automazione Windows e browser attorno a schemi degli strumenti dichiarati, non rigidamente tipizzati, e a un registro di capacità governato da policy.", alternative: "Un’implementazione interamente nativa o compilata ridurrebbe parte del packaging, ma frammenterebbe le integrazioni e rallenterebbe l’esperimento.", cost: "Accettiamo un runtime e dipendenze Python da bloccare, distribuire e verificare." },
+          { choice: "UI Automation e Selenium come canali principali.", why: "Elementi accessibili, ruoli e DOM offrono bersagli semantici più stabili di una posizione sullo schermo.", alternative: "Pixel e coordinate sarebbero fragili rispetto a DPI, focus, layout e ridimensionamenti.", cost: "Accettiamo differenze tra piattaforme e fallback limitati per Canvas o controlli non accessibili." },
+          { choice: "Una singola azione Gemini strutturata.", why: "Ogni turno propone un’azione dichiarata che attraversa livelli di permesso e allowlist prima dell’esecuzione; timeout e successiva osservazione limitano e verificano il risultato.", alternative: "Un comando libero richiederebbe parsing ambiguo e aumenterebbe il rischio di concatenazioni o istruzioni non previste.", cost: "Accettiamo dipendenza cloud, latenza e un vocabolario di azioni intenzionalmente ristretto." },
+          { choice: "Una console FastAPI locale.", why: "L’operatore può ispezionare permessi e attività sulla stessa macchina entro un confine loopback autenticato.", alternative: "Un control plane hosted trasferirebbe schermate, log e autorità operativa verso un servizio remoto e richiederebbe isolamento multi-tenant.", cost: "Accettiamo gestione locale di processo, token e sessioni, senza orchestrazione remota incorporata." },
+        ],
+      },
       decisions: {
         title: "Le scelte che riducono la superficie di attacco",
         intro: "Le capacità sono configurazione e codice, non buone maniere suggerite nel prompt.",
@@ -286,6 +319,7 @@ export const labsLocales = {
       title: "Trasformare Gopher in uno strumento locale controllato e ispezionabile",
       summary:
         "DIG 3.0.0 è un vero client Gopher con tre superfici separate: una CLI su TCP, un explorer live nel browser dietro un gateway locale same-origin e un sito GitHub Pages basato solo su fixture. Il core condiviso interpreta risposte RFC 1436 e indirizzi RFC 4266 senza fingere che un browser statico possa aprire socket grezzi.",
+      readMinutes: "13",
       facts: [
         ["Prodotto", "CLI Gopher, gateway locale ed explorer nel browser"],
         ["Protocollo", "Richieste, menu e testo RFC 1436; URL e ricerca RFC 4266"],
@@ -334,6 +368,16 @@ export const labsLocales = {
         labels: ["URL + QUERY", "POLICY DESTINAZIONE", "TCP VINCOLATO", "PARSER RFC", "CLI + EXPLORER"],
         caption: "CLI ed explorer locale condividono il percorso reale del protocollo; Pages si ferma al confine delle fixture.",
       },
+      technology: {
+        title: "Perché queste tecnologie",
+        intro: "Lo stack rende possibile Gopher nel browser senza trasformare il progetto in un proxy pubblico.",
+        items: [
+          { choice: "Un gateway TCP locale in Node.js.", why: "Il browser non può aprire socket Gopher grezzi; il gateway applica risoluzione, policy di destinazione, timeout e limiti di dimensione prima della connessione.", alternative: "Un proxy generico o remoto offrirebbe una superficie SSRF e di relay molto più ampia del protocollo necessario.", cost: "Accettiamo un processo Node locale e nessuna pretesa di supportare protocolli arbitrari." },
+          { choice: "Endpoint live same-origin e limitati.", why: "L’explorer può usare il gateway sotto la stessa origine mantenendo richieste e risposte entro contratti stretti.", alternative: "Un proxy pubblico cross-origin potrebbe essere abusato per scansioni, accesso a reti private o traffico non previsto.", cost: "Accettiamo che il sito pubblico mostri solo fixture e che l’accesso live richieda l’installazione locale." },
+          { choice: "Preservare i byte fino al confine di presentazione.", why: "Gopher trasporta testo, menu e dati binari; conservare i byte evita di alterare download o terminatori del protocollo.", alternative: "Decodificare tutto in anticipo imporrebbe un charset, potrebbe corrompere payload binari e confondere contenuto con trasporto.", cost: "Accettiamo buffer, metadati di tipo e limiti espliciti più laboriosi da gestire." },
+          { choice: "Fixture di contratto e Playwright.", why: "URI, menu, byte, policy di rete e superfici browser diventano riproducibili senza dipendere da server Gopher esterni.", alternative: "Il test manuale non coprirebbe in modo affidabile edge case, regressioni del browser e blocchi SSRF.", cost: "Accettiamo manutenzione di fixture e browser CI, sapendo che non provano l’affidabilità di ogni server Internet." },
+        ],
+      },
       decisions: {
         title: "Scelte che rendono visibile il confine",
         intro: "Ogni superficie dichiara con chiarezza cosa può raggiungere e cosa conserva.",
@@ -344,14 +388,14 @@ export const labsLocales = {
             tradeoff: "Il rifiuto delle risposte miste può bloccare configurazioni DNS insolite ma legittime; è più sicuro che indovinare quale risposta intendesse usare un attaccante.",
           },
           {
-            title: "Mantenere le richieste live same-origin",
-            body: "Il gateway serve interfaccia e API JSON, verificando origine, formato del body, frequenza e dimensioni prima di ogni richiesta Gopher. Pages offre lo stesso explorer su fixture, senza accesso live o cross-origin.",
-            tradeoff: "Una risorsa live richiede il gateway locale o ospitato consapevolmente; il sito pubblico resta statico invece di diventare un’API proxy riutilizzabile.",
+            title: "Dichiarare quando l’explorer è una dimostrazione",
+            body: "La modalità pubblica segnala che naviga soltanto fixture incluse. L’accesso Gopher live appare come modalità distinta e richiede il gateway locale o un gateway hosted attivato esplicitamente.",
+            tradeoff: "Pages non offre la comodità di aprire risorse reali, ma l’utente non confonde una demo statica con un client connesso.",
           },
           {
-            title: "Conservare i byte della risposta",
-            body: "L’ispezione raw è facoltativa per testo e menu. Le risorse binarie conservano byte esatti, dimensione e digest SHA-256; il browser le scarica e la CLI le salva atomicamente.",
-            tradeoff: "L’esattezza richiede percorsi separati per testo e binario, ma evita corruzione UTF-8 silenziosa e file finali incompleti.",
+            title: "Rendere atomico il completamento dei download",
+            body: "La CLI scrive nella cartella di destinazione su un file temporaneo, quindi espone il percorso finale soltanto dopo il completamento riuscito; errori o interruzioni non lasciano un download apparentemente valido.",
+            tradeoff: "Servono spazio temporaneo e un passaggio finale di commit, ma gli strumenti a valle non osservano file parziali come risultati completi.",
           },
         ],
       },
@@ -377,6 +421,7 @@ export const labsLocales = {
       title: "Mantenere coerenti due strumenti di integrazione numerica con un unico corpus condiviso",
       summary:
         "IntegraDraw è un ambiente Java desktop e TypeScript Canvas per confrontare somme dei punti medi e trapezoidali con un riferimento Simpson. Entrambi i runtime condividono casi numerici versionati e tolleranze esplicite.",
+      readMinutes: "11",
       facts: [
         ["Prodotto", "Ambiente visuale per il calcolo infinitesimale"],
         ["Ruolo", "Ricostruzione cross-runtime e release engineering"],
@@ -424,14 +469,24 @@ export const labsLocales = {
         labels: ["FUNZIONE UTENTE", "PARSER SICURO", "CORE NUMERICO", "CORPUS GOLDEN", "UI JAVA + CANVAS"],
         caption: "Le implementazioni restano separate; il contratto numerico osservabile è condiviso.",
       },
+      technology: {
+        title: "Perché queste tecnologie",
+        intro: "Le scelte mantengono autonome le due applicazioni e condividono soltanto ciò che deve davvero coincidere.",
+        items: [
+          { choice: "Implementazioni Java e TypeScript separate.", why: "Ogni interfaccia usa il proprio runtime naturale mentre un contratto esterno confronta lo stesso comportamento numerico.", alternative: "Un bridge tra linguaggi o la condivisione artificiale del sorgente aggiungerebbero accoppiamento senza dimostrare la parità osservabile.", cost: "Accettiamo di mantenere due implementazioni degli algoritmi." },
+          { choice: "Un parser matematico limitato.", why: "Offre le espressioni necessarie all’ambiente mantenendo grammatica, funzioni e fallimenti controllabili.", alternative: "eval o Function eseguirebbero JavaScript arbitrario e renderebbero il confine di sicurezza non verificabile.", cost: "Accettiamo una lingua più piccola, funzioni enumerate ed errori espliciti per input non supportati." },
+          { choice: "Canvas per il grafico web.", why: "Permette un tracciato responsive, leggero e senza dipendenze con controllo diretto di scala e pixel.", alternative: "Una libreria di grafici o un grande albero SVG introdurrebbero dipendenze e complessità DOM non necessarie per una sola curva.", cost: "Accettiamo di implementare assi, scaling, ridisegno e supporti di accessibilità attorno al Canvas." },
+          { choice: "Un corpus golden condiviso.", why: "Casi e tolleranze versionati confrontano l’output reale dei due runtime indipendenti.", alternative: "Condividere codice non sarebbe naturale tra Java e TypeScript e potrebbe propagare lo stesso errore in entrambe le interfacce.", cost: "Accettiamo di curare casi, tolleranze e versioni; il corpus resta un test, non una prova formale." },
+        ],
+      },
       decisions: {
         title: "Le scelte che migliorano la chiarezza matematica",
         intro: "L’ambiente chiama l’approssimazione con il suo nome.",
         items: [
           {
-            title: "Usare un linguaggio di espressioni limitato",
-            body: "Il browser accetta x, costanti, operazioni aritmetiche, parentesi e un insieme documentato di funzioni tramite un parser proprio.",
-            tradeoff: "È più sicuro e comprensibile di JavaScript arbitrario, ma volutamente meno espressivo.",
+            title: "Conservare il segno dell’integrale",
+            body: "I metodi del punto medio e dei trapezi restituiscono area orientata: invertire i limiti o integrare una funzione negativa mantiene un risultato negativo invece di convertirlo in area geometrica.",
+            tradeoff: "Il valore può sorprendere chi si aspetta sempre un’area positiva, ma rispetta il significato matematico dell’integrale definito.",
           },
           {
             title: "Dare al riferimento il nome corretto",
@@ -439,9 +494,9 @@ export const labsLocales = {
             tradeoff: "Alcune funzioni discontinue o non finite vengono rifiutate; il progetto non è un sistema di dimostrazione simbolica.",
           },
           {
-            title: "Confrontare il comportamento osservabile",
-            body: "I test Java e TypeScript usano gli stessi casi versionati mantenendo visibili le rispettive tolleranze numeriche.",
-            tradeoff: "Il corpus deve evolvere in modo deliberato ogni volta che cambia il contratto matematico supportato.",
+            title: "Rispettare esattamente la partizione richiesta",
+            body: "Valore numerico e grafico usano il numero di segmenti inserito dall’utente. Nessun runtime aumenta, riduce o adatta silenziosamente la discretizzazione.",
+            tradeoff: "Scelte molto grossolane producono approssimazioni visibilmente grossolane; il prodotto le mostra invece di correggerle di nascosto.",
           },
         ],
       },
@@ -467,6 +522,7 @@ export const labsLocales = {
       title: "Progettare un sistema per i tirocini che la scuola possa gestire in autonomia",
       summary:
         "VECTOR 3.0.0 è un sistema white-label per la gestione dei tirocini che ogni scuola può eseguire sulla propria infrastruttura. Riunisce coorti, studenti, aziende ospitanti, assegnazioni, ore, verifiche ed evidenze in un flusso con regole di accesso applicate dalle API.",
+      readMinutes: "14",
       facts: [
         ["Prodotto", "Gestione white-label dei tirocini in self-hosting"],
         ["Ruolo", "Prodotto, architettura e implementazione clean-room"],
@@ -515,6 +571,16 @@ export const labsLocales = {
         labels: ["AMBIENTE WEB", "POLICY LAYER EXPRESS", "SQLITE WAL", "AUDIT + RETENTION", "BACKUP + RELEASE"],
         caption: "Il server decide cosa un operatore può vedere e modificare; il browser presenta quella decisione.",
       },
+      technology: {
+        title: "Perché queste tecnologie",
+        intro: "Lo stack è dimensionato per una scuola che possiede e gestisce la propria installazione.",
+        items: [
+          { choice: "Una sola scuola per installazione.", why: "Proprietà dei dati, ruoli, white label, backup e ripristino restano entro un confine istituzionale chiaro.", alternative: "Un SaaS multi-tenant richiederebbe isolamento tra clienti, billing, operazioni centrali e garanzie di conformità che non appartengono al prodotto.", cost: "Accettiamo che ogni scuola gestisca aggiornamenti, capacità e backup della propria istanza." },
+          { choice: "Express come livello server.", why: "Autenticazione, ruoli, perimetro e transizioni vengono applicati prima che i dati raggiungano il browser.", alternative: "Un’app solo browser lascerebbe regole e dati sul client, che non può imporre autorizzazioni affidabili.", cost: "Accettiamo di distribuire e mantenere un servizio server esposto alla rete dell’istituto." },
+          { choice: "SQLite in modalità WAL.", why: "Transazioni, portabilità e snapshot a file singolo sono proporzionati al carico di una singola scuola.", alternative: "PostgreSQL o un database cloud aggiungerebbero servizio, credenziali e amministrazione senza una scala multi-tenant dimostrata.", cost: "Accettiamo limiti di scrittura concorrente e nessuna alta disponibilità automatica." },
+          { choice: "Docker con strumenti espliciti di backup e ripristino.", why: "L’istituto ottiene un’installazione riproducibile e un percorso di recupero verificabile sulla propria infrastruttura.", alternative: "Una piattaforma gestita semplificherebbe le operazioni, ma sposterebbe controllo e dipendenza verso un fornitore.", cost: "Accettiamo che l’operatore monitori storage, provi i ripristini e pianifichi gli aggiornamenti." },
+        ],
+      },
       decisions: {
         title: "Le scelte che rendono più sicuro il lavoro quotidiano",
         intro: "Il prodotto preferisce regole visibili a uno stato nascosto ma comodo.",
@@ -558,6 +624,7 @@ export const labsLocales = {
       title: "Trasformare un prototipo scolastico di controllo remoto in assistenza basata sul consenso",
       summary:
         "JDoor nasce nel 2022 come progetto scolastico di networking co-creato da Djenis Ejupi e NobodyToListen. In seguito Djenis ne ha ricostruito il modello di sicurezza, il ciclo di sessione, la UX, i test e il percorso di rilascio come JDoor Assist: uno strumento desktop visibile e view-only per impostazione predefinita, destinato al supporto autorizzato su reti locali fidate.",
+      readMinutes: "12",
       facts: [
         ["Prodotto", "Assistenza remota LAN basata sul consenso"],
         ["Origine", "Progetto scolastico del 2022 co-creato da Djenis Ejupi e NobodyToListen"],
@@ -617,24 +684,34 @@ export const labsLocales = {
         labels: ["UI HOST", "SESSIONE + CONSENSO", "TLS CON PIN", "PROTOCOLLO LIMITATO", "UI VIEWER"],
         caption: "I frame raggiungono un solo viewer approvato; l’input torna indietro soltanto durante il permesso visibile dell’host.",
       },
+      technology: {
+        title: "Perché queste tecnologie",
+        intro: "Ogni scelta restringe JDoor all’assistenza temporanea e visibile prevista dal suo modello di fiducia.",
+        items: [
+          { choice: "Java e Swing per l’app desktop.", why: "Conservano il codebase e usano direttamente AWT per cattura, input e interfacce native su Java 21.", alternative: "Una riscrittura web o Electron non eliminerebbe il bisogno di privilegi desktop e allargherebbe la superficie del runtime.", cost: "Accettiamo distribuzione Java, permessi specifici del sistema operativo e un’interfaccia meno vicina alle convenzioni web." },
+          { choice: "Connessione diretta su LAN fidata.", why: "È proporzionata a una sessione tra un host presente e un solo helper senza infrastruttura centrale.", alternative: "Relay e account abiliterebbero Internet e NAT traversal, ma introdurrebbero segreti centrali, abuso, identità e operazioni di servizio.", cost: "Accettiamo che i dispositivi debbano condividere una rete fidata o un percorso privato predisposto." },
+          { choice: "TLS effimero con pin e token monouso.", why: "L’invito autentica l’endpoint esatto per quella sessione senza creare un’identità persistente o un database di account.", alternative: "Password e identità durature richiederebbero storage, recupero, rotazione e revoca oltre il perimetro del progetto.", cost: "Accettiamo lo scambio out-of-band del link, il confronto del codice e una nuova identità TLS a ogni avvio host." },
+          { choice: "Un protocollo binario stretto e limitato.", why: "Trasporta soltanto frame, heartbeat, stato dei permessi e input autorizzato con tipi e dimensioni verificabili.", alternative: "Uno stack general-purpose come RDP o VNC offrirebbe interoperabilità, ma richiederebbe di vincolare o disabilitare capacità più ampie — clipboard, trasferimento file e accesso non presidiato — per rispettare questo modello di fiducia.", cost: "Accettiamo meno funzioni, nessuna compatibilità universale e la manutenzione diretta di codec e test." },
+        ],
+      },
       decisions: {
         title: "Le decisioni che hanno cambiato il prodotto",
         intro: "Ogni scelta rimuove un privilegio implicito del prototipo originale.",
         items: [
           {
-            title: "Autenticare la sessione esatta",
-            body: "Ogni avvio host crea in memoria certificato e token. Il link trasporta l’impronta del certificato, mentre il dialogo di approvazione mostra nome del viewer, indirizzo e codice di verifica.",
-            tradeoff: "Il link completo richiede un canale fuori banda fidato e la connettività LAN resta responsabilità dell’utente, perché non esistono account o relay.",
+            title: "Approvare una persona visibile",
+            body: "Prima di entrare, il viewer resta in attesa mentre l’host vede nome dichiarato, indirizzo e codice di verifica e decide localmente se accettare quella persona.",
+            tradeoff: "L’host deve essere presente e riconoscere il richiedente; l’ingresso non può diventare automatico o invisibile.",
           },
           {
             title: "Separare visione e controllo",
-            body: "L’approvazione avvia uno stream view-only. Un toggle dell’host assegna il controllo alla sessione corrente; revoca, perdita del focus, disconnessione e arresto rilasciano lo stato dell’input remoto.",
-            tradeoff: "L’host deve restare presente e decidere il permesso; la comodità dell’accesso non presidiato è esclusa intenzionalmente.",
+            body: "L’approvazione apre soltanto una sessione view-only. Il controllo di mouse e tastiera richiede un’autorizzazione successiva, esplicita e revocabile assegnata dall’host alla sessione corrente.",
+            tradeoff: "L’helper non ottiene subito il controllo e l’host deve concederlo deliberatamente; è il costo di mantenere visibile il minimo privilegio.",
           },
           {
-            title: "Mantenere stretti protocollo e rilascio",
-            body: "Il formato wire supporta pairing, frame, input limitato, stato dei permessi, heartbeat e disconnessione. L’automazione verifica test, copertura, formattazione, pacchetti, SBOM e provenienza del rilascio.",
-            tradeoff: "Clipboard, file, audio, relay pubblico e identità enterprise restano fuori scope; i pacchetti community non firmati richiedono ancora verifica di checksum e provenienza.",
+            title: "Azzerare deterministicamente lo stato dell’input",
+            body: "Revoca, perdita del focus, disconnessione e arresto rilasciano i tasti e i pulsanti remoti tracciati, così uno stato incompleto non sopravvive alla sessione.",
+            tradeoff: "Il ciclo di vita deve gestire più percorsi di cleanup e testare ogni uscita, ma evita input bloccati o ancora attivi dopo la perdita del permesso.",
           },
         ],
       },
@@ -661,6 +738,7 @@ export const labsLocales = {
       category: "Local-first-Produkt",
       title: "Ein privater Karriere-Arbeitsbereich, der auf Belegen statt auf generierten Behauptungen beruht",
       summary: "CareerOS Local verbindet eine Tauri-Desktop-Anwendung, einen FastAPI-Sidecar, einen versionierten SQLite-Tresor und eine verpflichtende lokale LLM-Laufzeit. So bleiben Quelldaten, Dokumente und Analysen auf dem Gerät des Benutzers.",
+      readMinutes: "13",
       facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "Signiertes v1.6.0-Release mit geprüfter Release-Pipeline"]],
       evidence: { title: "Evidenzprotokoll", intro: "Das aktuelle Repository dokumentiert diese reproduzierbaren Prüfungen und Grenzen:", items: [
         ["Backend", "1.369 Tests bestehen für v1.6.0; eine unabhängige Prüfung wiederholte 42 Portabilitäts- und Speichertests."],
@@ -684,9 +762,19 @@ export const labsLocales = {
         "Ich habe sie in einen Karriere-Tresor, reproduzierbare Bereitschafts- und Bewerbungsdatensätze sowie schemageprüfte lokale Analyse-Pipelines getrennt. Die Oberfläche kann dadurch zeigen, woher eine Schlussfolgerung stammt und welche Korrektur in den Quelldatensatz gehört.",
       ]},
       architecture: { title: "Eine überwachte lokale Laufzeit", intro: "Tauri betreibt die Desktop-Shell und überwacht einen FastAPI-Sidecar auf der Loopback-Schnittstelle. React stellt den Arbeitsbereich bereit, SQLite und lokale Artefakte speichern den dauerhaften Datensatz, und eine verwaltete llama.cpp-kompatible Laufzeit führt die verpflichtende LLM-Analyse aus, ohne selbst zur Speicherschicht zu werden.", labels: ["TAURI + REACT", "FASTAPI", "SQLITE-TRESOR", "LOKALES LLM", "DOKUMENTE + STELLEN"], caption: "Belege und Workflow-Zustand bleiben dauerhaft gespeichert; die lokale Inferenz erhält einen ausdrücklich begrenzten Aufgabenkontext." },
+      technology: {
+        title: "Warum diese Technologien",
+        intro: "Jede Komponente hält das Produkt lokal, prüfbar und mit vertretbarem Aufwand auslieferbar.",
+        items: [
+          { choice: "Tauri als Desktop-Shell.", why: "Es passt zu einer lokalen Anwendung, die native Fenster, Dateien und die Überwachung von Diensten integrieren muss, ohne einen vollständigen Browser mitzuliefern.", alternative: "Electron würde Gewicht und Laufzeitoberfläche vergrößern; eine reine Browser-Lösung könnte Sidecar und lokale Artefakte nicht ebenso zuverlässig steuern.", cost: "Wir nehmen eine zusätzliche Rust-Grenze und plattformspezifische Paketierung in Kauf." },
+          { choice: "Ein FastAPI-Sidecar für die Anwendungsdienste.", why: "Dokument- und Analyseabläufe bleiben in Python, werden der Shell aber über eine enge, prüfbare Loopback-API bereitgestellt.", alternative: "Alles in Rust neu zu schreiben würde das Python-Ökosystem nachbauen; Logik im Browser würde die Kontrolle über lokale Daten schwächen.", cost: "Wir nehmen Start, Überwachung und Versionierung eines zweiten Prozesses in Kauf." },
+          { choice: "SQLite als versionierter Datenspeicher.", why: "Transaktionen, Migrationen und eine einzelne Datei passen zu einem lokal verwalteten persönlichen Arbeitsbereich statt zu einem gemeinsam gehosteten Dienst.", alternative: "Ein lokaler Datenbankserver brächte einen zusätzlichen Administrationsprozess und Zugangsdaten mit sich; ein Cloud-Speicher eine Netzwerk- und Anbietergrenze. Für einen gemeinsam genutzten Dienst besteht im Projektumfang jedoch keine Anforderung, die eine der beiden Optionen lösen würde.", cost: "Wir nehmen begrenzte Parallelität und die Verantwortung für lokale Migrationen und Sicherungen in Kauf." },
+          { choice: "Eine lokale, mit llama.cpp kompatible Laufzeit.", why: "Die Analyse bleibt innerhalb der erklärten Gerätegrenze und lässt sich auf freigegebene Modelle und Aufgaben beschränken.", alternative: "Eine Cloud-LLM-API würde Karrieredaten vom Gerät übertragen und Datenschutz sowie Verhalten von einem entfernten Dienst abhängig machen.", cost: "Wir nehmen Ersteinrichtung, Hardwareanforderungen, lokale Latenz und eine nicht universelle Modellkompatibilität in Kauf." },
+        ],
+      },
       decisions: { title: "Entscheidungen, die daraus ein echtes Werkzeug machen", intro: "Das nützliche Produkt ist der vollständige Arbeitsablauf rund um das Modell.", items: [
         { title: "Herkunft im Datensatz bewahren", body: "Karrierefakten behalten Quelle, Prüfstatus und Revisionen. Lebenslaufinhalte und Bewerbungsbelege können auf diesen Datensatz zurückverweisen.", tradeoff: "Das verlangt mehr Struktur als ein Freitextprofil, ermöglicht dafür aber Korrekturen und Audits." },
-        { title: "Lokale Analyse voraussetzen", body: "Opportunity-Matching und Coaching bleiben gesperrt, bis die freigegebene lokale Laufzeit bereit ist. Die Anwendung sendet die Aufgabe nie als bequemen Fallback an ein entferntes Modell.", tradeoff: "Die Ersteinrichtung ist aufwendiger und die Hardware spielt eine Rolle; die Datenschutzgrenze bleibt dafür ehrlich." },
+        { title: "Modellausgaben den Belegen nachordnen", body: "Matching und Coaching interpretieren nur den prüfbaren Datensatz und erzeugen getrennte Vorschläge. Modellausgaben werden nie eigenständig zur maßgeblichen Quelle und überschreiben keine Ausgangsfakten.", tradeoff: "Jeder nützliche Vorschlag braucht Bestätigung oder eine ausdrückliche Änderung des Quelldatensatzes; Automatisierungsgeschwindigkeit bleibt der Nachvollziehbarkeit untergeordnet." },
         { title: "Bewerbungen als Belege paketieren", body: "Versionierte Lebensläufe, Antworten, Anforderungszuordnungen und geprüfte Dateien lassen sich mit einem kanonischen SHA-256-Manifest exportieren.", tradeoff: "Ein Dossier ist bewusster aufgebaut als ein Ordner mit losen Dateien; dafür ist es reproduzierbar und prüfbar." },
       ]},
       delivery: { title: "Wie das Produkt verifiziert wird", paragraphs: [
@@ -703,6 +791,7 @@ export const labsLocales = {
       category: "Machine Learning",
       title: "Aus einem riskanten Chatbot-Prototyp wird ein prüfbares Open-Set-ML-Experiment",
       summary: "ELIZA Lab ist eine Rust-Pipeline zum lokalen Trainieren, Kalibrieren und Untersuchen eines Intent-Klassifikators. Sie ersetzt die irreführende Idee eines Therapie-Bots durch ein reproduzierbares, nicht klinisches Experiment, das sich enthalten kann.",
+      readMinutes: "14",
       facts: [["Produkt", "Lernorientierte ML-Pipeline und Browser-Labor"], ["Rolle", "ML-Protokoll, Rust-Implementierung und Sicherheitsneugestaltung"], ["Daten", "Versionierte synthetische Fixtures"], ["Status", "Reproduzierbares v3-Bundle, verschachteltes Auswahl-Audit und CLI"]],
       evidence: { title: "Evidenzprotokoll", intro: "Die geprüften Artefakte zeigen Auswahlresultat, eingefrorenen Test und Schwachstellen gemeinsam:", items: [
         ["Auswahlprotokoll", "385 Trainings- und Entwicklungszeilen in 77 Familien durchlaufen 11 äußere und 5 innere Gruppen-Folds; dabei werden 506 Modelle trainiert."],
@@ -726,9 +815,19 @@ export const labsLocales = {
         "Das v3-Protokoll friert deshalb gruppenbewusste Partitionen ein und trennt Modell-Fitting, Wahrscheinlichkeitskalibrierung, Auswahl der Enthaltungsrichtlinie und finale Evaluation. Rust-Typen halten finale Testsätze aus den Auswahl-APIs heraus.",
       ]},
       architecture: { title: "Die Open-Set-Pipeline", intro: "Strikte TSV-Validierung speist eine deterministische, gruppenbewusste Teilung. Ein ausschließlich auf Trainingsdaten aufgebautes TF-IDF-Vokabular und multinomiale logistische Regression erzeugen Wahrscheinlichkeiten, Temperature Scaling kalibriert sie, und eine separat gewählte Richtlinie entscheidet über die Enthaltung.", labels: ["SYNTHETISCHE DATEN", "GRUPPIERTE TEILUNG", "TF-IDF + LOGREG", "KALIBRIERUNG", "ENTHALTUNG + TRACE"], caption: "Training, Kalibrierung, Richtlinienwahl und finale Evaluation bleiben getrennt." },
+      technology: {
+        title: "Warum diese Technologien",
+        intro: "Der Stack stellt ein reproduzierbares, überprüfbares Experiment über die größtmögliche scheinbare Modellleistung.",
+        items: [
+          { choice: "Rust für Pipeline und CLI.", why: "Typen, festgeschriebene Builds und ein portables Binärprogramm machen Datenrollen ausdrücklich und Prüfpfade reproduzierbar.", alternative: "Ein Notebook oder eine reine Python-Pipeline wären explorativer, ließen aber mehr impliziten Zustand und stärkere Umgebungsdrift zu.", cost: "Wir nehmen höheren Implementierungsaufwand und ein kleineres ML-Ökosystem in Kauf." },
+          { choice: "TF-IDF mit multinomialer logistischer Regression.", why: "Das Verfahren ist für einen kleinen synthetischen Korpus angemessen und macht Gewichte, Margins und Kalibrierung einsehbar.", alternative: "Ein Transformer wäre undurchsichtiger, teurer und für die vorhandene Evidenz überdimensioniert.", cost: "Wir nehmen begrenztes semantisches Verständnis und begrenzte Sprachabdeckung in Kauf." },
+          { choice: "Ein gruppenbewusstes, verschachteltes Protokoll.", why: "Es hält Prompt-Familien zusammen und trennt Modellwahl, Kalibrierung und finalen Test.", alternative: "Eine Zufallsteilung ließe verwandte Paraphrasen durchsickern und erzeugte irreführend optimistische Kennzahlen.", cost: "Wir nehmen 506 Trainingsläufe, zusätzliche Versuchsbuchführung und sichtbare Unsicherheitsintervalle in Kauf." },
+          { choice: "Kalibrierte Enthaltung.", why: "Ein Open-Set-System muss schwache oder verteilungsfremde Evidenz ablehnen können, statt Sicherheit vorzutäuschen.", alternative: "Eine erzwungene Klasse würde auch dann eine Antwort liefern, wenn die Daten keines der Labels stützen.", cost: "Wir nehmen geringere Abdeckung, anspruchsvollere Schwellenwahl und keine Behauptung in Kauf, Enthaltung beseitige das Risiko." },
+        ],
+      },
       decisions: { title: "Entscheidungen für ein ehrliches Ergebnis", intro: "Das Projekt behandelt das Evaluationsprotokoll als Teil der Software.", items: [
-        { title: "Semantische Familien einfrieren", body: "Die überwachte Fixture enthält 525 Zeilen in 105 gleich großen Prompt-Familien. Explizite Gruppen-IDs halten verwandte Formulierungen bei der Partitionierung zusammen.", tradeoff: "Die Fixture ist bewusst synthetisch und begrenzt; sie stützt Reproduzierbarkeit, keine Aussagen über reale klinische Sprache." },
-        { title: "Unbekanntes von finalen Tests trennen", body: "Getrennte OOD-Entwicklungs- und OOD-Testpopulationen erlauben die Auswahl der Enthaltungsrichtlinie vor ihrer finalen Bewertung.", tradeoff: "Das Protokoll braucht mehr Fixtures und Buchführung, doch die finale Messung gehört nicht mehr zur Abstimmung." },
+        { title: "Aussagen auf synthetische Daten begrenzen", body: "Ergebnisse, Intervalle und Fehler beschreiben ausschließlich die versionierten synthetischen Fixtures des Experiments. Sie werden nicht auf reale Gespräche, klinische Kontexte oder allgemeine Sprachabdeckung übertragen.", tradeoff: "Die Aussage ist enger und weniger spektakulär, bleibt aber der tatsächlich beobachteten Evidenz angemessen." },
+        { title: "Den vollständigen Auswahlpfad veröffentlichen", body: "Bundle, Partitionsplan, Out-of-Fold-Wahrscheinlichkeiten, Fold-Zuordnungen und Kandidatenrangfolge werden eingefroren und per SHA-256 verknüpft, sodass sich das ausgewählte Ergebnis rekonstruieren lässt.", tradeoff: "Das Artefakt ist aufwendiger zu erzeugen und zu prüfen, verhindert aber, dass eine einzige finale Kennzahl den Auswahlpfad verbirgt." },
         { title: "Die tatsächliche Margin erklären", body: "Vorhersagen zeigen Wahrscheinlichkeiten, Konfidenz, Top-Two-Margin und Merkmalsbeiträge, die die Differenz der führenden Logits rekonstruieren.", tradeoff: "Die Merkmalsattribution erklärt die Berechnung dieses linearen Modells, nicht menschliche Bedeutung oder Absicht." },
       ]},
       delivery: { title: "Reproduktions- und Release-Prüfungen", paragraphs: [
@@ -745,6 +844,7 @@ export const labsLocales = {
       category: "Agentensysteme",
       title: "Computerautomatisierung, die ihre Berechtigungen vor dem Handeln offenlegt",
       summary: "DjenisAiAgent beobachtet eine Windows- oder Browseroberfläche, fordert eine einzelne strukturierte Gemini-Aktion an, prüft sie gegen Laufzeitberechtigungen und übergibt das verifizierte Ergebnis an den nächsten Turn.",
+      readMinutes: "12",
       facts: [["Produkt", "Experimenteller Computer-Use-Agent"], ["Rolle", "Architektur, Policy-Schicht und Implementierung"], ["Laufzeit", "Natives Windows oder browserorientiertes Docker"], ["Status", "Funktionsfähige Alpha mit begrenzten Fähigkeiten"]],
       evidence: { title: "Evidenzprotokoll", intro: "Die Aussagen zur Alpha beruhen auf geprüften Grenzen statt auf Anekdoten autonomer Aufgaben:", items: [
         ["Verifikation", "155 Unit-Test-Deklarationen und ein Repository-Coverage-Gate von 70%."],
@@ -767,6 +867,16 @@ export const labsLocales = {
         "Ich habe diese Entscheidungen in ein richtliniengeschütztes Tool-Register und eine begrenzte Orchestrierungsschicht verlegt. Unbekannte Werkzeuge schlagen fehl, Wiederholungen und Aufgabendauer sind beschränkt, und Audit-Ereignisse werden vor dem Schreiben redigiert.",
       ]},
       architecture: { title: "Ein Zyklus, der beobachtet, entscheidet, prüft und verifiziert", intro: "Die Wahrnehmung erfasst Screenshot oder Accessibility Tree. Gemini liefert genau einen deklarierten Funktionsaufruf. Die Policy-Schicht prüft Laufzeitunterstützung, Stufe und Allowlists, bevor ein Werkzeug läuft. Die resultierende Beobachtung wird zur Evidenz des nächsten Turns.", labels: ["WAHRNEHMUNG", "GEMINI TOOL CALL", "POLICY-GATE", "AKTION", "VERIFIZIERTE BEOBACHTUNG"], caption: "Das Modell schlägt vor; die Laufzeit entscheidet, welche Befugnis tatsächlich besteht." },
+      technology: {
+        title: "Warum diese Technologien",
+        intro: "Die Technologien trennen die Schlussfolgerung des Modells von der tatsächlichen Befugnis auf dem Computer.",
+        items: [
+          { choice: "Python für die Orchestrierung.", why: "Gemini, Windows-Automatisierung und Browser lassen sich damit zügig um deklarierte, nicht streng typisierte Werkzeugschemata und ein richtliniengesteuertes Fähigkeitenregister integrieren.", alternative: "Eine vollständig native oder kompilierte Implementierung würde Teile der Paketierung vereinfachen, die Integrationen aber aufsplittern und das Experiment verlangsamen.", cost: "Wir nehmen eine festzuschreibende, auszuliefernde und zu prüfende Python-Laufzeit samt Abhängigkeiten in Kauf." },
+          { choice: "UI Automation und Selenium als primäre Kanäle.", why: "Zugängliche Elemente, Rollen und DOM liefern stabilere semantische Ziele als Bildschirmpositionen.", alternative: "Pixel und Koordinaten wären gegenüber DPI, Fokus, Layout und Größenänderungen fragil.", cost: "Wir nehmen Plattformunterschiede und begrenzte Fallbacks für Canvas oder unzugängliche Steuerelemente in Kauf." },
+          { choice: "Genau eine strukturierte Gemini-Aktion.", why: "Jeder Turn schlägt eine deklarierte Aktion vor, die vor der Ausführung Berechtigungsstufen und Allowlists durchläuft; Timeouts und der nächste beobachtete Zustand begrenzen und verifizieren das Ergebnis.", alternative: "Freie Befehle erforderten mehrdeutiges Parsing und erhöhten das Risiko von Verkettungen oder nicht vorgesehenen Anweisungen.", cost: "Wir nehmen Cloud-Abhängigkeit, Latenz und ein absichtlich enges Aktionsvokabular in Kauf." },
+          { choice: "Eine lokale FastAPI-Konsole.", why: "Der Operator kann Berechtigungen und Aktivitäten auf demselben Rechner innerhalb einer authentifizierten Loopback-Grenze prüfen.", alternative: "Eine gehostete Control Plane würde Screenshots, Logs und operative Befugnis an einen entfernten Dienst übertragen und Mandantentrennung verlangen.", cost: "Wir nehmen lokale Prozess-, Token- und Sitzungsverwaltung ohne eingebaute Fernorchestrierung in Kauf." },
+        ],
+      },
       decisions: { title: "Entscheidungen zur Verringerung der Angriffsfläche", intro: "Fähigkeiten sind Konfiguration und Code, keine Prompt-Etikette.", items: [
         { title: "Das Register zur Laufzeit aufbauen", body: "Nicht unterstützte Werkzeuge werden weggelassen, statt sie anzubieten und erst nach der Auswahl durch das Modell scheitern zu lassen.", tradeoff: "Das Modell sieht weniger Werkzeuge; das ist besser, als in jeder Umgebung dieselben Befugnisse vorzutäuschen." },
         { title: "Unabhängige Gates verwenden", body: "Systemwerkzeuge verlangen die Stufe system und ein separates Bestätigungsflag für gefährliche Aktionen sowie Allowlists für Pfade, Anwendungen und Programme.", tradeoff: "Die Einrichtung dauert länger, aber ein einziger breiter Schalter kann nicht alle folgenreichen Aktionen freigeben." },
@@ -787,6 +897,7 @@ export const labsLocales = {
       title: "Gopher als klar begrenzte, prüfbare lokale Arbeitsumgebung",
       summary:
         "DIG 3.0.0 ist ein echter Gopher-Client mit drei klar getrennten Oberflächen: einer CLI über TCP, einem Live-Explorer hinter einem lokalen Same-Origin-Gateway und einer GitHub-Pages-Ausgabe ausschließlich mit Fixtures. Der gemeinsame Kern verarbeitet RFC-1436-Antworten und RFC-4266-Adressen, ohne vorzugeben, dass eine statische Browserseite rohe Sockets öffnen kann.",
+      readMinutes: "13",
       facts: [
         ["Produkt", "Gopher-CLI, lokales Gateway und Browser-Explorer"],
         ["Protokoll", "RFC-1436-Anfragen, Menüs und Text; RFC-4266-URLs und Suche"],
@@ -835,6 +946,16 @@ export const labsLocales = {
         labels: ["URL + SUCHE", "ZIELRICHTLINIE", "GEPINNTES TCP", "RFC-PARSER", "CLI + EXPLORER"],
         caption: "CLI und lokaler Explorer teilen den echten Protokollpfad; Pages endet an der Fixture-Grenze.",
       },
+      technology: {
+        title: "Warum diese Technologien",
+        intro: "Der Stack bringt Gopher in den Browser, ohne das Projekt in einen öffentlichen Proxy zu verwandeln.",
+        items: [
+          { choice: "Ein lokales TCP-Gateway in Node.js.", why: "Der Browser kann keine rohen Gopher-Sockets öffnen; das Gateway wendet Auflösung, Zielrichtlinie, Timeouts und Größenlimits vor der Verbindung an.", alternative: "Ein allgemeiner oder entfernter Proxy böte eine weit größere SSRF- und Relay-Oberfläche, als das Protokoll benötigt.", cost: "Wir nehmen einen lokalen Node-Prozess und den bewussten Verzicht auf beliebige Protokolle in Kauf." },
+          { choice: "Begrenzte Live-Endpunkte unter derselben Origin.", why: "Der Explorer kann das Gateway unter derselben Herkunft nutzen, während Anfragen und Antworten engen Verträgen folgen.", alternative: "Ein öffentlicher Cross-Origin-Proxy könnte für Scans, Zugriffe auf private Netze oder nicht vorgesehenen Verkehr missbraucht werden.", cost: "Wir nehmen in Kauf, dass die öffentliche Site nur Fixtures zeigt und Live-Zugriff eine lokale Installation erfordert." },
+          { choice: "Bytes bis zur Darstellungsgrenze unverändert bewahren.", why: "Gopher überträgt Text, Menüs und Binärdaten; unveränderte Bytes verhindern beschädigte Downloads oder Protokollterminatoren.", alternative: "Alles vorab zu dekodieren würde einen Zeichensatz erzwingen, Binärdaten beschädigen und Inhalt mit Transport verwechseln können.", cost: "Wir nehmen aufwendigere Puffer, Typmetadaten und ausdrückliche Grenzen in Kauf." },
+          { choice: "Vertrags-Fixtures und Playwright.", why: "URIs, Menüs, Bytes, Netzwerkrichtlinien und Browseroberflächen werden reproduzierbar, ohne von externen Gopher-Servern abzuhängen.", alternative: "Manuelle Tests könnten Grenzfälle, Browserregressionen und SSRF-Sperren nicht zuverlässig abdecken.", cost: "Wir nehmen die Pflege von Fixtures und CI-Browsern in Kauf; sie belegt nicht die Zuverlässigkeit jedes Internetservers." },
+        ],
+      },
       decisions: {
         title: "Entscheidungen, die die Grenze sichtbar machen",
         intro: "Jede Oberfläche sagt klar, was sie erreichen und was sie speichern kann.",
@@ -845,14 +966,14 @@ export const labsLocales = {
             tradeoff: "Die strikte Ablehnung gemischter Antworten kann ungewöhnliche, legitime DNS-Konfigurationen blockieren; sie ist sicherer, als die Absicht eines Angreifers zu erraten.",
           },
           {
-            title: "Live-Anfragen auf Same-Origin begrenzen",
-            body: "Das Gateway liefert Oberfläche und JSON-API gemeinsam aus und prüft Origin, Body-Form, Rate und Größe vor jedem Gopher-Abruf. Pages bietet denselben Explorer über Fixtures, ohne Live- oder Cross-Origin-Zugriff.",
-            tradeoff: "Eine Live-Ressource braucht das lokale oder bewusst gehostete Gateway; die öffentliche Site bleibt statisch statt zu einer wiederverwendbaren Proxy-API zu werden.",
+            title: "Demo- und Live-Modus sichtbar unterscheiden",
+            body: "Der öffentliche Modus kennzeichnet, dass er ausschließlich mit enthaltenen Fixtures navigiert. Live-Gopher erscheint als eigener Modus und benötigt das lokale oder bewusst betriebene Hosted-Gateway.",
+            tradeoff: "Pages öffnet keine echten Ressourcen, aber Benutzer verwechseln eine statische Demo nicht mit einem verbundenen Client.",
           },
           {
-            title: "Antwortbytes unverändert erhalten",
-            body: "Rohdatenansicht ist bei Text und Menüs optional. Binärressourcen behalten exakte Bytes, Bytezahl und SHA-256-Digest; der Browser lädt sie herunter und die CLI speichert sie atomar.",
-            tradeoff: "Exaktheit braucht getrennte Text- und Binärpfade, verhindert aber stille UTF-8-Verfälschung und unvollständige Zieldateien.",
+            title: "Downloads atomar abschließen",
+            body: "Die CLI schreibt im Zielverzeichnis in eine temporäre Datei und macht den endgültigen Pfad erst nach erfolgreichem Abschluss sichtbar; Fehler oder Abbruch hinterlassen keinen scheinbar gültigen Download.",
+            tradeoff: "Dafür sind temporärer Speicher und ein finaler Commit-Schritt nötig, doch Verbraucher sehen Teildateien nicht als vollständige Ergebnisse.",
           },
         ],
       },
@@ -877,6 +998,7 @@ export const labsLocales = {
       category: "Computergestützte Mathematik",
       title: "Zwei Werkzeuge für numerische Integration mit einem gemeinsamen Korpus konsistent halten",
       summary: "IntegraDraw ist eine Java-Desktop- und TypeScript-Canvas-Umgebung zum Vergleich von Mittelpunkt- und Trapezsummen mit einer Simpson-Referenz. Beide Laufzeiten teilen versionierte numerische Fälle und ausdrückliche Toleranzen.",
+      readMinutes: "11",
       facts: [["Produkt", "Visuelle Analysis-Umgebung"], ["Rolle", "Laufzeitübergreifender Neuaufbau und Release Engineering"], ["Laufzeiten", "Java 17 Desktop und TypeScript Web"], ["Status", "Funktionsfähige Web-App und ausführbares JAR"]],
       evidence: { title: "Evidenzprotokoll", intro: "Der numerische Vertrag ist klein genug, um ihn vollständig aufzuzählen:", items: [
         ["Golden-Korpus", "Sechs Integralfälle, drei Fälle ungültiger Ausdrücke und sieben Validierungsfälle unter Schemaversion 1."],
@@ -899,10 +1021,20 @@ export const labsLocales = {
         "Ich habe einen versionierten Golden-Korpus eingeführt, den JUnit und Vitest verwenden. Laufzeitspezifische Toleranzen und Grenzen bleiben sichtbar, damit Abweichungen nicht hinter einem großzügigen Gleichheits-Helper verschwinden.",
       ]},
       architecture: { title: "Zwei Oberflächen, ein numerischer Datensatz", intro: "Die Java-Anwendung verpackt eine Swing-Oberfläche und den numerischen Kern als ausführbares JAR. Die Webanwendung verwendet einen abhängigkeitfreien Ausdrucksparser, TypeScript-Integrationsroutinen und einen responsiven Canvas-Plot. Beide prüfen sich gegen den gemeinsamen Korpus.", labels: ["BENUTZERFUNKTION", "SICHERER PARSER", "NUMERISCHER KERN", "GOLDEN-KORPUS", "JAVA + CANVAS UI"], caption: "Die Implementierungen bleiben getrennt; ihr beobachtbarer numerischer Vertrag ist gemeinsam." },
+      technology: {
+        title: "Warum diese Technologien",
+        intro: "Die Entscheidungen halten beide Anwendungen eigenständig und teilen nur, was wirklich übereinstimmen muss.",
+        items: [
+          { choice: "Getrennte Implementierungen in Java und TypeScript.", why: "Jede Oberfläche nutzt ihre natürliche Laufzeit, während ein externer Vertrag dasselbe numerische Verhalten vergleicht.", alternative: "Eine Sprachbrücke oder künstlich geteilter Quellcode würden Kopplung schaffen, ohne beobachtbare Parität zu belegen.", cost: "Wir nehmen die Pflege zweier Implementierungen der Algorithmen in Kauf." },
+          { choice: "Ein begrenzter Mathematikparser.", why: "Er bietet die benötigten Ausdrücke und hält Grammatik, Funktionen und Fehler kontrollierbar.", alternative: "eval oder Function würden beliebiges JavaScript ausführen und die Sicherheitsgrenze unprüfbar machen.", cost: "Wir nehmen eine kleinere Sprache, aufgezählte Funktionen und ausdrückliche Fehler für nicht unterstützte Eingaben in Kauf." },
+          { choice: "Canvas für den Webplot.", why: "Es ermöglicht eine responsive, leichte Darstellung ohne Abhängigkeiten und mit direkter Kontrolle über Maßstab und Pixel.", alternative: "Eine Diagrammbibliothek oder ein großer SVG-Baum würden Abhängigkeiten und unnötige DOM-Komplexität für eine einzelne Kurve einführen.", cost: "Wir nehmen die eigene Umsetzung von Achsen, Skalierung, Neuzeichnen und Accessibility-Unterstützung rund um Canvas in Kauf." },
+          { choice: "Ein gemeinsamer Golden-Korpus.", why: "Versionierte Fälle und Toleranzen vergleichen die tatsächlichen Ausgaben zweier unabhängiger Laufzeiten.", alternative: "Gemeinsamer Code wäre zwischen Java und TypeScript unnatürlich und könnte denselben Fehler in beide Oberflächen tragen.", cost: "Wir nehmen die Pflege von Fällen, Toleranzen und Versionen in Kauf; der Korpus bleibt ein Test, kein formaler Beweis." },
+        ],
+      },
       decisions: { title: "Entscheidungen für mathematische Klarheit", intro: "Die Umgebung bezeichnet Näherung als Näherung.", items: [
-        { title: "Eine begrenzte Ausdruckssprache nutzen", body: "Der Browser akzeptiert x, Konstanten, Arithmetik, Klammern und eine dokumentierte Funktionsmenge über einen eigenen Parser.", tradeoff: "Das ist sicherer und verständlicher als beliebiges JavaScript, aber bewusst weniger ausdrucksstark." },
+        { title: "Das Vorzeichen des Integrals erhalten", body: "Mittelpunkt- und Trapezmethode liefern orientierte Fläche: Umgekehrte Grenzen oder eine negative Funktion bleiben negativ, statt in geometrische Fläche umgedeutet zu werden.", tradeoff: "Das Ergebnis kann überraschen, wenn stets positive Fläche erwartet wird, entspricht aber der mathematischen Bedeutung des bestimmten Integrals." },
         { title: "Die Referenz korrekt benennen", body: "Der Webvergleich verwendet die zusammengesetzte Simpson-Regel mit 8.192 Teilintervallen und nennt sie Referenz statt exaktes Ergebnis.", tradeoff: "Einige unstetige oder nicht endliche Funktionen werden abgelehnt; das Projekt ist kein symbolisches Beweissystem." },
-        { title: "Beobachtbares Verhalten gegenprüfen", body: "Java- und TypeScript-Tests verwenden dieselben versionierten Fälle und halten ihre numerischen Toleranzen sichtbar.", tradeoff: "Der Korpus muss bewusst weiterentwickelt werden, wenn sich der unterstützte mathematische Vertrag ändert." },
+        { title: "Die angeforderte Partition exakt einhalten", body: "Numerischer Wert und Plot verwenden die vom Benutzer eingegebene Segmentzahl. Keine Laufzeit erhöht, senkt oder passt die Diskretisierung stillschweigend an.", tradeoff: "Eine sehr grobe Wahl erzeugt eine sichtbar grobe Näherung; das Produkt zeigt sie, statt sie im Hintergrund zu korrigieren." },
       ]},
       delivery: { title: "Beide Anwendungen paketieren", paragraphs: [
         "CI kompiliert Java 17, führt JUnit aus, paketiert und prüft das ausführbare JAR per Smoke-Test und typprüft, testet und baut anschließend die TypeScript-Anwendung. Release-Kandidaten enthalten außerdem Web-Bundle und SBOMs beider Laufzeiten.",
@@ -918,6 +1050,7 @@ export const labsLocales = {
       category: "Schulische Betriebssoftware",
       title: "Ein selbst betriebenes Praktikumssystem entwickeln, das der Schule gehört",
       summary: "VECTOR 3.0.0 ist ein White-Label-System für Praktikumsabläufe, das eine Schule auf der eigenen Infrastruktur betreiben kann. Kohorten, Schüler, Betriebe, Einsätze, Stunden, Check-ins und Nachweise laufen in einem servergestützten Arbeitsablauf zusammen; die API setzt die Zugriffsregeln durch.",
+      readMinutes: "14",
       facts: [["Produkt", "Selbst betriebene White-Label-Praktikumsverwaltung"], ["Rolle", "Clean-Room-Produkt, Architektur und Implementierung"], ["Betrieb", "Eine Schule pro Installation"], ["Status", "Open-Source-Version 3.0.0 unter der MIT-Lizenz"]],
       evidence: { title: "Evidenzprotokoll", intro: "Das Repository der Version 3.0.0 verknüpft seine Produktversprechen mit konkreten Kontrollen:", items: [
         ["Zugriff", "Berechtigungen für Administratoren, Koordinatoren, Tutoren und Leser werden auf dem Server geprüft. Der erste Administrator muss das temporäre Passwort ändern, bevor operative Daten zugänglich sind."],
@@ -941,6 +1074,16 @@ export const labsLocales = {
         "VECTOR verwendet eine Schule pro Installation, statt einen gemeinsamen mandantenfähigen Dienst aufzubauen. Die operative Verantwortung bleibt eindeutig; Sicherung, Aufbewahrung und White-Label-Konfiguration lassen sich leichter nachvollziehen. Das Projekt liefert Software aus, keine verwaltete Cloud-Plattform.",
       ]},
       architecture: { title: "Ein kompakter Server mit klaren Grenzen", intro: "Der Browser-Arbeitsbereich spricht mit einer Express-API, die Anmeldung, Rollen und Zustandswechsel verwaltet. SQLite speichert die Datensätze einer Schule im WAL-Modus. Undurchsichtige AES-GCM-Cursor binden die Seitennavigation an Schule, Zuständigkeit und aktive Filter; begrenzte Suchendpunkte verhindern, dass Formulare ganze Tabellen laden.", labels: ["BROWSER-ARBEITSBEREICH", "EXPRESS POLICY LAYER", "SQLITE WAL", "AUDIT + AUFBEWAHRUNG", "SICHERUNG + RELEASE"], caption: "Der Server entscheidet, was ein Operator sehen und ändern darf; der Browser stellt diese Entscheidung dar." },
+      technology: {
+        title: "Warum diese Technologien",
+        intro: "Der Stack ist für eine Schule dimensioniert, die ihre eigene Installation besitzt und betreibt.",
+        items: [
+          { choice: "Eine Schule pro Installation.", why: "Datenhoheit, Rollen, White Label, Sicherung und Wiederherstellung bleiben innerhalb einer klaren institutionellen Grenze.", alternative: "Ein mandantenfähiges SaaS bräuchte Kundentrennung, Abrechnung, zentralen Betrieb und Compliance-Zusagen, die nicht zum Produkt gehören.", cost: "Wir nehmen in Kauf, dass jede Schule Updates, Kapazität und Sicherungen ihrer Instanz selbst verwaltet." },
+          { choice: "Express als Serverschicht.", why: "Authentifizierung, Rollen, Zuständigkeit und Zustandswechsel greifen, bevor Daten den Browser erreichen.", alternative: "Eine reine Browser-Anwendung ließe Regeln und Daten beim Client, der Berechtigungen nicht verlässlich durchsetzen kann.", cost: "Wir nehmen Betrieb und Wartung eines Serverdienstes im Netz der Institution in Kauf." },
+          { choice: "SQLite im WAL-Modus mit Migrationen.", why: "Transaktionen, Portabilität und Snapshots einer einzelnen Datei passen zur Last einer einzelnen Schule.", alternative: "PostgreSQL oder eine Cloud-Datenbank würden Dienst, Zugangsdaten und Administration ohne belegte Multi-Tenant-Skalierung hinzufügen.", cost: "Wir nehmen Grenzen bei parallelen Schreibvorgängen und fehlende automatische Hochverfügbarkeit in Kauf." },
+          { choice: "Docker mit ausdrücklichen Werkzeugen für Sicherung und Wiederherstellung.", why: "Die Institution erhält eine reproduzierbare Installation und einen prüfbaren Wiederherstellungsweg auf eigener Infrastruktur.", alternative: "Eine verwaltete Plattform vereinfachte den Betrieb, verlagerte Kontrolle und Abhängigkeit aber zu einem Anbieter.", cost: "Wir nehmen in Kauf, dass der Operator Speicher überwacht, Wiederherstellungen testet und Updates plant." },
+        ],
+      },
       decisions: { title: "Entscheidungen für einen sichereren Arbeitsalltag", intro: "Das Produkt bevorzugt sichtbare Regeln gegenüber bequemem, verborgenem Zustand.", items: [
         { title: "Zuständigkeit vor Seitennavigation", body: "Jede Liste wendet Schule und Rolle vor dem Limit an. Authentifizierte undurchsichtige Cursor binden diesen Geltungsbereich an Filter und eine stabile Sortierposition. Suchendpunkte liefern nur eine kleine Menge geeigneter Datensätze.", tradeoff: "Die Oberfläche kann keine unbegrenzte Tabelle in einer Anfrage laden. Die vollständige Entnahme erfolgt über einen getrennten, gefilterten Export mit höchstens 10.000 Zeilen." },
         { title: "Nachweise korrigieren, ohne Historie umzuschreiben", body: "Bereitschaftsregeln steuern die Zustandswechsel eines Einsatzes. Stunden werden bestätigt oder storniert; ein unterschriebenes Dokument wird durch einen neuen Datensatz ersetzt, nicht nachträglich verändert.", tradeoff: "Der Operator muss einen ausdrücklichen Korrekturschritt ausführen, dafür bleibt die Abfolge der Entscheidungen nachvollziehbar." },
@@ -961,6 +1104,7 @@ export const labsLocales = {
       title: "Einen schulischen Fernsteuerungsprototyp in zustimmungsbasierte Unterstützung verwandeln",
       summary:
         "JDoor begann 2022 als gemeinsam von Djenis Ejupi und NobodyToListen entwickeltes Schulprojekt zum Thema Netzwerke. Später baute Djenis Sicherheitsmodell, Sitzungslebenszyklus, Produkt-UX, Tests und Release-Weg als JDoor Assist neu auf: ein sichtbares Desktop-Werkzeug, das standardmäßig nur Ansicht erlaubt und für autorisierte Hilfe in vertrauenswürdigen lokalen Netzen gedacht ist.",
+      readMinutes: "12",
       facts: [
         ["Produkt", "Zustimmungsbasierte Fernunterstützung im LAN"],
         ["Ursprung", "2022 von Djenis Ejupi und NobodyToListen gemeinsam entwickeltes Schulprojekt"],
@@ -1020,24 +1164,34 @@ export const labsLocales = {
         labels: ["HOST-UI", "ZUSTIMMUNGSSITZUNG", "GEPINNTES TLS", "BEGRENZTER WIRE", "VIEWER-UI"],
         caption: "Frames erreichen einen genehmigten Viewer; Eingaben fließen nur während der sichtbaren Steuerfreigabe des Hosts zurück.",
       },
+      technology: {
+        title: "Warum diese Technologien",
+        intro: "Jede Entscheidung begrenzt JDoor auf die vorübergehende, sichtbare Unterstützung seines Vertrauensmodells.",
+        items: [
+          { choice: "Java und Swing für die Desktop-Anwendung.", why: "Sie bewahren die Codebasis und nutzen AWT unter Java 21 direkt für Aufnahme, Eingabe und native Oberflächen.", alternative: "Eine Web- oder Electron-Neuentwicklung beseitigte die nötigen Desktop-Rechte nicht und vergrößerte die Laufzeitoberfläche.", cost: "Wir nehmen Java-Auslieferung, betriebssystemspezifische Berechtigungen und eine weniger webtypische Oberfläche in Kauf." },
+          { choice: "Direkte Verbindung im vertrauenswürdigen LAN.", why: "Sie passt zu einer Sitzung zwischen einem anwesenden Host und genau einem Helfer ohne zentrale Infrastruktur.", alternative: "Relay und Konten ermöglichten Internetzugriff und NAT-Traversal, führten aber zentrale Geheimnisse, Missbrauchsrisiken, Identitäten und Dienstbetrieb ein.", cost: "Wir nehmen in Kauf, dass beide Geräte ein vertrauenswürdiges Netz oder einen vorbereiteten privaten Pfad teilen müssen." },
+          { choice: "Kurzlebiges TLS mit Pin und Einmal-Token.", why: "Die Einladung authentifiziert genau den Endpunkt dieser Sitzung, ohne dauerhafte Identität oder Kontodatenbank anzulegen.", alternative: "Dauerhafte Passwörter und Identitäten verlangten Speicherung, Wiederherstellung, Rotation und Widerruf außerhalb des Projektumfangs.", cost: "Wir nehmen die Übertragung des Links außerhalb der Sitzung, den Codevergleich und eine neue TLS-Identität bei jedem Host-Start in Kauf." },
+          { choice: "Ein enges, begrenztes Binärprotokoll.", why: "Es überträgt nur Frames, Heartbeats, Berechtigungszustand und autorisierte Eingaben mit prüfbaren Typen und Größen.", alternative: "Ein universeller Stack wie RDP oder VNC böte Interoperabilität, müsste aber weitergehende Funktionen wie Zwischenablage, Dateiübertragung und unbeaufsichtigten Zugriff begrenzen oder deaktivieren, um diesem Vertrauensmodell zu entsprechen.", cost: "Wir nehmen weniger Funktionen, keine universelle Kompatibilität und die eigene Pflege von Codec und Tests in Kauf." },
+        ],
+      },
       decisions: {
         title: "Entscheidungen, die das Produkt verändert haben",
         intro: "Jede Entscheidung entfernt ein implizites Privileg des ursprünglichen Prototyps.",
         items: [
           {
-            title: "Die genaue Sitzung authentifizieren",
-            body: "Jeder Host-Start erzeugt Zertifikat und Token im Speicher. Der Pairing-Link trägt den Zertifikat-Fingerabdruck; der Genehmigungsdialog zeigt Viewer-Name, Adresse und Prüfcode.",
-            tradeoff: "Der vollständige Link braucht einen vertrauenswürdigen Übertragungsweg außerhalb der Sitzung, und die direkte LAN-Verbindung bleibt Aufgabe der Benutzer, weil es weder Konten noch Relay gibt.",
+            title: "Eine sichtbare Person genehmigen",
+            body: "Vor dem Beitritt wartet der Viewer, während der Host den angegebenen Namen, die Adresse und den Prüfcode sieht und lokal entscheidet, ob er diese Person zulässt.",
+            tradeoff: "Der Host muss anwesend sein und den Anfragenden erkennen; der Beitritt kann weder automatisch noch unsichtbar werden.",
           },
           {
-            title: "Ansicht und Steuerung trennen",
-            body: "Die Genehmigung startet einen Nur-Ansicht-Stream. Ein Host-Schalter erteilt der aktuellen Sitzung Steuerung; Widerruf, Fokusverlust, Trennung und Herunterfahren geben entfernte Eingaben frei.",
-            tradeoff: "Der Host muss anwesend bleiben und die Berechtigung entscheiden; unbeaufsichtigte Bequemlichkeit ist absichtlich ausgeschlossen.",
+            title: "Ansicht und Steuerung getrennt freigeben",
+            body: "Die Genehmigung öffnet nur einen Nur-Ansicht-Stream. Maus- und Tastatursteuerung verlangt eine spätere, ausdrückliche und widerrufbare Freigabe des Hosts für die aktuelle Sitzung.",
+            tradeoff: "Der Helfer erhält nicht sofort Steuerung und der Host muss sie bewusst erteilen; das hält das sichtbare Mindestprivileg aufrecht.",
           },
           {
-            title: "Protokoll und Release eng halten",
-            body: "Das Wire-Format unterstützt Pairing, Frames, begrenzte Eingaben, Berechtigungsstatus, Heartbeat und Trennung. Die Automatisierung prüft Tests, Abdeckung, Formatierung, Pakete, SBOM und Release-Provenienz.",
-            tradeoff: "Zwischenablage, Dateien, Audio, öffentliches Relay und Unternehmensidentität bleiben außerhalb des Umfangs; unsignierte Community-Pakete erfordern weiterhin Prüfsummen- und Provenienzkontrolle.",
+            title: "Eingabezustand deterministisch bereinigen",
+            body: "Widerruf, Fokusverlust, Trennung und Herunterfahren geben alle verfolgten entfernten Tasten und Maustasten frei, damit kein unvollständiger Zustand die Sitzung überdauert.",
+            tradeoff: "Der Lebenszyklus muss mehrere Cleanup-Pfade behandeln und jeden Ausgang testen, verhindert dafür aber blockierte oder nach Berechtigungsverlust weiter aktive Eingaben.",
           },
         ],
       },
@@ -1064,6 +1218,7 @@ export const labsLocales = {
       category: "Produit local-first",
       title: "Construire un espace de travail privé pour sa carrière, fondé sur des preuves plutôt que sur des affirmations générées",
       summary: "CareerOS Local associe une application de bureau Tauri, un sidecar FastAPI, un coffre SQLite versionné et un runtime LLM local obligatoire. Les faits sources, les documents et les analyses restent ainsi sur l’appareil de l’utilisateur.",
+      readMinutes: "13",
       facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "Version v1.6.0 signée avec pipeline de publication vérifié"]],
       evidence: { title: "Registre des preuves", intro: "Le dépôt actuel consigne ces vérifications et limites reproductibles :", items: [
         ["Backend", "1 369 tests réussis pour la v1.6.0 ; une revue indépendante a rejoué 42 tests de portabilité et de stockage."],
@@ -1087,9 +1242,19 @@ export const labsLocales = {
         "Je les ai répartis entre un coffre de carrière, des registres reproductibles de préparation et de candidature, et des pipelines d’analyse locale validés par schéma. L’interface peut montrer l’origine d’une conclusion et la correction qui appartient au fait source.",
       ]},
       architecture: { title: "Un runtime local supervisé", intro: "Tauri gère l’application de bureau et supervise un sidecar FastAPI sur loopback. React fournit l’espace de travail, SQLite et les artefacts locaux conservent le registre durable, tandis qu’un runtime géré compatible avec llama.cpp exécute l’analyse LLM obligatoire sans devenir une couche de stockage.", labels: ["TAURI + REACT", "FASTAPI", "COFFRE SQLITE", "LLM LOCAL", "DOCUMENTS + OFFRES"], caption: "Les preuves et l’état des workflows restent durables ; l’inférence locale reçoit un contexte de tâche explicite." },
+      technology: {
+        title: "Pourquoi ces technologies",
+        intro: "Chaque composant garde le produit local, vérifiable et raisonnablement simple à distribuer.",
+        items: [
+          { choice: "Tauri comme shell de bureau.", why: "Il convient à une application locale qui doit intégrer fenêtres natives, fichiers et supervision de services sans embarquer un navigateur complet.", alternative: "Electron alourdirait le produit et sa surface d’exécution ; une solution uniquement web ne piloterait pas le sidecar et les artefacts locaux avec la même fiabilité.", cost: "Nous acceptons une frontière Rust supplémentaire et un packaging propre à chaque plateforme." },
+          { choice: "Un sidecar FastAPI pour les services applicatifs.", why: "Les workflows documentaires et analytiques restent en Python, tout en étant exposés au shell par une API loopback étroite et vérifiable.", alternative: "Tout réécrire en Rust dupliquerait l’écosystème Python ; placer la logique dans le navigateur affaiblirait le contrôle sur les données locales.", cost: "Nous acceptons de démarrer, superviser et versionner un second processus." },
+          { choice: "SQLite comme registre versionné.", why: "Transactions, migrations et fichier unique correspondent à un espace de travail personnel possédé localement, et non à un service partagé hébergé.", alternative: "Un serveur de base local ajouterait un processus d’administration et des identifiants ; un stockage cloud introduirait le réseau et la frontière du fournisseur. Aucun ne répond à un besoin de service partagé présent dans le périmètre.", cost: "Nous acceptons une concurrence limitée et la responsabilité des migrations et sauvegardes locales." },
+          { choice: "Un runtime local compatible avec llama.cpp.", why: "L’analyse reste dans la frontière déclarée de l’appareil et peut être limitée aux modèles et tâches approuvés.", alternative: "Une API LLM cloud transférerait les données professionnelles hors de l’appareil et ferait dépendre confidentialité et comportement d’un service distant.", cost: "Nous acceptons la configuration initiale, les exigences matérielles, la latence locale et une compatibilité de modèles non universelle." },
+        ],
+      },
       decisions: { title: "Les choix qui en font un véritable utilitaire", intro: "Le produit utile est le workflow complet construit autour du modèle.", items: [
         { title: "Conserver la provenance dans le registre", body: "Les faits professionnels gardent leur source, leur état de vérification et leurs révisions. Le CV et les preuves de candidature peuvent remonter à ce registre.", tradeoff: "Cette structure est plus exigeante qu’un profil libre, mais elle rend possibles les corrections et les audits." },
-        { title: "Exiger l’analyse locale", body: "Le matching et le coaching restent bloqués jusqu’à ce que le runtime local approuvé soit prêt. L’application n’envoie jamais la tâche à un modèle distant par commodité.", tradeoff: "La première configuration est plus lourde et dépend du matériel, mais la limite de confidentialité reste honnête." },
+        { title: "Maintenir les sorties du modèle en aval des preuves", body: "Matching et coaching n’interprètent que le registre vérifiable et produisent des suggestions distinctes. Une sortie du modèle ne devient jamais, à elle seule, la source de référence et ne remplace pas les faits d’origine.", tradeoff: "Chaque suggestion utile demande une confirmation ou une modification explicite du fait source ; la vitesse d’automatisation reste subordonnée à la traçabilité." },
         { title: "Regrouper les candidatures comme preuves", body: "CV versionnés, réponses, correspondances d’exigences et fichiers vérifiés s’exportent avec un manifeste SHA-256 canonique.", tradeoff: "Un dossier demande plus de rigueur qu’un répertoire de fichiers épars ; il est aussi reproductible et vérifiable." },
       ]},
       delivery: { title: "Comment le produit est vérifié", paragraphs: [
@@ -1106,6 +1271,7 @@ export const labsLocales = {
       category: "Machine learning",
       title: "Transformer un prototype de chatbot risqué en expérience ML open-set vérifiable",
       summary: "ELIZA Lab est un pipeline Rust pour entraîner, calibrer et examiner localement un classificateur d’intentions. Il remplace la prémisse trompeuse d’un bot thérapeutique par une expérience reproductible, non clinique et capable de s’abstenir.",
+      readMinutes: "14",
       facts: [["Produit", "Pipeline ML pédagogique et laboratoire web"], ["Rôle", "Protocole ML, implémentation Rust et refonte de la sécurité"], ["Données", "Fixtures synthétiques versionnées"], ["État", "Bundle v3 reproductible, audit de sélection imbriqué et CLI"]],
       evidence: { title: "Registre des preuves", intro: "Les artefacts vérifiés présentent ensemble le résultat de sélection, le test gelé et les cas faibles :", items: [
         ["Protocole de sélection", "385 lignes d’entraînement et de développement réparties en 77 familles passent par 11 folds externes et 5 internes groupés, soit 506 modèles ajustés."],
@@ -1129,9 +1295,19 @@ export const labsLocales = {
         "Le protocole v3 gèle donc des partitions conscientes des groupes et sépare entraînement, calibration, sélection de la politique d’abstention et évaluation finale. Les types Rust excluent les tests finaux des API de sélection.",
       ]},
       architecture: { title: "Le pipeline open-set", intro: "Une validation TSV stricte alimente une partition déterministe par groupes. Un vocabulaire TF-IDF limité à l’entraînement et une régression logistique multinomiale produisent les probabilités ; le temperature scaling les calibre, puis une politique choisie séparément décide de l’abstention.", labels: ["DONNÉES SYNTHÉTIQUES", "PARTITION GROUPÉE", "TF-IDF + LOGREG", "CALIBRATION", "ABSTENTION + TRACE"], caption: "Entraînement, calibration, sélection de politique et évaluation finale restent distincts." },
+      technology: {
+        title: "Pourquoi ces technologies",
+        intro: "La stack privilégie une expérience reproductible et inspectable plutôt qu’une capacité apparente maximale.",
+        items: [
+          { choice: "Rust pour le pipeline et la CLI.", why: "Les types, les builds verrouillés et un binaire portable rendent les rôles des données explicites et les parcours de vérification reproductibles.", alternative: "Un notebook ou un pipeline uniquement Python faciliteraient l’exploration, mais laisseraient davantage d’état implicite et de dérive d’environnement.", cost: "Nous acceptons un effort d’implémentation supérieur et un écosystème ML moins vaste." },
+          { choice: "TF-IDF avec régression logistique multinomiale.", why: "Cette approche est proportionnée à un petit corpus synthétique et permet d’inspecter poids, marges et calibration.", alternative: "Un transformer serait plus opaque, plus coûteux et surdimensionné au regard des preuves disponibles.", cost: "Nous acceptons une compréhension sémantique et une couverture linguistique limitées." },
+          { choice: "Un protocole imbriqué conscient des groupes.", why: "Il garde les familles de prompts ensemble et sépare choix du modèle, calibration et test final.", alternative: "Une partition aléatoire laisserait passer des paraphrases apparentées et produirait des métriques artificiellement optimistes.", cost: "Nous acceptons 506 entraînements, davantage de suivi expérimental et des intervalles d’incertitude visibles." },
+          { choice: "Une abstention calibrée.", why: "Un système open-set doit pouvoir refuser une preuve faible ou hors distribution au lieu de simuler la certitude.", alternative: "Forcer une classe fournirait une réponse même lorsqu’aucune étiquette n’est étayée par les données.", cost: "Nous acceptons une couverture moindre, un choix de seuil plus complexe et ne prétendons pas que l’abstention supprime le risque." },
+        ],
+      },
       decisions: { title: "Les choix qui préservent l’honnêteté du résultat", intro: "Le protocole d’évaluation fait partie du logiciel.", items: [
-        { title: "Geler les familles sémantiques", body: "La fixture supervisée contient 525 lignes dans 105 familles de prompts de taille égale. Des ID de groupe explicites gardent les formulations apparentées ensemble.", tradeoff: "La fixture est volontairement synthétique et bornée ; elle prouve la reproductibilité, pas la validité sur un langage clinique réel." },
-        { title: "Séparer l’inconnu des tests finaux", body: "Des populations distinctes pour le développement OOD et le test OOD permettent de choisir la politique avant l’évaluation finale.", tradeoff: "Le protocole exige davantage de fixtures et de suivi, mais la mesure finale ne sert plus au réglage." },
+        { title: "Limiter les conclusions aux données synthétiques", body: "Résultats, intervalles et erreurs décrivent exclusivement les fixtures synthétiques versionnées de l’expérience. Ils ne sont pas étendus aux conversations réelles, aux contextes cliniques ni à une couverture linguistique générale.", tradeoff: "La conclusion est plus étroite et moins spectaculaire, mais reste proportionnée aux preuves effectivement observées." },
+        { title: "Publier tout le parcours de sélection", body: "Bundle, plan des partitions, probabilités out-of-fold, affectations des folds et classement des candidats sont gelés et reliés par SHA-256 afin que le résultat retenu puisse être reconstruit.", tradeoff: "L’artefact demande davantage de travail à produire et à relire, mais empêche une seule métrique finale de masquer le parcours de sélection." },
         { title: "Expliquer la marge réelle", body: "Les prédictions exposent probabilités, confiance, marge des deux premières classes et contributions reconstruisant l’écart des logits gagnants.", tradeoff: "Cette attribution explique le calcul du modèle linéaire, pas le sens ou l’intention humaine." },
       ]},
       delivery: { title: "Vérifications de reproduction et de publication", paragraphs: [
@@ -1148,6 +1324,7 @@ export const labsLocales = {
       category: "Systèmes agentiques",
       title: "Construire une automatisation qui expose ses permissions avant d’agir",
       summary: "DjenisAiAgent observe une interface Windows ou web, demande une action Gemini structurée, la confronte aux permissions du runtime puis transmet le résultat vérifié au tour suivant.",
+      readMinutes: "12",
       facts: [["Produit", "Agent expérimental d’utilisation de l’ordinateur"], ["Rôle", "Architecture, couche de politique et implémentation"], ["Runtime", "Windows natif ou Docker orienté navigateur"], ["État", "Alpha fonctionnelle aux capacités bornées"]],
       evidence: { title: "Registre des preuves", intro: "Les affirmations reposent sur des limites vérifiées, pas sur des anecdotes d’autonomie :", items: [
         ["Vérification", "155 déclarations de tests unitaires et un seuil de couverture du dépôt de 70 %."],
@@ -1159,6 +1336,16 @@ export const labsLocales = {
       constraints: { title: "Les limites imposées par le runtime", intro: "L’agent repose sur des limites explicites :", items: ["Le niveau observe par défaut fournit des contrôles du runtime et un accès en lecture seule aux chemins approuvés.", "Les outils bureau, navigateur, fichiers et système n’apparaissent que si runtime et niveau de permission les autorisent.", "Il n’existe pas de shell généraliste. Le lanceur borné invoque directement un seul exécutable en allowlist et refuse pipelines, substitutions et chaînage.", "Une tâche n’est terminée qu’après une observation post-action vérifiée."] },
       diagnosis: { title: "Séparer raisonnement et autorité", paragraphs: ["Le modèle choisit l’action déclarée qu’il souhaite demander. Il ne décide ni de sa permission, ni de sa durée, ni de la quantité de sortie ajoutée au prompt suivant.", "J’ai placé ces décisions dans un registre d’outils protégé par politique et une orchestration bornée. Les outils inconnus échouent, les tentatives et la durée sont limitées, et les événements d’audit sont expurgés avant écriture."] },
       architecture: { title: "Une boucle qui observe, décide, autorise et vérifie", intro: "La perception capture une image ou l’arbre d’accessibilité. Gemini renvoie un appel de fonction déclaré. La politique vérifie runtime, niveau et allowlists avant exécution. L’observation obtenue devient la preuve du tour suivant.", labels: ["PERCEPTION", "GEMINI TOOL CALL", "CONTRÔLE DE POLITIQUE", "ACTION", "OBSERVATION VÉRIFIÉE"], caption: "Le modèle propose ; le runtime décide de l’autorité réelle." },
+      technology: {
+        title: "Pourquoi ces technologies",
+        intro: "Les technologies séparent le raisonnement du modèle de l’autorité réellement accordée sur l’ordinateur.",
+        items: [
+          { choice: "Python pour l’orchestration.", why: "Il permet d’intégrer rapidement Gemini, l’automatisation Windows et le navigateur autour de schémas d’outils déclarés, sans typage strict, et d’un registre de capacités gouverné par des politiques.", alternative: "Une implémentation entièrement native ou compilée allégerait une partie du packaging, mais fragmenterait les intégrations et ralentirait l’expérience.", cost: "Nous acceptons un runtime et des dépendances Python à verrouiller, distribuer et contrôler." },
+          { choice: "UI Automation et Selenium comme canaux principaux.", why: "Éléments accessibles, rôles et DOM fournissent des cibles sémantiques plus stables qu’une position à l’écran.", alternative: "Pixels et coordonnées seraient fragiles face au DPI, au focus, à la mise en page et au redimensionnement.", cost: "Nous acceptons les différences entre plateformes et des fallbacks limités pour Canvas ou les contrôles non accessibles." },
+          { choice: "Une seule action Gemini structurée.", why: "Chaque tour propose une action déclarée qui passe par les niveaux de permission et les allowlists avant exécution ; délais et état observé au tour suivant bornent et vérifient le résultat.", alternative: "Une commande libre imposerait un parsing ambigu et accroîtrait le risque de chaînage ou d’instructions imprévues.", cost: "Nous acceptons la dépendance au cloud, la latence et un vocabulaire d’actions volontairement restreint." },
+          { choice: "Une console FastAPI locale.", why: "L’opérateur peut inspecter permissions et activité sur la même machine, dans une frontière loopback authentifiée.", alternative: "Un plan de contrôle hébergé transférerait captures, journaux et autorité opérationnelle à un service distant et exigerait une isolation multi-tenant.", cost: "Nous acceptons la gestion locale du processus, des jetons et des sessions, sans orchestration distante intégrée." },
+        ],
+      },
       decisions: { title: "Les choix qui réduisent la surface d’attaque", intro: "Les capacités relèvent de la configuration et du code, pas de la politesse du prompt.", items: [
         { title: "Construire le registre au runtime", body: "Les outils indisponibles sont omis au lieu d’être annoncés puis de tomber en échec après leur sélection.", tradeoff: "Le modèle voit moins d’outils, ce qui vaut mieux que de prétendre chaque environnement aussi puissant." },
         { title: "Utiliser des contrôles indépendants", body: "Les outils système exigent le niveau system, une confirmation séparée et des allowlists de chemins, applications et exécutables.", tradeoff: "La configuration prend plus de temps, mais un seul interrupteur ne peut pas exposer toutes les actions sensibles." },
@@ -1173,6 +1360,7 @@ export const labsLocales = {
       title: "Faire de Gopher un outil local borné et inspectable",
       summary:
         "DIG 3.0.0 est un vrai client Gopher décliné en trois surfaces bien séparées : une CLI sur TCP, un explorateur web connecté derrière une passerelle locale same-origin et un site GitHub Pages alimenté uniquement par des fixtures. Le cœur partagé traite les réponses RFC 1436 et les adresses RFC 4266 sans prétendre qu’une page statique peut ouvrir des sockets bruts.",
+      readMinutes: "13",
       facts: [
         ["Produit", "CLI Gopher, passerelle locale et explorateur web"],
         ["Protocole", "Requêtes, menus et texte RFC 1436 ; URL et recherche RFC 4266"],
@@ -1221,6 +1409,16 @@ export const labsLocales = {
         labels: ["URL + RECHERCHE", "POLITIQUE CIBLE", "TCP ÉPINGLÉ", "PARSER RFC", "CLI + EXPLORATEUR"],
         caption: "La CLI et l’explorateur local partagent le vrai chemin du protocole ; Pages s’arrête à la frontière des fixtures.",
       },
+      technology: {
+        title: "Pourquoi ces technologies",
+        intro: "La stack rend Gopher accessible dans le navigateur sans transformer le projet en proxy public.",
+        items: [
+          { choice: "Une passerelle TCP locale en Node.js.", why: "Le navigateur ne peut pas ouvrir de socket Gopher brut ; la passerelle applique résolution, politique de destination, délais et limites de taille avant la connexion.", alternative: "Un proxy générique ou distant offrirait une surface SSRF et de relais bien plus large que ne l’exige le protocole.", cost: "Nous acceptons un processus Node local et renonçons explicitement à prendre en charge des protocoles arbitraires." },
+          { choice: "Des endpoints connectés, bornés et same-origin.", why: "L’explorateur utilise la passerelle sous la même origine, avec des requêtes et réponses maintenues dans des contrats étroits.", alternative: "Un proxy public cross-origin pourrait servir au scan, à l’accès aux réseaux privés ou à du trafic imprévu.", cost: "Nous acceptons que le site public n’affiche que des fixtures et que l’accès connecté exige l’installation locale." },
+          { choice: "Préserver les octets jusqu’à la frontière de présentation.", why: "Gopher transporte texte, menus et données binaires ; garder les octets intacts évite d’altérer téléchargements ou terminateurs du protocole.", alternative: "Tout décoder en amont imposerait un jeu de caractères, pourrait corrompre les payloads binaires et confondre contenu et transport.", cost: "Nous acceptons des buffers, métadonnées de type et limites explicites plus exigeants à gérer." },
+          { choice: "Des fixtures de contrat et Playwright.", why: "URI, menus, octets, politique réseau et surfaces web deviennent reproductibles sans dépendre de serveurs Gopher externes.", alternative: "Les tests manuels ne couvriraient pas fiablement les cas limites, régressions navigateur et blocages SSRF.", cost: "Nous acceptons l’entretien des fixtures et des navigateurs en CI, sans prétendre vérifier la fiabilité de chaque serveur Internet." },
+        ],
+      },
       decisions: {
         title: "Les choix qui rendent la frontière visible",
         intro: "Chaque surface indique clairement ce qu’elle peut atteindre et ce qu’elle conserve.",
@@ -1231,14 +1429,14 @@ export const labsLocales = {
             tradeoff: "Le rejet strict des réponses mixtes peut bloquer une configuration DNS inhabituelle mais légitime ; il est plus sûr que de deviner la réponse voulue par un attaquant.",
           },
           {
-            title: "Garder les requêtes réelles sur la même origine",
-            body: "La passerelle sert l’interface et l’API JSON, puis contrôle origine, forme du corps, débit et taille avant tout accès Gopher. Pages propose le même explorateur sur fixtures, sans accès réel ni cross-origin.",
-            tradeoff: "Une ressource réelle exige la passerelle locale ou volontairement hébergée ; le site public reste statique au lieu de devenir une API de proxy réutilisable.",
+            title: "Distinguer visiblement démonstration et mode connecté",
+            body: "Le mode public indique qu’il navigue uniquement dans les fixtures incluses. L’accès Gopher réel apparaît comme un mode distinct et exige la passerelle locale ou une passerelle hébergée volontairement.",
+            tradeoff: "Pages n’ouvre pas de ressources réelles, mais l’utilisateur ne confond pas une démonstration statique avec un client connecté.",
           },
           {
-            title: "Préserver les octets de la réponse",
-            body: "L’inspection brute reste facultative pour le texte et les menus. Les ressources binaires conservent leurs octets exacts, leur taille et leur empreinte SHA-256 ; le navigateur les télécharge et la CLI les enregistre atomiquement.",
-            tradeoff: "L’exactitude impose des chemins séparés pour le texte et le binaire, mais évite la corruption UTF-8 silencieuse et les fichiers cibles incomplets.",
+            title: "Achever les téléchargements atomiquement",
+            body: "La CLI écrit dans un fichier temporaire du dossier cible, puis ne rend le chemin final visible qu’après une fin réussie ; erreur ou interruption ne laisse aucun téléchargement partiel apparemment valide.",
+            tradeoff: "Il faut de l’espace temporaire et une étape finale de commit, mais les outils en aval ne voient pas un fichier partiel comme un résultat complet.",
           },
         ],
       },
@@ -1261,25 +1459,47 @@ export const labsLocales = {
     }),
     integradraw: localize("integradraw", {
       category: "Mathématiques computationnelles", title: "Maintenir deux outils d’intégration numérique cohérents grâce à un corpus partagé", summary: "IntegraDraw est un atelier Java desktop et TypeScript Canvas qui compare sommes des milieux et des trapèzes à une référence Simpson. Les deux runtimes partagent des cas versionnés et des tolérances explicites.",
+      readMinutes: "11",
       facts: [["Produit", "Atelier visuel de calcul"], ["Rôle", "Refonte multi-runtime et release engineering"], ["Runtimes", "Java 17 desktop et TypeScript web"], ["État", "Application web fonctionnelle et JAR exécutable"]],
       evidence: { title: "Registre des preuves", intro: "Le contrat numérique est assez petit pour être énuméré :", items: [["Corpus golden", "Six cas d’intégrales, trois expressions invalides et sept cas de validation sous le schéma version 1."], ["Vérification", "22 déclarations JUnit et 80 TypeScript dans la version auditée."], ["Référence", "La comparaison Simpson composite du navigateur utilise 8 192 sous-intervalles."], ["Limite", "La référence n’est pas exacte ; discontinuités et expressions non finies peuvent être rejetées et les limites des runtimes diffèrent volontairement."]] },
       starting: { title: "Le problème de cohérence", paragraphs: ["Un outil numérique peut sembler convaincant alors que deux implémentations divergent sur le nombre d’intervalles, l’aire signée ou les fonctions invalides. IntegraDraw avait un passé Java et devait gagner une édition web sans devenir deux calculatrices distinctes.", "La refonte explicite le contrat : nombre exact d’intervalles demandé, résultats signés, erreur visible et rejet clair des entrées non finies."] },
       constraints: { title: "Ce sur quoi les runtimes doivent s’accorder", intro: "L’interface n’est utile que si les règles restent stables :", items: ["Les méthodes du milieu et des trapèzes utilisent exactement le nombre de segments saisi.", "Une aire négative reste négative.", "La valeur de comparaison est une référence Simpson, jamais un résultat symbolique exact.", "Le parser web n’utilise ni eval ni Function."] },
       diagnosis: { title: "Un contrat au-dessus des implémentations", paragraphs: ["Partager le code Java et TypeScript créerait un pont maladroit sans prouver grand-chose. Partager le comportement attendu est plus utile.", "J’ai introduit un corpus golden versionné consommé par JUnit et Vitest. Tolérances et limites propres aux runtimes restent visibles."] },
       architecture: { title: "Deux interfaces, un même référentiel numérique", intro: "Java distribue une interface Swing et le cœur numérique dans un JAR. Le web utilise un parser sans dépendance, des routines TypeScript et un tracé Canvas responsive. Les deux vérifient le corpus partagé.", labels: ["FONCTION UTILISATEUR", "PARSER SÛR", "CŒUR NUMÉRIQUE", "CORPUS GOLDEN", "UI JAVA + CANVAS"], caption: "Les implémentations restent distinctes ; leur contrat observable est partagé." },
-      decisions: { title: "Les choix qui clarifient les mathématiques", intro: "L’atelier appelle une approximation une approximation.", items: [{ title: "Borner le langage d’expressions", body: "Le navigateur accepte x, constantes, arithmétique, parenthèses et fonctions documentées via son propre parser.", tradeoff: "C’est plus sûr que du JavaScript arbitraire, mais volontairement moins expressif." }, { title: "Nommer correctement la référence", body: "La comparaison utilise Simpson composite avec 8 192 sous-intervalles et parle de référence, pas de résultat exact.", tradeoff: "Certaines fonctions sont refusées ; ce n’est pas un système de preuve symbolique." }, { title: "Comparer le comportement observable", body: "Les tests Java et TypeScript utilisent les mêmes cas en gardant leurs tolérances visibles.", tradeoff: "Le corpus doit évoluer délibérément avec le contrat mathématique." }] },
+      technology: {
+        title: "Pourquoi ces technologies",
+        intro: "Ces choix gardent les deux applications autonomes et ne partagent que ce qui doit réellement coïncider.",
+        items: [
+          { choice: "Des implémentations Java et TypeScript distinctes.", why: "Chaque interface utilise son runtime naturel, tandis qu’un contrat externe compare le même comportement numérique.", alternative: "Un bridge entre langages ou un partage artificiel du code source ajouteraient du couplage sans démontrer la parité observable.", cost: "Nous acceptons de maintenir deux implémentations des algorithmes." },
+          { choice: "Un parser mathématique borné.", why: "Il fournit les expressions nécessaires à l’atelier tout en gardant grammaire, fonctions et échecs contrôlables.", alternative: "eval ou Function exécuteraient du JavaScript arbitraire et rendraient la frontière de sécurité invérifiable.", cost: "Nous acceptons un langage plus réduit, des fonctions énumérées et des erreurs explicites pour les entrées non prises en charge." },
+          { choice: "Canvas pour le tracé web.", why: "Il permet un rendu responsive, léger et sans dépendance, avec un contrôle direct de l’échelle et des pixels.", alternative: "Une bibliothèque de graphiques ou un grand arbre SVG ajouteraient dépendances et complexité DOM inutiles pour une seule courbe.", cost: "Nous acceptons d’implémenter axes, mise à l’échelle, redessin et aides d’accessibilité autour du Canvas." },
+          { choice: "Un corpus golden partagé.", why: "Des cas et tolérances versionnés comparent les sorties réelles de deux runtimes indépendants.", alternative: "Partager le code serait peu naturel entre Java et TypeScript et pourrait propager la même erreur aux deux interfaces.", cost: "Nous acceptons de maintenir cas, tolérances et versions ; le corpus reste un test, pas une preuve formelle." },
+        ],
+      },
+      decisions: { title: "Les choix qui clarifient les mathématiques", intro: "L’atelier appelle une approximation une approximation.", items: [{ title: "Préserver le signe de l’intégrale", body: "Les méthodes du point milieu et des trapèzes renvoient une aire orientée : inverser les bornes ou intégrer une fonction négative conserve un résultat négatif au lieu de le convertir en aire géométrique.", tradeoff: "La valeur peut surprendre les personnes qui s’attendent toujours à une aire positive, mais elle respecte le sens mathématique de l’intégrale définie." }, { title: "Nommer correctement la référence", body: "La comparaison utilise Simpson composite avec 8 192 sous-intervalles et parle de référence, pas de résultat exact.", tradeoff: "Certaines fonctions sont refusées ; ce n’est pas un système de preuve symbolique." }, { title: "Respecter exactement la partition demandée", body: "Valeur numérique et graphique utilisent le nombre de segments saisi par l’utilisateur. Aucun runtime n’augmente, ne réduit ni n’adapte silencieusement la discrétisation.", tradeoff: "Un choix très grossier produit une approximation visiblement grossière ; le produit la montre au lieu de la corriger en secret." }] },
       delivery: { title: "Distribuer les deux applications", paragraphs: ["La CI compile Java 17, exécute JUnit, construit et teste le JAR, puis vérifie, teste et compile TypeScript. Les candidats incluent bundle web et SBOM des deux runtimes.", "La publication compare des builds indépendants, valide les inventaires et contrôle manifestes SHA-256 et attestations GitHub."] },
       result: { title: "Ce que l’atelier rend visible", paragraphs: ["L’utilisateur modifie fonction, intervalle et segments puis compare estimations, courbe et référence Simpson.", "Les applications restent autonomes ; le corpus offre aux mainteneurs un lieu unique pour contrôler la promesse numérique."] },
       scope: "IntegraDraw est un outil pédagogique exploratoire. Il ne fournit ni intégration symbolique, ni preuve, ni gestion garantie des discontinuités, ni résultat exact pour une fonction arbitraire.",
     }),
     "vector-placement-operations": localize("vector-placement-operations", {
       category: "Logiciel de gestion scolaire", title: "Concevoir un système de stages que chaque école peut héberger et maîtriser", summary: "VECTOR 3.0.0 est un système white label de gestion des stages qu’une école peut exploiter sur sa propre infrastructure. Cohortes, élèves, organismes d’accueil, affectations, heures, suivis et justificatifs partagent un même flux côté serveur, avec des règles d’accès appliquées par l’API.",
+      readMinutes: "14",
       facts: [["Produit", "Gestion white label des stages en auto-hébergement"], ["Rôle", "Produit, architecture et implémentation en clean room"], ["Déploiement", "Une école par installation"], ["État", "Version open source 3.0.0 sous licence MIT"]],
       evidence: { title: "Registre des preuves", intro: "Le dépôt de la version 3.0.0 rattache ses promesses produit à des contrôles concrets :", items: [["Accès", "Le serveur vérifie les droits des administrateurs, coordinateurs, tuteurs et lecteurs. L’administrateur initial doit remplacer son mot de passe temporaire avant d’accéder aux données opérationnelles."], ["Données", "SQLite fonctionne en mode WAL derrière des migrations explicites. Les contrôles de révision empêchent un opérateur d’écraser silencieusement les changements d’un autre."], ["Flux", "Les critères de préparation et les transitions couvrent les stages, les heures validées ou annulées, les suivis et les justificatifs, qui peuvent être remplacés sans effacer leur historique."], ["Gouvernance", "Les métadonnées d’audit excluent les champs personnels. La rétention respecte les blocages placés sur les élèves et exige l’empreinte exacte de l’aperçu avant chaque lot de suppression limité."], ["Livraison", "Le parcours de publication construit une archive source reproductible, la vérifie après extraction et teste sauvegarde, inspection, restauration et compactage sur l’application empaquetée."]] },
       starting: { title: "Le problème opérationnel", paragraphs: ["La gestion des stages ne se résume pas à un tableau de bord. Une école coordonne des cohortes, des élèves, des organismes, des tuteurs, des dates, des heures, des suivis et des justificatifs signés. Chaque rôle a besoin d’une vue différente du même dossier, et une correction ne doit pas effacer ce qui l’a précédée.", "L’ancienne implémentation scolaire ne pouvait pas servir de base à un produit. J’ai reconstruit VECTOR depuis zéro en ne gardant que la compréhension du métier. Aucun code historique, dossier personnel, nom ou asset de l’ancien projet n’a été repris dans le nouveau dépôt."] },
       constraints: { title: "Ce qu’un système maîtrisé par l’école doit garantir", intro: "L’architecture part de quatre contraintes concrètes :", items: ["Chaque installation appartient à une seule école, qui contrôle sa base, son identité visuelle, ses sauvegardes et son déploiement.", "Les droits et le périmètre des tuteurs doivent être appliqués par le serveur avant toute sélection, tout comptage ou tout export.", "Les heures validées et les justificatifs signés ont besoin de parcours de correction explicites qui préservent le dossier initial.", "Imports, exports, rétention et restauration doivent être bornés, vérifiables et relançables sans risque après un échec."] },
       diagnosis: { title: "Définir d’abord la frontière de propriété", paragraphs: ["Déplacer davantage d’état dans le navigateur aurait laissé les questions difficiles intactes. Les contrôles de rôle auraient pu rester cachés dans l’interface, toute l’école être chargée en mémoire et un champ modifié être traité comme si sa valeur précédente n’avait jamais existé.", "VECTOR consacre chaque installation à une seule école au lieu de construire un service multi-tenant partagé. La responsabilité opérationnelle est nette, et les sauvegardes, la rétention et le white label restent plus simples à raisonner. Le projet distribue un logiciel, pas une plateforme cloud administrée."] },
       architecture: { title: "Un serveur compact aux frontières explicites", intro: "L’espace de travail web appelle une API Express qui gère authentification, rôles et transitions. SQLite conserve les dossiers d’une école en mode WAL. Des curseurs opaques AES-GCM lient la pagination à l’école, au périmètre et aux filtres actifs ; des recherches bornées évitent de charger des tables entières dans les formulaires.", labels: ["ESPACE DE TRAVAIL WEB", "POLICY LAYER EXPRESS", "SQLITE WAL", "AUDIT + RÉTENTION", "SAUVEGARDE + RELEASE"], caption: "Le serveur décide ce qu’un opérateur peut consulter et modifier ; le navigateur présente cette décision." },
+      technology: {
+        title: "Pourquoi ces technologies",
+        intro: "La stack est dimensionnée pour une école qui possède et exploite sa propre installation.",
+        items: [
+          { choice: "Une école par installation.", why: "Propriété des données, rôles, white label, sauvegarde et restauration restent dans une frontière institutionnelle claire.", alternative: "Un SaaS multi-tenant exigerait isolation des clients, facturation, opérations centrales et garanties de conformité qui ne relèvent pas du produit.", cost: "Nous acceptons que chaque école gère les mises à jour, la capacité et les sauvegardes de son instance." },
+          { choice: "Express comme couche serveur.", why: "Authentification, rôles, périmètre et transitions s’appliquent avant que les données n’atteignent le navigateur.", alternative: "Une application uniquement web laisserait règles et données au client, qui ne peut pas imposer des autorisations fiables.", cost: "Nous acceptons de déployer et maintenir un service serveur sur le réseau de l’établissement." },
+          { choice: "SQLite en mode WAL avec migrations.", why: "Transactions, portabilité et snapshots d’un fichier unique sont proportionnés à la charge d’une seule école.", alternative: "PostgreSQL ou une base cloud ajouteraient service, identifiants et administration sans échelle multi-tenant démontrée.", cost: "Nous acceptons les limites d’écriture concurrente et l’absence de haute disponibilité automatique." },
+          { choice: "Docker avec des outils explicites de sauvegarde et restauration.", why: "L’établissement obtient une installation reproductible et un parcours de reprise vérifiable sur sa propre infrastructure.", alternative: "Une plateforme gérée simplifierait les opérations, mais déplacerait le contrôle et la dépendance vers un fournisseur.", cost: "Nous acceptons que l’opérateur surveille le stockage, teste les restaurations et planifie les mises à jour." },
+        ],
+      },
       decisions: { title: "Les choix qui sécurisent le travail quotidien", intro: "Le produit préfère des règles visibles à un état caché mais pratique.", items: [{ title: "Appliquer le périmètre avant la pagination", body: "Chaque liste applique l’école et le rôle avant sa limite. Les curseurs opaques authentifiés lient ce périmètre aux filtres et à une position de tri stable. Les recherches ne renvoient qu’un petit ensemble de dossiers admissibles.", tradeoff: "L’interface ne peut pas télécharger une table sans limite en une requête. L’extraction complète passe par un export filtré séparé, plafonné à 10 000 lignes." }, { title: "Corriger les justificatifs sans réécrire l’historique", body: "Les critères de préparation gouvernent les transitions du stage. Les heures sont validées ou annulées ; un document signé est corrigé par un nouveau dossier qui le remplace, jamais par une modification sur place.", tradeoff: "L’opérateur suit une étape explicite, mais le contrôle peut reconstituer toute la suite des décisions." }, { title: "Faire échouer proprement les opérations massives", body: "Un import CSV valide le fichier entier dans une seule transaction. L’aperçu de rétention montre dossiers bloqués, travail restant et empreinte exacte ; l’exécution refuse un aperçu périmé et supprime par lots bornés.", tradeoff: "Les changements administratifs importants demandent un aperçu délibéré et parfois plusieurs passages. Cela vaut mieux qu’un import partiel ou une suppression massive non relue." }] },
       delivery: { title: "Auto-hébergement et restauration", paragraphs: ["Chaque école peut définir nom, couleurs, logo et coordonnées de support avec des révisions qui protègent les modifications concurrentes. L’image Docker s’exécute sans privilège et accepte un système de fichiers racine en lecture seule. Les commandes health et doctor signalent les problèmes de configuration et de stockage avant l’usage courant.", "Les outils créent un instantané SQLite privé, l’inspectent sans démarrer l’application, le restaurent par un parcours de maintenance protégé et compactent les données conservées si nécessaire. L’automatisation construit deux fois l’archive source, vérifie inventaire et commit, recherche les secrets, installe depuis l’artefact extrait et y exécute le parcours d’acceptation."] },
       result: { title: "Ce que VECTOR prend en charge aujourd’hui", paragraphs: ["Une école peut gérer cohortes, élèves, organismes, périodes et affectations ; valider les heures ; enregistrer les suivis ; préserver l’historique des documents ; examiner les événements d’audit dans son périmètre ; importer les données de façon atomique et exporter une vue opérationnelle filtrée. Un administrateur peut aussi placer un élève sous blocage de rétention avant la suppression d’anciens dossiers.", "VECTOR est un logiciel open source auto-hébergé. Ce n’est pas un SaaS administré et il ne revendique ni certification de conformité, ni haute disponibilité, ni SSO. Une institution qui en a besoin devra encore traiter ces sujets côté produit et déploiement."] },
@@ -1290,6 +1510,7 @@ export const labsLocales = {
       title: "Transformer un prototype scolaire de contrôle à distance en assistance fondée sur le consentement",
       summary:
         "JDoor est né en 2022 comme projet scolaire de réseau co-créé par Djenis Ejupi et NobodyToListen. Djenis a ensuite reconstruit son modèle de sécurité, son cycle de session, son UX produit, ses tests et sa chaîne de publication sous le nom JDoor Assist : un outil de bureau visible, en consultation seule par défaut, destiné à l’assistance autorisée sur des réseaux locaux de confiance.",
+      readMinutes: "12",
       facts: [
         ["Produit", "Assistance LAN fondée sur le consentement"],
         ["Origine", "Projet scolaire de 2022 co-créé par Djenis Ejupi et NobodyToListen"],
@@ -1349,24 +1570,34 @@ export const labsLocales = {
         labels: ["UI HÔTE", "SESSION + CONSENTEMENT", "TLS ÉPINGLÉ", "PROTOCOLE BORNÉ", "UI VIEWER"],
         caption: "Les images atteignent un seul viewer approuvé ; les entrées ne reviennent que pendant l’autorisation visible de l’hôte.",
       },
+      technology: {
+        title: "Pourquoi ces technologies",
+        intro: "Chaque choix limite JDoor à l’assistance temporaire et visible prévue par son modèle de confiance.",
+        items: [
+          { choice: "Java et Swing pour l’application de bureau.", why: "Ils préservent le code existant et utilisent directement AWT pour la capture, les entrées et les interfaces natives sous Java 21.", alternative: "Une réécriture web ou Electron ne supprimerait pas les privilèges desktop nécessaires et élargirait la surface du runtime.", cost: "Nous acceptons la distribution Java, les permissions propres au système et une interface moins proche des conventions web." },
+          { choice: "Une connexion directe sur un LAN de confiance.", why: "Elle est proportionnée à une session entre un hôte présent et un seul assistant, sans infrastructure centrale.", alternative: "Relais et comptes permettraient Internet et la traversée NAT, mais introduiraient secrets centraux, abus, identités et exploitation d’un service.", cost: "Nous acceptons que les appareils partagent un réseau de confiance ou un chemin privé préparé." },
+          { choice: "Un TLS éphémère avec pin et jeton à usage unique.", why: "L’invitation authentifie l’endpoint exact de cette session sans créer d’identité persistante ni de base de comptes.", alternative: "Mots de passe et identités durables exigeraient stockage, récupération, rotation et révocation hors du périmètre.", cost: "Nous acceptons l’échange du lien hors bande, la comparaison du code et une nouvelle identité TLS à chaque démarrage de l’hôte." },
+          { choice: "Un protocole binaire étroit et borné.", why: "Il ne transporte que frames, heartbeats, état des permissions et entrées autorisées, avec types et tailles vérifiables.", alternative: "Une stack généraliste comme RDP ou VNC offrirait l’interopérabilité, mais il faudrait borner ou désactiver ses fonctions plus larges — presse-papiers, transfert de fichiers et accès sans surveillance — pour respecter ce modèle de confiance.", cost: "Nous acceptons moins de fonctions, aucune compatibilité universelle et la maintenance directe du codec et des tests." },
+        ],
+      },
       decisions: {
         title: "Les décisions qui ont changé le produit",
         intro: "Chaque décision retire un privilège implicite du prototype d’origine.",
         items: [
           {
-            title: "Authentifier la session exacte",
-            body: "Chaque démarrage hôte crée certificat et jeton en mémoire. Le lien d’appairage transporte l’empreinte du certificat, tandis que la boîte d’approbation affiche nom du viewer, adresse et code de vérification.",
-            tradeoff: "Le lien complet exige un canal hors bande de confiance et la connectivité LAN directe reste à la charge des utilisateurs, puisqu’il n’existe ni compte ni relais.",
+            title: "Approuver une personne visible",
+            body: "Avant d’entrer, le viewer attend pendant que l’hôte voit le nom déclaré, l’adresse et le code de vérification, puis décide localement s’il accepte cette personne.",
+            tradeoff: "L’hôte doit être présent et reconnaître le demandeur ; l’entrée ne peut devenir ni automatique ni invisible.",
           },
           {
-            title: "Séparer consultation et contrôle",
-            body: "L’approbation démarre un flux en consultation seule. Un bouton hôte accorde le contrôle à la session courante ; révocation, perte de focus, déconnexion et arrêt libèrent l’état des entrées distantes.",
-            tradeoff: "L’hôte doit rester présent et décider de la permission ; la commodité d’un accès sans surveillance est volontairement exclue.",
+            title: "Autoriser séparément consultation et contrôle",
+            body: "L’approbation ouvre uniquement un flux en consultation seule. Le contrôle de la souris et du clavier exige ensuite une autorisation explicite et révocable de l’hôte pour la session courante.",
+            tradeoff: "L’assistant n’obtient pas immédiatement le contrôle et l’hôte doit le lui accorder délibérément ; le moindre privilège reste ainsi visible.",
           },
           {
-            title: "Garder protocole et publication étroits",
-            body: "Le format wire prend en charge appairage, images, entrées bornées, état des permissions, heartbeat et déconnexion. L’automatisation vérifie tests, couverture, formatage, paquets, SBOM et provenance de publication.",
-            tradeoff: "Presse-papiers, fichiers, audio, relais public et identité d’entreprise restent hors périmètre ; les paquets communautaires non signés exigent encore la vérification des sommes et de la provenance.",
+            title: "Nettoyer déterministiquement l’état des entrées",
+            body: "Révocation, perte de focus, déconnexion et arrêt libèrent toutes les touches et tous les boutons distants suivis, afin qu’aucun état incomplet ne survive à la session.",
+            tradeoff: "Le cycle de vie doit gérer plusieurs parcours de nettoyage et tester chaque sortie, mais évite des entrées bloquées ou encore actives après la perte de permission.",
           },
         ],
       },

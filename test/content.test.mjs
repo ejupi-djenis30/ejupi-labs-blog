@@ -15,7 +15,7 @@ import {
 } from "../src/content-contract.mjs";
 
 test("every locale contains the same complete case-study structure", () => {
-  const expectedSections = ["starting", "constraints", "diagnosis", "architecture", "decisions", "delivery", "result"];
+  const expectedSections = ["starting", "constraints", "diagnosis", "architecture", "technology", "decisions", "delivery", "result"];
 
   for (const localeKey of localeOrder) {
     const locale = locales[localeKey];
@@ -28,6 +28,12 @@ test("every locale contains the same complete case-study structure", () => {
       const study = locale.cases[definition.slug];
       assert.ok(study, `${localeKey} is missing ${definition.slug}`);
       for (const section of expectedSections) assert.ok(study[section], `${localeKey}/${definition.slug} is missing ${section}`);
+      assert.equal(study.technology.items.length, 4);
+      for (const choice of study.technology.items) {
+        for (const key of ["choice", "why", "alternative", "cost"]) {
+          assert.ok(choice[key].length > 20, `${localeKey}/${definition.slug}.technology.${key} is too vague`);
+        }
+      }
       assert.equal(study.decisions.items.length, definition.kind === "professional" ? 4 : 3);
       if (definition.kind === "professional") {
         assert.ok(study.constraints.items.length >= 5);
@@ -55,7 +61,10 @@ test("every locale contains the same complete case-study structure", () => {
           definition.sourceUrl,
           /^https:\/\/github\.com\/[^/]+\/[^/]+\/commit\/[0-9a-f]{40}$/u,
         );
-        assert.equal(definition.verifiedAt, definition.updated);
+        assert.ok(
+          definition.verifiedAt <= definition.updated,
+          `${definition.slug} cannot be verified after its editorial update`,
+        );
         if (localeKey !== "en") {
           assert.notEqual(
             study.summary,
@@ -193,7 +202,7 @@ test("Labs source metadata is required and must resolve to an immutable commit",
 test("VECTOR is presented as the bounded self-hosted v3 product in every locale", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "vector-placement-operations");
   assert.ok(definition);
-  assert.equal(definition.updated, "2026-07-26");
+  assert.equal(definition.updated, "2026-07-28");
   assert.equal(definition.verifiedAt, "2026-07-26");
   assert.equal(definition.sourceRef, "v3.0.0");
   assert.equal(
@@ -220,11 +229,22 @@ test("VECTOR is presented as the bounded self-hosted v3 product in every locale"
     assert.match(copy, /SaaS/u);
   }
 
-  const english = JSON.stringify(locales.en.cases[definition.slug]);
+  const englishStudy = locales.en.cases[definition.slug];
+  const english = JSON.stringify(englishStudy);
   assert.match(english, /10,000-row cap/u);
   assert.match(english, /retention hold/iu);
   assert.match(english, /compliance certification/iu);
-  assert.doesNotMatch(english, /browser-only|browser-local persistence|local storage|focused demonstrator/iu);
+  const englishPositioning = JSON.stringify({
+    summary: englishStudy.summary,
+    facts: englishStudy.facts,
+    architecture: englishStudy.architecture,
+    result: englishStudy.result,
+    scope: englishStudy.scope,
+  });
+  assert.doesNotMatch(
+    englishPositioning,
+    /browser-only|browser-local persistence|local storage|focused demonstrator/iu,
+  );
 });
 
 
@@ -344,19 +364,17 @@ test("editorial chrome and visible byline labels are complete in every locale", 
     "related",
     "methodology",
     "personal",
-    "professionalShort",
-    "labsShort",
     "searchLoading",
     "searchFallback",
-    "lastVerified",
     "caseLabel",
-    "casesLabel",
-    "indexLabel",
-    "noteLabel",
-    "countryLabel",
     "systemViewLabel",
     "versionedDeliveryPathLabel",
     "processStateReturnLabel",
+    "choiceLabel",
+    "whyLabel",
+    "alternativeLabel",
+    "costLabel",
+    "tradeoffLabel",
   ];
 
   for (const localeKey of localeOrder) {

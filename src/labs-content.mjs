@@ -5,7 +5,7 @@ export const labsCases = {
     title: "Building a private career workspace around evidence, not generated claims",
     summary:
       "CareerOS Local combines a Tauri desktop shell, a FastAPI sidecar, a versioned SQLite vault and a required local LLM runtime. The result is a career utility that keeps source facts, documents and analysis on the user’s device.",
-    readMinutes: "11",
+    readMinutes: "13",
     facts: [
       ["Product", "Open-source desktop utility"],
       ["Role", "Product, architecture and implementation"],
@@ -54,6 +54,49 @@ export const labsCases = {
       labels: ["TAURI + REACT", "FASTAPI", "SQLITE VAULT", "LOCAL LLM", "DOCUMENTS + JOBS"],
       caption: "Evidence and workflow state remain durable; local inference receives explicit task context.",
     },
+    technology: {
+      title: "Why this stack fits a private desktop utility",
+      intro:
+        "Each boundary keeps a different responsibility local and makes its operational cost visible.",
+      items: [
+        {
+          choice: "Tauri 2 owns the desktop shell and native lifecycle.",
+          why:
+            "CareerOS needs an installable workspace that can supervise the bundled sidecar, constrain native permissions and coordinate local files and backups. Tauri provides that boundary while React remains responsible for the interface.",
+          alternative:
+            "Electron would package another browser runtime around the same local services, while a browser-only build could not honestly own the Python process, local model runtime and native artifact lifecycle.",
+          cost:
+            "The project accepts Rust integration, operating-system prerequisites and cross-platform packaging work instead of treating the interface as a standalone website.",
+        },
+        {
+          choice: "A loopback FastAPI sidecar owns the application services.",
+          why:
+            "The career domain benefits from Pydantic validation, SQLAlchemy transactions, Alembic migrations and Python document and analysis tooling. A narrow local API gives the React workspace one explicit contract to those capabilities.",
+          alternative:
+            "Moving everything into Rust would require rebuilding that service layer and its Python-oriented integrations; putting it in the browser would expose storage and local-runtime concerns to an environment that cannot supervise them.",
+          cost:
+            "Two processes must start, authenticate and stop together, and the release has to package the sidecar and defend its loopback boundary.",
+        },
+        {
+          choice: "SQLite and local artifacts form the durable vault.",
+          why:
+            "The product is a locally owned personal workspace rather than a shared hosted service. SQLite provides transactions, explicit migrations and a portable database that can participate in the same backup and erasure workflow as generated documents.",
+          alternative:
+            "A separate database server would add an administered process and credentials; a cloud store would add a network and provider data boundary. Neither solves a shared-service requirement in this product’s scope.",
+          cost:
+            "Concurrency and scale remain those of a local utility, and migrations, archive preflight and verified restore need deliberate engineering.",
+        },
+        {
+          choice: "A managed llama.cpp-compatible runtime performs required analysis locally.",
+          why:
+            "Matching and coaching operate on private career evidence. Keeping inference on the device preserves the stated boundary, and schema-validated tasks stop the model from becoming a second source of record.",
+          alternative:
+            "A cloud API would simplify first use and offer different model capacity, but it would send task context outside the device and make privacy depend on a provider and network connection.",
+          cost:
+            "Users accept model provisioning, hardware-dependent latency and a narrower set of supported runtimes; the application must also fail closed when the approved local model is unavailable.",
+        },
+      ],
+    },
     decisions: {
       title: "Decisions that make it a utility",
       intro: "The useful product is the complete workflow around the model.",
@@ -64,9 +107,9 @@ export const labsCases = {
           tradeoff: "This requires more structure than a free-form profile, but it makes corrections and audits possible.",
         },
         {
-          title: "Require local analysis",
-          body: "Opportunity matching and coaching fail closed until the approved local runtime is ready. The application never sends the task to a remote model as a convenience fallback.",
-          tradeoff: "First-run setup is heavier and hardware matters, but the privacy boundary stays honest.",
+          title: "Keep model output downstream of evidence",
+          body: "The vault supplies explicit context to matching and coaching. Model output may interpret or draft from that evidence, but it cannot become the source of record or silently overwrite verified facts.",
+          tradeoff: "The user must review useful suggestions before they enter the workflow, trading seamless automation for provenance that remains inspectable and correctable.",
         },
         {
           title: "Package applications as evidence",
@@ -98,7 +141,7 @@ export const labsCases = {
     title: "Turning a risky chatbot prototype into an inspectable open-set ML experiment",
     summary:
       "ELIZA Lab is a Rust machine-learning pipeline for training, calibrating and inspecting an intent classifier locally. It replaces a misleading therapy-bot premise with a reproducible, non-clinical experiment that can abstain.",
-    readMinutes: "12",
+    readMinutes: "14",
     facts: [
       ["Product", "Educational ML pipeline and browser lab"],
       ["Role", "ML protocol, Rust implementation and safety redesign"],
@@ -147,19 +190,62 @@ export const labsCases = {
       labels: ["SYNTHETIC DATA", "GROUPED SPLIT", "TF-IDF + LOGREG", "CALIBRATION", "ABSTENTION + TRACE"],
       caption: "Training, calibration, policy selection and final evaluation remain distinct.",
     },
+    technology: {
+      title: "Why the experiment stays small and explicit",
+      intro:
+        "The implementation favours inspectable behaviour and separated data roles over a more impressive-looking model.",
+      items: [
+        {
+          choice: "Rust implements the training, evaluation and inference pipeline.",
+          why:
+            "The project publishes a repeatable executable workflow rather than a sequence of interactive cells. Rust types also encode the distinct data roles so final test fixtures cannot enter selection APIs by accident.",
+          alternative:
+            "A Python-only notebook would be convenient for exploration, but mutable cell state and loosely connected scripts would make the frozen protocol and release artifact harder to audit as one system.",
+          cost:
+            "Model experimentation requires more explicit code and a smaller library surface, and changes take longer than editing a notebook.",
+        },
+        {
+          choice: "Training uses TF-IDF features and multinomial logistic regression.",
+          why:
+            "The bounded synthetic corpus suits a compact linear model whose vocabulary, probabilities, top-two margin and feature contributions can all be inspected and reproduced locally.",
+          alternative:
+            "A transformer could model richer language, but this corpus does not justify its data and compute demands, and a larger opaque model would distract from the evaluation protocol the lab is meant to expose.",
+          cost:
+            "The classifier has limited semantic reach and remains sensitive to vocabulary and phrasing; the project publishes those weak cases instead of implying broader understanding.",
+        },
+        {
+          choice: "Group-aware nested selection keeps prompt families together.",
+          why:
+            "Paraphrases in one semantic family are not independent examples. Grouped outer and inner folds keep related wording on one side of each boundary while separating candidate selection from out-of-fold measurement.",
+          alternative:
+            "A random row split would be simpler, but near-related formulations could appear in both training and evaluation and make the resulting score easier to overstate.",
+          cost:
+            "The effective sample size is smaller, the protocol fits many more models and the split ledger is more involved to maintain.",
+        },
+        {
+          choice: "Temperature calibration feeds an explicit abstention policy.",
+          why:
+            "Weak in-distribution evidence and out-of-distribution inputs should not be forced into a known intent. Separate calibration and OOD-development roles let confidence and margin thresholds be fixed before final testing.",
+          alternative:
+            "Returning the highest-probability class for every input would produce a simpler demo, but it would present an answer even when the model has little evidence for one.",
+          cost:
+            "Abstention reduces coverage, requires additional fixtures and threshold governance, and does not turn the remaining predictions into a safety guarantee.",
+        },
+      ],
+    },
     decisions: {
       title: "Decisions that keep the result honest",
       intro: "The project treats the evaluation protocol as part of the software.",
       items: [
         {
-          title: "Freeze semantic families",
-          body: "The supervised fixture contains 525 rows in 105 equal prompt families. Explicit group IDs keep related wording together during partitioning.",
-          tradeoff: "The fixture is intentionally synthetic and bounded; it supports reproducibility, not claims about real clinical language.",
+          title: "Bound the claim to the synthetic fixture",
+          body: "The versioned corpus is synthetic and deliberately bounded. Reported behaviour describes that fixture and frozen protocol, not clinical language, broad intent coverage or production readiness.",
+          tradeoff: "This limits the conclusions, but it makes the educational experiment reproducible without borrowing credibility from a domain it has not measured.",
         },
         {
-          title: "Separate unknowns from final tests",
-          body: "Distinct OOD development and OOD test populations let the abstention policy be selected before its final evaluation.",
-          tradeoff: "The protocol needs more fixtures and bookkeeping, but the final measurement is no longer part of tuning.",
+          title: "Publish the selection record",
+          body: "Fold assignments, candidate ranks and out-of-fold probabilities are frozen in a SHA-256-pinned report linked to the released bundle, so the chosen model and policy can be reconstructed from the artifact.",
+          tradeoff: "The release carries more governed files and consistency checks, but its summary is independently auditable instead of resting on a final score alone.",
         },
         {
           title: "Explain the actual margin",
@@ -191,7 +277,7 @@ export const labsCases = {
     title: "Building computer automation that exposes its permissions before it acts",
     summary:
       "DjenisAiAgent observes a Windows or browser interface, requests one structured Gemini action, checks it against runtime permissions and feeds the verified result into the next turn.",
-    readMinutes: "10",
+    readMinutes: "12",
     facts: [
       ["Product", "Experimental computer-use agent"],
       ["Role", "Architecture, policy layer and implementation"],
@@ -239,6 +325,49 @@ export const labsCases = {
       labels: ["PERCEPTION", "GEMINI TOOL CALL", "POLICY GATE", "ACTION", "VERIFIED OBSERVATION"],
       caption: "The model proposes; the runtime decides what authority actually exists.",
     },
+    technology: {
+      title: "Why the runtime is split at the authority boundary",
+      intro:
+        "The stack is organised around what can observe, what can propose and what is actually allowed to act.",
+      items: [
+        {
+          choice: "Python coordinates perception, policy and tool execution.",
+          why:
+            "The runtime needs Windows automation libraries, Selenium, FastAPI, model SDKs and introspection of real function signatures. Python connects those surfaces while turning the checked signatures into declared tool schemas.",
+          alternative:
+            "A single compiled desktop stack could simplify distribution, but it would require replacing or wrapping the automation and model integrations that define this experiment.",
+          cost:
+            "Dynamic boundaries demand extensive validation and tests, worker threads cannot be cancelled arbitrarily, and packaging native Windows dependencies remains part of the product.",
+        },
+        {
+          choice: "UI Automation and Selenium provide structural interaction.",
+          why:
+            "Accessibility properties and browser DOM state give actions named targets that can be checked again after execution. Separate native and browser adapters also expose what each runtime can actually control.",
+          alternative:
+            "Coordinate- or pixel-only automation would cover some inaccessible surfaces, but ordinary layout, scaling, focus or window movement could silently change what a click means.",
+          cost:
+            "Accessibility trees and DOMs are incomplete for canvas-heavy or custom interfaces, Selenium adds its own runtime, and focus still limits native reliability.",
+        },
+        {
+          choice: "Gemini must return one structured, declared action.",
+          why:
+            "A declared function name and structured arguments can pass through permission tiers and allowlists before execution; timeouts and the next observed state then bound and verify the result.",
+          alternative:
+            "Free-form commands or a general shell would be easier for a model to improvise, but they would collapse intent, parsing and permission into one ambiguous text channel.",
+          cost:
+            "Every capability needs a maintained schema, malformed calls fail closed and the model can only act through the smaller vocabulary the runtime exposes.",
+        },
+        {
+          choice: "A local FastAPI console is the operator control plane.",
+          why:
+            "The console belongs beside the single running agent, where loopback binding, an operator token, short-lived sessions and bounded WebSockets can expose status without creating a remote service.",
+          alternative:
+            "A hosted control plane would make remote access easier, but it would introduce accounts, tenancy, internet exposure and centralized handling of an authority-bearing agent.",
+          cost:
+            "The operator must run and secure the local service, and the design deliberately gives up managed availability, multi-user collaboration and remote administration.",
+        },
+      ],
+    },
     decisions: {
       title: "Decisions that narrow the attack surface",
       intro: "Capability is treated as configuration and code, not prompt etiquette.",
@@ -283,7 +412,7 @@ export const labsCases = {
     title: "Turning Gopher into a bounded, inspectable local workbench",
     summary:
       "DIG 3.0.0 is a real Gopher client with three deliberate surfaces: a CLI over TCP, a live browser explorer behind a same-origin local gateway, and a fixture-only GitHub Pages build. The shared core parses RFC 1436 responses and RFC 4266 addresses without pretending a static browser can open raw sockets.",
-    readMinutes: "11",
+    readMinutes: "13",
     facts: [
       ["Product", "Gopher CLI, local gateway and browser explorer"],
       ["Protocol", "RFC 1436 requests, menus and text; RFC 4266 URLs and search"],
@@ -332,6 +461,49 @@ export const labsCases = {
       labels: ["URL + QUERY", "DESTINATION POLICY", "PINNED TCP", "RFC PARSER", "CLI + EXPLORER"],
       caption: "The CLI and local explorer share the real protocol path; Pages stops at the fixture boundary.",
     },
+    technology: {
+      title: "Why the live protocol boundary sits outside the browser",
+      intro:
+        "DIG keeps transport, destination policy and representation explicit instead of hiding Gopher behind a generic web request.",
+      items: [
+        {
+          choice: "A Node.js TCP client and gateway perform live Gopher requests.",
+          why:
+            "Node can write the selector and CRLF to a raw socket, enforce byte and time limits and reuse the same parser and policy as the CLI.",
+          alternative:
+            "Browser JavaScript cannot open raw TCP sockets, while a generic forwarding proxy would hide Gopher-specific selectors, item types and response limits behind an unrelated abstraction.",
+          cost:
+            "Live browser exploration needs a local process and a second HTTP boundary; the public static site can offer only verified fixtures.",
+        },
+        {
+          choice: "The gateway is same-origin, bounded and destination-aware.",
+          why:
+            "DNS validation, IP pinning, response limits and the absence of CORS keep each request inside the documented local or authenticated hosted policy.",
+          alternative:
+            "An anonymous public proxy would be simpler to visit, but it would create an abuse and server-side request-forgery surface for arbitrary destinations.",
+          cost:
+            "Operators must configure authentication and network policy, and private destinations require an explicit local override rather than working by default.",
+        },
+        {
+          choice: "Transport paths preserve response bytes before interpretation.",
+          why:
+            "Gopher serves menus, text and binary item types. Exact bytes, byte counts and SHA-256 digests let the CLI save binary data without corrupting it and make parser decisions inspectable.",
+          alternative:
+            "Decoding every response as text would be convenient for display, but it would damage binary payloads and conceal invalid or unsupported encodings.",
+          cost:
+            "The implementation must branch deliberately by item type, keep text encoding support narrow and carry additional metadata through each surface.",
+        },
+        {
+          choice: "Deterministic TCP fixtures and contract tests back the browser checks.",
+          why:
+            "The suite can exercise real selectors, menus, binary bytes, network rejection and the local gateway through Playwright without relying on an external Gopher server.",
+          alternative:
+            "Manual checks against public servers would demonstrate connectivity, but remote content and availability would make failures difficult to reproduce and leave negative boundaries under-tested.",
+          cost:
+            "Fixtures and cross-surface contracts need maintenance, and passing them does not claim compatibility with every historical Gopher server.",
+        },
+      ],
+    },
     decisions: {
       title: "Decisions that make the boundary visible",
       intro: "Each surface says clearly what it can reach and what it stores.",
@@ -342,14 +514,14 @@ export const labsCases = {
           tradeoff: "Strict mixed-answer rejection can block unusual but legitimate DNS setups; it is safer than guessing which answer an attacker intended.",
         },
         {
-          title: "Keep live requests same-origin",
-          body: "The gateway serves both the interface and its small JSON API, validating origin, body shape, rate and size before any Gopher fetch. Pages ships the same explorer over fixtures and never enables live or cross-origin access.",
-          tradeoff: "A live resource requires the local or deliberately hosted gateway; the public site remains static rather than becoming a reusable proxy API.",
+          title: "Label fixture-only mode honestly",
+          body: "The public Pages explorer states that it is backed only by deterministic fixtures. Live browsing is offered only by the local or deliberately hosted gateway, so the interface never implies that a static browser opened a Gopher connection.",
+          tradeoff: "Visitors cannot point the public demo at arbitrary servers, but they can inspect the interface without turning Pages into a misleading proxy.",
         },
         {
-          title: "Preserve response bytes",
-          body: "Raw inspection is opt-in for text and menus. Binary resources retain exact bytes, byte count and SHA-256 digest; the browser downloads them and the CLI saves them atomically.",
-          tradeoff: "Exactness needs separate text and binary paths, but avoids silent UTF-8 corruption and half-written files.",
+          title: "Commit downloads only when complete",
+          body: "The CLI stages output and publishes the requested path only after the bounded fetch succeeds. On failure it removes the temporary artifact instead of leaving a plausible but partial file.",
+          tradeoff: "Atomic output needs staging, cleanup and sufficient local space, but callers never have to guess whether a visible target is complete.",
         },
       ],
     },
@@ -376,7 +548,7 @@ export const labsCases = {
     title: "Keeping two numerical integration tools honest with one shared corpus",
     summary:
       "IntegraDraw is a Java desktop and TypeScript Canvas workbench for comparing midpoint and trapezoidal sums with a Simpson reference. Both runtimes share versioned numerical cases and explicit tolerances.",
-    readMinutes: "9",
+    readMinutes: "11",
     facts: [
       ["Product", "Visual calculus workbench"],
       ["Role", "Cross-runtime rebuild and release engineering"],
@@ -424,14 +596,57 @@ export const labsCases = {
       labels: ["USER FUNCTION", "SAFE PARSER", "NUMERICAL CORE", "GOLDEN CORPUS", "JAVA + CANVAS UI"],
       caption: "The implementations stay separate; their observable numerical contract is shared.",
     },
+    technology: {
+      title: "Why the implementations share a contract, not a runtime",
+      intro:
+        "The desktop and web tools stay native to their environments while one corpus defines the behaviour they both promise.",
+      items: [
+        {
+          choice: "Java and TypeScript keep separate numerical implementations.",
+          why:
+            "The executable JAR and browser application can each run independently with their platform’s normal packaging, interface and numerical code.",
+          alternative:
+            "A runtime bridge or generated shared source would couple both releases and could make the same implementation defect appear as agreement rather than independent evidence.",
+          cost:
+            "Algorithm changes and fixes must be implemented twice, and parity is enforced through tests instead of source reuse.",
+        },
+        {
+          choice: "The browser uses a custom bounded expression parser.",
+          why:
+            "A documented grammar can admit x, arithmetic, constants and selected functions while rejecting unsupported syntax before numerical evaluation.",
+          alternative:
+            "JavaScript eval or Function would accept a broader expression language, but it would also execute arbitrary code in a tool that only needs mathematics.",
+          cost:
+            "The supported language is intentionally smaller, and the project owns tokenization, precedence, validation and useful parse errors.",
+        },
+        {
+          choice: "Canvas renders the responsive browser plot.",
+          why:
+            "The workbench controls sampling, axes and curve rendering directly without adding a charting dependency or mapping numerical state into a large set of document nodes.",
+          alternative:
+            "A chart library would bring its own data and interaction conventions, while an SVG-first plot would require managing many generated elements for each redraw.",
+          cost:
+            "Resizing, labels, high-density rendering and non-visual explanations must be implemented explicitly because Canvas has no semantic structure of its own.",
+        },
+        {
+          choice: "A versioned golden corpus defines cross-runtime behaviour.",
+          why:
+            "JUnit and Vitest consume the same cases while retaining explicit Java and TypeScript expected values and tolerances. Reviewers can see exactly where legitimate floating-point differences are allowed.",
+          alternative:
+            "Sharing the calculation code would guarantee similar outputs but would not independently check that two implementations satisfy the intended numerical contract.",
+          cost:
+            "The corpus is a governed artifact: every supported behavioural change requires reviewed cases, versioning and runtime-specific expectations.",
+        },
+      ],
+    },
     decisions: {
       title: "Decisions that improve mathematical clarity",
       intro: "The workbench labels approximation as approximation.",
       items: [
         {
-          title: "Use a bounded expression language",
-          body: "The browser accepts x, constants, arithmetic, parentheses and a documented set of functions through its own parser.",
-          tradeoff: "It is safer and easier to reason about than arbitrary JavaScript, but deliberately less expressive.",
+          title: "Preserve signed area",
+          body: "Midpoint, trapezoidal and Simpson calculations retain the sign of the function, so regions below the x-axis subtract from the definite integral instead of being presented as positive geometric area.",
+          tradeoff: "A user who wants total geometric area must split or transform the problem; preserving the sign keeps the tool faithful to the integral it labels.",
         },
         {
           title: "Name the reference correctly",
@@ -439,9 +654,9 @@ export const labsCases = {
           tradeoff: "Some discontinuous or non-finite functions are rejected; the project is not a symbolic proof system.",
         },
         {
-          title: "Cross-check observable behaviour",
-          body: "Java and TypeScript tests consume the same versioned cases while keeping their numeric tolerances visible.",
-          tradeoff: "The corpus must evolve deliberately whenever the supported mathematical contract changes.",
+          title: "Use exactly the requested segment count",
+          body: "Midpoint and trapezoidal estimates calculate and draw exactly the number of subintervals the user entered, including odd counts; the interface does not silently round it to an even value.",
+          tradeoff: "A small count can produce a visibly rough approximation, but the picture remains an honest rendering of the requested experiment.",
         },
       ],
     },
@@ -468,7 +683,7 @@ export const labsCases = {
     title: "Designing a self-hosted placement system that a school can own",
     summary:
       "VECTOR 3.0.0 is a white-label placement operations system that a school can run on its own infrastructure. It brings cohorts, students, hosts, placements, hours, check-ins and evidence into one server-backed workflow, with access rules enforced by the API.",
-    readMinutes: "12",
+    readMinutes: "14",
     facts: [
       ["Product", "Self-hosted white-label placement operations"],
       ["Role", "Clean-room product, architecture and implementation"],
@@ -517,6 +732,49 @@ export const labsCases = {
       labels: ["BROWSER WORKSPACE", "EXPRESS POLICY LAYER", "SQLITE WAL", "AUDIT + RETENTION", "BACKUP + RELEASE"],
       caption: "The server decides what an operator may see and change; the browser renders that decision.",
     },
+    technology: {
+      title: "Why the deployment stays compact and school-owned",
+      intro:
+        "The stack follows the chosen ownership boundary: one institution, one installation and one recoverable record.",
+      items: [
+        {
+          choice: "Each installation serves one school.",
+          why:
+            "Database ownership, branding, retention and backups align with one operational institution, making the scope of every record and administrative action explicit.",
+          alternative:
+            "A multi-tenant SaaS could centralize upgrades, but it would require tenant isolation, shared service operations, account recovery and governance that are outside this product’s contract.",
+          cost:
+            "Every school operates its own deployment and cannot rely on a managed fleet, cross-school reporting or built-in high availability.",
+        },
+        {
+          choice: "Express and Node.js own the authorization boundary.",
+          why:
+            "The API applies role and tutor scope before selecting, counting, changing or exporting records, and it owns the workflow transitions that preserve evidence history.",
+          alternative:
+            "A browser-only application could render forms, but client-side checks cannot protect a shared school record from another operator or a modified request.",
+          cost:
+            "The institution must run and update a server, and API, session and migration contracts need ongoing compatibility work.",
+        },
+        {
+          choice: "SQLite runs in WAL mode behind explicit migrations.",
+          why:
+            "A single-school installation gains transactions, strict relational records and a database that the supplied backup and inspection tools can snapshot as one owned artifact.",
+          alternative:
+            "PostgreSQL or a cloud database would offer a larger concurrency and availability envelope, but it would add another administered service to a deliberately compact deployment.",
+          cost:
+            "Write concurrency and scaling remain single-node concerns, and reliable use depends on maintenance windows, tested backups and guarded restore procedures.",
+        },
+        {
+          choice: "Docker and repository-owned backup tooling define the deployment path.",
+          why:
+            "A school can run the same packaged service, inspect a snapshot without starting the application and restore through an explicit maintenance workflow while retaining custody of its data.",
+          alternative:
+            "A managed platform could absorb infrastructure work, but it would move runtime, storage and recovery decisions into a provider-specific service.",
+          cost:
+            "The operator remains responsible for patches, secrets, storage, monitoring and recovery drills; containers alone do not provide compliance or high availability.",
+        },
+      ],
+    },
     decisions: {
       title: "Decisions that make daily use safer",
       intro: "The product favours visible rules over convenient hidden state.",
@@ -561,7 +819,7 @@ export const labsCases = {
     title: "Turning a school remote-control prototype into consent-first assistance",
     summary:
       "JDoor began as a 2022 school networking project co-created by Djenis Ejupi and NobodyToListen. Djenis later rebuilt its security model, session lifecycle, product UX, tests and release path as JDoor Assist: a visible, view-only-by-default desktop tool for authorized help on trusted local networks.",
-    readMinutes: "10",
+    readMinutes: "12",
     facts: [
       ["Product", "Consent-first LAN remote assistance"],
       ["Origin", "2022 school project co-created by Djenis Ejupi and NobodyToListen"],
@@ -621,24 +879,67 @@ export const labsCases = {
       labels: ["HOST UI", "CONSENT SESSION", "PINNED TLS", "BOUNDED WIRE", "VIEWER UI"],
       caption: "Frames flow to one approved viewer; input flows back only during the host’s visible control grant.",
     },
+    technology: {
+      title: "Why the assistance surface stays narrow",
+      intro:
+        "The implementation preserves the project’s Java origin while removing infrastructure and privileges that visible LAN assistance does not need.",
+      items: [
+        {
+          choice: "Java 21 and Swing remain the desktop application stack.",
+          why:
+            "The project already centres on Java networking, screen capture and input, and Swing can place host approval, view-only state and disconnect controls in the same native runtime.",
+          alternative:
+            "A web interface cannot perform the required raw LAN, capture and input work by itself; an Electron rewrite would add a browser-to-native bridge and discard the project’s existing implementation path.",
+          cost:
+            "The product accepts Swing-specific UX work, platform integration differences and Java application packaging instead of inheriting a web UI ecosystem.",
+        },
+        {
+          choice: "The viewer connects directly over the trusted LAN.",
+          why:
+            "Direct connectivity keeps screen data and session decisions between the two endpoints and avoids a central service that stores accounts or relays an authority-bearing session.",
+          alternative:
+            "A relay and account backend would make internet and NAT traversal easier, but it would add persistent identities, hosted infrastructure and a much larger operational and security boundary.",
+          cost:
+            "Both people must arrange network reachability, JDoor does not cross NAT automatically and exposing its port beyond the trusted LAN is outside the supported model.",
+        },
+        {
+          choice: "Every run uses ephemeral pinned TLS and a single-use token.",
+          why:
+            "The complete invitation binds the viewer to the exact temporary certificate and one short-lived session, while local approval confirms the person before viewing begins.",
+          alternative:
+            "A reusable password or long-lived account identity would reduce repeated pairing, but compromise and recovery would persist beyond one support session and require an identity service.",
+          cost:
+            "The invitation must be shared privately, both parties pair again for each host run and there is no account-based recovery when the link expires.",
+        },
+        {
+          choice: "A narrow framed protocol carries only the approved session features.",
+          why:
+            "Direction, message type, dimensions and payload size can be validated, and viewing remains distinct from the host’s revocable input grant.",
+          alternative:
+            "A general-purpose RDP or VNC stack would require constraining or disabling broader facilities such as clipboard, file transfer and unattended access because they contradict this product’s consent-first boundary.",
+          cost:
+            "JDoor supports fewer capabilities, one approved viewer and the primary display, and every future protocol feature must preserve the explicit state machine and bounds.",
+        },
+      ],
+    },
     decisions: {
       title: "Decisions that changed the product",
       intro: "Each decision removes an implicit privilege from the original prototype.",
       items: [
         {
-          title: "Authenticate the exact session",
-          body: "Each host run creates an in-memory certificate and token. The pairing link carries the certificate fingerprint, while the approval dialog exposes the viewer name, address and verification code.",
-          tradeoff: "The complete link needs a trusted out-of-band path, and direct LAN connectivity remains the user’s responsibility because there is no account or relay service.",
+          title: "Make approval legible to the host",
+          body: "Before any stream begins, the local dialog identifies the viewer by name and network address, pairs that identity with a verification code and asks the host to approve that person explicitly.",
+          tradeoff: "Possessing the invitation is not enough and the host must be present; that extra step turns access into a visible human decision.",
         },
         {
           title: "Separate viewing from control",
-          body: "Approval starts a view-only stream. A host toggle owns control for the current session, and revoke, focus loss, disconnect and shutdown release remote input state.",
-          tradeoff: "The host must remain present and make the permission decision; unattended convenience is deliberately excluded.",
+          body: "Approval starts a view-only stream. A host toggle grants input only for the current session and keeps the permission visible while it is active.",
+          tradeoff: "This adds a second permission step, but viewing no longer implies authority to act.",
         },
         {
-          title: "Keep the protocol and release narrow",
-          body: "The wire format supports pairing, frames, bounded input, permission state, heartbeat and disconnect. Build automation verifies tests, coverage, formatting, packages, SBOM and release provenance.",
-          tradeoff: "Clipboard, files, audio, public relay and enterprise identity stay out of scope, while unsigned community packages still require checksum and provenance verification.",
+          title: "Release remote input on every exit path",
+          body: "Revocation, focus loss, disconnect and shutdown each trigger deterministic cleanup that releases held keys and buttons before control ends.",
+          tradeoff: "The lifecycle needs explicit cleanup branches and tests, but an ended session cannot leave remote input logically pressed.",
         },
       ],
     },

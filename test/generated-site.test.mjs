@@ -130,7 +130,7 @@ test("articles identify Djenis as the Person author and Ejupi Labs as publisher"
   assert.match(html, /itemprop="author" itemscope itemtype="https:\/\/schema\.org\/Person" itemid="https:\/\/djenis\.ejupilabs\.com\/#person"/u);
   assert.match(html, /rel="author" itemprop="url" href="https:\/\/djenis\.ejupilabs\.com\/"/u);
   assert.match(html, /itemprop="jobTitle">Engineer and case-study author/u);
-  assert.match(html, /Last verified <time datetime="2026-07-24" itemprop="dateModified">/u);
+  assert.match(html, /Updated <time datetime="2026-07-28" itemprop="dateModified">/u);
   assert.match(html, /class="site-cta"/u);
 });
 
@@ -172,7 +172,7 @@ test("localized chrome, bylines and cross-site routes stay in the selected langu
     );
     assert.ok(workflow.includes(`rel="author" itemprop="url" href="${authorRoute}"`));
     assert.ok(workflow.includes(ui.authorRole));
-    assert.ok(workflow.includes(`${ui.lastVerified} <time datetime="2026-07-24"`));
+    assert.ok(workflow.includes(`${ui.updated} <time datetime="2026-07-28"`));
     assert.ok(workflow.includes(uppercase(ui.systemViewLabel)));
     assert.ok(workflow.includes(uppercase(ui.processStateReturnLabel)));
 
@@ -262,6 +262,34 @@ test("Labs evidence ledgers cite immutable source snapshots without replacing pr
   assert.doesNotMatch(professional, /evidence-citation|github\.com\/[^\s"]+\/commit\//u);
 });
 
+test("every article makes technology rationale and rejected alternatives explicit", async () => {
+  for (const localeKey of localeOrder) {
+    const prefix = locales[localeKey].prefix.replace(/^\//u, "");
+    const outputDirectory = prefix ? `${prefix}/` : "";
+    const ui = editorialUi[localeKey];
+    for (const definition of caseDefinitions) {
+      const html = await readFile(
+        new URL(
+          `../dist/${outputDirectory}case-studies/${definition.slug}/index.html`,
+          import.meta.url,
+        ),
+        "utf8",
+      );
+      assert.match(html, /id="technology-rationale"/u);
+      assert.equal((html.match(/class="technology-choice"/gu) ?? []).length, 4);
+      for (const label of [
+        ui.choiceLabel,
+        ui.whyLabel,
+        ui.alternativeLabel,
+        ui.costLabel,
+        ui.tradeoffLabel,
+      ]) {
+        assert.ok(html.includes(label), `${localeKey}/${definition.slug} is missing ${label}`);
+      }
+    }
+  }
+});
+
 test("every article renders the two locale-safe related cases in ranked order", async () => {
   for (const localeKey of localeOrder) {
     const prefix = locales[localeKey].prefix.replace(/^\//u, "");
@@ -330,8 +358,7 @@ test("sitemap and feed include the expanded editorial archive", async () => {
   const feed = await readFile(new URL("../dist/feed.xml", import.meta.url), "utf8");
   assert.match(sitemap, /\/fr\/case-studies\/vector-placement-operations\//);
   assert.match(sitemap, /\/de\/methodology\//);
-  assert.match(sitemap, /<lastmod>2026-07-24<\/lastmod>/);
-  assert.match(sitemap, /<lastmod>2026-07-25<\/lastmod>/);
+  assert.match(sitemap, /<lastmod>2026-07-28<\/lastmod>/);
   assert.match(feed, /<category>Machine learning<\/category>/);
   assert.match(feed, /\/case-studies\/careeros-local\//);
 });
@@ -399,6 +426,8 @@ test("every lazy locale index contains article decisions, trade-offs and results
     const study = locales[localeKey].cases[slug];
     assert.ok(cloud);
     assert.ok(cloud.text.includes(study.decisions.items[0].tradeoff));
+    assert.ok(cloud.text.includes(study.technology.items[0].why));
+    assert.ok(cloud.text.includes(study.technology.items[0].alternative));
     assert.ok(cloud.text.includes(study.result.paragraphs.at(-1)));
     assert.ok(cloud.text.includes(study.diagnosis.paragraphs[0]));
   }

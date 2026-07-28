@@ -29,7 +29,7 @@ export const caseDefinitions = [
     categoryKey: "cloud-platforms",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-22",
-    updated: "2026-07-24",
+    updated: "2026-07-28",
     stack: ["GKE", "Terraform", "Helm", "Cloud Build", "GitLab CI/CD"],
   },
   {
@@ -40,7 +40,7 @@ export const caseDefinitions = [
     categoryKey: "workflow-software",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-22",
-    updated: "2026-07-24",
+    updated: "2026-07-28",
     stack: ["Spring Boot", "React", "Single-SPA", "Camunda", "S3-compatible storage"],
   },
   {
@@ -51,7 +51,7 @@ export const caseDefinitions = [
     categoryKey: "enterprise-software",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-22",
-    updated: "2026-07-24",
+    updated: "2026-07-28",
     stack: ["C#", ".NET Framework 4.8", "SQL Server", "KnockoutJS", "Crystal Reports"],
   },
   {
@@ -62,7 +62,7 @@ export const caseDefinitions = [
     categoryKey: "local-first-product",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-25",
+    updated: "2026-07-28",
     projectUrl: "https://ejupi-djenis30.github.io/careeros-local/",
     sourceRef: "v1.6.0",
     sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/commit/cd4ae45ba5580a4b4bbea94755a8db3f3e62533e",
@@ -77,7 +77,7 @@ export const caseDefinitions = [
     categoryKey: "machine-learning",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-25",
+    updated: "2026-07-28",
     projectUrl: "https://ejupi-djenis30.github.io/PsychologistRustBot/",
     sourceRef: "v1.5.0",
     sourceUrl: "https://github.com/ejupi-djenis30/PsychologistRustBot/commit/79f5a5722289ce2c2c0801995ae2c91b48d9e1d2",
@@ -92,7 +92,7 @@ export const caseDefinitions = [
     categoryKey: "agent-systems",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-25",
+    updated: "2026-07-28",
     projectUrl: "https://ejupi-djenis30.github.io/DjenisAiAgent/",
     sourceRef: "v0.2.2",
     sourceUrl: "https://github.com/ejupi-djenis30/DjenisAiAgent/commit/afe50077755b4d8a82ef9ce1b4dd92587ab0dec1",
@@ -107,7 +107,7 @@ export const caseDefinitions = [
     categoryKey: "protocol-tooling",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-26",
+    updated: "2026-07-28",
     projectUrl: "https://ejupi-djenis30.github.io/Dig/",
     sourceRef: "v3.0.0",
     sourceUrl: "https://github.com/ejupi-djenis30/Dig/commit/9ef8f9406960d1ba6fe21754debda3b69d8f4031",
@@ -122,7 +122,7 @@ export const caseDefinitions = [
     categoryKey: "computational-mathematics",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-25",
+    updated: "2026-07-28",
     projectUrl: "https://ejupi-djenis30.github.io/IntegraDraw/",
     sourceRef: "v1.1.2",
     sourceUrl: "https://github.com/ejupi-djenis30/IntegraDraw/commit/fa7db6675f4b04d8c822fb464ca0d4b130488316",
@@ -137,7 +137,7 @@ export const caseDefinitions = [
     categoryKey: "operations-software",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-26",
+    updated: "2026-07-28",
     projectUrl: "https://ejupi-djenis30.github.io/vector-placement-operations/",
     sourceRef: "v3.0.0",
     sourceUrl: "https://github.com/ejupi-djenis30/vector-placement-operations/commit/a32002bae031fbfc34b9fb70013dbf9cf4766b9f",
@@ -152,7 +152,7 @@ export const caseDefinitions = [
     categoryKey: "secure-remote-assistance",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-26",
-    updated: "2026-07-26",
+    updated: "2026-07-28",
     projectUrl: "https://jdoor.ejupilabs.com/",
     sourceRef: "v1.0.0",
     sourceUrl: "https://github.com/NobodyToListen/JDoor/commit/ac94dd82cdff17551826b7254165d123190aeec7",
@@ -228,15 +228,12 @@ export const locales = {
       contact: "Discuss a project",
       allWork: "All case studies",
       readCase: "Read case study",
-      articleLabel: "Anonymised case study",
       published: "Published",
       readTime: "min read",
       contents: "On this page",
       stack: "Technology",
-      next: "Next case study",
-      back: "Back to all case studies",
       sourceNote: "Evidence boundary",
-      socialImageAlt: "Ejupi Labs wordmark beside the headline “Engineering work, explained” and an editorial system diagram.",
+      socialImageAlt: "Ejupi Labs wordmark beside the headline “Engineering decisions, explained” and an editorial decision diagram.",
       footerLine: "Product software, cloud systems and automation from Switzerland.",
       rights: "All rights reserved.",
       notFoundTitle: "This page is not available.",
@@ -244,30 +241,10 @@ export const locales = {
       notFoundAction: "Browse all case studies",
     },
     index: {
-      title: "Engineering work, explained.",
+      title: "Engineering decisions, explained.",
       description:
-        "Case studies tracing the constraints, decisions and evidence behind anonymised professional systems and open-source Labs projects.",
+        "Case studies tracing constraints, choices, credible alternatives, accepted costs and evidence across anonymised professional systems and open-source Labs projects.",
       eyebrow: "Engineering case studies / 01 / 10",
-      introTitle: "The decisions behind the systems",
-      introBody:
-        "These case studies separate professional work from Labs projects and make the constraints, trade-offs, evidence and limits explicit.",
-      principles: [
-        {
-          number: "P01",
-          title: "No invented metrics",
-          body: "When an exact figure is confidential or unavailable, I describe the technical change instead of manufacturing a percentage.",
-        },
-        {
-          number: "P02",
-          title: "Decisions before tools",
-          body: "The technology matters, but only after the problem and the trade-off are clear.",
-        },
-        {
-          number: "P03",
-          title: "Names withheld, work intact",
-          body: "Organisations and commercial details are omitted. The engineering scope is kept specific.",
-        },
-      ],
       ctaTitle: "Need a clearer route through a complex system?",
       ctaBody: "Share the difficult part. We can frame the architecture, delivery path and first useful release together.",
     },
@@ -278,7 +255,7 @@ export const locales = {
         title: "Moving an AI workflow platform to a repeatable cloud foundation",
         summary:
           "In roughly one month, I moved a multi-component document and AI-workflow platform from an environment-specific on-premise setup to reusable Terraform, GKE and a controlled blue/red delivery path on Google Cloud.",
-        readMinutes: "12",
+        readMinutes: "14",
         facts: [
           ["Discipline", "Cloud platform engineering"],
           ["Scope", "Infrastructure, workloads and release path"],
@@ -319,29 +296,60 @@ export const locales = {
           labels: ["GITLAB CI", "CLOUD BUILD", "ARTIFACT REGISTRY", "GKE BLUE / RED", "CLOUD SQL + GCS"],
           caption: "Build once, verify the inactive slot, then make the production switch explicit.",
         },
-        decisions: {
-          title: "Decisions that mattered",
-          intro: "Each choice removes one class of hidden difference, even when the safer option asks for more explicit work.",
+        technology: {
+          title: "Why these technologies fit the migration",
+          intro:
+            "These were choices inside an existing product and an agreed Google Cloud destination, not a greenfield ranking of every possible platform. The useful question was which boundaries made this particular mix of workloads repeatable and operable.",
           items: [
             {
-              title: "Reuse modules, vary inputs",
-              body: "Reusable Terraform keeps the foundation consistent while environment-specific values stay visible as inputs. Copying whole stacks per environment would have made the first setup quicker but allowed them to drift silently.",
-              tradeoff: "The module boundary needs stricter contracts and review, but the differences now live in one place where operators can see them.",
+              choice: "GKE as the common workload boundary",
+              why: "The platform already combined a Vue interface, Spring Boot services, a Python worker, Temporal and Keycloak. GKE gave those different workloads one deployment, readiness and blue/red slot model while managed data moved outside the cluster.",
+              alternative: "Splitting the components across serverless products would have imposed several execution models on one release path, while long-lived VMs would have preserved more host-specific setup and maintenance.",
+              cost: "The team accepts a Kubernetes control surface, cluster lifecycle work and the need to keep workload requests, readiness and upgrades explicit.",
             },
             {
-              title: "Move state to managed boundaries",
-              body: "Cloud SQL takes the PostgreSQL role and Cloud Storage replaces MinIO object storage. Keeping both inside GKE would have looked more like the old installation, but it would also have carried its backup, availability and maintenance burden into the cluster.",
-              tradeoff: "Managed services make ownership clearer, but the migration must account for provider-specific behaviour and deliberate data-transfer sequencing.",
+              choice: "Terraform modules for the Google Cloud foundation",
+              why: "Reusable modules kept common infrastructure definitions together while exposing environment differences as reviewable inputs. That directly addressed the environment-specific setup the migration needed to remove.",
+              alternative: "Console configuration or copied templates could create the first environment quickly, but repeated changes would be harder to review and each copy could drift independently.",
+              cost: "Module contracts, provider state and version changes require discipline; even a small infrastructure exception must be modelled rather than fixed silently by hand.",
             },
             {
-              title: "Separate demonstration from production",
-              body: "The demonstration path proves the packaged system without pretending it has the same consequence as a production release. Production keeps its own build, registry, verification and traffic controls.",
-              tradeoff: "Two paths create more pipeline work than one universal deploy command, but they stop convenience settings from becoming production policy.",
+              choice: "Helm for Kubernetes workload packaging",
+              why: "Helm provided a release unit for the related Kubernetes resources and a controlled place for environment values without copying the full workload definition for every slot.",
+              alternative: "Raw manifests would be more direct for a single deployment, but duplicating them across environments and blue/red slots would make shared changes and intentional differences harder to distinguish.",
+              cost: "Templates and values introduce indirection, so rendered output must be inspected and chart changes versioned with the same care as application code.",
             },
             {
-              title: "Switch only after verification",
-              body: "Production deploys to an inactive blue/red slot. Readiness signals and smoke tests run there before a human moves traffic, instead of updating the active environment in place.",
-              tradeoff: "The manual gate is slower than blind continuous deployment, but rollback and final production authority remain visible.",
+              choice: "Separate Cloud Build and GitLab delivery responsibilities",
+              why: "Cloud Build produced images in the Google Cloud path, while GitLab CI kept production orchestration, verification and the explicit traffic decision. The split matched the different consequences of building an artifact and releasing it.",
+              alternative: "One undifferentiated deploy pipeline would be simpler to describe, but it would blur demonstration and production controls and make artifact creation, rollout and traffic switching one coupled action.",
+              cost: "Two systems require credentials, artifact hand-offs and failure diagnosis across a boundary, and their contracts must remain aligned.",
+            },
+          ],
+        },
+        decisions: {
+          title: "Operating rules for a reversible release",
+          intro: "The stack defines the route; these rules define who owns state, what counts as evidence and how production can change without becoming an irreversible leap.",
+          items: [
+            {
+              title: "Turn environment variance into a review surface",
+              body: "Before a release, environment-specific values and stateful responsibilities are visible together, including who owns data, backup and recovery. A difference becomes an explicit input or hand-off, not an invisible fix in a running environment.",
+              tradeoff: "Reviewing variance and ownership adds preparation, but prevents configuration drift or unowned recovery work from emerging during cutover.",
+            },
+            {
+              title: "Verify the candidate end to end",
+              body: "A release is followed from the built image into the inactive environment, then checked with readiness, infrastructure signals and a smoke test. No single green indicator stands in for the whole path.",
+              tradeoff: "This takes longer than accepting a successful build as proof; the smoke test is still deliberately scoped and does not claim to cover every business workflow.",
+            },
+            {
+              title: "Separate artifact evidence from traffic authority",
+              body: "A successful build creates a candidate; it does not grant production access. The same artifact is deployed and exercised on the inactive blue/red slot, while the decision to move traffic remains a distinct operator action.",
+              tradeoff: "This governance adds hand-offs and requires both slots to stay ready, but prevents build success from being mistaken for release approval.",
+            },
+            {
+              title: "Make cutover explicit and reversible",
+              body: "Traffic moves only after the checks are visible and an operator approves the switch. The previous slot remains the clear return path instead of being overwritten in place.",
+              tradeoff: "The gate adds a deliberate pause, but keeps final production authority and reversal visible when evidence is incomplete.",
             },
           ],
         },
@@ -370,7 +378,7 @@ export const locales = {
         title: "Giving operators one clear route through a complex archival workflow",
         summary:
           "Over roughly three months, I built a Spring Boot service and React Single-SPA microfrontend around Camunda so operators could create archival sessions, move source packages through a nine-step lifecycle and track the resulting output.",
-        readMinutes: "11",
+        readMinutes: "13",
         facts: [
           ["Discipline", "Workflow and product engineering"],
           ["Scope", "Service, microfrontend and workflow boundary"],
@@ -411,29 +419,60 @@ export const locales = {
           labels: ["OPERATOR", "REACT SINGLE-SPA", "SPRING BOOT API", "CAMUNDA", "S3 INPUT + OUTPUT"],
           caption: "The platform owns the shell; the microfrontend and service own the archival workflow boundary.",
         },
-        decisions: {
-          title: "Decisions that mattered",
-          intro: "The design avoids solving composition twice and keeps workflow authority outside the browser.",
+        technology: {
+          title: "Why these boundaries fit the host platform",
+          intro:
+            "This was not a greenfield stack selection. The shell, workflow engine and storage conventions belonged to an existing platform; the design task was to add one coherent capability without duplicating or bypassing those boundaries.",
           items: [
             {
-              title: "Put the workflow behind an application service",
-              body: "The React client talks to a focused Spring API rather than calling Camunda directly or encoding process mechanics in the browser.",
-              tradeoff: "The service adds a boundary to maintain, but it gives workflow rules one testable owner and prevents them from leaking into every screen.",
+              choice: "A focused Spring Boot service boundary",
+              why: "The service gave application rules, valid actions, Camunda integration and storage references one backend owner. React could consume an application model instead of learning process-engine mechanics.",
+              alternative: "Calling Camunda directly from the browser or distributing archival rules through shared services would expose orchestration details and create more than one interpretation of valid workflow behaviour.",
+              cost: "The additional API and mapping layer must evolve with the process, and errors at the service-to-engine boundary need explicit handling.",
             },
             {
-              title: "Reuse the platform shell",
-              body: "The single-spa host keeps the header, footer, navigation and shared component conventions. The archival microfrontend contributes only the new workflow experience instead of presenting itself as a separate application.",
-              tradeoff: "Reuse reduces duplicated chrome, but it requires a stable integration contract and coordination when shared platform components change.",
+              choice: "Camunda for the nine-step process",
+              why: "Camunda already coordinated the workflow, so keeping process transitions there preserved one source for progress while the service translated that state for operators.",
+              alternative: "A custom state machine, especially one represented mainly as UI state, would duplicate process logic and make browser state compete with the workflow engine for authority.",
+              cost: "Process definitions and application models must stay aligned, and operational diagnosis crosses both the service and the engine.",
             },
             {
-              title: "Make state visible before action",
-              body: "The interface centres the current session, its packages and the workflow state so an operator can understand what is happening before choosing a valid next step.",
-              tradeoff: "The UI must represent unavailable, pending and failed states instead of optimistically showing only the happy path.",
+              choice: "React in the existing single-spa composition",
+              why: "A bounded microfrontend could reuse the platform header, footer, navigation and component conventions while owning only the archival route and interaction model.",
+              alternative: "Rewriting the shell or shipping a standalone React application would expand the project beyond the missing capability and create duplicate navigation and chrome to maintain.",
+              cost: "The microfrontend depends on a stable mount and integration contract, and shared-platform changes require coordination rather than complete local control.",
             },
             {
-              title: "Keep one interpretation of progress",
-              body: "The service maps Camunda state into an application model consumed by the microfrontend. The host platform does not acquire a second copy of the archival lifecycle.",
-              tradeoff: "The mapping needs care whenever the process changes, but it prevents workflow meaning from diverging across shell, browser and engine.",
+              choice: "S3-compatible storage for input and output packages",
+              why: "Package content stayed at an object-storage boundary while the service and workflow referred to it, keeping archival records and binary payload ownership distinct.",
+              alternative: "Database blobs would bind package content to the relational data lifecycle, while local files would bind it to a particular service instance and deployment path.",
+              cost: "Buckets, endpoints, credentials and missing-object cases become explicit operational concerns that the service must represent honestly.",
+            },
+          ],
+        },
+        decisions: {
+          title: "Rules for an operable workflow",
+          intro: "The architecture provides one source of process truth; these rules turn it into an experience an operator can read, trust and recover.",
+          items: [
+            {
+              title: "Show state before offering action",
+              body: "The current session, its source and output packages, and the process stage stay visible before an operator chooses the next step. An action without that context is not presented as progress.",
+              tradeoff: "The interface must explain unavailable, pending and failed states instead of optimising only for the happy path.",
+            },
+            {
+              title: "Derive valid actions from backend state",
+              body: "The interface presents transitions supported by the application model, while the service rejects invalid ones. Local browser state never becomes a second authority over what may happen next.",
+              tradeoff: "State exchange and refresh behaviour must be explicit, but a stale screen cannot invent a valid workflow step.",
+            },
+            {
+              title: "Preserve session and package continuity",
+              body: "The session, source packages and resulting packages remain connected across the nine-step route. Verification follows that same journey from creation and attachment through processing and output tracking.",
+              tradeoff: "The model and interface carry more context than a task-only screen, but operators can follow how the work and its output belong together.",
+            },
+            {
+              title: "Make failure and retry visible",
+              body: "An incomplete, pending or failed step remains visible. If the next valid action allows a retry or continuation, it appears only after the backend confirms that state.",
+              tradeoff: "This increases the number of states and error paths the interface must explain, but distinguishes waiting, failure and recovery instead of leaving operators to guess.",
             },
           ],
         },
@@ -462,7 +501,7 @@ export const locales = {
         title: "Improving a retail ERP without stepping outside daily operations",
         summary:
           "Across approximately nineteen months, I worked through SQL Server, .NET Framework 4.8 and a KnockoutJS frontend in a live retail ERP, covering features, defects, reporting, two courier integrations and stock-receipt modernisation.",
-        readMinutes: "12",
+        readMinutes: "14",
         facts: [
           ["Discipline", "Enterprise product engineering"],
           ["Scope", "Database, backend, frontend and integrations"],
@@ -504,29 +543,60 @@ export const locales = {
           labels: ["WEB OPERATOR", "KNOCKOUT + JQUERY", ".NET FRAMEWORK 4.8", "SHARED SQL SERVER", "VB6 ERP + TILL"],
           caption: "The web ERP and the older VB6 estate meet at one backward-compatible database contract.",
         },
+        technology: {
+          title: "Why continuity was an architectural choice",
+          intro:
+            "This was evolution inside a live ERP estate, not a greenfield endorsement of its stack. The right technology decision was often to preserve an operational contract and improve it in place rather than make every layer new at once.",
+          items: [
+            {
+              choice: "Keep C#/.NET Framework and KnockoutJS for incremental change",
+              why: "Features, defects and daily workflows already crossed these layers. Working within them allowed each change to follow the real request path and remain releasable alongside ongoing operations.",
+              alternative: "A big-bang rewrite of backend and frontend would require the existing behaviour to be rediscovered and replaced before smaller operational improvements could reach users.",
+              cost: "The work accepts older framework constraints, mixed frontend patterns and continued maintenance knowledge instead of gaining a clean modern baseline immediately.",
+            },
+            {
+              choice: "Treat SQL Server as the shared data contract",
+              why: "The web ERP, VB6 desktop ERP and till application read and wrote the same schema. Compatible SQL changes protected consumers that could not move with every web release.",
+              alternative: "Migrating to a new database or schema as part of the web work would assume all consumers could cut over together despite the absence of a migration system.",
+              cost: "Additive changes and transitional structures can remain longer, and database design must account for old reads and writes as well as the new path.",
+            },
+            {
+              choice: "Evolve Crystal Reports and existing reporting paths",
+              why: "Reporting was already part of the operational system and its SQL Server behaviour. Keeping that path in scope allowed report changes to be checked with the same data and application contract.",
+              alternative: "Introducing a new reporting platform at the same time would add another migration and require existing report behaviour to be translated while application and database changes were still underway.",
+              cost: "The solution retains legacy reporting tooling and its design constraints, so report work continues to require specialised knowledge and cross-layer verification.",
+            },
+            {
+              choice: "Deliver one end-to-end workflow slice at a time",
+              why: "A change could cover the operator screen, .NET rules, SQL behaviour and, when involved, reports, integrations and older consumers as one coherent operational slice.",
+              alternative: "Modernising one technical layer at a time would leave behaviour divided between old and new paths and postpone proof that the real workflow still worked until several migrations were complete.",
+              cost: "Each slice must be completed and verified across every layer and consumer it touches, so progress demands disciplined boundaries rather than the visual uniformity of a layer-wide programme.",
+            },
+          ],
+        },
         decisions: {
-          title: "Decisions that mattered",
-          intro: "The work favoured evidence from the real operation, compatible contracts and releasable change over a dramatic rewrite.",
+          title: "Rules for changing a live operation",
+          intro: "Stack continuity set the boundary; these rules kept each change connected to the full operating path and to the people using it.",
           items: [
             {
               title: "Trace the whole request path",
-              body: "Performance and reliability work starts at the behaviour the client or operator can describe, then follows it through KnockoutJS and jQuery, the .NET backend and SQL Server.",
+              body: "Performance and reliability work starts with behaviour the client or operator can describe, then follows it through the web state, backend rules and database work instead of stopping at the first visible symptom.",
               tradeoff: "This takes more investigation than patching the first slow component, but it avoids moving the bottleneck or fixing a symptom the client did not actually have.",
             },
             {
-              title: "Treat the database as a shared contract",
-              body: "With no migration system and VB6 consumers on the same database, schema work had to preserve existing reads and writes. An additive or compatible change was safer than assuming every application could move in lockstep.",
-              tradeoff: "Backward compatibility can leave transitional structures in place longer, but it protects the desktop and till workflows that cannot be upgraded as part of every web release.",
+              title: "Make compatibility part of acceptance",
+              body: "A change is accepted only after it works through the web ERP and against the older desktop and till paths that share its records. Stored procedures, views, reports and courier exchanges join that check whenever the workflow touches them.",
+              tradeoff: "The acceptance surface is wider than the edited component, but a local success cannot quietly become a failure in another daily path.",
             },
             {
-              title: "Improve in releasable slices",
-              body: "Focused changes are easier to reason about in a business-critical system than a simultaneous rewrite of the web stack, database and legacy desktop estate.",
-              tradeoff: "Incremental delivery demands patience and careful boundaries, but each release keeps its compatibility risk visible.",
+              title: "Define done in the client’s actual workflow",
+              body: "Client conversations translate a request into concrete workflows, edge cases and acceptance checks before the change. Delivery is complete only when the resulting behaviour reconnects to daily use, not merely when one component works in isolation.",
+              tradeoff: "This definition of done takes coordination time, but it is cheaper than shipping a technically coherent interpretation that does not fit the real retail process.",
             },
             {
-              title: "Keep the client in the reasoning loop",
-              body: "Direct conversations turned requests into concrete workflows, edge cases and acceptance checks before I changed reports, integrations or daily screens.",
-              tradeoff: "The feedback loop takes coordination time, but it is cheaper than implementing a technically coherent interpretation that does not fit the real retail process.",
+              title: "Treat support and training as release feedback",
+              body: "Questions raised through support and training keep requirements tied to the way people understand and perform the work. That feedback informs the next bounded correction or improvement.",
+              tradeoff: "Delivery responsibility extends beyond merging code, but usability gaps become visible while they can still shape the following release.",
             },
           ],
         },
@@ -568,15 +638,12 @@ export const locales = {
       contact: "Parliamo di un progetto",
       allWork: "Tutti i case study",
       readCase: "Leggi il case study",
-      articleLabel: "Case study anonimizzato",
       published: "Pubblicato",
       readTime: "min di lettura",
       contents: "In questa pagina",
       stack: "Tecnologie",
-      next: "Case study successivo",
-      back: "Torna ai case study",
       sourceNote: "Limiti delle informazioni",
-      socialImageAlt: "Il wordmark Ejupi Labs accanto al titolo «Progetti di ingegneria, spiegati» e a un diagramma editoriale di sistema.",
+      socialImageAlt: "Il wordmark Ejupi Labs accanto al titolo «Decisioni tecniche, spiegate» e a un diagramma editoriale delle scelte.",
       footerLine: "Software di prodotto, sistemi cloud e automazione dalla Svizzera.",
       rights: "Tutti i diritti riservati.",
       notFoundTitle: "Questa pagina non è disponibile.",
@@ -584,30 +651,10 @@ export const locales = {
       notFoundAction: "Vedi tutti i case study",
     },
     index: {
-      title: "Progetti di ingegneria, spiegati.",
+      title: "Decisioni tecniche, spiegate.",
       description:
-        "Case study che ricostruiscono vincoli, decisioni ed evidenze dietro sistemi professionali anonimizzati e progetti Labs open source.",
+        "Case study che ricostruiscono vincoli, scelte, alternative credibili, costi accettati ed evidenze dietro sistemi professionali anonimizzati e progetti Labs open source.",
       eyebrow: "Case study di engineering / 01 / 10",
-      introTitle: "Le decisioni dietro i sistemi",
-      introBody:
-        "I case study separano lavoro professionale e progetti Labs e rendono espliciti vincoli, compromessi, evidenze e limiti.",
-      principles: [
-        {
-          number: "P01",
-          title: "Nessun numero inventato",
-          body: "Quando un dato preciso è riservato o non disponibile, descrivo il cambiamento tecnico invece di costruire una percentuale.",
-        },
-        {
-          number: "P02",
-          title: "Prima le decisioni, poi gli strumenti",
-          body: "La tecnologia conta, ma soltanto dopo aver chiarito il problema e il compromesso.",
-        },
-        {
-          number: "P03",
-          title: "Nomi omessi, lavoro intatto",
-          body: "Le organizzazioni e i dettagli commerciali non compaiono. Il perimetro tecnico resta specifico.",
-        },
-      ],
       ctaTitle: "Serve un percorso più chiaro per un sistema complesso?",
       ctaBody: "Partiamo dalla parte difficile. Possiamo definire insieme architettura, percorso di delivery e prima release utile.",
     },
@@ -618,7 +665,7 @@ export const locales = {
         title: "Portare una piattaforma AI su una base cloud ripetibile",
         summary:
           "In circa un mese ho portato una piattaforma multicomponente per documenti e workflow AI da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
-        readMinutes: "12",
+        readMinutes: "14",
         facts: [
           ["Disciplina", "Cloud platform engineering"],
           ["Perimetro", "Infrastruttura, workload e percorso di rilascio"],
@@ -659,29 +706,60 @@ export const locales = {
           labels: ["GITLAB CI", "CLOUD BUILD", "ARTIFACT REGISTRY", "GKE BLUE / RED", "CLOUD SQL + GCS"],
           caption: "Build unica, verifica sullo slot inattivo e switch di produzione esplicito.",
         },
-        decisions: {
-          title: "Le decisioni importanti",
-          intro: "Ogni scelta elimina una classe di differenze nascoste, anche quando l’opzione più sicura richiede più lavoro esplicito.",
+        technology: {
+          title: "Perché queste tecnologie erano adatte alla migrazione",
+          intro:
+            "Erano scelte compiute dentro un prodotto esistente e una destinazione Google Cloud già definita, non una classifica greenfield di ogni piattaforma possibile. La domanda utile era quali confini rendessero ripetibile e gestibile questo insieme concreto di workload.",
           items: [
             {
-              title: "Riutilizzare i moduli, variare gli input",
-              body: "Terraform riutilizzabile mantiene coerente la base, mentre i valori specifici restano input visibili. Copiare interi stack per ambiente avrebbe velocizzato il primo setup, ma avrebbe permesso loro di divergere in silenzio.",
-              tradeoff: "Il confine dei moduli richiede contratti e revisioni più rigorosi, ma le differenze ora vivono in un punto in cui gli operatori possono vederle.",
+              choice: "GKE come confine comune per i workload",
+              why: "La piattaforma riuniva già un’interfaccia Vue, servizi Spring Boot, un worker Python, Temporal e Keycloak. GKE offriva a workload diversi un unico modello di distribuzione, readiness e slot blue/red, mentre i dati gestiti uscivano dal cluster.",
+              alternative: "Distribuire i componenti tra prodotti serverless avrebbe imposto più modelli di esecuzione allo stesso rilascio; VM persistenti avrebbero conservato una parte maggiore del setup e della manutenzione specifici per host.",
+              cost: "Il team accetta la superficie operativa di Kubernetes, il ciclo di vita del cluster e la necessità di rendere espliciti risorse, readiness e aggiornamenti dei workload.",
             },
             {
-              title: "Portare lo stato su confini gestiti",
-              body: "Cloud SQL assume il ruolo di PostgreSQL e Cloud Storage sostituisce MinIO. Mantenerli entrambi dentro GKE sarebbe stato più simile all’installazione precedente, ma avrebbe trasferito nel cluster anche backup, disponibilità e manutenzione.",
-              tradeoff: "I servizi gestiti rendono più chiara la responsabilità operativa, ma la migrazione deve considerare il comportamento del provider e una sequenza intenzionale per il trasferimento dei dati.",
+              choice: "Moduli Terraform per la base Google Cloud",
+              why: "I moduli riutilizzabili mantenevano unite le definizioni comuni e rendevano le differenze tra ambienti input visibili e revisionabili. Era una risposta diretta al setup specifico per ambiente che la migrazione doveva eliminare.",
+              alternative: "Configurazione da console o template copiati avrebbero creato più rapidamente il primo ambiente, ma le modifiche successive sarebbero state meno verificabili e ogni copia avrebbe potuto divergere da sola.",
+              cost: "Contratti dei moduli, stato dei provider e cambi di versione richiedono disciplina; anche una piccola eccezione infrastrutturale va modellata invece di essere corretta a mano in silenzio.",
             },
             {
-              title: "Separare dimostrazione e produzione",
-              body: "Il percorso dimostrativo prova il sistema impacchettato senza fingere di avere le stesse conseguenze di un rilascio produttivo. La produzione conserva build, registry, verifiche e controllo del traffico propri.",
-              tradeoff: "Due percorsi richiedono più lavoro di pipeline rispetto a un comando universale, ma impediscono che impostazioni di comodo diventino policy di produzione.",
+              choice: "Helm per impacchettare i workload Kubernetes",
+              why: "Helm forniva un’unità di rilascio per le risorse collegate e un punto controllato per i valori d’ambiente, senza copiare l’intera definizione per ogni ambiente e slot.",
+              alternative: "Manifest Kubernetes non templati sarebbero stati più diretti per un singolo deploy, ma duplicarli tra ambienti e slot blue/red avrebbe reso meno distinguibili modifiche condivise e differenze intenzionali.",
+              cost: "Template e valori introducono un livello di indirezione: l’output renderizzato va ispezionato e le modifiche al chart vanno versionate con la stessa cura del codice applicativo.",
             },
             {
-              title: "Fare lo switch solo dopo la verifica",
-              body: "La produzione viene distribuita sullo slot blue/red inattivo. Segnali di readiness e smoke test vengono eseguiti lì prima che una persona sposti il traffico, invece di aggiornare l’ambiente attivo in place.",
-              tradeoff: "Il gate manuale è più lento di un deploy continuo cieco, ma rollback e autorità finale sulla produzione restano visibili.",
+              choice: "Responsabilità separate tra Cloud Build e GitLab CI",
+              why: "Cloud Build produceva le immagini nel percorso Google Cloud, mentre GitLab CI manteneva orchestrazione produttiva, verifiche e decisione esplicita sul traffico. La separazione rifletteva le conseguenze diverse di creare un artefatto e rilasciarlo.",
+              alternative: "Un’unica pipeline di deploy indistinta sarebbe stata più semplice da descrivere, ma avrebbe confuso controlli dimostrativi e produttivi e legato in una sola azione build, rollout e spostamento del traffico.",
+              cost: "Due sistemi richiedono credenziali, passaggio degli artefatti e diagnosi degli errori attraverso un confine; i loro contratti devono restare allineati.",
+            },
+          ],
+        },
+        decisions: {
+          title: "Regole operative per un rilascio reversibile",
+          intro: "Lo stack definisce il percorso; queste regole chiariscono chi possiede lo stato, quali segnali valgono come evidenza e come cambiare la produzione senza trasformare il passaggio in un salto irreversibile.",
+          items: [
+            {
+              title: "Rendere revisionabili le differenze tra ambienti",
+              body: "Prima di un rilascio, i valori specifici dell’ambiente e le responsabilità sullo stato sono visibili insieme, compreso chi risponde di dati, backup e ripristino. Ogni differenza diventa un input o un passaggio esplicito, non una correzione invisibile sull’ambiente in esecuzione.",
+              tradeoff: "Revisionare differenze e responsabilità richiede più preparazione, ma impedisce che drift di configurazione o compiti di ripristino senza proprietario emergano durante il cutover.",
+            },
+            {
+              title: "Verificare il candidato da un estremo all’altro",
+              body: "Il candidato al rilascio viene seguito dall’immagine costruita fino all’ambiente inattivo, poi verificato con readiness, segnali infrastrutturali e smoke test. Nessun singolo indicatore verde sostituisce l’intero percorso.",
+              tradeoff: "Richiede più tempo che accettare una build riuscita come prova; lo smoke test resta intenzionalmente circoscritto e non pretende di coprire ogni workflow di business.",
+            },
+            {
+              title: "Separare l’evidenza sull’artefatto dall’autorità sul traffico",
+              body: "Una build riuscita crea un candidato, ma non gli concede accesso alla produzione. Lo stesso artefatto viene distribuito e provato sullo slot blue/red inattivo, mentre la decisione di spostare il traffico resta un’azione distinta dell’operatore.",
+              tradeoff: "Questa governance aggiunge passaggi di responsabilità e richiede che entrambi gli slot restino pronti, ma impedisce di scambiare il successo della build per un’approvazione al rilascio.",
+            },
+            {
+              title: "Rendere il cutover esplicito e reversibile",
+              body: "Il traffico si sposta soltanto quando le verifiche sono visibili e un operatore approva il passaggio. Lo slot precedente resta il percorso di ritorno chiaro invece di essere sovrascritto.",
+              tradeoff: "Il gate introduce una pausa intenzionale, ma mantiene visibili l’autorità finale sulla produzione e la possibilità di tornare indietro quando le evidenze sono incomplete.",
             },
           ],
         },
@@ -710,7 +788,7 @@ export const locales = {
         title: "Un percorso chiaro per gestire un workflow archivistico complesso",
         summary:
           "In circa tre mesi ho costruito un servizio Spring Boot e un microfrontend React Single-SPA attorno a Camunda, per creare sessioni archivistiche, muovere pacchetti sorgente lungo un ciclo di nove passaggi e seguirne l’output.",
-        readMinutes: "11",
+        readMinutes: "13",
         facts: [
           ["Disciplina", "Workflow e product engineering"],
           ["Perimetro", "Servizio, microfrontend e confine workflow"],
@@ -751,29 +829,60 @@ export const locales = {
           labels: ["OPERATORE", "REACT SINGLE-SPA", "API SPRING BOOT", "CAMUNDA", "S3 INPUT + OUTPUT"],
           caption: "La piattaforma possiede la shell; microfrontend e servizio possiedono il confine del workflow archivistico.",
         },
-        decisions: {
-          title: "Le decisioni importanti",
-          intro: "Il design evita di risolvere due volte la composizione e mantiene l’autorità del workflow fuori dal browser.",
+        technology: {
+          title: "Perché questi confini erano adatti alla piattaforma host",
+          intro:
+            "Non era una selezione greenfield dello stack. Shell, motore di workflow e convenzioni di storage appartenevano a una piattaforma esistente; il compito era aggiungere una capacità coerente senza duplicare o aggirare quei confini.",
           items: [
             {
-              title: "Mettere il workflow dietro un servizio",
-              body: "Il client React parla con una API Spring mirata invece di chiamare direttamente Camunda o codificare nel browser i meccanismi del processo.",
-              tradeoff: "Il servizio aggiunge un confine da mantenere, ma assegna alle regole del workflow un proprietario testabile e impedisce loro di invadere ogni schermata.",
+              choice: "Un servizio Spring Boot con un confine mirato",
+              why: "Il servizio assegnava a regole applicative, azioni valide, integrazione Camunda e riferimenti storage un solo proprietario backend. React poteva consumare un modello applicativo senza conoscere i meccanismi del motore di processo.",
+              alternative: "Chiamare Camunda direttamente dal browser o distribuire le regole archivistiche tra servizi condivisi avrebbe esposto dettagli di orchestrazione e creato più interpretazioni del comportamento valido.",
+              cost: "L’API e il livello di mappatura aggiuntivi devono evolvere insieme al processo; gli errori tra servizio e motore richiedono una gestione esplicita.",
             },
             {
-              title: "Riutilizzare la shell della piattaforma",
-              body: "L’host single-spa conserva header, footer, navigazione e convenzioni dei componenti condivisi. Il microfrontend archivistico contribuisce soltanto la nuova esperienza invece di presentarsi come applicazione separata.",
-              tradeoff: "Il riuso riduce il chrome duplicato, ma richiede un contratto d’integrazione stabile e coordinamento quando cambiano i componenti condivisi.",
+              choice: "Camunda per il processo in nove passaggi",
+              why: "Camunda coordinava già il workflow; mantenere lì le transizioni conservava una sola fonte dell’avanzamento, mentre il servizio traduceva quello stato per gli operatori.",
+              alternative: "Una macchina a stati personalizzata, soprattutto se rappresentata principalmente nello stato della UI, avrebbe duplicato la logica e messo il browser in concorrenza con il motore come autorità sul processo.",
+              cost: "Definizioni del processo e modello applicativo devono restare allineati, e la diagnosi operativa attraversa sia il servizio sia il motore.",
             },
+            {
+              choice: "React nella composizione single-spa esistente",
+              why: "Un microfrontend circoscritto poteva riutilizzare header, footer, navigazione e convenzioni della piattaforma, possedendo soltanto la route archivistica e il suo modello d’interazione.",
+              alternative: "Riscrivere la shell o distribuire un’applicazione React autonoma avrebbe ampliato il progetto oltre la capacità mancante e creato navigazione e chrome duplicati da mantenere.",
+              cost: "Il microfrontend dipende da un contratto stabile di montaggio e integrazione; i cambiamenti condivisi richiedono coordinamento invece di un controllo completamente locale.",
+            },
+            {
+              choice: "Storage S3-compatible per pacchetti di input e output",
+              why: "Il contenuto dei pacchetti restava al confine dello storage a oggetti, mentre servizio e workflow lo referenziavano, separando record archivistici e responsabilità dei payload binari.",
+              alternative: "Blob nel database avrebbero legato i pacchetti al ciclo di vita dei dati relazionali; file locali li avrebbero legati a una specifica istanza del servizio e al suo percorso di deploy.",
+              cost: "Bucket, endpoint, credenziali e casi di oggetto mancante diventano responsabilità operative esplicite che il servizio deve rappresentare con chiarezza.",
+            },
+          ],
+        },
+        decisions: {
+          title: "Regole per un workflow realmente operativo",
+          intro: "L’architettura offre una sola fonte di verità sul processo; queste regole la trasformano in un’esperienza che l’operatore può leggere, considerare affidabile e riprendere dopo un problema.",
+          items: [
             {
               title: "Mostrare lo stato prima dell’azione",
-              body: "L’interfaccia mette al centro la sessione corrente, i pacchetti e lo stato del processo, così l’operatore capisce cosa sta accadendo prima di scegliere un passaggio valido.",
-              tradeoff: "La UI deve rappresentare stati indisponibili, in attesa e falliti invece di mostrare in modo ottimistico soltanto il percorso ideale.",
+              body: "La sessione corrente, i pacchetti sorgente e risultanti e la fase del processo restano visibili prima che l’operatore scelga il passaggio successivo. Un’azione priva di questo contesto non viene presentata come progresso.",
+              tradeoff: "L’interfaccia deve spiegare gli stati indisponibili, in attesa e falliti invece di ottimizzare soltanto il percorso ideale.",
             },
             {
-              title: "Mantenere una sola interpretazione del progresso",
-              body: "Il servizio traduce lo stato Camunda in un modello applicativo consumato dal microfrontend. La piattaforma host non acquisisce una seconda copia del lifecycle archivistico.",
-              tradeoff: "La mappatura richiede attenzione quando cambia il processo, ma impedisce al significato del workflow di divergere tra shell, browser e motore.",
+              title: "Derivare le azioni valide dallo stato del backend",
+              body: "L’interfaccia presenta le transizioni supportate dal modello applicativo, mentre il servizio rifiuta quelle non valide. Lo stato locale del browser non diventa mai una seconda autorità sul passaggio successivo.",
+              tradeoff: "Lo scambio e l’aggiornamento dello stato devono essere espliciti, ma una schermata obsoleta non può inventare un passaggio valido.",
+            },
+            {
+              title: "Preservare la continuità tra sessione e pacchetti",
+              body: "La sessione, i pacchetti sorgente e quelli risultanti restano collegati lungo il percorso in nove fasi. La verifica segue lo stesso viaggio, dalla creazione e associazione fino all’elaborazione e al tracciamento dell’output.",
+              tradeoff: "Il modello e l’interfaccia trasportano più contesto di una schermata dedicata a un solo task, ma l’operatore può seguire il legame tra il lavoro e il suo risultato.",
+            },
+            {
+              title: "Rendere visibili errore e nuovo tentativo",
+              body: "Uno stato incompleto, in attesa o fallito resta visibile. Se l’azione successiva valida permette di riprovare o proseguire, viene mostrata soltanto dopo la conferma del backend.",
+              tradeoff: "Aumentano gli stati e i percorsi di errore da spiegare, ma attesa, fallimento e ripresa restano distinti invece di lasciare l’operatore nell’incertezza.",
             },
           ],
         },
@@ -802,7 +911,7 @@ export const locales = {
         title: "Migliorare un ERP retail senza interrompere le operazioni quotidiane",
         summary:
           "Per circa diciannove mesi ho lavorato su SQL Server, .NET Framework 4.8 e un frontend KnockoutJS di un ERP retail operativo: feature, bug, report, due integrazioni con corrieri e modernizzazione della ricezione stock.",
-        readMinutes: "12",
+        readMinutes: "14",
         facts: [
           ["Disciplina", "Enterprise product engineering"],
           ["Perimetro", "Database, backend, frontend e integrazioni"],
@@ -844,29 +953,60 @@ export const locales = {
           labels: ["OPERATORE WEB", "KNOCKOUT + JQUERY", ".NET FRAMEWORK 4.8", "SQL SERVER CONDIVISO", "ERP + CASSA VB6"],
           caption: "L’ERP web e il vecchio ecosistema VB6 si incontrano in un contratto dati retrocompatibile.",
         },
+        technology: {
+          title: "Perché la continuità era una scelta architetturale",
+          intro:
+            "Era l’evoluzione di un ERP operativo, non un’approvazione greenfield del suo stack. La scelta tecnologica corretta consisteva spesso nel preservare un contratto di lavoro e migliorarlo sul posto, invece di rendere nuovo ogni livello nello stesso momento.",
+          items: [
+            {
+              choice: "Conservare C#/.NET Framework e KnockoutJS per cambiamenti incrementali",
+              why: "Funzionalità, difetti e flussi quotidiani attraversavano già questi livelli. Lavorare al loro interno permetteva di seguire ogni richiesta lungo il percorso reale e rilasciarla senza sospendere l’operatività.",
+              alternative: "Una riscrittura in un unico passaggio di backend e frontend avrebbe richiesto di riscoprire e sostituire il comportamento esistente prima di consegnare miglioramenti operativi più piccoli.",
+              cost: "Il lavoro accetta i vincoli dei framework meno recenti, modelli frontend misti e competenze di manutenzione continuative invece di ottenere subito una base moderna e uniforme.",
+            },
+            {
+              choice: "Trattare SQL Server come contratto dati condiviso",
+              why: "ERP web, ERP desktop VB6 e applicazione cassa leggevano e scrivevano lo stesso schema. Modifiche SQL compatibili proteggevano applicazioni che non potevano avanzare con ogni release web.",
+              alternative: "Migrare database o schema insieme al lavoro web avrebbe presupposto un passaggio simultaneo di tutte le applicazioni, nonostante l’assenza di un sistema di migrazione.",
+              cost: "Modifiche additive e strutture transitorie possono restare più a lungo; il design del database deve considerare letture e scritture vecchie oltre al nuovo percorso.",
+            },
+            {
+              choice: "Far evolvere Crystal Reports e i percorsi di reporting esistenti",
+              why: "Il reporting faceva già parte del sistema operativo e del suo comportamento su SQL Server. Mantenerlo nel perimetro permetteva di verificare i cambiamenti con lo stesso contratto dati e applicativo.",
+              alternative: "Introdurre nello stesso momento una nuova piattaforma di reporting avrebbe aggiunto un’altra migrazione e imposto di tradurre il comportamento dei report mentre applicazione e database stavano ancora cambiando.",
+              cost: "La soluzione conserva strumenti di reporting storici e i loro vincoli di progettazione; le modifiche continuano a richiedere competenze specifiche e verifiche tra più livelli.",
+            },
+            {
+              choice: "Consegnare un workflow end-to-end alla volta",
+              why: "Una modifica poteva attraversare schermata operatore, regole .NET, comportamento SQL e, quando coinvolti, report, integrazioni e applicazioni preesistenti come un’unica sezione operativa coerente.",
+              alternative: "Modernizzare un livello tecnico alla volta avrebbe diviso il comportamento tra percorsi vecchi e nuovi, rimandando la prova del workflow reale fino al completamento di più migrazioni.",
+              cost: "Ogni sezione deve essere completata e verificata in tutti i livelli e le applicazioni che tocca; il progresso richiede quindi confini rigorosi invece dell’uniformità visiva di un programma per livelli.",
+            },
+          ],
+        },
         decisions: {
-          title: "Le decisioni importanti",
-          intro: "Il lavoro ha privilegiato evidenze dall’operatività reale, contratti compatibili e cambiamenti rilasciabili rispetto a una riscrittura spettacolare.",
+          title: "Regole per cambiare un sistema in uso",
+          intro: "La continuità dello stack definiva il perimetro; queste regole hanno mantenuto ogni modifica collegata all’intero percorso operativo e alle persone che lo utilizzano.",
           items: [
             {
               title: "Seguire tutta la richiesta",
-              body: "Il lavoro su performance e affidabilità parte dal comportamento che cliente o operatore riescono a descrivere, poi lo segue attraverso KnockoutJS e jQuery, backend .NET e SQL Server.",
+              body: "Il lavoro su performance e affidabilità parte da un comportamento che cliente o operatore riescono a descrivere, poi lo segue attraverso stato web, regole backend e lavoro sul database invece di fermarsi al primo sintomo visibile.",
               tradeoff: "Richiede più indagine di una patch al primo componente lento, ma evita di spostare il collo di bottiglia o risolvere un sintomo che il cliente non aveva davvero.",
             },
             {
-              title: "Trattare il database come contratto condiviso",
-              body: "Senza migrations e con consumer VB6 sullo stesso database, le modifiche allo schema dovevano preservare letture e scritture esistenti. Un cambiamento additivo o compatibile era più sicuro che presumere un avanzamento simultaneo di tutte le applicazioni.",
-              tradeoff: "La retrocompatibilità può mantenere più a lungo strutture transitorie, ma protegge i flussi desktop e cassa che non possono essere aggiornati con ogni release web.",
+              title: "Rendere la compatibilità un criterio di accettazione",
+              body: "Una modifica viene accettata soltanto dopo aver funzionato nel gestionale web e nei percorsi desktop e cassa che condividono gli stessi dati. Stored procedure, viste, report e scambi con i corrieri entrano nella verifica quando il workflow li attraversa.",
+              tradeoff: "La superficie di accettazione è più ampia del componente modificato, ma un successo locale non può trasformarsi in silenzio in un guasto su un altro percorso quotidiano.",
             },
             {
-              title: "Migliorare in sezioni rilasciabili",
-              body: "Modifiche mirate sono più semplici da comprendere in un sistema business-critical rispetto a una riscrittura simultanea di stack web, database e applicazioni desktop legacy.",
-              tradeoff: "La consegna incrementale richiede pazienza e confini precisi, ma mantiene visibile il rischio di compatibilità di ogni release.",
+              title: "Definire il completamento nel workflow reale del cliente",
+              body: "Le conversazioni con il cliente traducono una richiesta in workflow concreti, casi limite e verifiche di accettazione prima della modifica. La consegna è completa soltanto quando il comportamento risultante si ricollega all’uso quotidiano, non quando un singolo componente funziona in isolamento.",
+              tradeoff: "Questa definizione del completamento richiede tempo di coordinamento, ma costa meno che consegnare un’interpretazione tecnicamente coerente e inadatta al processo retail reale.",
             },
             {
-              title: "Tenere il cliente nel ragionamento",
-              body: "Le conversazioni dirette trasformavano le richieste in workflow concreti, casi limite e verifiche di accettazione prima di cambiare report, integrazioni o schermate quotidiane.",
-              tradeoff: "Il feedback richiede tempo di coordinamento, ma costa meno che implementare un’interpretazione tecnicamente coerente e inadatta al processo retail reale.",
+              title: "Usare supporto e formazione come feedback di rilascio",
+              body: "Le domande emerse durante supporto e formazione mantengono i requisiti legati al modo in cui le persone comprendono e svolgono il lavoro. Quel feedback orienta la successiva correzione o evoluzione circoscritta.",
+              tradeoff: "La responsabilità della consegna continua oltre il merge del codice, ma le difficoltà d’uso diventano visibili mentre possono ancora guidare il rilascio seguente.",
             },
           ],
         },
@@ -908,15 +1048,12 @@ export const locales = {
       contact: "Projekt besprechen",
       allWork: "Alle Fallstudien",
       readCase: "Fallstudie lesen",
-      articleLabel: "Anonymisierte Fallstudie",
       published: "Veröffentlicht",
       readTime: "Min. Lesezeit",
       contents: "Auf dieser Seite",
       stack: "Technologien",
-      next: "Nächste Fallstudie",
-      back: "Zurück zu allen Fallstudien",
       sourceNote: "Informationsgrenze",
-      socialImageAlt: "Die Wortmarke Ejupi Labs neben der Überschrift «Engineering-Arbeit, erklärt» und einem redaktionellen Systemdiagramm.",
+      socialImageAlt: "Die Wortmarke Ejupi Labs neben der Überschrift «Technische Entscheidungen, erklärt» und einem redaktionellen Entscheidungsdiagramm.",
       footerLine: "Produktsoftware, Cloud-Systeme und Automatisierung aus der Schweiz.",
       rights: "Alle Rechte vorbehalten.",
       notFoundTitle: "Diese Seite ist nicht verfügbar.",
@@ -924,30 +1061,10 @@ export const locales = {
       notFoundAction: "Alle Fallstudien ansehen",
     },
     index: {
-      title: "Engineering-Arbeit, erklärt.",
+      title: "Technische Entscheidungen, erklärt.",
       description:
-        "Fallstudien zu Anforderungen, Entscheidungen und Nachweisen hinter anonymisierten beruflichen Systemen und Open-Source-Projekten aus Labs.",
+        "Fallstudien zu Anforderungen, Entscheidungen, realistischen Alternativen, bewusst akzeptierten Kosten und Nachweisen hinter anonymisierten beruflichen Systemen und Open-Source-Projekten aus Labs.",
       eyebrow: "Engineering-Fallstudien / 01 / 10",
-      introTitle: "Die Entscheidungen hinter den Systemen",
-      introBody:
-        "Die Fallstudien trennen berufliche Arbeit von Labs-Projekten und machen Anforderungen, Abwägungen, Nachweise und Grenzen sichtbar.",
-      principles: [
-        {
-          number: "P01",
-          title: "Keine erfundenen Kennzahlen",
-          body: "Wenn eine genaue Zahl vertraulich oder nicht verfügbar ist, beschreibe ich die technische Veränderung, statt eine Prozentzahl zu erfinden.",
-        },
-        {
-          number: "P02",
-          title: "Entscheidungen vor Werkzeugen",
-          body: "Technologie zählt, aber erst nachdem Problem und Abwägung klar sind.",
-        },
-        {
-          number: "P03",
-          title: "Namen weggelassen, Arbeit erhalten",
-          body: "Organisationen und kommerzielle Details fehlen bewusst. Der technische Umfang bleibt konkret.",
-        },
-      ],
       ctaTitle: "Braucht ein komplexes System einen klareren Weg?",
       ctaBody: "Bringen Sie den schwierigen Teil mit. Gemeinsam klären wir Architektur, Auslieferungspfad und die erste nützliche Version.",
     },
@@ -958,7 +1075,7 @@ export const locales = {
         title: "Eine AI-Workflow-Plattform auf ein wiederholbares Cloud-Fundament stellen",
         summary:
           "In etwa einem Monat überführte ich eine mehrteilige Dokument- und AI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
-        readMinutes: "12",
+        readMinutes: "14",
         facts: [
           ["Disziplin", "Cloud Platform Engineering"],
           ["Umfang", "Infrastruktur, Workloads und Releaseweg"],
@@ -999,29 +1116,60 @@ export const locales = {
           labels: ["GITLAB CI", "CLOUD BUILD", "ARTIFACT REGISTRY", "GKE BLUE / RED", "CLOUD SQL + GCS"],
           caption: "Ein Build, Prüfung im inaktiven Slot und ein bewusster Produktionswechsel.",
         },
-        decisions: {
-          title: "Entscheidungen, die zählten",
-          intro: "Jede Entscheidung entfernt eine Klasse versteckter Unterschiede, auch wenn die sicherere Option mehr ausdrückliche Arbeit verlangt.",
+        technology: {
+          title: "Warum diese Technologien zur Migration passten",
+          intro:
+            "Diese Entscheidungen fielen innerhalb eines bestehenden Produkts und eines festgelegten Google-Cloud-Ziels; sie waren kein Greenfield-Vergleich aller denkbaren Plattformen. Entscheidend war, welche Grenzen genau diesen Workload-Mix wiederholbar und betreibbar machten.",
           items: [
             {
-              title: "Module wiederverwenden, Eingaben variieren",
-              body: "Wiederverwendbares Terraform hält das Fundament konsistent, während umgebungsspezifische Werte sichtbar bleiben. Ganze Stacks je Umgebung zu kopieren, hätte den ersten Aufbau beschleunigt, aber stille Abweichungen ermöglicht.",
-              tradeoff: "Die Modulgrenze verlangt strengere Verträge und Reviews, doch Unterschiede liegen nun an einem Ort, an dem Operatoren sie sehen können.",
+              choice: "GKE als gemeinsame Grenze für die Workloads",
+              why: "Die Plattform verband bereits eine Vue-Oberfläche, Spring-Boot-Dienste, einen Python-Worker, Temporal und Keycloak. GKE gab diesen unterschiedlichen Workloads ein gemeinsames Modell für Deployment, Readiness und Blue/Red-Slots, während verwaltete Daten den Cluster verliessen.",
+              alternative: "Eine Verteilung auf mehrere Serverless-Produkte hätte verschiedene Ausführungsmodelle in denselben Releaseweg gebracht; dauerhaft laufende VMs hätten mehr hostspezifischen Aufbau und Wartung bewahrt.",
+              cost: "Das Team übernimmt die Kubernetes-Betriebsoberfläche, den Cluster-Lebenszyklus und die Pflicht, Ressourcen, Readiness und Upgrades der Workloads ausdrücklich zu pflegen.",
             },
             {
-              title: "State an verwaltete Grenzen verschieben",
-              body: "Cloud SQL übernimmt die PostgreSQL-Rolle und Cloud Storage ersetzt MinIO. Beide in GKE zu betreiben, hätte der alten Installation ähnlicher gesehen, aber auch Backup, Verfügbarkeit und Wartung in den Cluster mitgenommen.",
-              tradeoff: "Managed Services klären die Verantwortung, doch die Migration muss providerspezifisches Verhalten und eine bewusste Reihenfolge der Datenübertragung berücksichtigen.",
+              choice: "Terraform-Module für das Google-Cloud-Fundament",
+              why: "Wiederverwendbare Module hielten gemeinsame Infrastrukturdefinitionen zusammen und machten Umgebungsunterschiede zu sichtbaren, prüfbaren Eingaben. Das adressierte direkt den umgebungsspezifischen Aufbau, den die Migration beseitigen sollte.",
+              alternative: "Konfiguration in der Konsole oder kopierte Templates hätten die erste Umgebung schneller erzeugt, doch spätere Änderungen wären schwerer prüfbar gewesen und jede Kopie hätte unabhängig abweichen können.",
+              cost: "Modulverträge, Provider-State und Versionswechsel verlangen Disziplin; selbst eine kleine Ausnahme muss modelliert werden, statt unbemerkt von Hand korrigiert zu werden.",
             },
             {
-              title: "Demo und Produktion trennen",
-              body: "Der Demo-Weg prüft das paketierte System, ohne so zu tun, als hätte er dieselben Folgen wie ein Produktionsrelease. Produktion behält ihren eigenen Build-, Registry-, Prüf- und Traffic-Weg.",
-              tradeoff: "Zwei Wege bedeuten mehr Pipeline-Arbeit als ein universeller Deploy-Befehl, verhindern aber, dass bequeme Demo-Einstellungen zur Produktionspolitik werden.",
+              choice: "Helm zur Paketierung der Kubernetes-Workloads",
+              why: "Helm lieferte eine Releaseeinheit für zusammengehörige Kubernetes-Ressourcen und einen kontrollierten Ort für Umgebungswerte, ohne die vollständige Workload-Definition für jeden Slot zu kopieren.",
+              alternative: "Direkte Kubernetes-Manifeste wären für ein einzelnes Deployment einfacher gewesen. Kopien über Umgebungen und Blue/Red-Slots hinweg hätten gemeinsame Änderungen und beabsichtigte Unterschiede jedoch schwerer unterscheidbar gemacht.",
+              cost: "Templates und Werte schaffen eine zusätzliche Ebene; die gerenderte Ausgabe muss geprüft und jede Chart-Änderung so sorgfältig versioniert werden wie Anwendungscode.",
             },
             {
-              title: "Erst nach der Prüfung umschalten",
-              body: "Produktion wird in den inaktiven Blue/Red-Slot deployt. Readiness-Signale und Smoke-Tests laufen dort, bevor ein Mensch den Traffic verschiebt, statt die aktive Umgebung direkt zu aktualisieren.",
-              tradeoff: "Das manuelle Gate ist langsamer als blindes Continuous Deployment, hält aber Rollback und endgültige Produktionshoheit sichtbar.",
+              choice: "Getrennte Verantwortlichkeiten für Cloud Build und GitLab CI",
+              why: "Cloud Build erzeugte die Images im Google-Cloud-Pfad, während GitLab CI Produktionsorchestrierung, Prüfung und die ausdrückliche Trafficentscheidung behielt. Die Trennung entsprach den unterschiedlichen Folgen von Artefakterstellung und Release.",
+              alternative: "Eine einzige undifferenzierte Deploy-Pipeline wäre leichter zu beschreiben gewesen, hätte aber Demo- und Produktionskontrollen vermischt und Build, Rollout und Trafficwechsel zu einer gekoppelten Aktion gemacht.",
+              cost: "Zwei Systeme benötigen Zugangsdaten, Artefaktübergaben und Fehleranalyse über eine Grenze hinweg; ihre Verträge müssen aufeinander abgestimmt bleiben.",
+            },
+          ],
+        },
+        decisions: {
+          title: "Betriebsregeln für ein umkehrbares Release",
+          intro: "Der Stack definiert den Weg; diese Regeln klären, wem State gehört, was als Nachweis gilt und wie Produktion ohne unumkehrbaren Sprung verändert wird.",
+          items: [
+            {
+              title: "Umgebungsunterschiede überprüfbar machen",
+              body: "Vor einem Release sind umgebungsspezifische Werte und Verantwortung für State gemeinsam sichtbar, einschliesslich Daten, Backup und Recovery. Ein Unterschied wird zum ausdrücklichen Input oder Übergabepunkt, nicht zur unsichtbaren Korrektur in einer laufenden Umgebung.",
+              tradeoff: "Unterschiede und Verantwortung zu prüfen, braucht Vorbereitung, verhindert aber, dass Konfigurationsdrift oder ungeklärte Recovery-Aufgaben erst beim Cutover auftauchen.",
+            },
+            {
+              title: "Den Kandidaten durchgängig prüfen",
+              body: "Ein Release wird vom gebauten Image bis in die inaktive Umgebung verfolgt und dort mit Readiness, Infrastruktursignalen und einem Smoke-Test geprüft. Kein einzelnes grünes Signal steht für den gesamten Weg.",
+              tradeoff: "Das dauert länger, als einen erfolgreichen Build als Beweis zu akzeptieren; der Smoke-Test bleibt bewusst begrenzt und beansprucht nicht, jeden Geschäftsablauf abzudecken.",
+            },
+            {
+              title: "Artefaktnachweis und Traffic-Hoheit trennen",
+              body: "Ein erfolgreicher Build erzeugt einen Kandidaten, gewährt ihm aber keinen Produktionszugang. Dasselbe Artefakt wird im inaktiven Blue/Red-Slot deployt und erprobt, während die Traffic-Umschaltung eine separate Aktion des Operators bleibt.",
+              tradeoff: "Diese Governance schafft Übergaben und verlangt, dass beide Slots bereit bleiben, verhindert aber, dass Build-Erfolg mit Release-Freigabe verwechselt wird.",
+            },
+            {
+              title: "Den Cutover ausdrücklich und umkehrbar machen",
+              body: "Traffic wechselt erst, wenn die Prüfungen sichtbar sind und ein Operator die Umschaltung freigibt. Der vorherige Slot bleibt der klare Rückweg, statt direkt überschrieben zu werden.",
+              tradeoff: "Das Gate schafft eine bewusste Pause, hält aber die letzte Produktionshoheit und den Rückweg sichtbar, wenn die Nachweise unvollständig sind.",
             },
           ],
         },
@@ -1050,7 +1198,7 @@ export const locales = {
         title: "Ein klarer Arbeitsweg durch einen komplexen Archivierungsprozess",
         summary:
           "In etwa drei Monaten baute ich einen Spring-Boot-Dienst und ein React-Single-SPA-Microfrontend um Camunda, um Archivierungssitzungen, Quellpakete und den Output eines neunstufigen Ablaufs zu steuern.",
-        readMinutes: "11",
+        readMinutes: "13",
         facts: [
           ["Disziplin", "Workflow- und Product Engineering"],
           ["Umfang", "Dienst, Microfrontend und Workflow-Grenze"],
@@ -1091,29 +1239,60 @@ export const locales = {
           labels: ["BENUTZER", "REACT SINGLE-SPA", "SPRING BOOT API", "CAMUNDA", "S3 INPUT + OUTPUT"],
           caption: "Die Plattform besitzt die Shell; Microfrontend und Dienst besitzen die Grenze des Archivierungsworkflows.",
         },
-        decisions: {
-          title: "Entscheidungen, die zählten",
-          intro: "Das Design löst Komposition nicht zweimal und hält die Workflow-Autorität ausserhalb des Browsers.",
+        technology: {
+          title: "Warum diese Grenzen zur Host-Plattform passten",
+          intro:
+            "Dies war keine Greenfield-Auswahl des Stacks. Shell, Workflow-Engine und Storage-Konventionen gehörten zu einer bestehenden Plattform; die Aufgabe war, eine zusammenhängende Fähigkeit hinzuzufügen, ohne diese Grenzen zu duplizieren oder zu umgehen.",
           items: [
             {
-              title: "Den Workflow hinter einen Dienst stellen",
-              body: "Der React-Client spricht mit einer fokussierten Spring-API, statt Camunda direkt aufzurufen oder Prozessmechanik im Browser abzubilden.",
-              tradeoff: "Der Dienst ist eine zusätzliche Grenze, gibt den Workflow-Regeln aber einen testbaren Eigentümer und verhindert, dass sie in jede Ansicht durchsickern.",
+              choice: "Ein fokussierter Spring-Boot-Dienst als Anwendungsgrenze",
+              why: "Der Dienst bündelte die Zuständigkeit für Anwendungsregeln, gültige Aktionen, Camunda-Integration und Storage-Referenzen im Backend. React konnte ein Anwendungsmodell nutzen, ohne die Mechanik der Prozess-Engine zu kennen.",
+              alternative: "Direkte Camunda-Aufrufe aus dem Browser oder verteilte Archivierungsregeln in gemeinsamen Diensten hätten Orchestrierungsdetails offengelegt und mehrere Auslegungen des gültigen Workflow-Verhaltens geschaffen.",
+              cost: "Die zusätzliche API- und Abbildungsschicht muss sich mit dem Prozess weiterentwickeln; Fehler an der Grenze zwischen Dienst und Engine brauchen eine ausdrückliche Behandlung.",
             },
             {
-              title: "Die Plattform-Shell wiederverwenden",
-              body: "Der single-spa-Host behält Header, Footer, Navigation und gemeinsame Komponentenkonventionen. Das Archivierungs-Microfrontend ergänzt nur die neue Erfahrung, statt als separate Anwendung aufzutreten.",
-              tradeoff: "Wiederverwendung reduziert doppelten Chrome, verlangt aber einen stabilen Integrationsvertrag und Koordination bei Änderungen gemeinsamer Komponenten.",
+              choice: "Camunda für den neunstufigen Prozess",
+              why: "Camunda koordinierte den Workflow bereits. Die Übergänge dort zu belassen, erhielt eine einzige Quelle für den Fortschritt, während der Dienst diesen Status für Mitarbeitende übersetzte.",
+              alternative: "Eine eigene Zustandsmaschine, besonders wenn sie hauptsächlich als UI-Status abgebildet wäre, hätte Prozesslogik dupliziert und den Browser mit der Workflow-Engine um die Autorität konkurrieren lassen.",
+              cost: "Prozessdefinition und Anwendungsmodell müssen aufeinander abgestimmt bleiben; die Betriebsdiagnose führt sowohl durch den Dienst als auch durch die Engine.",
             },
             {
-              title: "Status vor Aktion sichtbar machen",
-              body: "Die Oberfläche stellt aktuelle Sitzung, Pakete und Prozessstatus ins Zentrum. So verstehen Mitarbeitende vor dem nächsten gültigen Schritt, was gerade geschieht.",
-              tradeoff: "Die UI muss nicht verfügbare, laufende und fehlgeschlagene Zustände ehrlich darstellen, statt nur den Idealfall zu zeigen.",
+              choice: "React in der bestehenden single-spa-Komposition",
+              why: "Ein klar begrenztes Microfrontend konnte Header, Footer, Navigation und Plattformkonventionen wiederverwenden und nur die Archivierungsroute samt Interaktionsmodell besitzen.",
+              alternative: "Eine neue Shell oder eine eigenständige React-Anwendung hätte das Vorhaben über die fehlende Fähigkeit hinaus erweitert und doppelte Navigation sowie doppelten Chrome geschaffen.",
+              cost: "Das Microfrontend hängt von einem stabilen Mount- und Integrationsvertrag ab; Änderungen der gemeinsamen Plattform erfordern Koordination statt vollständiger lokaler Kontrolle.",
             },
             {
-              title: "Nur eine Interpretation des Fortschritts",
-              body: "Der Dienst übersetzt den Camunda-Status in ein Anwendungsmodell für das Microfrontend. Die Host-Plattform erhält keine zweite Kopie des Archivierungslebenszyklus.",
-              tradeoff: "Die Abbildung braucht bei Prozessänderungen Sorgfalt, verhindert aber unterschiedliche Workflow-Bedeutungen in Shell, Browser und Engine.",
+              choice: "S3-kompatibler Storage für Input- und Output-Pakete",
+              why: "Paketinhalte blieben an einer Object-Storage-Grenze, auf die Dienst und Workflow verwiesen. So blieben Archivierungsdatensätze und Verantwortung für binäre Inhalte getrennt.",
+              alternative: "Datenbank-Blobs hätten Paketinhalt an den Lebenszyklus relationaler Daten gebunden; lokale Dateien hätten ihn an eine bestimmte Dienstinstanz und deren Deploymentweg gebunden.",
+              cost: "Buckets, Endpunkte, Zugangsdaten und fehlende Objekte werden zu ausdrücklichen Betriebsbelangen, die der Dienst nachvollziehbar darstellen muss.",
+            },
+          ],
+        },
+        decisions: {
+          title: "Betriebsregeln für einen bedienbaren Workflow",
+          intro: "Die Architektur liefert eine Quelle der Prozesswahrheit; diese Regeln machen daraus eine Erfahrung, die Mitarbeitende lesen, ihr vertrauen und nach einem Problem fortsetzen können.",
+          items: [
+            {
+              title: "Status vor der Aktion zeigen",
+              body: "Die aktuelle Sitzung, ihre Quell- und Ergebnispakete sowie die Prozessphase bleiben sichtbar, bevor Mitarbeitende den nächsten Schritt wählen. Eine Aktion ohne diesen Kontext wird nicht als Fortschritt dargestellt.",
+              tradeoff: "Die Oberfläche muss nicht verfügbare, laufende und fehlgeschlagene Zustände erklären, statt nur den Idealfall zu optimieren.",
+            },
+            {
+              title: "Gültige Aktionen aus dem Backend-Status ableiten",
+              body: "Die Oberfläche zeigt Übergänge, die das Anwendungsmodell unterstützt, während der Dienst ungültige ablehnt. Lokaler Browser-Status wird nie zu einer zweiten Autorität über den nächsten Schritt.",
+              tradeoff: "Statusaustausch und Aktualisierung müssen ausdrücklich behandelt werden, doch eine veraltete Ansicht kann keinen gültigen Workflow-Schritt erfinden.",
+            },
+            {
+              title: "Kontinuität von Sitzung und Paketen bewahren",
+              body: "Sitzung, Quellpakete und Ergebnispakete bleiben über den neunstufigen Weg verbunden. Die Prüfung folgt derselben Reise von Erstellung und Zuordnung über die Verarbeitung bis zur Nachverfolgung der Ausgabe.",
+              tradeoff: "Modell und Oberfläche tragen mehr Kontext als eine reine Aufgabenansicht, doch Mitarbeitende können den Zusammenhang zwischen Arbeit und Ergebnis verfolgen.",
+            },
+            {
+              title: "Fehler und Wiederholung sichtbar machen",
+              body: "Ein unvollständiger, laufender oder fehlgeschlagener Schritt bleibt sichtbar. Erlaubt die nächste gültige Aktion einen neuen Versuch oder die Fortsetzung, erscheint sie erst nach Bestätigung durch das Backend.",
+              tradeoff: "Die Oberfläche muss mehr Zustände und Fehlerwege erklären, trennt dafür aber Warten, Fehlschlag und Wiederaufnahme, statt Mitarbeitende raten zu lassen.",
             },
           ],
         },
@@ -1142,7 +1321,7 @@ export const locales = {
         title: "Ein Retail-ERP verbessern, ohne den täglichen Betrieb zu verlassen",
         summary:
           "Über etwa neunzehn Monate arbeitete ich an SQL Server, .NET Framework 4.8 und einem KnockoutJS-Frontend eines laufenden Retail-ERP: Features, Fehler, Reports, zwei Kuriereinbindungen und Modernisierung des Wareneingangs.",
-        readMinutes: "12",
+        readMinutes: "14",
         facts: [
           ["Disziplin", "Enterprise Product Engineering"],
           ["Umfang", "Datenbank, Backend, Frontend und Integrationen"],
@@ -1184,29 +1363,60 @@ export const locales = {
           labels: ["WEB-BENUTZER", "KNOCKOUT + JQUERY", ".NET FRAMEWORK 4.8", "GEMEINSAMER SQL SERVER", "VB6 ERP + KASSE"],
           caption: "Web-ERP und ältere VB6-Anwendungen treffen in einem rückwärtskompatiblen Datenvertrag zusammen.",
         },
+        technology: {
+          title: "Warum Kontinuität eine Architekturentscheidung war",
+          intro:
+            "Dies war die Weiterentwicklung eines laufenden ERP, keine Greenfield-Empfehlung seines Stacks. Die richtige Technologieentscheidung bestand oft darin, einen Betriebsvertrag zu erhalten und gezielt zu verbessern, statt jede Schicht gleichzeitig zu ersetzen.",
+          items: [
+            {
+              choice: "C#/.NET Framework und KnockoutJS für schrittweise Änderungen beibehalten",
+              why: "Funktionen, Fehler und tägliche Abläufe führten bereits durch diese Schichten. Innerhalb davon zu arbeiten erlaubte, jede Änderung entlang des realen Anfragewegs zu verfolgen und im laufenden Betrieb auszuliefern.",
+              alternative: "Eine Big-Bang-Neuentwicklung von Backend und Frontend hätte bestehendes Verhalten vollständig neu erfassen und ersetzen müssen, bevor kleinere betriebliche Verbesserungen die Benutzer erreicht hätten.",
+              cost: "Die Arbeit akzeptiert ältere Framework-Grenzen, gemischte Frontend-Muster und fortlaufenden Wartungsbedarf, statt sofort eine saubere moderne Ausgangsbasis zu gewinnen.",
+            },
+            {
+              choice: "SQL Server als gemeinsamen Datenvertrag behandeln",
+              why: "Web-ERP, VB6-Desktop-ERP und Kassenanwendung lasen und schrieben dasselbe Schema. Kompatible SQL-Änderungen schützten Verbraucher, die nicht mit jedem Webrelease wechseln konnten.",
+              alternative: "Eine neue Datenbank oder ein neues Schema im Rahmen der Webarbeit hätte vorausgesetzt, dass alle Verbraucher trotz fehlenden Migrationssystems gleichzeitig umgestellt werden konnten.",
+              cost: "Additive Änderungen und Übergangsstrukturen können länger bestehen bleiben; das Datenbankdesign muss alte Lese- und Schreibwege ebenso berücksichtigen wie den neuen Pfad.",
+            },
+            {
+              choice: "Crystal Reports und bestehende Reportingwege weiterentwickeln",
+              why: "Reporting war bereits Teil des Betriebssystems und seines SQL-Server-Verhaltens. Dieser bestehende Pfad erlaubte, Reportänderungen mit demselben Daten- und Anwendungsvertrag zu prüfen.",
+              alternative: "Eine neue Reportingplattform zur selben Zeit hätte eine weitere Migration eröffnet und die Übersetzung bestehenden Reportverhaltens verlangt, während Anwendung und Datenbank ebenfalls verändert wurden.",
+              cost: "Die Lösung behält ältere Reportingwerkzeuge und ihre Gestaltungsgrenzen; Reportarbeit verlangt weiterhin Spezialwissen und eine Prüfung über mehrere Schichten.",
+            },
+            {
+              choice: "Jeweils einen End-to-End-Ablauf liefern",
+              why: "Eine Änderung konnte Bedienoberfläche, .NET-Regeln, SQL-Verhalten und bei Bedarf Reports, Integrationen sowie ältere Anwendungen als einen zusammenhängenden betrieblichen Ausschnitt abdecken.",
+              alternative: "Eine Modernisierung Schicht für Schicht hätte Verhalten zwischen alten und neuen Wegen geteilt und den Nachweis des echten Ablaufs bis zum Abschluss mehrerer Migrationen verschoben.",
+              cost: "Jeder Ausschnitt muss über alle berührten Schichten und Anwendungen abgeschlossen und geprüft werden; Fortschritt braucht daher klare Grenzen statt der sichtbaren Einheitlichkeit eines schichtweiten Programms.",
+            },
+          ],
+        },
         decisions: {
-          title: "Entscheidungen, die zählten",
-          intro: "Die Arbeit setzte auf Erkenntnisse aus dem realen Betrieb, kompatible Verträge und auslieferbare Änderungen statt auf eine dramatische Neuentwicklung.",
+          title: "Regeln für Änderungen im laufenden Betrieb",
+          intro: "Technische Kontinuität setzte den Rahmen; diese Regeln verbanden jede Änderung mit dem gesamten Betriebsweg und dem Feedback der Menschen, die ihn nutzen.",
           items: [
             {
               title: "Den ganzen Anfrageweg verfolgen",
-              body: "Performance- und Zuverlässigkeitsarbeit beginnt beim Verhalten, das Kunde oder Benutzer beschreiben können, und folgt ihm durch KnockoutJS und jQuery, .NET-Backend und SQL Server.",
+              body: "Performance- und Zuverlässigkeitsarbeit beginnt bei einem Verhalten, das Kunde oder Benutzer beschreiben können, und folgt ihm durch Webstatus, Backend-Regeln und Datenbankarbeit, statt beim ersten sichtbaren Symptom anzuhalten.",
               tradeoff: "Das braucht mehr Untersuchung als ein Patch am ersten langsamen Bauteil, verhindert aber, dass nur der Engpass verschoben oder ein falsches Symptom behoben wird.",
             },
             {
-              title: "Die Datenbank als gemeinsamen Vertrag behandeln",
-              body: "Ohne Migrationen und mit VB6-Verbrauchern auf derselben Datenbank mussten Schemaänderungen bestehende Lese- und Schreibwege erhalten. Eine additive oder kompatible Änderung war sicherer als die Annahme, alle Anwendungen könnten gleichzeitig wechseln.",
-              tradeoff: "Rückwärtskompatibilität kann Übergangsstrukturen länger erhalten, schützt aber Desktop- und Kassenabläufe, die nicht mit jedem Webrelease aktualisiert werden können.",
+              title: "Kompatibilität zum Abnahmekriterium machen",
+              body: "Eine Änderung wird erst abgenommen, wenn sie im Web-ERP und in den älteren Desktop- und Kassenwegen funktioniert, die dieselben Daten nutzen. Stored Procedures, Views, Reports und Kurier-Austausch gehören dazu, sobald der Ablauf sie berührt.",
+              tradeoff: "Die Abnahmefläche ist grösser als das bearbeitete Bauteil, doch ein lokaler Erfolg kann nicht unbemerkt einen anderen täglichen Weg beschädigen.",
             },
             {
-              title: "In auslieferbaren Schritten verbessern",
-              body: "Fokussierte Änderungen sind in einem geschäftskritischen System verständlicher als eine gleichzeitige Neuentwicklung von Webstack, Datenbank und altem Desktopbestand.",
-              tradeoff: "Schrittweise Lieferung verlangt Geduld und klare Grenzen, hält dafür aber das Kompatibilitätsrisiko jeder Version sichtbar.",
+              title: "Im tatsächlichen Kundenablauf definieren, was fertig ist",
+              body: "Kundengespräche übersetzen eine Anforderung vor der Änderung in konkrete Abläufe, Randfälle und Abnahmeprüfungen. Geliefert ist sie erst, wenn das Ergebnis wieder zur täglichen Nutzung passt, nicht wenn eine einzelne Komponente isoliert funktioniert.",
+              tradeoff: "Diese Definition von fertig kostet Koordinationszeit, ist aber günstiger als eine technisch stimmige Interpretation, die nicht zum tatsächlichen Retailprozess passt.",
             },
             {
-              title: "Den Kunden im Denkprozess halten",
-              body: "Direkte Gespräche machten aus Anforderungen konkrete Abläufe, Randfälle und Abnahmekriterien, bevor ich Reports, Integrationen oder tägliche Oberflächen änderte.",
-              tradeoff: "Die Feedbackschleife kostet Koordinationszeit, ist aber günstiger als eine technisch stimmige Interpretation, die nicht zum tatsächlichen Retailprozess passt.",
+              title: "Support und Schulung als Release-Feedback nutzen",
+              body: "Fragen aus Support und Schulung halten Anforderungen mit der Art verbunden, wie Menschen die Arbeit verstehen und ausführen. Dieses Feedback prägt die nächste klar begrenzte Korrektur oder Verbesserung.",
+              tradeoff: "Die Verantwortung für Lieferung endet nicht mit dem Merge, doch Verständnishürden werden sichtbar, solange sie das nächste Release noch beeinflussen können.",
             },
           ],
         },
@@ -1248,15 +1458,12 @@ export const locales = {
       contact: "Parler d’un projet",
       allWork: "Toutes les études de cas",
       readCase: "Lire l’étude de cas",
-      articleLabel: "Étude de cas anonymisée",
       published: "Publié le",
       readTime: "min de lecture",
       contents: "Sur cette page",
       stack: "Technologies",
-      next: "Étude de cas suivante",
-      back: "Retour aux études de cas",
       sourceNote: "Limite des informations",
-      socialImageAlt: "Le mot-symbole Ejupi Labs à côté du titre «Le travail d’ingénierie, expliqué» et d’un schéma éditorial de système.",
+      socialImageAlt: "Le mot-symbole Ejupi Labs à côté du titre «Les décisions techniques, expliquées» et d’un schéma éditorial de décision.",
       footerLine: "Logiciels produit, systèmes cloud et automatisation depuis la Suisse.",
       rights: "Tous droits réservés.",
       notFoundTitle: "Cette page n’est pas disponible.",
@@ -1264,30 +1471,10 @@ export const locales = {
       notFoundAction: "Voir toutes les études de cas",
     },
     index: {
-      title: "Le travail d’ingénierie, expliqué.",
+      title: "Les décisions techniques, expliquées.",
       description:
-        "Des études de cas qui retracent les contraintes, les décisions et les preuves derrière des systèmes professionnels anonymisés et des projets Labs open source.",
+        "Des études de cas qui retracent les contraintes, les choix, les alternatives crédibles, les coûts acceptés et les preuves derrière des systèmes professionnels anonymisés et des projets Labs open source.",
       eyebrow: "Études de cas d’ingénierie / 01 / 10",
-      introTitle: "Les décisions derrière les systèmes",
-      introBody:
-        "Les études distinguent le travail professionnel des projets Labs et rendent explicites les contraintes, les arbitrages, les preuves et les limites.",
-      principles: [
-        {
-          number: "P01",
-          title: "Aucun chiffre inventé",
-          body: "Lorsqu’une mesure exacte est confidentielle ou indisponible, je décris le changement technique au lieu de fabriquer un pourcentage.",
-        },
-        {
-          number: "P02",
-          title: "Les décisions avant les outils",
-          body: "La technologie compte, mais seulement après avoir clarifié le problème et le compromis.",
-        },
-        {
-          number: "P03",
-          title: "Les noms disparaissent, pas le travail",
-          body: "Les organisations et les détails commerciaux sont omis. Le périmètre d’ingénierie reste précis.",
-        },
-      ],
       ctaTitle: "Un système complexe a besoin d’un parcours plus clair ?",
       ctaBody: "Commençons par la partie difficile. Nous pouvons cadrer ensemble l’architecture, le parcours de livraison et la première version utile.",
     },
@@ -1298,7 +1485,7 @@ export const locales = {
         title: "Installer une plateforme de workflow IA sur une base cloud reproductible",
         summary:
           "En environ un mois, j’ai transféré une plateforme documentaire et de workflows IA depuis un déploiement on-premise propre à chaque environnement vers Terraform, GKE et une livraison blue/red contrôlée.",
-        readMinutes: "12",
+        readMinutes: "14",
         facts: [
           ["Discipline", "Ingénierie de plateforme cloud"],
           ["Périmètre", "Infrastructure, workloads et parcours de livraison"],
@@ -1339,29 +1526,60 @@ export const locales = {
           labels: ["GITLAB CI", "CLOUD BUILD", "ARTIFACT REGISTRY", "GKE BLUE / RED", "CLOUD SQL + GCS"],
           caption: "Un build, une vérification sur le slot inactif, puis un basculement explicite.",
         },
-        decisions: {
-          title: "Les décisions importantes",
-          intro: "Chaque décision supprime une catégorie de différences cachées, même lorsque l’option la plus sûre demande davantage de travail explicite.",
+        technology: {
+          title: "Pourquoi ces technologies convenaient à la migration",
+          intro:
+            "Ces décisions s’inscrivaient dans un produit existant et une destination Google Cloud déjà arrêtée ; elles ne constituaient pas un classement greenfield de toutes les plateformes possibles. La vraie question était de trouver les frontières qui rendaient cet ensemble précis de workloads reproductible et exploitable.",
           items: [
             {
-              title: "Réutiliser les modules, varier les entrées",
-              body: "Terraform réutilisable maintient une base cohérente tandis que les valeurs propres à chaque environnement restent visibles. Copier des stacks entières aurait accéléré le premier setup, mais permis leur divergence silencieuse.",
-              tradeoff: "La frontière des modules demande des contrats et des revues plus stricts, mais les différences vivent désormais à un endroit visible pour les opérateurs.",
+              choice: "GKE comme frontière commune des workloads",
+              why: "La plateforme réunissait déjà une interface Vue, des services Spring Boot, un worker Python, Temporal et Keycloak. GKE donnait à ces workloads différents un même modèle de déploiement, de readiness et de slots blue/red, tandis que les données managées sortaient du cluster.",
+              alternative: "Répartir les composants entre plusieurs produits serverless aurait imposé plusieurs modèles d’exécution au même parcours de release ; des VM persistantes auraient conservé davantage de configuration et de maintenance propres aux hôtes.",
+              cost: "L’équipe accepte la surface opérationnelle de Kubernetes, le cycle de vie du cluster et la nécessité de rendre explicites les ressources, la readiness et les mises à niveau des workloads.",
             },
             {
-              title: "Déplacer l’état vers des frontières managées",
-              body: "Cloud SQL reprend le rôle de PostgreSQL et Cloud Storage remplace MinIO. Les conserver dans GKE aurait ressemblé davantage à l’installation précédente, mais aurait aussi déplacé sauvegarde, disponibilité et maintenance dans le cluster.",
-              tradeoff: "Les services managés clarifient les responsabilités, mais la migration doit tenir compte du comportement propre au fournisseur et d’un séquencement volontaire du transfert des données.",
+              choice: "Des modules Terraform pour la base Google Cloud",
+              why: "Les modules réutilisables regroupaient les définitions communes et exposaient les différences entre environnements sous forme d’entrées visibles et révisables. Cela répondait directement à la configuration propre à chaque environnement que la migration devait supprimer.",
+              alternative: "Une configuration en console ou des templates copiés auraient créé plus vite le premier environnement, mais les changements suivants auraient été moins vérifiables et chaque copie aurait pu diverger seule.",
+              cost: "Les contrats des modules, l’état Terraform et les changements de version des providers exigent de la discipline ; même une petite exception doit être modélisée plutôt que corrigée manuellement en silence.",
             },
             {
-              title: "Séparer démonstration et production",
-              body: "Le parcours de démonstration éprouve le système packagé sans prétendre avoir les mêmes conséquences qu’une release de production. La production conserve ses propres build, registry, vérifications et contrôle du trafic.",
-              tradeoff: "Deux parcours demandent plus de travail de pipeline qu’une commande de déploiement universelle, mais empêchent les réglages pratiques de devenir une politique de production.",
+              choice: "Helm pour packager les workloads Kubernetes",
+              why: "Helm fournissait une unité de release pour les ressources liées et un emplacement contrôlé pour les valeurs d’environnement, sans copier toute la définition des workloads pour chaque environnement et chaque slot.",
+              alternative: "Des manifestes bruts auraient été plus directs pour un déploiement unique, mais leur duplication entre environnements et slots blue/red aurait rendu plus difficiles à distinguer les changements communs et les écarts volontaires.",
+              cost: "Templates et valeurs ajoutent de l’indirection ; la sortie rendue doit être inspectée et chaque évolution du chart versionnée avec le même soin que le code applicatif.",
             },
             {
-              title: "Basculer seulement après vérification",
-              body: "La production est déployée sur le slot blue/red inactif. Les signaux de readiness et les smoke tests s’y exécutent avant qu’une personne déplace le trafic, plutôt que de mettre à jour l’environnement actif en place.",
-              tradeoff: "Le contrôle manuel est plus lent qu’un déploiement continu aveugle, mais le rollback et l’autorité finale sur la production restent visibles.",
+              choice: "Des responsabilités séparées entre Cloud Build et GitLab CI",
+              why: "Cloud Build produisait les images dans le parcours Google Cloud, tandis que GitLab CI conservait l’orchestration de production, les vérifications et la décision explicite sur le trafic. Cette séparation reflétait les conséquences différentes de créer un artefact et de le livrer.",
+              alternative: "Une pipeline de déploiement unique et indistincte aurait été plus simple à décrire, mais elle aurait confondu les contrôles de démonstration et de production et couplé build, rollout et basculement du trafic.",
+              cost: "Deux systèmes impliquent des identifiants, des transferts d’artefacts et un diagnostic des erreurs à travers une frontière ; leurs contrats doivent rester alignés.",
+            },
+          ],
+        },
+        decisions: {
+          title: "Règles d’exploitation pour une mise en production réversible",
+          intro: "Le socle technique définit le parcours ; ces règles précisent qui assume l’état, ce qui constitue une preuve et comment faire évoluer la production sans saut irréversible.",
+          items: [
+            {
+              title: "Rendre les écarts d’environnement vérifiables",
+              body: "Avant une release, les valeurs propres à l’environnement et les responsabilités liées à l’état sont visibles ensemble, notamment pour les données, la sauvegarde et la reprise. Un écart devient une entrée ou un passage de relais explicite, pas une correction invisible dans un environnement actif.",
+              tradeoff: "Vérifier écarts et responsabilités demande davantage de préparation, mais évite que la dérive de configuration ou une reprise sans responsable n’apparaisse au moment de la bascule.",
+            },
+            {
+              title: "Vérifier le candidat de bout en bout",
+              body: "Une release est suivie depuis l’image construite jusqu’à l’environnement inactif, puis contrôlée par la readiness, les signaux d’infrastructure et un smoke test. Aucun voyant vert isolé ne représente tout le parcours.",
+              tradeoff: "Cela prend plus de temps que de considérer un build réussi comme une preuve ; le smoke test reste volontairement ciblé et ne prétend pas couvrir tous les parcours métier.",
+            },
+            {
+              title: "Séparer la preuve sur l’artefact de l’autorité sur le trafic",
+              body: "Un build réussi produit un candidat, mais ne lui ouvre pas la production. Le même artefact est déployé et éprouvé sur le slot blue/red inactif, tandis que la décision de déplacer le trafic reste une action distincte de l’opérateur.",
+              tradeoff: "Cette gouvernance ajoute des passages de relais et exige que les deux slots restent prêts, mais empêche de confondre réussite du build et autorisation de release.",
+            },
+            {
+              title: "Rendre la bascule explicite et réversible",
+              body: "Le trafic ne se déplace qu’une fois les contrôles visibles et la bascule approuvée par un opérateur. Le slot précédent reste le chemin de retour clair au lieu d’être écrasé en place.",
+              tradeoff: "Ce contrôle introduit une pause volontaire, mais garde visibles l’autorité finale sur la production et le retour arrière lorsque les preuves sont incomplètes.",
             },
           ],
         },
@@ -1390,7 +1608,7 @@ export const locales = {
         title: "Offrir un parcours clair dans un workflow d’archivage complexe",
         summary:
           "En environ trois mois, j’ai construit un service Spring Boot et un microfrontend React Single-SPA autour de Camunda pour créer des sessions, faire avancer les paquets sources dans un cycle de neuf étapes et suivre leur sortie.",
-        readMinutes: "11",
+        readMinutes: "13",
         facts: [
           ["Discipline", "Ingénierie produit et workflow"],
           ["Périmètre", "Service, microfrontend et frontière workflow"],
@@ -1431,29 +1649,60 @@ export const locales = {
           labels: ["OPÉRATEUR", "REACT SINGLE-SPA", "API SPRING BOOT", "CAMUNDA", "S3 ENTRÉE + SORTIE"],
           caption: "La plateforme possède la shell ; le microfrontend et le service possèdent la frontière du workflow d’archivage.",
         },
-        decisions: {
-          title: "Les décisions importantes",
-          intro: "La conception évite de résoudre deux fois la composition et maintient l’autorité du workflow hors du navigateur.",
+        technology: {
+          title: "Pourquoi ces frontières convenaient à la plateforme hôte",
+          intro:
+            "Il ne s’agissait pas de choisir un stack greenfield. La shell, le moteur de workflow et les conventions de stockage appartenaient à une plateforme existante ; l’enjeu était d’ajouter une capacité cohérente sans dupliquer ni contourner ces frontières.",
           items: [
             {
-              title: "Placer le workflow derrière un service",
-              body: "Le client React parle à une API Spring ciblée au lieu d’appeler directement Camunda ou d’encoder les mécanismes du processus dans le navigateur.",
-              tradeoff: "Le service ajoute une frontière à maintenir, mais donne aux règles du workflow un propriétaire testable et les empêche d’envahir chaque écran.",
+              choice: "Une frontière applicative ciblée avec Spring Boot",
+              why: "Le service regroupait côté backend la responsabilité des règles applicatives, des actions valides, de l’intégration Camunda et des références de stockage. React pouvait consommer un modèle applicatif sans connaître la mécanique du moteur de processus.",
+              alternative: "Appeler Camunda directement depuis le navigateur ou disperser les règles d’archivage dans des services partagés aurait exposé les détails d’orchestration et créé plusieurs interprétations du comportement valide.",
+              cost: "L’API et la couche de correspondance supplémentaires doivent évoluer avec le processus ; les erreurs à la frontière entre service et moteur demandent un traitement explicite.",
             },
             {
-              title: "Réutiliser la shell de la plateforme",
-              body: "L’hôte single-spa conserve header, footer, navigation et conventions des composants partagés. Le microfrontend d’archivage apporte seulement la nouvelle expérience au lieu de se présenter comme une application séparée.",
-              tradeoff: "La réutilisation réduit le chrome dupliqué, mais exige un contrat d’intégration stable et de la coordination lorsque les composants partagés évoluent.",
+              choice: "Camunda pour le processus en neuf étapes",
+              why: "Camunda coordonnait déjà le workflow. Y conserver les transitions maintenait une seule source de l’avancement, tandis que le service traduisait cet état pour les opérateurs.",
+              alternative: "Une machine à états sur mesure, surtout représentée principalement par l’état de l’interface, aurait dupliqué la logique du processus et mis le navigateur en concurrence avec le moteur pour l’autorité sur le workflow.",
+              cost: "Les définitions du processus et le modèle applicatif doivent rester alignés ; le diagnostic opérationnel traverse à la fois le service et le moteur.",
             },
             {
-              title: "Montrer l’état avant l’action",
-              body: "L’interface place la session, ses paquets et l’état du processus au centre afin que l’opérateur comprenne la situation avant de choisir une prochaine étape valide.",
-              tradeoff: "L’UI doit représenter les états indisponibles, en attente ou en échec au lieu d’afficher uniquement un parcours idéal.",
+              choice: "React dans la composition single-spa existante",
+              why: "Un microfrontend borné pouvait réutiliser header, footer, navigation et conventions de la plateforme tout en possédant uniquement la route d’archivage et son modèle d’interaction.",
+              alternative: "Réécrire la shell ou livrer une application React autonome aurait étendu le projet au-delà de la capacité manquante et créé une navigation ainsi qu’un chrome dupliqués.",
+              cost: "Le microfrontend dépend d’un contrat stable de montage et d’intégration ; les évolutions de la plateforme partagée demandent de la coordination plutôt qu’un contrôle entièrement local.",
             },
             {
-              title: "Conserver une seule interprétation de l’avancement",
-              body: "Le service traduit l’état Camunda en un modèle applicatif consommé par le microfrontend. La plateforme hôte n’acquiert pas une seconde copie du cycle d’archivage.",
-              tradeoff: "Cette correspondance demande de l’attention lorsque le processus change, mais évite une divergence de sens entre shell, navigateur et moteur.",
+              choice: "Un stockage compatible S3 pour les paquets d’entrée et de sortie",
+              why: "Le contenu des paquets restait à une frontière de stockage objet, référencée par le service et le workflow, ce qui séparait les enregistrements d’archivage de la responsabilité des contenus binaires.",
+              alternative: "Des blobs en base auraient lié les paquets au cycle de vie des données relationnelles ; des fichiers locaux les auraient liés à une instance précise du service et à son parcours de déploiement.",
+              cost: "Buckets, endpoints, identifiants et cas d’objet manquant deviennent des préoccupations opérationnelles explicites que le service doit représenter avec clarté.",
+            },
+          ],
+        },
+        decisions: {
+          title: "Règles pour un workflow réellement exploitable",
+          intro: "L’architecture fournit une source unique de vérité sur le processus ; ces règles en font une expérience que l’opérateur peut lire, juger fiable et reprendre après un problème.",
+          items: [
+            {
+              title: "Montrer l’état avant de proposer une action",
+              body: "La session en cours, ses paquets sources et résultats ainsi que l’étape du processus restent visibles avant que l’opérateur choisisse la suite. Une action privée de ce contexte n’est pas présentée comme un progrès.",
+              tradeoff: "L’interface doit expliquer les états indisponibles, en attente et en échec au lieu d’optimiser uniquement le parcours idéal.",
+            },
+            {
+              title: "Dériver les actions valides de l’état du backend",
+              body: "L’interface présente les transitions prises en charge par le modèle applicatif, tandis que le service refuse celles qui ne sont pas valides. L’état local du navigateur ne devient jamais une seconde autorité sur la prochaine étape.",
+              tradeoff: "Les échanges et le rafraîchissement d’état doivent être explicites, mais un écran périmé ne peut pas inventer une transition valide.",
+            },
+            {
+              title: "Préserver la continuité entre session et paquets",
+              body: "La session, les paquets sources et les paquets résultats restent liés tout au long du parcours en neuf étapes. La vérification suit le même chemin, de la création et l’association jusqu’au traitement et au suivi des résultats.",
+              tradeoff: "Le modèle et l’interface portent plus de contexte qu’un écran dédié à une seule tâche, mais l’opérateur peut suivre le lien entre le travail et son résultat.",
+            },
+            {
+              title: "Rendre l’échec et la reprise visibles",
+              body: "Une étape incomplète, en attente ou en échec reste visible. Si la prochaine action valide permet de réessayer ou de poursuivre, elle apparaît seulement après confirmation du backend.",
+              tradeoff: "L’interface doit expliquer davantage d’états et de parcours d’erreur, mais distingue attente, échec et reprise au lieu de laisser l’opérateur deviner.",
             },
           ],
         },
@@ -1482,7 +1731,7 @@ export const locales = {
         title: "Améliorer un ERP retail sans interrompre les opérations quotidiennes",
         summary:
           "Pendant environ dix-neuf mois, j’ai travaillé sur SQL Server, .NET Framework 4.8 et un frontend KnockoutJS d’un ERP retail actif : fonctionnalités, correctifs, rapports, deux intégrations transporteurs et modernisation de la réception de stock.",
-        readMinutes: "12",
+        readMinutes: "14",
         facts: [
           ["Discipline", "Ingénierie produit d’entreprise"],
           ["Périmètre", "Base de données, backend, frontend et intégrations"],
@@ -1524,29 +1773,60 @@ export const locales = {
           labels: ["OPÉRATEUR WEB", "KNOCKOUT + JQUERY", ".NET FRAMEWORK 4.8", "SQL SERVER PARTAGÉ", "ERP + CAISSE VB6"],
           caption: "L’ERP web et l’ancien parc VB6 se rencontrent dans un contrat de données rétrocompatible.",
         },
+        technology: {
+          title: "Pourquoi la continuité était un choix d’architecture",
+          intro:
+            "Il s’agissait de faire évoluer un ERP en production, pas de recommander son stack pour un projet greenfield. Le bon choix technologique consistait souvent à préserver un contrat opérationnel et à l’améliorer en place plutôt qu’à renouveler toutes les couches simultanément.",
+          items: [
+            {
+              choice: "Conserver C#/.NET Framework et KnockoutJS pour évoluer progressivement",
+              why: "Fonctionnalités, défauts et parcours quotidiens traversaient déjà ces couches. Travailler dans ce cadre permettait de suivre chaque changement sur le chemin réel de la requête et de le livrer sans suspendre l’exploitation.",
+              alternative: "Une réécriture big-bang du backend et du frontend aurait exigé de redécouvrir et remplacer tout le comportement existant avant que des améliorations opérationnelles plus petites atteignent les utilisateurs.",
+              cost: "Le travail accepte les contraintes de frameworks plus anciens, des modèles frontend mixtes et un besoin durable de compétences de maintenance au lieu d’obtenir immédiatement une base moderne uniforme.",
+            },
+            {
+              choice: "Traiter SQL Server comme le contrat de données partagé",
+              why: "L’ERP web, l’ERP desktop VB6 et l’application de caisse lisaient et écrivaient le même schéma. Des changements SQL compatibles protégeaient les consommateurs qui ne pouvaient pas avancer à chaque release web.",
+              alternative: "Migrer la base ou le schéma avec l’application web aurait supposé que tous les consommateurs puissent basculer ensemble malgré l’absence d’un système de migrations.",
+              cost: "Des évolutions additives et des structures transitoires peuvent subsister plus longtemps ; la conception doit tenir compte des anciennes lectures et écritures autant que du nouveau parcours.",
+            },
+            {
+              choice: "Faire évoluer Crystal Reports et les parcours de reporting existants",
+              why: "Le reporting appartenait déjà au système opérationnel et à son comportement SQL Server. Conserver ce parcours dans le périmètre permettait de vérifier les rapports avec le même contrat de données et d’application.",
+              alternative: "Introduire simultanément une nouvelle plateforme de reporting aurait ajouté une autre migration et imposé de traduire le comportement des rapports pendant que l’application et la base changeaient aussi.",
+              cost: "La solution conserve un outil de reporting historique et ses contraintes de conception ; les changements continuent d’exiger des compétences spécifiques et une vérification entre plusieurs couches.",
+            },
+            {
+              choice: "Livrer un parcours de bout en bout à la fois",
+              why: "Une modification pouvait couvrir l’écran opérateur, les règles .NET, le comportement SQL et, si nécessaire, rapports, intégrations et anciennes applications comme une tranche opérationnelle cohérente.",
+              alternative: "Moderniser une couche technique à la fois aurait partagé le comportement entre anciens et nouveaux parcours, repoussant la preuve du workflow réel jusqu’à l’achèvement de plusieurs migrations.",
+              cost: "Chaque tranche doit être terminée et vérifiée dans toutes les couches et applications qu’elle touche ; le progrès exige donc des frontières rigoureuses plutôt que l’uniformité visible d’un programme par couches.",
+            },
+          ],
+        },
         decisions: {
-          title: "Les décisions importantes",
-          intro: "Le travail a privilégié les faits issus de l’opération réelle, les contrats compatibles et les changements livrables plutôt qu’une réécriture spectaculaire.",
+          title: "Règles pour faire évoluer un système en activité",
+          intro: "La continuité technique fixait le cadre ; ces règles reliaient chaque changement au parcours opérationnel complet et aux retours des personnes qui l’utilisent.",
           items: [
             {
               title: "Suivre toute la requête",
-              body: "Le travail sur la performance et la fiabilité part du comportement que le client ou l’opérateur peut décrire, puis le suit à travers KnockoutJS et jQuery, le backend .NET et SQL Server.",
+              body: "Le travail sur la performance et la fiabilité part d’un comportement que le client ou l’opérateur peut décrire, puis le suit à travers l’état web, les règles backend et le travail en base au lieu de s’arrêter au premier symptôme visible.",
               tradeoff: "Cela demande plus d’enquête qu’un correctif sur le premier composant lent, mais évite de déplacer le goulot ou de corriger un symptôme que le client ne rencontrait pas réellement.",
             },
             {
-              title: "Traiter la base comme un contrat partagé",
-              body: "Sans migrations et avec des consommateurs VB6 sur la même base, les changements de schéma devaient préserver les lectures et écritures existantes. Une évolution additive ou compatible était plus sûre que de supposer que toutes les applications pouvaient avancer ensemble.",
-              tradeoff: "La rétrocompatibilité peut conserver plus longtemps des structures de transition, mais elle protège les parcours desktop et caisse qui ne peuvent pas être mis à niveau à chaque release web.",
+              title: "Faire de la compatibilité un critère d’acceptation",
+              body: "Une modification n’est acceptée qu’après avoir fonctionné dans l’ERP web et dans les anciens parcours desktop et caisse qui partagent les mêmes données. Procédures stockées, vues, rapports et échanges avec les transporteurs rejoignent ce contrôle lorsque le workflow les traverse.",
+              tradeoff: "La surface d’acceptation dépasse le composant modifié, mais une réussite locale ne peut pas devenir silencieusement une panne dans un autre parcours quotidien.",
             },
             {
-              title: "Améliorer par tranches livrables",
-              body: "Des changements ciblés sont plus faciles à comprendre dans un système critique qu’une réécriture simultanée du stack web, de la base et du parc desktop historique.",
-              tradeoff: "La livraison progressive exige de la patience et des frontières précises, mais garde visible le risque de compatibilité de chaque version.",
+              title: "Définir « terminé » dans le parcours réel du client",
+              body: "Les échanges avec le client traduisent une demande en parcours concrets, cas limites et vérifications d’acceptation avant la modification. La livraison est terminée seulement lorsque le résultat rejoint l’usage quotidien, pas lorsqu’un composant fonctionne isolément.",
+              tradeoff: "Cette définition de « terminé » demande du temps de coordination, mais coûte moins cher qu’une interprétation techniquement cohérente qui ne correspond pas au processus retail réel.",
             },
             {
-              title: "Garder le client dans le raisonnement",
-              body: "Les échanges directs transformaient les demandes en parcours concrets, cas limites et vérifications d’acceptation avant de modifier rapports, intégrations ou écrans quotidiens.",
-              tradeoff: "Cette boucle demande du temps de coordination, mais coûte moins cher qu’une interprétation techniquement cohérente qui ne correspond pas au processus retail réel.",
+              title: "Utiliser le support et la formation comme retours de release",
+              body: "Les questions issues du support et de la formation maintiennent les exigences liées à la façon dont les personnes comprennent et accomplissent leur travail. Ces retours orientent la correction ou l’amélioration ciblée suivante.",
+              tradeoff: "La responsabilité de livraison se poursuit au-delà du merge, mais les difficultés d’usage deviennent visibles tant qu’elles peuvent encore guider la release suivante.",
             },
           ],
         },
