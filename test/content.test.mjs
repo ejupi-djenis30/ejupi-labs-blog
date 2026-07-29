@@ -59,7 +59,7 @@ test("every locale contains the same complete case-study structure", () => {
         assert.match(definition.sourceRef, /^v\d+\.\d+\.\d+$/u);
         assert.match(
           definition.sourceUrl,
-          /^https:\/\/github\.com\/[^/]+\/[^/]+\/commit\/[0-9a-f]{40}$/u,
+          /^https:\/\/(?:github\.com\/[^/]+\/[^/]+\/commit|api\.github\.com\/repositories\/\d+\/commits)\/[0-9a-f]{40}$/u,
         );
         assert.ok(
           definition.verifiedAt <= definition.updated,
@@ -199,6 +199,50 @@ test("Labs source metadata is required and must resolve to an immutable commit",
   );
 });
 
+test("CareerOS documents the released v1.8.0 workflow and its verified gates", () => {
+  const definition = caseDefinitions.find(({ slug }) => slug === "careeros-local");
+  assert.ok(definition);
+  assert.equal(definition.updated, "2026-07-29");
+  assert.equal(definition.verifiedAt, "2026-07-29");
+  assert.equal(definition.sourceRef, "v1.8.0");
+  assert.equal(
+    definition.sourceUrl,
+    "https://github.com/ejupi-djenis30/careeros-local/commit/6dfeb12d180a2342a01bc264c3963bcc4373aeee",
+  );
+
+  const localizedClaims = {
+    en: {
+      provenance: /provenance|revision/iu,
+      pipeline: /application (?:pipeline|timeline)/iu,
+    },
+    it: {
+      provenance: /provenienza|revisione/iu,
+      pipeline: /pipeline di candidatura/iu,
+    },
+    de: {
+      provenance: /provenienz|revision/iu,
+      pipeline: /bewerbungs-pipeline/iu,
+    },
+    fr: {
+      provenance: /provenance|révision/iu,
+      pipeline: /pipeline de candidature/iu,
+    },
+  };
+
+  for (const localeKey of localeOrder) {
+    const study = locales[localeKey].cases[definition.slug];
+    const copy = JSON.stringify(study);
+    assert.match(copy, /v1\.8\.0/u);
+    assert.match(copy, /1(?:,|\.| )456/u);
+    assert.match(copy, /354/u);
+    assert.match(copy, /archive v5|archivio v5|Archiv v5|format v5/iu);
+    assert.match(copy, /\bCLI\b/u);
+    assert.match(copy, /\bMCP\b/u);
+    assert.match(copy, localizedClaims[localeKey].provenance);
+    assert.match(copy, localizedClaims[localeKey].pipeline);
+  }
+});
+
 test("VECTOR is presented as the bounded self-hosted v3 product in every locale", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "vector-placement-operations");
   assert.ok(definition);
@@ -256,14 +300,14 @@ test("JDoor preserves co-authorship, authorized use and the requested Labs topol
   assert.equal(definition.sourceRef, "v1.0.0");
   assert.equal(
     definition.sourceUrl,
-    "https://github.com/NobodyToListen/JDoor/commit/ac94dd82cdff17551826b7254165d123190aeec7",
+    "https://api.github.com/repositories/567343188/commits/ac94dd82cdff17551826b7254165d123190aeec7",
   );
 
   const coCreationClaims = {
-    en: /co-created|both school-project creators/iu,
-    it: /co-creato|entrambi i creatori/iu,
-    de: /gemeinsam entwickelt|beiden urhebern/iu,
-    fr: /co-créé|deux créateurs/iu,
+    en: /co-created[\s\S]{0,50}(?:by Djenis and|with) a collaborator/iu,
+    it: /co-creat[oa][\s\S]{0,50}un collaboratore/iu,
+    de: /gemeinsam[\s\S]{0,80}mitwirkenden Person/iu,
+    fr: /co-créé[\s\S]{0,50}un collaborateur/iu,
   };
   const authorizedUseClaims = {
     en: /authorized/iu,
@@ -281,7 +325,15 @@ test("JDoor preserves co-authorship, authorized use and the requested Labs topol
     assert.equal(study.decisions.items.length, 3);
     assert.match(copy, coCreationClaims[localeKey]);
     assert.match(copy, authorizedUseClaims[localeKey]);
+    assert.doesNotMatch(
+      copy,
+      /published as|pubblicat[oa] come|veröffentlicht als|publié sous/iu,
+    );
   }
+  assert.doesNotMatch(
+    definition.sourceUrl,
+    /^https:\/\/github\.com\/[^/]+\/JDoor\//iu,
+  );
 });
 
 test("related case studies have a deterministic editorial order", () => {

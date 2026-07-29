@@ -19,24 +19,24 @@ export const labsLocales = {
         ["Prodotto", "Utility desktop open source"],
         ["Ruolo", "Prodotto, architettura e implementazione"],
         ["Confine di fiducia", "Dispositivo locale per impostazione predefinita"],
-        ["Stato", "Release v1.6.0 firmata con pipeline di rilascio verificata"],
+        ["Stato", "Release v1.8.0 firmata con pacchetti nativi verificati per sei combinazioni di piattaforma e architettura"],
       ],
       evidence: {
         title: "Registro delle evidenze",
         intro: "Il repository documenta questi controlli e limiti riproducibili:",
         items: [
-          ["Backend", "1.369 test superati per la v1.6.0; una review indipendente ha rieseguito 42 test su portabilità e storage."],
-          ["Frontend + shell", "334 test frontend in 64 file e 17 test della libreria Rust superati, incluso il writer nativo dei backup."],
-          ["Verifica dei backup", "Gli archivi dalla versione 1 alla 4 ricevono un preflight completo e non mutante; la risposta contiene metadati limitati, non il contenuto dell’archivio."],
-          ["Fixture di scala", "Una fixture agenda con 10.000 candidature registra un p95 di 68,670 ms rispetto al budget di progetto di 200 ms."],
-          ["Limite", "Le ricevute locali non proteggono da un processo che può scrivere direttamente nel database; le importazioni non firmate vengono messe in quarantena."],
+          ["Backend", "Il candidato v1.8.0 supera 1.456 test backend con 4 skip previsti."],
+          ["Frontend + shell", "Supera 354 controlli frontend e tutti i 17 test Rust, oltre ai gate di lint, build di produzione e audit delle dipendenze."],
+          ["Archivio portabile", "Il formato v5 conserva il legame con l’opportunità logica e continua a ispezionare e ripristinare i formati dalla v1 alla v4."],
+          ["Provenienza della ricerca", "Ogni annuncio registra prima osservazione, ultima osservazione e revisione del contenuto; una revisione nuova invalida le analisi precedenti ancora in esecuzione."],
+          ["CLI + MCP", "La CLI in sola lettura e il server MCP su stdio espongono sette strumenti limitati tramite autorizzazioni revocabili legate a un account, senza aprire porte di rete."],
         ],
       },
       starting: {
         title: "Il problema di prodotto",
         paragraphs: [
           "Le informazioni professionali tendono a disperdersi tra vecchi CV, portali di lavoro, appunti e sistemi di candidatura. Gli strumenti AI generici aggiungono un altro problema: una risposta ben scritta può perdere il legame con il fatto che la sostiene.",
-          "CareerOS Local è stato progettato prima di tutto come registro operativo. Esperienze, formazione, competenze e risultati conservano provenienza, stato di verifica e cronologia delle revisioni. L’LLM analizza poi quel registro, di proprietà dell’utente, per il matching e il coaching, invece di inventare un secondo profilo scollegato.",
+          "CareerOS Local è stato progettato prima di tutto come registro operativo. Esperienze, formazione, competenze e risultati conservano provenienza, stato di verifica e cronologia delle revisioni. La ricerca guidata parte ora dai fatti confermati e privati dei contatti nel Career Vault; l’LLM analizza quel registro invece di inventare un secondo profilo.",
         ],
       },
       constraints: {
@@ -79,8 +79,8 @@ export const labsLocales = {
         items: [
           {
             title: "Conservare la provenienza nel registro",
-            body: "I dati professionali mantengono fonte, stato di verifica e revisioni. Il contenuto del CV e le evidenze di candidatura possono risalire a quel registro.",
-            tradeoff: "Richiede più struttura di un profilo libero, ma rende possibili correzioni e verifiche.",
+            body: "I dati professionali mantengono fonte, stato di verifica e revisioni. Gli annunci registrano separatamente osservazioni e revisione del contenuto, così un’analisi vecchia non può sovrascrivere un annuncio più recente.",
+            tradeoff: "Richiede più struttura di un profilo libero o di una tabella aggiornata sul posto, ma mantiene tracciabili correzioni e analisi.",
           },
           {
             title: "Tenere il modello a valle delle evidenze",
@@ -88,23 +88,24 @@ export const labsLocales = {
             tradeoff: "Ogni proposta utile richiede conferma o una modifica esplicita del dato sorgente; la velocità dell’automazione resta subordinata alla tracciabilità.",
           },
           {
-            title: "Trattare le candidature come evidenze",
-            body: "CV versionati, risposte, mappature dei requisiti e file verificati possono essere esportati con un manifesto SHA-256 canonico.",
-            tradeoff: "Un dossier richiede più cura di una cartella di file sparsi; in cambio è riproducibile e verificabile.",
+            title: "Una sola candidatura per opportunità",
+            body: "La scheda di un annuncio apre una timeline logica con fase, prossima azione, CV versionati, risposte, mappature dei requisiti e file verificati. Il dossier viene esportato con un manifesto SHA-256 canonico.",
+            tradeoff: "La pipeline impone un registro deliberato invece di tracker duplicati, ma resta coerente anche con annunci duplicati dai provider e richieste concorrenti.",
           },
         ],
       },
       delivery: {
         title: "Come viene verificato il prodotto",
         paragraphs: [
-          "Il repository testa i servizi Python, il comportamento React e l’integrazione desktop Rust. Le migrazioni del database vengono eseguite in cicli di upgrade, downgrade e nuovo upgrade. I test dei backup ispezionano senza modifiche le versioni 1–4, poi verificano sostituzione, rilevamento della corruzione e rollback su dati locali temporanei.",
-          "L’automazione dei rilasci controlla anche licenze delle dipendenze, SBOM, container e policy sulle vulnerabilità ad alta gravità. Le immagini del tour provengono dall’applicazione reale con dati fittizi e il registratore rifiuta errori del browser, risposte API fallite e avvisi visibili.",
+          "Il candidato v1.8.0 ha superato 1.456 test backend con 4 skip previsti, 354 controlli frontend e 17 test Rust. Le migrazioni hanno completato cicli di upgrade, downgrade e nuovo upgrade; i test dell’archivio hanno coperto il formato v5 e la compatibilità di ispezione e ripristino dalla v1 alla v4.",
+          "L’automazione ha verificato licenze, SBOM, container e policy sulle vulnerabilità prima di produrre i pacchetti pubblicati per Windows, macOS e Linux su x64 e ARM64. Anche la CLI installata dai sorgenti e il server MCP su stdio passano test su autorizzazioni, redazione ed entry point.",
         ],
       },
       result: {
         title: "Cosa esiste oggi",
         paragraphs: [
-          "CareerOS Local è una utility desktop funzionante con archivio professionale, studio per il CV, pipeline privata delle opportunità, dossier di candidatura, backup, esportazioni e un runtime supervisionato per l’analisi locale.",
+          "CareerOS Local v1.8.0 è una utility desktop funzionante con Career Vault, ricerca guidata, Job Library revisionata, pipeline di candidatura con una timeline per opportunità, studio per il CV, dossier, archivio v5 e analisi locale supervisionata.",
+          "Una CLI in sola lettura e un server MCP su stdio permettono a Codex, Claude Code e script shell di consultare una vista volutamente limitata di un account autorizzato. Le autorizzazioni hanno ambiti, scadenza e revoca; l’automazione non può modificare il vault né eseguire prompt liberi.",
           "Non sostiene che un LLM possa decidere una carriera. Il modello aiuta a interpretare un insieme di evidenze di proprietà dell’utente; l’utente conserva il registro, la fonte e la decisione finale.",
         ],
       },
@@ -623,11 +624,11 @@ export const labsLocales = {
       category: "Assistenza remota sicura",
       title: "Trasformare un prototipo scolastico di controllo remoto in assistenza basata sul consenso",
       summary:
-        "JDoor nasce nel 2022 come progetto scolastico di networking co-creato da Djenis Ejupi e NobodyToListen. In seguito Djenis ne ha ricostruito il modello di sicurezza, il ciclo di sessione, la UX, i test e il percorso di rilascio come JDoor Assist: uno strumento desktop visibile e view-only per impostazione predefinita, destinato al supporto autorizzato su reti locali fidate.",
+        "JDoor nasce nel 2022 come progetto scolastico di networking co-creato da Djenis e un collaboratore. In seguito Djenis ne ha ricostruito il modello di sicurezza, il ciclo di sessione, la UX, i test e il percorso di rilascio come JDoor Assist: uno strumento desktop visibile e view-only per impostazione predefinita, destinato al supporto autorizzato su reti locali fidate.",
       readMinutes: "12",
       facts: [
         ["Prodotto", "Assistenza remota LAN basata sul consenso"],
-        ["Origine", "Progetto scolastico del 2022 co-creato da Djenis Ejupi e NobodyToListen"],
+        ["Origine", "Progetto scolastico del 2022 co-creato da Djenis e un collaboratore"],
         ["Modernizzazione", "Sicurezza, UX di prodotto, test e release engineering di Djenis"],
         ["Stato", "Snapshot sorgente v1.0.0 versionato sotto GPL-3.0"],
       ],
@@ -656,7 +657,7 @@ export const labsLocales = {
       starting: {
         title: "Conservare l’origine, cambiare il modello di fiducia",
         paragraphs: [
-          "JDoor originale era un progetto scolastico del 2022 che Djenis ha realizzato con un amico, pubblicato come NobodyToListen. Dimostrava networking Java, cattura dello schermo e input remoto. Questa origine condivisa resta nella storia del progetto: il lavoro successivo non presenta il prototipo scolastico come opera individuale.",
+          "JDoor originale era un progetto scolastico del 2022 che Djenis ha realizzato con un collaboratore. Dimostrava networking Java, cattura dello schermo e input remoto. Questa origine condivisa resta nella storia del progetto: il lavoro successivo non presenta il prototipo scolastico come opera individuale.",
           "Una dimostrazione non è ancora un prodotto di assistenza. Il vecchio design trattava una connessione in ingresso come canale di controllo, senza pairing autenticato forte, stato view-only o ciclo completo per tasti bloccati, errori delle socket e arresto. La modernizzazione è quindi partita restringendo ciò che l’applicazione può fare.",
         ],
       },
@@ -726,7 +727,7 @@ export const labsLocales = {
         title: "Cos’è oggi JDoor Assist",
         paragraphs: [
           "JDoor Assist è un’applicazione desktop funzionante con flussi launcher, host e viewer; link monouso a scadenza; pin del certificato; approvazione locale; streaming view-only; permesso di controllo esplicito; cleanup dell’input; audit del ciclo di vita e comandi visibili di disconnessione.",
-          "Il prototipo del 2022 resta attribuito a entrambi i creatori del progetto scolastico. La modernizzazione successiva di sicurezza, prodotto, UX, test e rilascio è il contributo di Djenis, e il risultato resta limitato all’assistenza visibile tra persone autorizzate su una rete locale fidata.",
+          "Il prototipo del 2022 resta attribuito come lavoro co-creato con un collaboratore. La modernizzazione successiva di sicurezza, prodotto, UX, test e rilascio è il contributo di Djenis, e il risultato resta limitato all’assistenza visibile tra persone autorizzate su una rete locale fidata.",
         ],
       },
       scope:
@@ -739,17 +740,17 @@ export const labsLocales = {
       title: "Ein privater Karriere-Arbeitsbereich, der auf Belegen statt auf generierten Behauptungen beruht",
       summary: "CareerOS Local verbindet eine Tauri-Desktop-Anwendung, einen FastAPI-Sidecar, einen versionierten SQLite-Tresor und eine verpflichtende lokale LLM-Laufzeit. So bleiben Quelldaten, Dokumente und Analysen auf dem Gerät des Benutzers.",
       readMinutes: "13",
-      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "Signiertes v1.6.0-Release mit geprüfter Release-Pipeline"]],
+      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "Signiertes v1.8.0-Release mit geprüften nativen Paketen für sechs Plattform- und Architekturziele"]],
       evidence: { title: "Evidenzprotokoll", intro: "Das aktuelle Repository dokumentiert diese reproduzierbaren Prüfungen und Grenzen:", items: [
-        ["Backend", "1.369 Tests bestehen für v1.6.0; eine unabhängige Prüfung wiederholte 42 Portabilitäts- und Speichertests."],
-        ["Frontend + Shell", "334 Frontend-Tests in 64 Dateien und 17 Rust-Bibliothekstests bestehen, einschließlich des nativen Backup-Writers."],
-        ["Backup-Prüfung", "Archive der Versionen 1–4 durchlaufen einen vollständigen, nicht verändernden Preflight; die Antwort enthält begrenzte Metadaten statt Archivinhalten."],
-        ["Skalierungs-Fixture", "Eine Agenda-Fixture mit 10.000 Bewerbungen erfasst einen p95 von 68,670 ms bei einem Projektbudget von 200 ms."],
-        ["Grenze", "Lokale Belege schützen nicht vor einem Prozess, der direkt in die Datenbank schreiben kann; unsignierte Importe werden unter Quarantäne gestellt."],
+        ["Backend", "Der v1.8.0-Kandidat besteht 1.456 Backend-Tests mit 4 erwarteten Übersprüngen."],
+        ["Frontend + Shell", "354 Frontend-Prüfungen und alle 17 Rust-Tests bestehen, ebenso Linting, Produktions-Build und Abhängigkeits-Audit."],
+        ["Portables Archiv", "Archivformat v5 bewahrt die Beziehung zur logischen Opportunity und kann die Formate v1 bis v4 weiterhin prüfen und wiederherstellen."],
+        ["Suchprovenienz", "Stellenanzeigen erfassen erste und letzte Sichtung sowie die Inhaltsrevision; eine neuere Anzeige macht ältere, noch laufende Analysen ungültig."],
+        ["CLI + MCP", "Die schreibgeschützte CLI und der MCP-Server über stdio stellen sieben begrenzte Werkzeuge mit widerrufbaren, kontogebundenen Berechtigungen bereit, ohne einen Netzwerkport zu öffnen."],
       ]},
       starting: { title: "Das Produktproblem", paragraphs: [
         "Karriereinformationen verteilen sich häufig auf alte Lebensläufe, Jobportale, Notizen und Bewerbungsplattformen. Allgemeine AI-Werkzeuge schaffen ein weiteres Problem: Eine überzeugend formulierte Antwort kann den Bezug zu dem Fakt verlieren, der sie stützt.",
-        "CareerOS Local wurde zuerst als belastbares Arbeitsprotokoll entworfen. Erfahrung, Ausbildung, Fähigkeiten und Erfolge behalten Herkunft, Prüfstatus und Revisionsverlauf. Das LLM analysiert diesen eigenen Datenbestand für Matching und Coaching, statt ein zweites, losgelöstes Profil zu erfinden.",
+        "CareerOS Local wurde zuerst als belastbares Arbeitsprotokoll entworfen. Erfahrung, Ausbildung, Fähigkeiten und Erfolge behalten Herkunft, Prüfstatus und Revisionsverlauf. Die geführte Suche beginnt nun mit bestätigten, um Kontaktdaten bereinigten Fakten aus dem Career Vault; das LLM analysiert diesen Bestand, statt ein zweites Profil zu erfinden.",
       ]},
       constraints: { title: "Was das System schützen muss", intro: "Die Architektur folgt vier Produktvorgaben:", items: [
         "Private Karrieredaten, generierte Dokumente und Analysen bleiben auf dem Gerät.",
@@ -773,16 +774,17 @@ export const labsLocales = {
         ],
       },
       decisions: { title: "Entscheidungen, die daraus ein echtes Werkzeug machen", intro: "Das nützliche Produkt ist der vollständige Arbeitsablauf rund um das Modell.", items: [
-        { title: "Herkunft im Datensatz bewahren", body: "Karrierefakten behalten Quelle, Prüfstatus und Revisionen. Lebenslaufinhalte und Bewerbungsbelege können auf diesen Datensatz zurückverweisen.", tradeoff: "Das verlangt mehr Struktur als ein Freitextprofil, ermöglicht dafür aber Korrekturen und Audits." },
+        { title: "Herkunft im Datensatz bewahren", body: "Karrierefakten behalten Quelle, Prüfstatus und Revisionen. Stellenanzeigen erfassen Beobachtungen und Inhaltsrevision getrennt, damit alte Modellarbeit keine neuere Anzeige überschreiben kann.", tradeoff: "Das verlangt mehr Struktur als ein Freitextprofil oder eine direkt überschriebene Tabelle, hält Korrekturen und Analysen aber nachvollziehbar." },
         { title: "Modellausgaben den Belegen nachordnen", body: "Matching und Coaching interpretieren nur den prüfbaren Datensatz und erzeugen getrennte Vorschläge. Modellausgaben werden nie eigenständig zur maßgeblichen Quelle und überschreiben keine Ausgangsfakten.", tradeoff: "Jeder nützliche Vorschlag braucht Bestätigung oder eine ausdrückliche Änderung des Quelldatensatzes; Automatisierungsgeschwindigkeit bleibt der Nachvollziehbarkeit untergeordnet." },
-        { title: "Bewerbungen als Belege paketieren", body: "Versionierte Lebensläufe, Antworten, Anforderungszuordnungen und geprüfte Dateien lassen sich mit einem kanonischen SHA-256-Manifest exportieren.", tradeoff: "Ein Dossier ist bewusster aufgebaut als ein Ordner mit losen Dateien; dafür ist es reproduzierbar und prüfbar." },
+        { title: "Eine Bewerbung pro Opportunity verfolgen", body: "Eine Stellenkarte öffnet eine logische Bewerbungszeitleiste mit Phase, nächster Aktion, versionierten Lebensläufen, Antworten, Anforderungszuordnungen und geprüften Dateien. Das Dossier wird mit einem kanonischen SHA-256-Manifest exportiert.", tradeoff: "Die Pipeline erzwingt einen bewussten Datensatz statt doppelter Ad-hoc-Tracker, bleibt dafür auch bei Provider-Duplikaten und gleichzeitigen Anfragen konsistent." },
       ]},
       delivery: { title: "Wie das Produkt verifiziert wird", paragraphs: [
-        "Das Repository testet Python-Dienste, React-Verhalten und die Rust-Desktop-Integration. Datenbankmigrationen durchlaufen Upgrade-, Downgrade- und erneute Upgrade-Zyklen. Backup-Tests prüfen die Versionen 1–4 ohne Änderungen und testen danach Austausch, Korruptionserkennung und verifizierten Rollback mit kurzlebigen lokalen Daten.",
-        "Die Release-Automatisierung prüft außerdem Abhängigkeitslizenzen, SBOMs, Container und die Richtlinie für schwerwiegende Schwachstellen. Produkt-Touren werden in der echten Anwendung mit fiktiven Daten aufgenommen; der Recorder verwirft Browserfehler, fehlgeschlagene API-Antworten und sichtbare Warnungen.",
+        "Der v1.8.0-Kandidat bestand 1.456 Backend-Tests mit 4 erwarteten Übersprüngen, 354 Frontend-Prüfungen und 17 Rust-Tests. Migrationen durchliefen Upgrade, Downgrade und erneutes Upgrade; Archivtests deckten v5 sowie Prüfung und Wiederherstellung der Formate v1 bis v4 ab.",
+        "Die Release-Automatisierung prüfte Lizenzen, SBOMs, Container und Schwachstellenrichtlinien, bevor sie die veröffentlichten Pakete für Windows, macOS und Linux auf x64 und ARM64 baute. Auch die aus dem Quellcode installierte CLI und der MCP-Server über stdio durchlaufen Tests für Berechtigungen, Redaktion und Einstiegspunkte.",
       ]},
       result: { title: "Was heute vorhanden ist", paragraphs: [
-        "CareerOS Local ist eine funktionsfähige Desktop-Utility mit Karriere-Tresor, Lebenslauf-Studio, privater Opportunity-Pipeline, Bewerbungsdossiers, Backups, Exporten und einer überwachten lokalen Analyse-Laufzeit.",
+        "CareerOS Local v1.8.0 ist eine funktionsfähige Desktop-Utility mit Career Vault, geführter Suche, revisionsgeführter Job Library, einer Bewerbungs-Pipeline mit einer Zeitleiste pro Opportunity, Lebenslauf-Studio, Dossiers, Archiv v5 und überwachter lokaler Analyse.",
+        "Eine schreibgeschützte CLI und ein MCP-Server über stdio lassen Codex, Claude Code und Shell-Skripte eine bewusst kleine Ansicht eines autorisierten Kontos lesen. Berechtigungen sind begrenzt, befristet und widerrufbar; die Automatisierung kann weder den Tresor ändern noch freie Prompts ausführen.",
         "Das Produkt behauptet nicht, ein LLM könne eine Karriere entscheiden. Das Modell hilft, einen eigenen Belegbestand auszuwerten; Datensatz, Quelle und letzte Entscheidung bleiben beim Benutzer.",
       ]},
       scope: "Diese Fallstudie beschreibt die eingecheckte Architektur und das dokumentierte Produktverhalten. Sie behauptet weder Beschäftigungsergebnisse noch Modellgenauigkeit auf privaten Benutzerdaten oder Unterstützung für jedes lokale Modell und jede Maschine.",
@@ -1103,11 +1105,11 @@ export const labsLocales = {
       category: "Sichere Fernunterstützung",
       title: "Einen schulischen Fernsteuerungsprototyp in zustimmungsbasierte Unterstützung verwandeln",
       summary:
-        "JDoor begann 2022 als gemeinsam von Djenis Ejupi und NobodyToListen entwickeltes Schulprojekt zum Thema Netzwerke. Später baute Djenis Sicherheitsmodell, Sitzungslebenszyklus, Produkt-UX, Tests und Release-Weg als JDoor Assist neu auf: ein sichtbares Desktop-Werkzeug, das standardmäßig nur Ansicht erlaubt und für autorisierte Hilfe in vertrauenswürdigen lokalen Netzen gedacht ist.",
+        "JDoor begann 2022 als gemeinsam von Djenis und einer mitwirkenden Person entwickeltes Schulprojekt zum Thema Netzwerke. Später baute Djenis Sicherheitsmodell, Sitzungslebenszyklus, Produkt-UX, Tests und Release-Weg als JDoor Assist neu auf: ein sichtbares Desktop-Werkzeug, das standardmäßig nur Ansicht erlaubt und für autorisierte Hilfe in vertrauenswürdigen lokalen Netzen gedacht ist.",
       readMinutes: "12",
       facts: [
         ["Produkt", "Zustimmungsbasierte Fernunterstützung im LAN"],
-        ["Ursprung", "2022 von Djenis Ejupi und NobodyToListen gemeinsam entwickeltes Schulprojekt"],
+        ["Ursprung", "2022 von Djenis und einer mitwirkenden Person gemeinsam entwickeltes Schulprojekt"],
         ["Modernisierung", "Sicherheit, Produkt-UX, Tests und Release Engineering durch Djenis"],
         ["Status", "Versionierter v1.0.0-Quellstand unter GPL-3.0"],
       ],
@@ -1136,7 +1138,7 @@ export const labsLocales = {
       starting: {
         title: "Den Ursprung bewahren, das Vertrauensmodell ändern",
         paragraphs: [
-          "Das ursprüngliche JDoor war ein Schulprojekt von 2022, das Djenis mit einem Freund entwickelte, veröffentlicht als NobodyToListen. Es demonstrierte Java-Netzwerkprogrammierung, Bildschirmaufnahme und entfernte Eingaben. Dieser gemeinsame Ursprung bleibt Teil der Projektdokumentation; die spätere Arbeit stellt den Unterrichtsprototyp nicht als Einzelarbeit dar.",
+          "Das ursprüngliche JDoor war ein Schulprojekt von 2022, das Djenis mit einer mitwirkenden Person entwickelte. Es demonstrierte Java-Netzwerkprogrammierung, Bildschirmaufnahme und entfernte Eingaben. Dieser gemeinsame Ursprung bleibt Teil der Projektdokumentation; die spätere Arbeit stellt den Unterrichtsprototyp nicht als Einzelarbeit dar.",
           "Eine Demonstration ist noch kein Support-Produkt. Der alte Entwurf behandelte eine eingehende Verbindung als Steuerkanal, ohne stark authentifizierte Kopplung, Nur-Ansicht-Zustand oder vollständigen Lebenszyklus für hängen gebliebene Tasten, Socketfehler und Herunterfahren. Die Modernisierung begann deshalb damit, die erlaubten Fähigkeiten einzuschränken.",
         ],
       },
@@ -1206,7 +1208,7 @@ export const labsLocales = {
         title: "Was JDoor Assist heute ist",
         paragraphs: [
           "JDoor Assist ist eine funktionsfähige Desktop-Anwendung mit Launcher-, Host- und Viewer-Abläufen, ablaufendem Einmal-Link, Zertifikat-Pinning, lokaler Genehmigung, Nur-Ansicht-Streaming, ausdrücklicher Steuerfreigabe, Eingabe-Cleanup, Lebenszyklus-Audit und sichtbaren Trennfunktionen.",
-          "Der Prototyp von 2022 bleibt beiden Urhebern des Schulprojekts zugeschrieben. Die spätere Modernisierung von Sicherheit, Produkt, UX, Tests und Release ist Djenis’ Beitrag; ihr Ergebnis bleibt bewusst auf sichtbare Hilfe zwischen autorisierten Personen in einem vertrauenswürdigen lokalen Netz begrenzt.",
+          "Der Prototyp von 2022 bleibt als gemeinsam mit einer mitwirkenden Person geschaffenes Werk ausgewiesen. Die spätere Modernisierung von Sicherheit, Produkt, UX, Tests und Release ist Djenis’ Beitrag; ihr Ergebnis bleibt bewusst auf sichtbare Hilfe zwischen autorisierten Personen in einem vertrauenswürdigen lokalen Netz begrenzt.",
         ],
       },
       scope:
@@ -1219,17 +1221,17 @@ export const labsLocales = {
       title: "Construire un espace de travail privé pour sa carrière, fondé sur des preuves plutôt que sur des affirmations générées",
       summary: "CareerOS Local associe une application de bureau Tauri, un sidecar FastAPI, un coffre SQLite versionné et un runtime LLM local obligatoire. Les faits sources, les documents et les analyses restent ainsi sur l’appareil de l’utilisateur.",
       readMinutes: "13",
-      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "Version v1.6.0 signée avec pipeline de publication vérifié"]],
+      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "Version v1.8.0 signée avec paquets natifs vérifiés pour six cibles de plateforme et d’architecture"]],
       evidence: { title: "Registre des preuves", intro: "Le dépôt actuel consigne ces vérifications et limites reproductibles :", items: [
-        ["Backend", "1 369 tests réussis pour la v1.6.0 ; une revue indépendante a rejoué 42 tests de portabilité et de stockage."],
-        ["Frontend + shell", "334 tests frontend dans 64 fichiers et 17 tests de bibliothèque Rust réussis, dont le writer natif de sauvegarde."],
-        ["Assurance des sauvegardes", "Les archives des versions 1 à 4 subissent un preflight complet sans mutation ; la réponse contient des métadonnées bornées, pas le contenu de l’archive."],
-        ["Fixture à grande échelle", "Une fixture d’agenda de 10 000 candidatures mesure un p95 de 68,670 ms face au budget projet de 200 ms."],
-        ["Limite", "Les reçus locaux ne protègent pas contre un processus capable d’écrire directement dans la base ; les imports non signés sont mis en quarantaine."],
+        ["Backend", "Le candidat v1.8.0 réussit 1 456 tests backend avec 4 skips attendus."],
+        ["Frontend + shell", "Il réussit 354 contrôles frontend et les 17 tests Rust, ainsi que les gates de lint, de build de production et d’audit des dépendances."],
+        ["Archive portable", "Le format v5 conserve la relation avec l’opportunité logique et continue d’inspecter et de restaurer les formats v1 à v4."],
+        ["Provenance de recherche", "Chaque annonce enregistre sa première et sa dernière observation ainsi que sa révision de contenu ; une annonce plus récente invalide une analyse antérieure encore en cours."],
+        ["CLI + MCP", "La CLI en lecture seule et le serveur MCP sur stdio exposent sept outils bornés par des autorisations révocables liées au compte, sans ouvrir de port réseau."],
       ]},
       starting: { title: "Le problème produit", paragraphs: [
         "Les informations professionnelles se dispersent souvent entre d’anciens CV, des plateformes d’emploi, des notes et des portails de candidature. Les outils AI génériques ajoutent un risque : une réponse soignée peut perdre le lien avec le fait qui la justifie.",
-        "CareerOS Local a d’abord été conçu comme un registre de travail. Expériences, formations, compétences et réalisations conservent leur provenance, leur état de vérification et leur historique. Le LLM analyse ensuite ce registre maîtrisé pour le matching et le coaching, au lieu d’inventer un second profil déconnecté.",
+        "CareerOS Local a d’abord été conçu comme un registre de travail. Expériences, formations, compétences et réalisations conservent leur provenance, leur état de vérification et leur historique. La recherche guidée part désormais des faits confirmés et expurgés des coordonnées dans le Career Vault ; le LLM analyse ce registre au lieu d’inventer un second profil.",
       ]},
       constraints: { title: "Ce que le système doit protéger", intro: "L’architecture suit quatre contraintes produit :", items: [
         "Les données professionnelles privées, les documents générés et les analyses restent sur l’appareil.",
@@ -1253,16 +1255,17 @@ export const labsLocales = {
         ],
       },
       decisions: { title: "Les choix qui en font un véritable utilitaire", intro: "Le produit utile est le workflow complet construit autour du modèle.", items: [
-        { title: "Conserver la provenance dans le registre", body: "Les faits professionnels gardent leur source, leur état de vérification et leurs révisions. Le CV et les preuves de candidature peuvent remonter à ce registre.", tradeoff: "Cette structure est plus exigeante qu’un profil libre, mais elle rend possibles les corrections et les audits." },
+        { title: "Conserver la provenance dans le registre", body: "Les faits professionnels gardent leur source, leur état de vérification et leurs révisions. Les annonces enregistrent séparément leurs observations et leur révision de contenu, afin qu’une ancienne analyse ne puisse pas remplacer une annonce plus récente.", tradeoff: "Cette structure est plus exigeante qu’un profil libre ou qu’une table écrasée sur place, mais elle garde corrections et analyses traçables." },
         { title: "Maintenir les sorties du modèle en aval des preuves", body: "Matching et coaching n’interprètent que le registre vérifiable et produisent des suggestions distinctes. Une sortie du modèle ne devient jamais, à elle seule, la source de référence et ne remplace pas les faits d’origine.", tradeoff: "Chaque suggestion utile demande une confirmation ou une modification explicite du fait source ; la vitesse d’automatisation reste subordonnée à la traçabilité." },
-        { title: "Regrouper les candidatures comme preuves", body: "CV versionnés, réponses, correspondances d’exigences et fichiers vérifiés s’exportent avec un manifeste SHA-256 canonique.", tradeoff: "Un dossier demande plus de rigueur qu’un répertoire de fichiers épars ; il est aussi reproductible et vérifiable." },
+        { title: "Suivre une candidature par opportunité", body: "La fiche d’une annonce ouvre une timeline logique avec étape, prochaine action, CV versionnés, réponses, correspondances d’exigences et fichiers vérifiés. Le dossier s’exporte avec un manifeste SHA-256 canonique.", tradeoff: "Le pipeline impose un registre volontaire plutôt que des suivis ad hoc en double, mais reste cohérent face aux doublons des fournisseurs et aux requêtes concurrentes." },
       ]},
       delivery: { title: "Comment le produit est vérifié", paragraphs: [
-        "Le dépôt teste les services Python, le comportement React et l’intégration de bureau Rust. Les migrations suivent des cycles upgrade, downgrade puis upgrade. Les tests inspectent les sauvegardes v1 à v4 sans mutation, puis vérifient remplacement, détection de corruption et rollback contrôlé sur des données locales temporaires.",
-        "L’automatisation contrôle aussi les licences, les SBOM, les conteneurs et la politique de vulnérabilités critiques. Les captures du parcours produit proviennent de l’application réelle avec des données fictives ; l’enregistreur refuse les erreurs du navigateur, les réponses API en échec et les alertes visibles.",
+        "Le candidat v1.8.0 a réussi 1 456 tests backend avec 4 skips attendus, 354 contrôles frontend et 17 tests Rust. Les migrations ont suivi des cycles upgrade, downgrade puis upgrade ; les tests d’archive ont couvert la v5 ainsi que l’inspection et la restauration des formats v1 à v4.",
+        "L’automatisation a contrôlé licences, SBOM, conteneurs et politique de vulnérabilités avant de construire les paquets publiés pour Windows, macOS et Linux sur x64 et ARM64. La CLI installée depuis les sources et le serveur MCP sur stdio passent aussi des tests d’autorisation, de rédaction et de points d’entrée.",
       ]},
       result: { title: "Ce qui existe aujourd’hui", paragraphs: [
-        "CareerOS Local est un utilitaire de bureau fonctionnel avec coffre de carrière, studio de CV, pipeline privé d’opportunités, dossiers de candidature, sauvegardes, exports et runtime supervisé d’analyse locale.",
+        "CareerOS Local v1.8.0 est un utilitaire de bureau fonctionnel avec Career Vault, recherche guidée, Job Library révisionnée, pipeline de candidature à une timeline par opportunité, studio de CV, dossiers, archive v5 et analyse locale supervisée.",
+        "Une CLI en lecture seule et un serveur MCP sur stdio permettent à Codex, Claude Code et aux scripts shell de consulter une vue volontairement réduite d’un compte autorisé. Les autorisations sont limitées, temporaires et révocables ; l’automatisation ne peut ni modifier le coffre ni exécuter de prompts libres.",
         "Il ne prétend pas qu’un LLM puisse décider d’une carrière. Le modèle aide à interpréter un ensemble de preuves maîtrisé ; l’utilisateur conserve le registre, les sources et la décision finale.",
       ]},
       scope: "Cette étude de cas décrit l’architecture versionnée et le comportement documenté. Elle ne revendique ni résultats professionnels, ni précision du modèle sur des données privées, ni prise en charge de tous les modèles locaux et de toutes les machines.",
@@ -1509,11 +1512,11 @@ export const labsLocales = {
       category: "Assistance à distance sécurisée",
       title: "Transformer un prototype scolaire de contrôle à distance en assistance fondée sur le consentement",
       summary:
-        "JDoor est né en 2022 comme projet scolaire de réseau co-créé par Djenis Ejupi et NobodyToListen. Djenis a ensuite reconstruit son modèle de sécurité, son cycle de session, son UX produit, ses tests et sa chaîne de publication sous le nom JDoor Assist : un outil de bureau visible, en consultation seule par défaut, destiné à l’assistance autorisée sur des réseaux locaux de confiance.",
+        "JDoor est né en 2022 comme projet scolaire de réseau co-créé par Djenis et un collaborateur. Djenis a ensuite reconstruit son modèle de sécurité, son cycle de session, son UX produit, ses tests et sa chaîne de publication sous le nom JDoor Assist : un outil de bureau visible, en consultation seule par défaut, destiné à l’assistance autorisée sur des réseaux locaux de confiance.",
       readMinutes: "12",
       facts: [
         ["Produit", "Assistance LAN fondée sur le consentement"],
-        ["Origine", "Projet scolaire de 2022 co-créé par Djenis Ejupi et NobodyToListen"],
+        ["Origine", "Projet scolaire de 2022 co-créé par Djenis et un collaborateur"],
         ["Modernisation", "Sécurité, UX produit, tests et release engineering par Djenis"],
         ["État", "Instantané source v1.0.0 versionné sous GPL-3.0"],
       ],
@@ -1542,7 +1545,7 @@ export const labsLocales = {
       starting: {
         title: "Préserver l’origine, changer le modèle de confiance",
         paragraphs: [
-          "Le JDoor d’origine était un projet scolaire de 2022 que Djenis a réalisé avec un ami, publié sous le nom NobodyToListen. Il démontrait le réseau en Java, la capture d’écran et les entrées distantes. Cette origine commune reste dans l’historique : le travail ultérieur ne présente pas le prototype scolaire comme une réalisation individuelle.",
+          "Le JDoor d’origine était un projet scolaire de 2022 que Djenis a réalisé avec un collaborateur. Il démontrait le réseau en Java, la capture d’écran et les entrées distantes. Cette origine commune reste dans l’historique : le travail ultérieur ne présente pas le prototype scolaire comme une réalisation individuelle.",
           "Une démonstration n’est pas encore un produit d’assistance. L’ancien design traitait une connexion entrante comme un canal de contrôle, sans appairage fortement authentifié, état de consultation seule ni cycle complet pour les touches bloquées, erreurs de socket et arrêts. La modernisation a donc commencé par limiter ce que l’application est autorisée à faire.",
         ],
       },
@@ -1612,7 +1615,7 @@ export const labsLocales = {
         title: "Ce qu’est JDoor Assist aujourd’hui",
         paragraphs: [
           "JDoor Assist est une application de bureau fonctionnelle avec parcours launcher, hôte et viewer ; lien temporaire à usage unique ; épinglage du certificat ; approbation locale ; streaming en consultation seule ; autorisation explicite du contrôle ; nettoyage des entrées ; audit du cycle de vie et commandes visibles de déconnexion.",
-          "Le prototype de 2022 reste attribué aux deux créateurs du projet scolaire. La modernisation ultérieure de la sécurité, du produit, de l’UX, des tests et de la publication est la contribution de Djenis, et son résultat reste volontairement limité à une assistance visible entre personnes autorisées sur un réseau local de confiance.",
+          "Le prototype de 2022 reste attribué comme un travail co-créé avec un collaborateur. La modernisation ultérieure de la sécurité, du produit, de l’UX, des tests et de la publication est la contribution de Djenis, et son résultat reste volontairement limité à une assistance visible entre personnes autorisées sur un réseau local de confiance.",
         ],
       },
       scope:

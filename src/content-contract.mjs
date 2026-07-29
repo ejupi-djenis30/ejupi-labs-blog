@@ -317,12 +317,17 @@ export function assertDefinitionCatalog(
       } catch {
         fail(`${path}.sourceUrl`, "expected an absolute URL.");
       }
+      const isGitHubWebCommit =
+        sourceUrl.hostname === "github.com" &&
+        /^\/[^/]+\/[^/]+\/commit\/[0-9a-f]{40}$/u.test(sourceUrl.pathname);
+      const isGitHubApiCommit =
+        sourceUrl.hostname === "api.github.com" &&
+        /^\/repositories\/\d+\/commits\/[0-9a-f]{40}$/u.test(sourceUrl.pathname);
       if (
         sourceUrl.protocol !== "https:" ||
-        sourceUrl.hostname !== "github.com" ||
         sourceUrl.search ||
         sourceUrl.hash ||
-        !/^\/[^/]+\/[^/]+\/commit\/[0-9a-f]{40}$/u.test(sourceUrl.pathname)
+        (!isGitHubWebCommit && !isGitHubApiCommit)
       ) {
         fail(`${path}.sourceUrl`, "expected an immutable GitHub commit URL.");
       }

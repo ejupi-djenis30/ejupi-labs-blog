@@ -77,6 +77,13 @@ test("homepage search no longer depends on visible taxonomy controls", async () 
   assert.match(source, /url\.searchParams\.delete\("topic"\)/u);
 });
 
+test("README describes the archive as search-only", async () => {
+  const readme = await readFile(new URL("../README.md", import.meta.url), "utf8");
+
+  assert.match(readme, /search-only archive/iu);
+  assert.doesNotMatch(readme, /taxonomy filters/iu);
+});
+
 test("reading progress batches scroll work through requestAnimationFrame", async () => {
   const source = await readFile(new URL("../src/client.js", import.meta.url), "utf8");
 

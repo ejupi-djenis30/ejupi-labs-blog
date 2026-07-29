@@ -10,24 +10,24 @@ export const labsCases = {
       ["Product", "Open-source desktop utility"],
       ["Role", "Product, architecture and implementation"],
       ["Trust boundary", "Local device by default"],
-      ["Status", "Signed v1.6.0 release with a verified release pipeline"],
+      ["Status", "Signed v1.8.0 release with verified native packages for six platform and architecture targets"],
     ],
     evidence: {
       title: "Evidence ledger",
       intro: "The current repository records these reproducible checks and boundaries:",
       items: [
-        ["Backend", "1,369 tests pass for v1.6.0; an independent review reran 42 portability and storage tests."],
-        ["Frontend + shell", "334 frontend tests across 64 files and 17 Rust library tests pass, including the native backup writer."],
-        ["Backup assurance", "Archives from versions 1–4 receive a full non-mutating preflight; the response contains bounded metadata, not archive content."],
-        ["Scale fixture", "A 10,000-application agenda fixture records p95 at 68.670 ms against its 200 ms project budget."],
-        ["Boundary", "Local receipts do not protect against a process that can write directly to the database; unsigned imports are quarantined."],
+        ["Backend", "The v1.8.0 candidate passes 1,456 backend tests with 4 expected skips."],
+        ["Frontend + shell", "354 frontend checks and all 17 Rust tests pass, alongside lint, production build and dependency-audit gates."],
+        ["Portable archive", "Archive format v5 preserves the logical opportunity relationship and can still inspect and restore formats v1 through v4."],
+        ["Search provenance", "Listings record first seen, last seen and content revision; a newer advert invalidates older analysis still in flight."],
+        ["CLI + MCP", "The read-only CLI and stdio MCP server expose seven bounded tools through revocable, account-bound grants without opening a network listener."],
       ],
     },
     starting: {
       title: "The product problem",
       paragraphs: [
         "Career information tends to fragment across old CVs, job boards, notes and application portals. Generic AI tools add another problem: a polished answer can lose the connection to the fact that supports it.",
-        "CareerOS Local was designed as a working record first. Experience, education, skills and achievements keep provenance, verification state and revision history. The LLM then analyses that owned record for matching and coaching instead of inventing a second, disconnected profile.",
+        "CareerOS Local was designed as a working record first. Experience, education, skills and achievements keep provenance, verification state and revision history. The guided search now starts from confirmed, contact-redacted Career Vault facts, and the LLM analyses that owned record instead of inventing a second profile.",
       ],
     },
     constraints: {
@@ -103,8 +103,8 @@ export const labsCases = {
       items: [
         {
           title: "Keep provenance in the record",
-          body: "Career facts retain their source, verification status and revisions. Resume content and application evidence can point back to that record.",
-          tradeoff: "This requires more structure than a free-form profile, but it makes corrections and audits possible.",
+          body: "Career facts retain their source, verification status and revisions. Job listings separately record their observation history and content revision, so stale model work cannot overwrite a newer advert.",
+          tradeoff: "This requires more structure than a free-form profile or replace-in-place job table, but corrections and analysis remain traceable.",
         },
         {
           title: "Keep model output downstream of evidence",
@@ -112,23 +112,24 @@ export const labsCases = {
           tradeoff: "The user must review useful suggestions before they enter the workflow, trading seamless automation for provenance that remains inspectable and correctable.",
         },
         {
-          title: "Package applications as evidence",
-          body: "Versioned resumes, answers, requirement mappings and verified files can be exported with a canonical SHA-256 manifest.",
-          tradeoff: "A dossier is more deliberate than a folder of loose files; it is also reproducible and reviewable.",
+          title: "Track one application per opportunity",
+          body: "A job card opens one logical application timeline with its stage, next action, versioned resumes, answers, requirement mappings and verified files. The dossier exports with a canonical SHA-256 manifest.",
+          tradeoff: "The pipeline enforces a deliberate record instead of allowing duplicate ad-hoc trackers, but that record stays coherent across provider duplicates and concurrent requests.",
         },
       ],
     },
     delivery: {
       title: "How the product is verified",
       paragraphs: [
-        "The repository tests Python services, React behaviour and Rust desktop integration. Database migrations run as upgrade, downgrade and upgrade round trips. Backup tests inspect versions 1–4 without mutation, then exercise replacement, corruption detection and verified rollback against disposable local data.",
-        "Release automation also checks dependency licenses, SBOMs, containers and high-severity vulnerability policy. Product-tour captures come from the real application with fictional data, and the recorder rejects browser errors, failed API responses and visible alerts.",
+        "The v1.8.0 release candidate passed 1,456 backend tests with 4 expected skips, 354 frontend checks and 17 Rust tests. Database migrations ran as upgrade, downgrade and upgrade round trips, while archive tests exercised v5 plus inspection and restore compatibility for v1 through v4.",
+        "Release automation checked dependency licences, SBOMs, containers and vulnerability policy before building the published Windows, macOS and Linux packages for x64 and ARM64. The source-installed CLI and stdio MCP server also run through bounded grant, redaction and entry-point tests.",
       ],
     },
     result: {
       title: "What exists today",
       paragraphs: [
-        "CareerOS Local is a working desktop utility with a career vault, resume studio, private opportunity pipeline, application dossiers, backups, exports and a supervised local analysis runtime.",
+        "CareerOS Local v1.8.0 is a working desktop utility with a Career Vault, guided search, a revisioned Job Library, one application timeline for each opportunity, a resume studio, dossiers, archive v5 and a supervised local analysis runtime.",
+        "A read-only CLI and stdio MCP server let Codex, Claude Code and shell scripts inspect a deliberately small view of an authorized account. Grants are scoped, expiring and revocable; the automation surface cannot edit the vault or run free-form prompts.",
         "It does not claim that an LLM can decide a career. The model helps interpret an owned body of evidence; the user keeps the record, the source and the final decision.",
       ],
     },
@@ -818,11 +819,11 @@ export const labsCases = {
     cardTitle: "JDoor Assist",
     title: "Turning a school remote-control prototype into consent-first assistance",
     summary:
-      "JDoor began as a 2022 school networking project co-created by Djenis Ejupi and NobodyToListen. Djenis later rebuilt its security model, session lifecycle, product UX, tests and release path as JDoor Assist: a visible, view-only-by-default desktop tool for authorized help on trusted local networks.",
+      "JDoor began as a 2022 school networking project co-created by Djenis and a collaborator. Djenis later rebuilt its security model, session lifecycle, product UX, tests and release path as JDoor Assist: a visible, view-only-by-default desktop tool for authorized help on trusted local networks.",
     readMinutes: "12",
     facts: [
       ["Product", "Consent-first LAN remote assistance"],
-      ["Origin", "2022 school project co-created by Djenis Ejupi and NobodyToListen"],
+      ["Origin", "2022 school project co-created by Djenis and a collaborator"],
       ["Modernization", "Security, product UX, testing and release engineering by Djenis"],
       ["Status", "Versioned v1.0.0 source snapshot under GPL-3.0"],
     ],
@@ -851,7 +852,7 @@ export const labsCases = {
     starting: {
       title: "Preserve the origin, change the trust model",
       paragraphs: [
-        "The original JDoor was a 2022 school project that Djenis built with a friend, published as NobodyToListen. It demonstrated Java networking, screen capture and remote input. That shared origin remains part of the project record; the later work does not recast the classroom prototype as a solo project.",
+        "The original JDoor was a 2022 school project that Djenis built with a collaborator. It demonstrated Java networking, screen capture and remote input. That shared origin remains part of the project record; the later work does not recast the classroom prototype as a solo project.",
         "A demonstration is not yet a support product. The old design treated an incoming connection as a control channel, without a strong authenticated pairing ceremony, a view-only state or a complete lifecycle for stuck keys, socket failures and shutdown. The modernization therefore began by narrowing what the application is allowed to do.",
       ],
     },
@@ -954,7 +955,7 @@ export const labsCases = {
       title: "What JDoor Assist is now",
       paragraphs: [
         "JDoor Assist is a working desktop application with launcher, host and viewer flows; an expiring one-time link; certificate pinning; local approval; view-only streaming; an explicit control grant; input cleanup; lifecycle audit records and visible disconnect controls.",
-        "The 2022 prototype remains credited to both school-project creators. The later safety, product, UX, testing and release modernization is Djenis’s contribution, and its result is intentionally limited to visible assistance between authorized people on a trusted local network.",
+        "The 2022 prototype remains credited as work co-created with a collaborator. The later safety, product, UX, testing and release modernization is Djenis’s contribution, and its result is intentionally limited to visible assistance between authorized people on a trusted local network.",
       ],
     },
     scope:

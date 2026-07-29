@@ -20,7 +20,7 @@ The site is intentionally static. A small Node.js generator builds every route, 
 
 English is the canonical default at the root. Every canonical page includes canonical URLs, reciprocal `hreflang` links, an `x-default` reference, structured Blog or BlogPosting data and a locale-matched 1200×630 social preview. The build also creates four RSS feeds, a multilingual sitemap, localised OpenSearch descriptors, `robots.txt`, `llms.txt`, the machine-readable `/case-studies.json` catalog, local font assets and nearest-match 404 pages.
 
-The archive search and taxonomy filters work with keyboard and touch input, preserve filter state in the URL and leave the complete archive visible when JavaScript is unavailable. The full-text index is generated from each complete article and loaded only after a visitor starts a search.
+The search-only archive works with keyboard and touch input, preserves the query in the URL and leaves the complete archive visible when JavaScript is unavailable. The full-text index is generated from each complete article and loaded only after a visitor starts a search.
 
 ## Local development
 
