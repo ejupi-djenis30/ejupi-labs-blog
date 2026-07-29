@@ -167,6 +167,7 @@ function caseCatalog() {
       ...(definition.projectUrl
         ? {
             projectUrl: definition.projectUrl,
+            sourceState: definition.sourceState,
             sourceRef: definition.sourceRef,
             sourceUrl: definition.sourceUrl,
             verifiedAt: definition.verifiedAt,
@@ -527,6 +528,10 @@ function articlePage(localeKey, definition, index) {
     ? dateFormatter.format(new Date(`${definition.verifiedAt}T12:00:00Z`))
     : "";
   const sourceCommit = definition.sourceUrl?.split("/").at(-1);
+  const verifiedSourceLabel =
+    definition.sourceState === "release"
+      ? ui.verifiedRelease
+      : ui.verifiedCommitSnapshot;
   const evidence = study.evidence
     ? `<section class="story-section evidence-section" id="evidence" data-story-section>
         <h2>${heading(study.evidence.title)}</h2>
@@ -537,8 +542,8 @@ function articlePage(localeKey, definition, index) {
               `<div><dt>${escapeHtml(term)}</dt><dd>${escapeHtml(detail)}</dd></div>`,
           )
           .join("")}</dl>
-        <p class="evidence-citation">
-          <span>${escapeHtml(ui.verifiedSource)}</span>
+        <p class="evidence-citation" data-source-state="${escapeHtml(definition.sourceState)}">
+          <span class="evidence-citation__state">${escapeHtml(verifiedSourceLabel)}</span>
           <a href="${definition.sourceUrl}" rel="external">${escapeHtml(definition.sourceRef)} <span aria-hidden="true">· ${escapeHtml(sourceCommit.slice(0, 7))}</span></a>
           <span>${escapeHtml(ui.verifiedOn)} <time datetime="${definition.verifiedAt}">${escapeHtml(formattedVerified)}</time></span>
         </p>

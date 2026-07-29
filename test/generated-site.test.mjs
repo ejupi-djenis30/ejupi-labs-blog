@@ -245,6 +245,12 @@ test("Labs evidence ledgers cite immutable source snapshots without replacing pr
         "utf8",
       );
       assert.match(html, /class="evidence-citation"/u);
+      assert.ok(html.includes(`data-source-state="${definition.sourceState}"`));
+      const sourceStateLabel =
+        definition.sourceState === "release"
+          ? editorialUi[localeKey].verifiedRelease
+          : editorialUi[localeKey].verifiedCommitSnapshot;
+      assert.ok(html.includes(sourceStateLabel));
       assert.ok(html.includes(`href="${definition.sourceUrl}"`));
       assert.ok(html.includes(definition.sourceRef));
       assert.ok(html.includes(`<time datetime="${definition.verifiedAt}">`));
@@ -380,11 +386,13 @@ test("machine-readable catalog derives routes and locales from the authoritative
     assert.deepEqual(entry.availableLocales, definition.availableLocales);
     if (definition.kind === "labs") {
       assert.equal(entry.projectUrl, definition.projectUrl);
+      assert.equal(entry.sourceState, definition.sourceState);
       assert.equal(entry.sourceRef, definition.sourceRef);
       assert.equal(entry.sourceUrl, definition.sourceUrl);
       assert.equal(entry.verifiedAt, definition.verifiedAt);
     } else {
       assert.equal(entry.projectUrl, undefined);
+      assert.equal(entry.sourceState, undefined);
       assert.equal(entry.sourceRef, undefined);
       assert.equal(entry.sourceUrl, undefined);
       assert.equal(entry.verifiedAt, undefined);

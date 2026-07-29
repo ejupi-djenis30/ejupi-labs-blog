@@ -52,6 +52,7 @@ test("every locale contains the same complete case-study structure", () => {
       }
       if (definition.kind === "labs") {
         assert.ok(study.evidence.items.length >= 4);
+        assert.ok(["release", "snapshot"].includes(definition.sourceState));
         assert.ok(
           definition.projectUrl.startsWith("https://ejupi-djenis30.github.io/") ||
             definition.projectUrl === "https://jdoor.ejupilabs.com/",
@@ -160,6 +161,7 @@ test("every case study declares stable editorial metadata", () => {
     assert.match(definition.updated, /^\d{4}-\d{2}-\d{2}$/);
     if (definition.kind === "professional") {
       assert.equal(definition.projectUrl, undefined);
+      assert.equal(definition.sourceState, undefined);
       assert.equal(definition.sourceRef, undefined);
       assert.equal(definition.sourceUrl, undefined);
       assert.equal(definition.verifiedAt, undefined);
@@ -168,6 +170,33 @@ test("every case study declares stable editorial metadata", () => {
 });
 
 test("Labs source metadata is required and must resolve to an immutable commit", () => {
+  const missingSourceState = caseDefinitions.map((definition) =>
+    definition.slug === "careeros-local" ? structuredClone(definition) : definition,
+  );
+  delete missingSourceState.find(({ slug }) => slug === "careeros-local").sourceState;
+  assert.throws(
+    () =>
+      assertDefinitionCatalog(missingSourceState, {
+        localeOrder,
+        protectedLegacySlugs,
+      }),
+    /sourceState: expected a non-empty string/u,
+  );
+
+  const invalidSourceState = caseDefinitions.map((definition) =>
+    definition.slug === "careeros-local"
+      ? { ...structuredClone(definition), sourceState: "branch" }
+      : definition,
+  );
+  assert.throws(
+    () =>
+      assertDefinitionCatalog(invalidSourceState, {
+        localeOrder,
+        protectedLegacySlugs,
+      }),
+    /sourceState: expected release or snapshot/u,
+  );
+
   const missingSourceRef = caseDefinitions.map((definition) =>
     definition.slug === "careeros-local" ? structuredClone(definition) : definition,
   );
@@ -197,6 +226,21 @@ test("Labs source metadata is required and must resolve to an immutable commit",
       }),
     /expected an immutable GitHub commit URL/u,
   );
+
+  assert.deepEqual(
+    caseDefinitions
+      .filter(({ kind, sourceState }) => kind === "labs" && sourceState === "snapshot")
+      .map(({ slug }) => slug),
+    ["jdoor-security-lab"],
+  );
+  assert.ok(
+    caseDefinitions
+      .filter(
+        ({ kind, sourceState }) =>
+          kind === "labs" && sourceState === "release",
+      )
+      .every(({ slug }) => slug !== "jdoor-security-lab"),
+  );
 });
 
 test("CareerOS documents the released v1.8.0 workflow and its verified gates", () => {
@@ -204,6 +248,7 @@ test("CareerOS documents the released v1.8.0 workflow and its verified gates", (
   assert.ok(definition);
   assert.equal(definition.updated, "2026-07-29");
   assert.equal(definition.verifiedAt, "2026-07-29");
+  assert.equal(definition.sourceState, "release");
   assert.equal(definition.sourceRef, "v1.8.0");
   assert.equal(
     definition.sourceUrl,
@@ -243,15 +288,73 @@ test("CareerOS documents the released v1.8.0 workflow and its verified gates", (
   }
 });
 
-test("VECTOR is presented as the bounded self-hosted v3 product in every locale", () => {
-  const definition = caseDefinitions.find(({ slug }) => slug === "vector-placement-operations");
+test("DjenisAiAgent documents the checked local-first model boundary in every locale", () => {
+  const definition = caseDefinitions.find(({ slug }) => slug === "djenis-ai-agent");
   assert.ok(definition);
-  assert.equal(definition.updated, "2026-07-28");
-  assert.equal(definition.verifiedAt, "2026-07-26");
-  assert.equal(definition.sourceRef, "v3.0.0");
+  assert.equal(definition.updated, "2026-07-29");
+  assert.equal(definition.verifiedAt, "2026-07-29");
+  assert.equal(definition.sourceState, "release");
+  assert.equal(definition.sourceRef, "v0.3.0");
   assert.equal(
     definition.sourceUrl,
-    "https://github.com/ejupi-djenis30/vector-placement-operations/commit/a32002bae031fbfc34b9fb70013dbf9cf4766b9f",
+    "https://github.com/ejupi-djenis30/DjenisAiAgent/commit/946160fee919566b4167126185395e2d42dfb6a6",
+  );
+  assert.deepEqual(definition.stack, [
+    "Python",
+    "Ollama",
+    "OpenAI-compatible API",
+    "Windows UIA",
+    "Selenium",
+  ]);
+
+  for (const localeKey of localeOrder) {
+    const study = locales[localeKey].cases[definition.slug];
+    const copy = JSON.stringify(study);
+    assert.match(copy, /Ollama/u);
+    assert.match(copy, /OpenAI/u);
+    assert.match(copy, /600/u);
+    assert.match(copy, /946160f/u);
+    assert.doesNotMatch(copy, /Gemini/u);
+    assert.equal(study.evidence.items.length, 5);
+  }
+});
+
+test("DIG documents the checked Android and offline-safe v3.2 product in every locale", () => {
+  const definition = caseDefinitions.find(({ slug }) => slug === "dig-gopher-explorer");
+  assert.ok(definition);
+  assert.equal(definition.updated, "2026-07-29");
+  assert.equal(definition.verifiedAt, "2026-07-29");
+  assert.equal(definition.sourceState, "release");
+  assert.equal(definition.sourceRef, "v3.2.0");
+  assert.equal(
+    definition.sourceUrl,
+    "https://github.com/ejupi-djenis30/Dig/commit/75eda488941afc588f3cb650a660f74639a9dfc2",
+  );
+  assert.deepEqual(definition.stack, ["Node.js", "Android", "TCP", "RFC 1436 / 4266", "Capacitor"]);
+
+  for (const localeKey of localeOrder) {
+    const study = locales[localeKey].cases[definition.slug];
+    const copy = JSON.stringify(study);
+    assert.match(study.summary, /3\.2\.0/u);
+    assert.match(copy, /Android/u);
+    assert.match(copy, /Capacitor/u);
+    assert.match(copy, /PWA/u);
+    assert.match(copy, /102/u);
+    assert.match(copy, /15/u);
+    assert.doesNotMatch(copy, /3\.0\.0/u);
+  }
+});
+
+test("VECTOR is presented as the bounded self-hosted v3.3 product in every locale", () => {
+  const definition = caseDefinitions.find(({ slug }) => slug === "vector-placement-operations");
+  assert.ok(definition);
+  assert.equal(definition.updated, "2026-07-29");
+  assert.equal(definition.verifiedAt, "2026-07-29");
+  assert.equal(definition.sourceState, "release");
+  assert.equal(definition.sourceRef, "v3.3.0");
+  assert.equal(
+    definition.sourceUrl,
+    "https://github.com/ejupi-djenis30/vector-placement-operations/commit/0a99a9f2c0051a61c1f21c03c0eff48e6d0d2ef1",
   );
   assert.deepEqual(definition.stack, ["Node.js", "Express", "SQLite", "Docker", "Playwright"]);
 
@@ -261,22 +364,47 @@ test("VECTOR is presented as the bounded self-hosted v3 product in every locale"
     de: /eine schule pro installation/iu,
     fr: /une école par installation/iu,
   };
+  const programmeClaims = {
+    en: /programme policy/iu,
+    it: /policy di programma/iu,
+    de: /programmrichtlinie/iu,
+    fr: /politique de programme/iu,
+  };
+  const coverageClaims = {
+    en: /cohort coverage/iu,
+    it: /copertura della coorte/iu,
+    de: /kohortenabdeckung/iu,
+    fr: /couverture de cohorte/iu,
+  };
+  const attentionClaims = {
+    en: /attention queue/iu,
+    it: /coda operativa/iu,
+    de: /aufgabenliste/iu,
+    fr: /file opérationnelle/iu,
+  };
 
   for (const localeKey of localeOrder) {
     const study = locales[localeKey].cases[definition.slug];
     const copy = JSON.stringify(study);
-    assert.match(study.summary, /3\.0\.0/u);
+    assert.match(study.summary, /3\.3\.0/u);
     assert.match(study.facts.flat().join(" "), deploymentClaims[localeKey]);
     assert.equal(study.evidence.items.length, 5);
     assert.match(study.architecture.intro, /AES-GCM/u);
+    assert.match(copy, programmeClaims[localeKey]);
+    assert.match(copy, coverageClaims[localeKey]);
+    assert.match(copy, attentionClaims[localeKey]);
+    assert.match(copy, /89/u);
+    assert.match(copy, /22/u);
     assert.match(copy, /SQLite/u);
     assert.match(copy, /SaaS/u);
+    assert.doesNotMatch(copy, /3\.0\.0/u);
   }
 
   const englishStudy = locales.en.cases[definition.slug];
   const english = JSON.stringify(englishStudy);
-  assert.match(english, /10,000-row cap/u);
-  assert.match(english, /retention hold/iu);
+  assert.match(english, /immutable/iu);
+  assert.match(english, /overlapping placement conflicts/iu);
+  assert.match(english, /inactive sessions/iu);
   assert.match(english, /compliance certification/iu);
   const englishPositioning = JSON.stringify({
     summary: englishStudy.summary,
@@ -297,6 +425,7 @@ test("JDoor preserves co-authorship, authorized use and the requested Labs topol
   assert.ok(definition);
   assert.equal(definition.number, "10");
   assert.equal(definition.projectUrl, "https://jdoor.ejupilabs.com/");
+  assert.equal(definition.sourceState, "snapshot");
   assert.equal(definition.sourceRef, "v1.0.0");
   assert.equal(
     definition.sourceUrl,
@@ -350,9 +479,9 @@ test("related case studies have a deterministic editorial order", () => {
       "archival-workflow-management",
       "ai-workflow-cloud-migration",
     ],
-    "careeros-local": ["djenis-ai-agent", "vector-placement-operations"],
+    "careeros-local": ["vector-placement-operations", "eliza-lab"],
     "eliza-lab": ["careeros-local", "djenis-ai-agent"],
-    "djenis-ai-agent": ["careeros-local", "eliza-lab"],
+    "djenis-ai-agent": ["eliza-lab", "dig-gopher-explorer"],
     "dig-gopher-explorer": ["vector-placement-operations", "djenis-ai-agent"],
     integradraw: ["dig-gopher-explorer", "vector-placement-operations"],
     "vector-placement-operations": ["dig-gopher-explorer", "careeros-local"],
@@ -411,7 +540,8 @@ test("editorial chrome and visible byline labels are complete in every locale", 
   const requiredKeys = [
     "bylineBy",
     "authorRole",
-    "verifiedSource",
+    "verifiedRelease",
+    "verifiedCommitSnapshot",
     "verifiedOn",
     "related",
     "methodology",
