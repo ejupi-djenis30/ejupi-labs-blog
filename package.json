@@ -20,12 +20,12 @@
     "deploy": "npm run check && wrangler deploy"
   },
   "devDependencies": {
-    "@playwright/test": "1.61.1",
-    "sharp": "0.35.0",
-    "wrangler": "4.113.0"
+    "@playwright/test": "1.62.0",
+    "sharp": "0.35.3",
+    "wrangler": "4.114.0"
   },
   "overrides": {
-    "sharp": "0.35.0"
+    "sharp": "0.35.3"
   },
   "engines": {
     "node": ">=22"
