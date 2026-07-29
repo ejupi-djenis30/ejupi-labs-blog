@@ -218,22 +218,23 @@ export const labsLocales = {
       category: "Sistemi agentici",
       title: "Costruire un’automazione del computer che espone i propri permessi prima di agire",
       summary:
-        "DjenisAiAgent osserva un’interfaccia Windows o browser, richiede una singola azione Gemini strutturata, la verifica rispetto ai permessi del runtime e inserisce il risultato verificato nel turno successivo.",
+        "DjenisAiAgent esegue automazioni usando un modello già installato sulla macchina dell’operatore. Ollama o un server locale compatibile con OpenAI propone una sola azione strutturata; le policy dell’host decidono se può essere eseguita e una nuova osservazione verifica il risultato.",
       readMinutes: "12",
       facts: [
         ["Prodotto", "Agente sperimentale per l’uso del computer"],
         ["Ruolo", "Architettura, livello di policy e implementazione"],
-        ["Runtime", "Windows nativo o Docker orientato al browser"],
-        ["Stato", "Alpha funzionante con capacità limitate"],
+        ["Inferenza", "Modello locale già disponibile, senza passaggio automatico a servizi esterni"],
+        ["Runtime", "Windows nativo o Docker isolato orientato al browser"],
       ],
       evidence: {
         title: "Registro delle evidenze",
-        intro: "Le affermazioni sull’alpha sono legate a limiti verificati, non ad aneddoti su attività autonome:",
+        intro: "L’implementazione corrente si misura su limiti eseguibili, non su aneddoti di autonomia:",
         items: [
-          ["Verifica", "155 dichiarazioni di unit test e una soglia di copertura del repository del 70%."],
-          ["Limiti dell’attività", "50 turni, 900 secondi per attività, 120 secondi per richiesta al modello e 45 secondi per azione come valori predefiniti."],
-          ["Piano di controllo", "Token operatore di almeno 24 caratteri, al massimo otto WebSocket e due stream nativi come valori predefiniti."],
-          ["Limite", "Gemini è una dipendenza cloud; Docker non può controllare il desktop host e l’affidabilità nativa dipende dall’accessibilità dell’interfaccia e dal focus."],
+          ["Verifica", "Il sorgente controllato supera 600 test insieme ai gate Ruff, mypy, Bandit e audit delle dipendenze."],
+          ["Confine del modello", "L’inferenza usa un modello già presente in Ollama o in un server locale compatibile con OpenAI. Non usa credenziali di servizi esterni, non passa a modelli remoti e non scarica modelli automaticamente."],
+          ["Prova dell’esecuzione", "Una sola chiamata dichiarata deve superare schema e policy. Dopo una modifica, il completamento richiede una nuova osservazione cambiata o una lettura mirata della risorsa."],
+          ["Confine di rete", "In esecuzione nativa il modello è raggiungibile soltanto in loopback. In Docker agente e modello restano su una rete di controllo interna, con un solo gateway esposto."],
+          ["Confine desktop", "Docker controlla il browser Selenium isolato, non il desktop host. L’affidabilità nativa dipende ancora dai dati di accessibilità e dal focus."],
         ],
       },
       starting: {
@@ -257,23 +258,23 @@ export const labsLocales = {
         title: "Separare ragionamento e autorità",
         paragraphs: [
           "Il modello dovrebbe scegliere quale azione dichiarata richiedere. Non dovrebbe decidere se l’azione è consentita, quanto può durare o quanto output entra nel prompt successivo.",
-          "Ho spostato queste decisioni in un registro degli strumenti protetto da policy e in un livello di orchestrazione limitato. Gli strumenti sconosciuti falliscono, tentativi e durata dell’attività sono limitati e gli eventi di audit vengono redatti prima di raggiungere il disco.",
+          "Ho spostato queste decisioni in un registro degli strumenti protetto da policy e in un livello di orchestrazione limitato. Gli strumenti sconosciuti falliscono, tentativi e durata dell’attività sono limitati e gli eventi di audit vengono ripuliti dai dati sensibili prima di raggiungere il disco.",
         ],
       },
       architecture: {
         title: "Un ciclo che osserva, decide, autorizza e verifica",
         intro:
-          "La percezione acquisisce uno screenshot o l’albero di accessibilità. Gemini restituisce una singola chiamata di funzione dichiarata. Il livello di policy verifica supporto del runtime, livello e allowlist prima di eseguire uno strumento. L’osservazione risultante diventa l’evidenza del turno successivo.",
-        labels: ["PERCEZIONE", "TOOL CALL GEMINI", "CONTROLLO POLICY", "AZIONE", "OSSERVAZIONE VERIFICATA"],
+          "La percezione acquisisce uno screenshot o l’albero di accessibilità. Il modello locale restituisce esattamente una chiamata dichiarata. L’host ne verifica struttura, runtime, livello di permesso e allowlist prima dell’esecuzione; una nuova osservazione diventa poi l’evidenza del turno successivo.",
+        labels: ["PERCEZIONE", "MODELLO LOCALE", "CONTROLLO POLICY", "AZIONE", "OSSERVAZIONE VERIFICATA"],
         caption: "Il modello propone; il runtime decide quale autorità esiste davvero.",
       },
       technology: {
         title: "Perché queste tecnologie",
         intro: "Le tecnologie separano il ragionamento del modello dall’autorità effettiva del computer.",
         items: [
-          { choice: "Python per l’orchestrazione.", why: "È adatto a integrare rapidamente Gemini, automazione Windows e browser attorno a schemi degli strumenti dichiarati, non rigidamente tipizzati, e a un registro di capacità governato da policy.", alternative: "Un’implementazione interamente nativa o compilata ridurrebbe parte del packaging, ma frammenterebbe le integrazioni e rallenterebbe l’esperimento.", cost: "Accettiamo un runtime e dipendenze Python da bloccare, distribuire e verificare." },
+          { choice: "Python per l’orchestrazione.", why: "Collega automazione Windows, Selenium, FastAPI e un client locale limitato a schemi di strumenti dichiarati e a un registro di capacità governato da policy.", alternative: "Un’implementazione interamente nativa o compilata ridurrebbe parte del packaging, ma frammenterebbe le integrazioni e rallenterebbe l’esperimento.", cost: "Accettiamo un runtime e dipendenze Python da bloccare, distribuire e verificare." },
           { choice: "UI Automation e Selenium come canali principali.", why: "Elementi accessibili, ruoli e DOM offrono bersagli semantici più stabili di una posizione sullo schermo.", alternative: "Pixel e coordinate sarebbero fragili rispetto a DPI, focus, layout e ridimensionamenti.", cost: "Accettiamo differenze tra piattaforme e fallback limitati per Canvas o controlli non accessibili." },
-          { choice: "Una singola azione Gemini strutturata.", why: "Ogni turno propone un’azione dichiarata che attraversa livelli di permesso e allowlist prima dell’esecuzione; timeout e successiva osservazione limitano e verificano il risultato.", alternative: "Un comando libero richiederebbe parsing ambiguo e aumenterebbe il rischio di concatenazioni o istruzioni non previste.", cost: "Accettiamo dipendenza cloud, latenza e un vocabolario di azioni intenzionalmente ristretto." },
+          { choice: "Una singola azione strutturata dal modello locale.", why: "Ogni turno propone un’azione dichiarata che attraversa livelli di permesso e allowlist prima dell’esecuzione; timeout e successiva osservazione limitano e verificano il risultato.", alternative: "Un comando libero richiederebbe parsing ambiguo e aumenterebbe il rischio di concatenazioni o istruzioni non previste.", cost: "Ogni capacità richiede uno schema mantenuto e il modello locale deve supportare tool call e, nel flusso predefinito, immagini." },
           { choice: "Una console FastAPI locale.", why: "L’operatore può ispezionare permessi e attività sulla stessa macchina entro un confine loopback autenticato.", alternative: "Un control plane hosted trasferirebbe schermate, log e autorità operativa verso un servizio remoto e richiederebbe isolamento multi-tenant.", cost: "Accettiamo gestione locale di processo, token e sessioni, senza orchestrazione remota incorporata." },
         ],
       },
@@ -308,41 +309,41 @@ export const labsLocales = {
       result: {
         title: "Cosa dimostra l’alpha",
         paragraphs: [
-          "L’agente può usare strumenti desktop e browser dichiarati attraverso un ciclo la cui autorità è visibile e limitata al di fuori della risposta del modello.",
-          "Non afferma un’autonomia generale. Qualità dell’interfaccia, focus della finestra, latenza di terze parti e interfacce basate su Canvas continuano a limitarne l’affidabilità; il progetto va quindi usato in ambienti usa e getta o attentamente confinati.",
+          "L’agente può usare strumenti desktop e browser dichiarati senza inviare il contesto di ragionamento a un modello hosted. Schemi, capacità del runtime, permessi ed evidenze restano applicati dall’host.",
+          "Non afferma un’autonomia generale. L’inferenza locale elimina un confine esterno dei dati, non i rischi del controllo del computer. Qualità dell’interfaccia, focus e superfici Canvas continuano a limitarne l’affidabilità, quindi va usato in ambienti usa e getta o rigorosamente isolati.",
         ],
       },
       scope:
-        "Questo case study riflette l’implementazione alpha documentata. Non afferma un funzionamento sicuro senza supervisione, protezione completa dai flag propri di un programma in allowlist né supporto per ogni applicazione Windows.",
+        "Questo case study riflette il commit 946160f. Non afferma un funzionamento sicuro senza supervisione, protezione completa dai flag di un programma autorizzato, supporto per ogni modello locale o controllo del desktop host da Docker.",
     }),
     "dig-gopher-explorer": localize("dig-gopher-explorer", {
       category: "Strumenti per protocolli",
       title: "Trasformare Gopher in uno strumento locale controllato e ispezionabile",
       summary:
-        "DIG 3.0.0 è un vero client Gopher con tre superfici separate: una CLI su TCP, un explorer live nel browser dietro un gateway locale same-origin e un sito GitHub Pages basato solo su fixture. Il core condiviso interpreta risposte RFC 1436 e indirizzi RFC 4266 senza fingere che un browser statico possa aprire socket grezzi.",
+        "DIG 3.2.0 apre risorse Gopher reali dalla CLI, da un ambiente locale nel browser e da un’app Android autonoma. La PWA conserva offline un contenuto di prova verificato; il traffico live del browser passa sempre dal gateway sulla stessa origine.",
       readMinutes: "13",
       facts: [
-        ["Prodotto", "CLI Gopher, gateway locale ed explorer nel browser"],
+        ["Prodotto", "CLI Gopher, explorer locale, PWA offline e app Android"],
         ["Protocollo", "Richieste, menu e testo RFC 1436; URL e ricerca RFC 4266"],
         ["Sicurezza", "Policy fail-closed sulle destinazioni con DNS pinning"],
-        ["Stato", "Versione open source v3.0.0 con licenza MIT"],
+        ["Stato", "Versione open source v3.2.0 con licenza MIT"],
       ],
       evidence: {
         title: "Registro delle evidenze",
-        intro: "Le affermazioni sulla v3.0.0 sono legate a controlli eseguibili e limiti visibili:",
+        intro: "Le affermazioni sulla v3.2.0 sono legate a controlli eseguibili e limiti visibili:",
         items: [
-          ["Verifica", "90 test Node.js e quattro E2E Chromium superati, incluso l’intero percorso live su una viewport esatta di 320 px."],
+          ["Verifica", "Il sorgente controllato supera 102 test Node.js e 15 flussi browser tra Chromium e WebKit mobile, con uno skip intenzionalmente specifico per piattaforma."],
+          ["Android", "L’app Capacitor 8 supporta Android 7/API 24 e successivi, usa il target API 36 e apre connessioni TCP native senza caricare il sito hosted."],
           ["Policy di rete", "La modalità hosted richiede un token, rifiuta un hostname se anche una sola risposta DNS non è pubblica e si connette soltanto all’indirizzo già validato."],
           ["Integrità dell’output", "La CLI scrive in un file temporaneo nella stessa cartella e rende visibile il percorso finale con un’operazione atomica; i byte binari non vengono mai stampati in un terminale interattivo."],
-          ["Runtime", "L’audit delle dipendenze rileva zero vulnerabilità e l’immagine Docker di produzione supera lo smoke test come processo non privilegiato."],
-          ["Confine pubblico", "GitHub Pages offre l’explorer soltanto con fixture incluse nel repository. Le richieste Gopher live richiedono il gateway same-origin."],
+          ["Confine offline", "La PWA memorizza shell statica e fixture verificata, mai le risposte API. Il ritorno online riprende soltanto una sessione gateway che era già live."],
         ],
       },
       starting: {
         title: "La distanza tra uno schema del protocollo e un client utile",
         paragraphs: [
           "L’interfaccia precedente poteva illustrare un menu Gopher, ma non provava le parti importanti: come un selector diventa byte su un socket, dove termina il framing del testo o cosa accade se un server remoto si blocca, dichiara un tipo errato o restituisce dati binari.",
-          "La versione 3.0.0 ricostruisce il progetto attorno al percorso reale della richiesta. La CLI apre connessioni TCP limitate. Il browser locale usa lo stesso client tramite un gateway same-origin. Il sito Pages resta basato solo su fixture perché JavaScript nel browser non può creare il socket TCP grezzo richiesto da Gopher.",
+          "La versione 3.2.0 mantiene il percorso Node.js limitato per CLI e gateway e aggiunge un trasporto Android nativo per l’uso mobile diretto. L’edizione browser è installabile e sicura offline, ma Pages resta su fixture perché JavaScript non può creare il socket TCP grezzo richiesto da Gopher.",
         ],
       },
       constraints: {
@@ -363,11 +364,11 @@ export const labsLocales = {
         ],
       },
       architecture: {
-        title: "Un solo percorso di fetch, due interfacce live",
+        title: "Due trasporti limitati, quattro superfici oneste",
         intro:
-          "Un URL Gopher e l’eventuale query di ricerca passano attraverso validazione dell’URL, policy sulla destinazione e una connessione TCP limitata e vincolata all’indirizzo validato. La risposta entra quindi nel parser RFC condiviso. La CLI la presenta o la salva direttamente; il gateway same-origin restituisce un risultato tipizzato all’explorer.",
-        labels: ["URL + QUERY", "POLICY DESTINAZIONE", "TCP VINCOLATO", "PARSER RFC", "CLI + EXPLORER"],
-        caption: "CLI ed explorer locale condividono il percorso reale del protocollo; Pages si ferma al confine delle fixture.",
+          "CLI ed explorer locale condividono policy, TCP vincolato e parser Node.js. Android applica gli stessi limiti di destinazione pubblica e risposta nel trasporto nativo, poi passa byte tipizzati all’explorer incluso nell’APK. PWA e Pages restano sulla fixture offline se manca un gateway autenticato.",
+        labels: ["URL + QUERY", "POLICY DESTINAZIONE", "TCP NODE / ANDROID", "PARSER RFC", "CLI + EXPLORER"],
+        caption: "Ogni interfaccia dichiara se i byte arrivano da TCP diretto, gateway same-origin o fixture offline.",
       },
       technology: {
         title: "Perché queste tecnologie",
@@ -376,7 +377,7 @@ export const labsLocales = {
           { choice: "Un gateway TCP locale in Node.js.", why: "Il browser non può aprire socket Gopher grezzi; il gateway applica risoluzione, policy di destinazione, timeout e limiti di dimensione prima della connessione.", alternative: "Un proxy generico o remoto offrirebbe una superficie SSRF e di relay molto più ampia del protocollo necessario.", cost: "Accettiamo un processo Node locale e nessuna pretesa di supportare protocolli arbitrari." },
           { choice: "Endpoint live same-origin e limitati.", why: "L’explorer può usare il gateway sotto la stessa origine mantenendo richieste e risposte entro contratti stretti.", alternative: "Un proxy pubblico cross-origin potrebbe essere abusato per scansioni, accesso a reti private o traffico non previsto.", cost: "Accettiamo che il sito pubblico mostri solo fixture e che l’accesso live richieda l’installazione locale." },
           { choice: "Preservare i byte fino al confine di presentazione.", why: "Gopher trasporta testo, menu e dati binari; conservare i byte evita di alterare download o terminatori del protocollo.", alternative: "Decodificare tutto in anticipo imporrebbe un charset, potrebbe corrompere payload binari e confondere contenuto con trasporto.", cost: "Accettiamo buffer, metadati di tipo e limiti espliciti più laboriosi da gestire." },
-          { choice: "Fixture di contratto e Playwright.", why: "URI, menu, byte, policy di rete e superfici browser diventano riproducibili senza dipendere da server Gopher esterni.", alternative: "Il test manuale non coprirebbe in modo affidabile edge case, regressioni del browser e blocchi SSRF.", cost: "Accettiamo manutenzione di fixture e browser CI, sapendo che non provano l’affidabilità di ogni server Internet." },
+          { choice: "Un trasporto Capacitor nativo su Android.", why: "L’explorer pacchettizzato apre connessioni TCP limitate e mantiene gli asset dell’interfaccia nell’APK, con una policy che non consente override verso reti private.", alternative: "Incorporare il sito hosted manterrebbe la dipendenza dal gateway; installare una PWA non concede al browser l’accesso ai socket grezzi.", cost: "Accettiamo un confine Kotlin, SDK e firma Android, oltre ai test di parità con la policy Node.js." },
         ],
       },
       decisions: {
@@ -401,21 +402,21 @@ export const labsLocales = {
         ],
       },
       delivery: {
-        title: "Come viene verificata la v3.0.0",
+        title: "Come viene verificata la v3.2.0",
         paragraphs: [
-          "I 90 test Node.js coprono parsing RFC, fixture TCP reali, policy di rete, contratto HTTP, output atomico della CLI, asset statici e regole di rilascio. Quattro flussi Chromium guidano l’explorer attraverso il gateway locale, includendo ricerca, cronologia, preferiti, ispezione raw, esportazione, download binario e layout a 320 px.",
-          "Il gate di rilascio esegue anche un audit delle dipendenze con zero vulnerabilità e avvia l’immagine Docker non privilegiata per uno smoke test runtime. Il progetto è distribuito sotto MIT; la build Pages resta statica, mentre il container avvia soltanto il gateway hosted autenticato.",
+          "I 102 test Node.js coprono parsing RFC, fixture TCP, policy di rete, contratto HTTP, output atomico, stato PWA, bundle Android e regole di rilascio. Quindici flussi Playwright verificano Chromium e WebKit mobile, compresi navigazione live e ripristino offline.",
+          "La CI Android compila e analizza il progetto nativo, esegue i test unitari e verifica gli asset inclusi. Il gate controlla inoltre archivi deterministici, audit delle dipendenze, smoke test del container e contratto dell’APK firmato.",
         ],
       },
       result: {
         title: "Cosa funziona oggi",
         paragraphs: [
-          "Dal terminale si possono recuperare menu, testi, ricerche e tipi binari comuni reali, verificare hash e dimensioni oppure salvare i byte esatti senza esporre un file finale parziale. Nell’explorer locale lo stesso percorso live aggiunge cronologia, preferiti, moduli di ricerca, ispezione della risposta raw, esportazione JSON e download binario.",
+          "Dal terminale o dall’app Android si possono recuperare menu, testi, ricerche e tipi binari reali. L’explorer locale aggiunge cronologia, preferiti, ricerca, ispezione raw, export JSON e download tramite il gateway; la PWA installata mantiene la fixture disponibile offline.",
           "DIG non trasforma Gopher in HTTP. Il traffico verso un server Gopher resta in chiaro, Pages non recupera risorse live e Gopher+, TLS, sessioni Telnet e crawling ricorsivo rimangono fuori dal contratto supportato.",
         ],
       },
       scope:
-        "Questo case study descrive l’implementazione verificata della v3.0.0: framing RFC 1436 per menu e testo, URL e ricerca RFC 4266, tipi binari comuni, TCP limitato, gateway same-origin ed explorer Pages basato solo su fixture. UTF-8 è la codifica supportata per i campi URL; il progetto non offre autenticazione del server né trasporto Gopher cifrato.",
+        "Questo case study descrive la v3.2.0 verificata: framing RFC 1436, URL e ricerca RFC 4266, tipi binari comuni, trasporti TCP limitati in Node.js e Android, gateway same-origin e PWA offline su fixture. Il traffico Gopher resta non autenticato e non cifrato.",
     }),
     integradraw: localize("integradraw", {
       category: "Matematica computazionale",
@@ -522,23 +523,23 @@ export const labsLocales = {
       category: "Software gestionale scolastico",
       title: "Progettare un sistema per i tirocini che la scuola possa gestire in autonomia",
       summary:
-        "VECTOR 3.0.0 è un sistema white-label per la gestione dei tirocini che ogni scuola può eseguire sulla propria infrastruttura. Riunisce coorti, studenti, aziende ospitanti, assegnazioni, ore, verifiche ed evidenze in un flusso con regole di accesso applicate dalle API.",
+        "VECTOR 3.3.0 è un sistema white-label per i tirocini che ogni scuola può eseguire sulla propria infrastruttura. Regole di programma versionate governano il completamento, la copertura di coorte evidenzia i vuoti di pianificazione e una coda per ruolo trasforma il lavoro scaduto in azioni concrete.",
       readMinutes: "14",
       facts: [
         ["Prodotto", "Gestione white-label dei tirocini in self-hosting"],
         ["Ruolo", "Prodotto, architettura e implementazione clean-room"],
         ["Distribuzione", "Una scuola per installazione"],
-        ["Stato", "Versione open source 3.0.0 con licenza MIT"],
+        ["Stato", "Versione open source 3.3.0 con licenza MIT"],
       ],
       evidence: {
         title: "Registro delle evidenze",
-        intro: "Il repository della versione 3.0.0 lega le promesse del prodotto a controlli concreti:",
+        intro: "Il repository della versione 3.3.0 lega le promesse del prodotto a controlli concreti:",
         items: [
-          ["Accesso", "I permessi di amministratori, coordinatori, tutor e lettori vengono verificati dal server. L’amministratore iniziale deve sostituire la password temporanea prima di accedere ai dati operativi."],
-          ["Record", "SQLite funziona in modalità WAL con migrazioni esplicite. Il controllo delle revisioni impedisce che un operatore sovrascriva in silenzio le modifiche di un altro."],
-          ["Flusso", "Requisiti di idoneità e transizioni regolano i tirocini, le ore verificate o annullate, i check-in e le evidenze, che possono essere sostituite senza cancellarne la storia."],
-          ["Governance", "I metadati di audit non contengono campi personali. La retention rispetta i blocchi applicati agli studenti e richiede l’impronta esatta dell’anteprima prima di eliminare record in lotti limitati."],
-          ["Distribuzione", "Il percorso di rilascio crea un artefatto sorgente riproducibile, lo verifica dopo l’estrazione e prova backup, ispezione, ripristino e compattazione sull’applicazione pacchettizzata."],
+          ["Policy di programma", "I coordinatori pubblicano versioni immutabili con ore obiettivo, numero minimo di check-in ed evidenze richieste. I tirocini esistenti mantengono la versione assegnata."],
+          ["Copertura della coorte", "La vista per periodo distingue studenti coperti, senza tirocinio e con sovrapposizioni, offrendo la creazione precompilata di un tirocinio per chi è scoperto."],
+          ["Coda operativa", "Evidenze scadute, ore da verificare, date dei tirocini e tutor mancanti rispettano ruolo e fuso orario della scuola, con paginazione stabile e riservata."],
+          ["Sessioni", "Il server chiude le sessioni inattive e il bootstrap di produzione termina prima di aprire il listener finché il segreto amministratore monouso non viene rimosso."],
+          ["Verifica", "Il sorgente controllato esegue 89 controlli Node.js, con uno skip specifico per piattaforma su Windows, e 22 flussi Playwright con verifiche dedicate a 320 px per workspace e presentazione. Build indipendenti su Ubuntu e Windows controllano la riproducibilità."],
         ],
       },
       starting: {
@@ -554,7 +555,7 @@ export const labsLocales = {
         items: [
           "Ogni installazione appartiene a una sola scuola, che controlla database, identità visiva, backup e distribuzione.",
           "Permessi e ambito dei tutor devono essere applicati dal server prima di selezionare, contare o esportare i record.",
-          "Ore verificate ed evidenze firmate richiedono percorsi di correzione espliciti che conservino il record originale.",
+          "Ogni tirocinio conserva la versione del programma che ne ha definito ore, check-in ed evidenze; le correzioni mantengono il record operativo originale.",
           "Import, export, retention e ripristino devono essere limitati, verificabili e ripetibili in sicurezza dopo un errore.",
         ],
       },
@@ -568,8 +569,8 @@ export const labsLocales = {
       architecture: {
         title: "Un server compatto con confini espliciti",
         intro:
-          "L’ambiente nel browser comunica con un’API Express che gestisce autenticazione, ruoli e transizioni. SQLite conserva i record di una scuola in modalità WAL. I cursori opachi AES-GCM legano la paginazione alla scuola, all’ambito e ai filtri attivi; le ricerche limitate evitano di caricare intere tabelle nei moduli.",
-        labels: ["AMBIENTE WEB", "POLICY LAYER EXPRESS", "SQLITE WAL", "AUDIT + RETENTION", "BACKUP + RELEASE"],
+          "L’ambiente web comunica con un’API Express che gestisce autenticazione, ruoli, versioni di programma e transizioni. SQLite conserva i record della scuola in WAL. I cursori AES-GCM legano copertura e attenzione a scuola, ruolo, filtri e posizioni stabili senza rivelarne il contenuto.",
+        labels: ["AMBIENTE WEB", "POLICY LAYER EXPRESS", "VERSIONI PROGRAMMA", "SQLITE WAL", "AUDIT + RIPRISTINO"],
         caption: "Il server decide cosa un operatore può vedere e modificare; il browser presenta quella decisione.",
       },
       technology: {
@@ -587,19 +588,19 @@ export const labsLocales = {
         intro: "Il prodotto preferisce regole visibili a uno stato nascosto ma comodo.",
         items: [
           {
-            title: "Applicare l’ambito prima della paginazione",
-            body: "Ogni elenco applica scuola e ruolo prima del limite. I cursori opachi autenticati legano quell’ambito ai filtri e a una posizione di ordinamento stabile. Le ricerche restituiscono soltanto pochi record idonei.",
-            tradeoff: "L’interfaccia non può scaricare una tabella illimitata in una sola richiesta. L’estrazione completa passa da un export filtrato separato, con un limite di 10.000 righe.",
+            title: "Versionare le regole, non soltanto il tirocinio",
+            body: "Una versione di programma pubblicata è immutabile. Le nuove regole valgono per le nuove assegnazioni; un tirocinio esistente conserva ore obiettivo, check-in minimi ed evidenze con cui è iniziato.",
+            tradeoff: "Una correzione richiede una nuova versione e i tirocini ancora intatti possono essere riassegnati solo in modo esplicito. Il completamento non cambia retroattivamente.",
           },
           {
-            title: "Correggere le evidenze senza riscrivere la storia",
-            body: "Le regole di idoneità governano le transizioni del tirocinio. Le ore vengono verificate o annullate; un documento firmato si corregge sostituendolo con un nuovo record invece di modificare l’evidenza sul posto.",
-            tradeoff: "L’operatore deve compiere un passaggio esplicito, ma chi controlla può ricostruire l’intera sequenza delle decisioni.",
+            title: "Mostrare i vuoti prima che diventino eccezioni",
+            body: "La copertura viene calcolata per coorte e periodo, distinguendo assegnazione valida, assenza e sovrapposizione. Da una riga scoperta si avvia un tirocinio precompilato senza perdere il contesto.",
+            tradeoff: "È una vista operativa limitata, non un motore generico di report. Proprio per questo il risultato resta azionabile e corretto per ruolo.",
           },
           {
-            title: "Bloccare in sicurezza le operazioni massive",
-            body: "Gli import CSV convalidano l’intero file in un’unica transazione. Le anteprime di retention mostrano record bloccati, lavoro residuo e un’impronta esatta; l’esecuzione rifiuta anteprime obsolete ed elimina in lotti limitati.",
-            tradeoff: "Le modifiche amministrative più grandi richiedono un’anteprima deliberata e talvolta più esecuzioni. È preferibile a un import parziale o a una cancellazione di massa non verificata.",
+            title: "Derivare l’attenzione dai record già posseduti",
+            body: "La coda deriva il lavoro dovuto da evidenze, ore, date e assegnazioni dei tutor invece di mantenere un secondo elenco. Il server applica il ruolo prima di conteggio e paginazione.",
+            tradeoff: "La coda non conserva promemoria arbitrari: resta coerente con il record del tirocinio ed evita una seconda fonte di verità.",
           },
         ],
       },
@@ -613,12 +614,12 @@ export const labsLocales = {
       result: {
         title: "Cosa supporta VECTOR oggi",
         paragraphs: [
-          "Una scuola può gestire coorti, studenti, aziende ospitanti, periodi e assegnazioni; verificare ore; registrare check-in; conservare la storia dei documenti; esaminare eventi di audit nel proprio ambito; importare dati in modo atomico ed esportare una vista operativa filtrata. Gli amministratori possono inoltre bloccare la retention per uno studente prima che i record più vecchi vengano rimossi.",
+          "Una scuola può pubblicare regole di programma, controllare la copertura della coorte, creare tirocini dai vuoti di pianificazione e lavorare una coda di attenzione per ruolo. Lo stesso record conserva ore, check-in, storia delle evidenze, audit, import atomico, export filtrato e retention governata.",
           "VECTOR è software open source in self-hosting. Non è un SaaS gestito e non dichiara certificazioni di conformità, alta disponibilità o SSO. Per un’istituzione che ne abbia bisogno, questi aspetti restano lavoro di prodotto e di distribuzione.",
         ],
       },
       scope:
-        "Questo case study descrive l’architettura della versione 3.0.0 presente nel repository e i relativi controlli di self-hosting. GitHub Pages presenta il prodotto senza dati operativi; l’applicazione vera e propria parte dal pacchetto server. Non vengono rappresentati dati scolastici reali, integrazioni istituzionali o risultati dei tirocini.",
+        "Questo case study descrive l’architettura rilasciata nella v3.3.0 al commit 0a99a9f e i controlli di self-hosting. GitHub Pages è un tour del prodotto; l’applicazione operativa parte dal pacchetto server. Non sono rappresentati dati scolastici reali, integrazioni istituzionali o risultati.",
     }),
     "jdoor-security-lab": localize("jdoor-security-lab", {
       category: "Assistenza remota sicura",
@@ -845,14 +846,15 @@ export const labsLocales = {
     "djenis-ai-agent": localize("djenis-ai-agent", {
       category: "Agentensysteme",
       title: "Computerautomatisierung, die ihre Berechtigungen vor dem Handeln offenlegt",
-      summary: "DjenisAiAgent beobachtet eine Windows- oder Browseroberfläche, fordert eine einzelne strukturierte Gemini-Aktion an, prüft sie gegen Laufzeitberechtigungen und übergibt das verifizierte Ergebnis an den nächsten Turn.",
+      summary: "DjenisAiAgent automatisiert Computer mit einem Modell, das bereits auf dem Rechner des Operators installiert ist. Ollama oder ein lokaler OpenAI-kompatibler Server schlägt genau eine strukturierte Aktion vor; Host-Richtlinien entscheiden über die Ausführung und neue Evidenz über den Erfolg.",
       readMinutes: "12",
-      facts: [["Produkt", "Experimenteller Computer-Use-Agent"], ["Rolle", "Architektur, Policy-Schicht und Implementierung"], ["Laufzeit", "Natives Windows oder browserorientiertes Docker"], ["Status", "Funktionsfähige Alpha mit begrenzten Fähigkeiten"]],
-      evidence: { title: "Evidenzprotokoll", intro: "Die Aussagen zur Alpha beruhen auf geprüften Grenzen statt auf Anekdoten autonomer Aufgaben:", items: [
-        ["Verifikation", "155 Unit-Test-Deklarationen und ein Repository-Coverage-Gate von 70%."],
-        ["Aufgabengrenzen", "Standardmäßig 50 Turns, 900 Sekunden pro Aufgabe, 120 Sekunden pro Modellabfrage und 45 Sekunden pro Aktion."],
-        ["Control Plane", "Mindestens 24 Zeichen langes Operator-Token, standardmäßig höchstens acht WebSockets und zwei native Streams."],
-        ["Grenze", "Gemini ist eine Cloud-Abhängigkeit; Docker kann den Host-Desktop nicht steuern, und native Zuverlässigkeit hängt von UI-Zugänglichkeit und Fokus ab."],
+      facts: [["Produkt", "Experimenteller Computer-Use-Agent"], ["Rolle", "Architektur, Policy-Schicht und Implementierung"], ["Inferenz", "Vorhandenes lokales Modell ohne gehosteten Fallback"], ["Laufzeit", "Natives Windows oder isolierte, browserorientierte Docker-Umgebung"]],
+      evidence: { title: "Evidenzprotokoll", intro: "Die aktuelle Implementierung wird an ausführbaren Grenzen gemessen, nicht an Autonomie-Anekdoten:", items: [
+        ["Verifikation", "Für den geprüften Quellstand laufen über 600 Tests sowie Ruff, mypy, Bandit und die Abhängigkeitsprüfung erfolgreich durch."],
+        ["Modellgrenze", "Die Inferenz nutzt ein vorhandenes Modell in Ollama oder einem lokalen OpenAI-kompatiblen Server. Gehostete Zugangsdaten, Remote-Fallback und automatische Downloads fehlen bewusst."],
+        ["Ausführungsnachweis", "Genau ein deklarierter Tool-Aufruf muss Schema und Richtlinie bestehen. Nach einer Zustandsänderung muss eine neue Beobachtung den geänderten Zustand zeigen oder eine gezielte Leseprüfung die betroffene Ressource bestätigen."],
+        ["Netzgrenze", "Nativ ist die Inferenz auf Loopback beschränkt. In Docker bleiben Agent und Modell im internen Kontrollnetz; nur ein gehärtetes Gateway wird veröffentlicht."],
+        ["Desktopgrenze", "Docker steuert seinen isolierten Selenium-Browser, nicht den Host-Desktop. Native Zuverlässigkeit hängt weiterhin von Accessibility-Daten und Fokus ab."],
       ]},
       starting: { title: "Das Automatisierungsproblem", paragraphs: [
         "Ein Computer-Use-Zyklus wird gefährlich, wenn Modellvorschlag und Programmbefugnis als dasselbe behandelt werden. Ein Prompt kann ein Ziel beschreiben; er darf nicht stillschweigend Zugriff auf Dateisystem, Shell oder Desktop gewähren.",
@@ -868,14 +870,14 @@ export const labsLocales = {
         "Das Modell soll entscheiden, welche deklarierte Aktion es anfordern möchte. Es soll nicht bestimmen, ob diese erlaubt ist, wie lange sie laufen darf oder wie viel Ausgabe in den nächsten Prompt gelangt.",
         "Ich habe diese Entscheidungen in ein richtliniengeschütztes Tool-Register und eine begrenzte Orchestrierungsschicht verlegt. Unbekannte Werkzeuge schlagen fehl, Wiederholungen und Aufgabendauer sind beschränkt, und Audit-Ereignisse werden vor dem Schreiben redigiert.",
       ]},
-      architecture: { title: "Ein Zyklus, der beobachtet, entscheidet, prüft und verifiziert", intro: "Die Wahrnehmung erfasst Screenshot oder Accessibility Tree. Gemini liefert genau einen deklarierten Funktionsaufruf. Die Policy-Schicht prüft Laufzeitunterstützung, Stufe und Allowlists, bevor ein Werkzeug läuft. Die resultierende Beobachtung wird zur Evidenz des nächsten Turns.", labels: ["WAHRNEHMUNG", "GEMINI TOOL CALL", "POLICY-GATE", "AKTION", "VERIFIZIERTE BEOBACHTUNG"], caption: "Das Modell schlägt vor; die Laufzeit entscheidet, welche Befugnis tatsächlich besteht." },
+      architecture: { title: "Ein Zyklus, der beobachtet, entscheidet, prüft und verifiziert", intro: "Die Wahrnehmung erfasst Screenshot oder Accessibility Tree. Das lokale Modell liefert genau einen deklarierten Funktionsaufruf. Der Host prüft Form, Laufzeit, Berechtigungsstufe und Allowlists vor der Ausführung; eine neue Beobachtung wird zur Evidenz des nächsten Turns.", labels: ["WAHRNEHMUNG", "LOKALES MODELL", "POLICY-GATE", "AKTION", "VERIFIZIERTE BEOBACHTUNG"], caption: "Das Modell schlägt vor; die Laufzeit entscheidet, welche Befugnis tatsächlich besteht." },
       technology: {
         title: "Warum diese Technologien",
         intro: "Die Technologien trennen die Schlussfolgerung des Modells von der tatsächlichen Befugnis auf dem Computer.",
         items: [
-          { choice: "Python für die Orchestrierung.", why: "Gemini, Windows-Automatisierung und Browser lassen sich damit zügig um deklarierte, nicht streng typisierte Werkzeugschemata und ein richtliniengesteuertes Fähigkeitenregister integrieren.", alternative: "Eine vollständig native oder kompilierte Implementierung würde Teile der Paketierung vereinfachen, die Integrationen aber aufsplittern und das Experiment verlangsamen.", cost: "Wir nehmen eine festzuschreibende, auszuliefernde und zu prüfende Python-Laufzeit samt Abhängigkeiten in Kauf." },
+          { choice: "Python für die Orchestrierung.", why: "Es verbindet Windows-Automatisierung, Selenium, FastAPI und einen begrenzten lokalen Modellclient mit deklarierten Werkzeugschemata und einem richtliniengesteuerten Register.", alternative: "Eine vollständig native oder kompilierte Implementierung würde Teile der Paketierung vereinfachen, die Integrationen aber aufsplittern und das Experiment verlangsamen.", cost: "Wir nehmen eine festzuschreibende, auszuliefernde und zu prüfende Python-Laufzeit samt Abhängigkeiten in Kauf." },
           { choice: "UI Automation und Selenium als primäre Kanäle.", why: "Zugängliche Elemente, Rollen und DOM liefern stabilere semantische Ziele als Bildschirmpositionen.", alternative: "Pixel und Koordinaten wären gegenüber DPI, Fokus, Layout und Größenänderungen fragil.", cost: "Wir nehmen Plattformunterschiede und begrenzte Fallbacks für Canvas oder unzugängliche Steuerelemente in Kauf." },
-          { choice: "Genau eine strukturierte Gemini-Aktion.", why: "Jeder Turn schlägt eine deklarierte Aktion vor, die vor der Ausführung Berechtigungsstufen und Allowlists durchläuft; Timeouts und der nächste beobachtete Zustand begrenzen und verifizieren das Ergebnis.", alternative: "Freie Befehle erforderten mehrdeutiges Parsing und erhöhten das Risiko von Verkettungen oder nicht vorgesehenen Anweisungen.", cost: "Wir nehmen Cloud-Abhängigkeit, Latenz und ein absichtlich enges Aktionsvokabular in Kauf." },
+          { choice: "Genau eine strukturierte Aktion des lokalen Modells.", why: "Jeder Turn schlägt eine deklarierte Aktion vor, die vor der Ausführung Berechtigungsstufen und Allowlists durchläuft; Timeouts und der nächste beobachtete Zustand begrenzen und verifizieren das Ergebnis.", alternative: "Freie Befehle erforderten mehrdeutiges Parsing und erhöhten das Risiko von Verkettungen oder nicht vorgesehenen Anweisungen.", cost: "Jede Fähigkeit braucht ein gepflegtes Schema; das lokale Modell muss Tool Calls und im Standardablauf Bilder unterstützen." },
           { choice: "Eine lokale FastAPI-Konsole.", why: "Der Operator kann Berechtigungen und Aktivitäten auf demselben Rechner innerhalb einer authentifizierten Loopback-Grenze prüfen.", alternative: "Eine gehostete Control Plane würde Screenshots, Logs und operative Befugnis an einen entfernten Dienst übertragen und Mandantentrennung verlangen.", cost: "Wir nehmen lokale Prozess-, Token- und Sitzungsverwaltung ohne eingebaute Fernorchestrierung in Kauf." },
         ],
       },
@@ -889,39 +891,39 @@ export const labsLocales = {
         "Container-Releases werden erst nach Vulnerability-, SBOM- und Provenance-Prüfungen ausschließlich per Digest freigegeben. Native Desktop-Steuerung bleibt bewusst außerhalb von Docker; die öffentliche Pages-Site ist eine Präsentation, keine Operator-Konsole.",
       ]},
       result: { title: "Was die Alpha belegt", paragraphs: [
-        "Der Agent kann deklarierte Desktop- und Browserwerkzeuge in einem Zyklus bedienen, dessen Befugnisse außerhalb der Modellantwort sichtbar und begrenzt sind.",
-        "Er beansprucht keine allgemeine Autonomie. UI-Qualität, Fensterfokus, Drittanbieterlatenz und Canvas-lastige Oberflächen begrenzen weiterhin die Zuverlässigkeit; das Projekt gehört deshalb in kurzlebige oder sorgfältig eingegrenzte Umgebungen.",
+        "Der Agent kann deklarierte Desktop- und Browserwerkzeuge nutzen, ohne seinen Schlussfolgerungskontext an ein gehostetes Modell zu senden. Schemas, Laufzeitfähigkeiten, Berechtigungen und Evidenz werden vom Host erzwungen.",
+        "Er beansprucht keine allgemeine Autonomie. Lokale Inferenz entfernt eine externe Datengrenze, nicht die Risiken der Computersteuerung. UI-Qualität, Fokus und Canvas-lastige Oberflächen begrenzen weiterhin die Zuverlässigkeit; deshalb gehört das Projekt in kurzlebige oder streng isolierte Umgebungen.",
       ]},
-      scope: "Diese Fallstudie beschreibt die dokumentierte Alpha-Implementierung. Sie behauptet weder sicheren unbeaufsichtigten Betrieb noch vollständigen Schutz vor den eigenen Flags eines freigegebenen Programms oder Unterstützung jeder Windows-Anwendung.",
+      scope: "Diese Fallstudie beschreibt Commit 946160f. Sie behauptet weder sicheren unbeaufsichtigten Betrieb noch vollständigen Schutz vor den Flags eines freigegebenen Programms, Unterstützung jedes lokalen Modells oder Host-Desktop-Steuerung aus Docker.",
     }),
     "dig-gopher-explorer": localize("dig-gopher-explorer", {
       category: "Protokollwerkzeuge",
       title: "Gopher als klar begrenzte, prüfbare lokale Arbeitsumgebung",
       summary:
-        "DIG 3.0.0 ist ein echter Gopher-Client mit drei klar getrennten Oberflächen: einer CLI über TCP, einem Live-Explorer hinter einem lokalen Same-Origin-Gateway und einer GitHub-Pages-Ausgabe ausschließlich mit Fixtures. Der gemeinsame Kern verarbeitet RFC-1436-Antworten und RFC-4266-Adressen, ohne vorzugeben, dass eine statische Browserseite rohe Sockets öffnen kann.",
+        "DIG 3.2.0 öffnet echte Gopher-Ressourcen über CLI, lokale Browser-Arbeitsumgebung und eigenständige Android-App. Die PWA hält ein geprüftes Fixture offline bereit; Live-Verkehr im Browser läuft weiterhin über das Same-Origin-Gateway.",
       readMinutes: "13",
       facts: [
-        ["Produkt", "Gopher-CLI, lokales Gateway und Browser-Explorer"],
+        ["Produkt", "Gopher-CLI, lokaler Explorer, Offline-PWA und Android-App"],
         ["Protokoll", "RFC-1436-Anfragen, Menüs und Text; RFC-4266-URLs und Suche"],
         ["Sicherheit", "Fail-closed-Zielrichtlinie mit DNS-Pinning"],
-        ["Status", "Open-Source-Version 3.0.0 unter der MIT-Lizenz"],
+        ["Status", "Open-Source-Version 3.2.0 unter der MIT-Lizenz"],
       ],
       evidence: {
         title: "Evidenzprotokoll",
-        intro: "Die Aussagen zu Version 3.0.0 sind an ausführbare Prüfungen und sichtbare Grenzen gebunden:",
+        intro: "Die Aussagen zu Version 3.2.0 sind an ausführbare Prüfungen und sichtbare Grenzen gebunden:",
         items: [
-          ["Verifikation", "90 Node.js-Tests und vier Chromium-E2E-Tests bestehen, einschließlich des vollständigen Live-Pfads bei exakt 320 px Viewport-Breite."],
+          ["Verifikation", "Der geprüfte Quellstand besteht 102 Node.js-Tests und 15 Browserabläufe in Chromium und mobilem WebKit; ein Skip ist bewusst plattformspezifisch."],
+          ["Android", "Die Capacitor-8-App unterstützt Android 7/API 24 und neuer, zielt auf API 36 und verwendet direkten nativen TCP-Transport statt die gehostete Site zu laden."],
           ["Netzrichtlinie", "Der Hosted-Modus verlangt ein Zugriffstoken, verwirft einen Hostnamen, sobald eine DNS-Antwort nicht öffentlich ist, und verbindet sich nur mit der bereits geprüften Adresse."],
           ["Ausgabeintegrität", "Die CLI schreibt über eine temporäre Datei im selben Verzeichnis und macht den Zielpfad atomar sichtbar; binäre Bytes gelangen nie in ein interaktives Terminal."],
-          ["Laufzeit", "Das Abhängigkeitsaudit meldet null Schwachstellen, und das produktive Docker-Image besteht den Laufzeit-Smoke-Test als unprivilegierter Prozess."],
-          ["Öffentliche Grenze", "GitHub Pages liefert den Explorer ausschließlich mit eingecheckten Fixtures aus. Live-Gopher-Anfragen benötigen das Same-Origin-Gateway."],
+          ["Offline-Grenze", "Die PWA speichert statische Shell und geprüftes Fixture, nie API-Antworten. Nach der Rückkehr ins Netz wird nur eine zuvor aktive Gateway-Sitzung fortgesetzt."],
         ],
       },
       starting: {
         title: "Der Abstand zwischen Protokollskizze und brauchbarem Client",
         paragraphs: [
           "Die frühere Oberfläche konnte ein Gopher-Menü veranschaulichen, belegte aber nicht die entscheidenden Teile: wie ein Selector als Bytes auf dem Socket landet, wo Text-Framing endet oder was geschieht, wenn ein Server hängt, einen falschen Typ meldet oder Binärdaten zurückgibt.",
-          "Version 3.0.0 baut das Projekt um den echten Anfragepfad neu auf. Die CLI öffnet begrenzte TCP-Verbindungen. Der lokale Browser verwendet denselben Client über ein Same-Origin-Gateway. Pages bleibt auf Fixtures beschränkt, weil Browser-JavaScript den für Gopher nötigen rohen TCP-Socket nicht erstellen kann.",
+          "Version 3.2.0 behält den begrenzten Node.js-Pfad für CLI und Gateway und ergänzt nativen Android-Transport für direkte mobile Nutzung. Die Browserausgabe ist installierbar und offline-sicher; Pages bleibt auf Fixtures beschränkt, weil Browser-JavaScript keine rohen TCP-Sockets öffnen kann.",
         ],
       },
       constraints: {
@@ -942,11 +944,11 @@ export const labsLocales = {
         ],
       },
       architecture: {
-        title: "Ein Abrufpfad, zwei Live-Oberflächen",
+        title: "Zwei begrenzte Transporte, vier ehrliche Oberflächen",
         intro:
-          "Eine Gopher-URL und eine optionale Suchanfrage durchlaufen URL-Prüfung, Zielrichtlinie und eine begrenzte TCP-Verbindung zur fest geprüften Adresse. Danach verarbeitet der gemeinsame RFC-Parser die Antwort. Die CLI zeigt oder speichert sie direkt; das Same-Origin-Gateway liefert dem Browser-Explorer ein typisiertes Ergebnis.",
-        labels: ["URL + SUCHE", "ZIELRICHTLINIE", "GEPINNTES TCP", "RFC-PARSER", "CLI + EXPLORER"],
-        caption: "CLI und lokaler Explorer teilen den echten Protokollpfad; Pages endet an der Fixture-Grenze.",
+          "CLI und lokaler Explorer teilen Node.js-Zielrichtlinie, gepinntes TCP und Parser. Android setzt dieselben öffentlichen Ziel- und Antwortgrenzen nativ um und reicht typisierte Bytes an den paketierten Explorer. PWA und Pages bleiben ohne authentifiziertes Gateway beim Offline-Fixture.",
+        labels: ["URL + SUCHE", "ZIELRICHTLINIE", "NODE / ANDROID TCP", "RFC-PARSER", "CLI + EXPLORER"],
+        caption: "Jede Oberfläche nennt, ob ihre Bytes aus direktem TCP, Same-Origin-Gateway oder Offline-Fixture stammen.",
       },
       technology: {
         title: "Warum diese Technologien",
@@ -955,7 +957,7 @@ export const labsLocales = {
           { choice: "Ein lokales TCP-Gateway in Node.js.", why: "Der Browser kann keine rohen Gopher-Sockets öffnen; das Gateway wendet Auflösung, Zielrichtlinie, Timeouts und Größenlimits vor der Verbindung an.", alternative: "Ein allgemeiner oder entfernter Proxy böte eine weit größere SSRF- und Relay-Oberfläche, als das Protokoll benötigt.", cost: "Wir nehmen einen lokalen Node-Prozess und den bewussten Verzicht auf beliebige Protokolle in Kauf." },
           { choice: "Begrenzte Live-Endpunkte unter derselben Origin.", why: "Der Explorer kann das Gateway unter derselben Herkunft nutzen, während Anfragen und Antworten engen Verträgen folgen.", alternative: "Ein öffentlicher Cross-Origin-Proxy könnte für Scans, Zugriffe auf private Netze oder nicht vorgesehenen Verkehr missbraucht werden.", cost: "Wir nehmen in Kauf, dass die öffentliche Site nur Fixtures zeigt und Live-Zugriff eine lokale Installation erfordert." },
           { choice: "Bytes bis zur Darstellungsgrenze unverändert bewahren.", why: "Gopher überträgt Text, Menüs und Binärdaten; unveränderte Bytes verhindern beschädigte Downloads oder Protokollterminatoren.", alternative: "Alles vorab zu dekodieren würde einen Zeichensatz erzwingen, Binärdaten beschädigen und Inhalt mit Transport verwechseln können.", cost: "Wir nehmen aufwendigere Puffer, Typmetadaten und ausdrückliche Grenzen in Kauf." },
-          { choice: "Vertrags-Fixtures und Playwright.", why: "URIs, Menüs, Bytes, Netzwerkrichtlinien und Browseroberflächen werden reproduzierbar, ohne von externen Gopher-Servern abzuhängen.", alternative: "Manuelle Tests könnten Grenzfälle, Browserregressionen und SSRF-Sperren nicht zuverlässig abdecken.", cost: "Wir nehmen die Pflege von Fixtures und CI-Browsern in Kauf; sie belegt nicht die Zuverlässigkeit jedes Internetservers." },
+          { choice: "Nativer Capacitor-Transport auf Android.", why: "Der paketierte Explorer öffnet begrenzte TCP-Verbindungen und hält seine UI-Assets im APK; die Richtlinie bietet keinen Override für private Netze.", alternative: "Eine eingebettete Hosted-Site bliebe vom Gateway abhängig, und eine installierte PWA erhält keine rohen Socket-Rechte.", cost: "Wir nehmen eine Kotlin-Grenze, Android-SDK, Signierung und Paritätstests mit der Node.js-Richtlinie in Kauf." },
         ],
       },
       decisions: {
@@ -980,21 +982,21 @@ export const labsLocales = {
         ],
       },
       delivery: {
-        title: "Wie Version 3.0.0 geprüft wird",
+        title: "Wie Version 3.2.0 geprüft wird",
         paragraphs: [
-          "Die 90 Node.js-Tests decken RFC-Parsing, echte TCP-Fixtures, Netzrichtlinie, HTTP-Vertrag, atomare CLI-Ausgabe, statische Assets und Release-Regeln ab. Vier Chromium-Abläufe steuern den Explorer über das lokale Gateway und prüfen Suche, Verlauf, Lesezeichen, Rohdatenansicht, Export, Binärdownload und das 320-px-Layout.",
-          "Das Release-Gate führt außerdem ein Abhängigkeitsaudit mit null Schwachstellen aus und startet das unprivilegierte Docker-Image für einen Laufzeit-Smoke-Test. Das Projekt steht unter MIT; Pages bleibt statisch, während der Container ausschließlich das authentifizierte Hosted-Gateway startet.",
+          "Die 102 Node.js-Tests decken RFC-Parsing, TCP-Fixtures, Netzrichtlinie, HTTP-Vertrag, atomare Ausgabe, PWA-Zustand, Android-Bundle und Release-Verträge ab. 15 Playwright-Abläufe prüfen Chromium und mobiles WebKit einschließlich Live-Navigation und Offline-Erholung.",
+          "Android CI kompiliert und lintet das native Projekt, führt Unit-Tests aus und prüft die paketierten Assets. Das Gate kontrolliert außerdem deterministische Archive, Abhängigkeiten, Container-Smoke-Test und den Vertrag des signierten APK.",
         ],
       },
       result: {
         title: "Was heute funktioniert",
         paragraphs: [
-          "Im Terminal lassen sich reale Menüs, Texte, Suchergebnisse und gängige Binärtypen abrufen, Hashes und Größen prüfen oder exakte Bytes speichern, ohne eine teilweise geschriebene Zieldatei offenzulegen. Der lokale Explorer ergänzt denselben Live-Pfad um Verlauf, Lesezeichen, Suchformulare, Rohdatenprüfung, JSON-Export und Binärdownload.",
+          "Im Terminal oder in der Android-App lassen sich reale Menüs, Texte, Suche und gängige Binärtypen abrufen. Der lokale Browser ergänzt Verlauf, Lesezeichen, Suche, Rohdatenprüfung, JSON-Export und Download über das Gateway; die installierte PWA hält das Fixture offline bereit.",
           "DIG macht aus Gopher kein HTTP. Der Verkehr zum Gopher-Server bleibt unverschlüsselt, Pages ruft keine Live-Ressourcen ab, und Gopher+, TLS, Telnet-Sitzungen sowie rekursives Crawling bleiben außerhalb des unterstützten Vertrags.",
         ],
       },
       scope:
-        "Diese Fallstudie beschreibt die geprüfte Implementierung von Version 3.0.0: RFC-1436-Framing für Menüs und Text, RFC-4266-URLs und Suche, gängige Binärtypen, begrenztes TCP, ein Same-Origin-Gateway und den fixturebasierten Pages-Explorer. UTF-8 ist die unterstützte Kodierung für URL-Felder; Serverauthentifizierung und verschlüsselter Gopher-Transport gehören nicht zum Projekt.",
+        "Diese Fallstudie beschreibt Version 3.2.0: RFC-1436-Framing, RFC-4266-URLs und Suche, Binärtypen, begrenzte TCP-Transporte in Node.js und Android, Same-Origin-Gateway und Offline-PWA mit Fixture. Gopher bleibt nicht authentifiziert und unverschlüsselt.",
     }),
     integradraw: localize("integradraw", {
       category: "Computergestützte Mathematik",
@@ -1051,15 +1053,15 @@ export const labsLocales = {
     "vector-placement-operations": localize("vector-placement-operations", {
       category: "Schulische Betriebssoftware",
       title: "Ein selbst betriebenes Praktikumssystem entwickeln, das der Schule gehört",
-      summary: "VECTOR 3.0.0 ist ein White-Label-System für Praktikumsabläufe, das eine Schule auf der eigenen Infrastruktur betreiben kann. Kohorten, Schüler, Betriebe, Einsätze, Stunden, Check-ins und Nachweise laufen in einem servergestützten Arbeitsablauf zusammen; die API setzt die Zugriffsregeln durch.",
+      summary: "VECTOR 3.3.0 ist ein White-Label-System für Praktikumsabläufe auf der Infrastruktur einer Schule. Versionierte Programmregeln steuern den Abschluss, Kohortenabdeckung zeigt Planungslücken und eine rollenbezogene Aufgabenliste macht überfällige Arbeit zu konkreten nächsten Schritten.",
       readMinutes: "14",
-      facts: [["Produkt", "Selbst betriebene White-Label-Praktikumsverwaltung"], ["Rolle", "Clean-Room-Produkt, Architektur und Implementierung"], ["Betrieb", "Eine Schule pro Installation"], ["Status", "Open-Source-Version 3.0.0 unter der MIT-Lizenz"]],
-      evidence: { title: "Evidenzprotokoll", intro: "Das Repository der Version 3.0.0 verknüpft seine Produktversprechen mit konkreten Kontrollen:", items: [
-        ["Zugriff", "Berechtigungen für Administratoren, Koordinatoren, Tutoren und Leser werden auf dem Server geprüft. Der erste Administrator muss das temporäre Passwort ändern, bevor operative Daten zugänglich sind."],
-        ["Datensätze", "SQLite läuft im WAL-Modus hinter expliziten Migrationen. Revisionsprüfungen verhindern, dass ein Operator die Änderungen eines anderen unbemerkt überschreibt."],
-        ["Ablauf", "Bereitschaftsregeln und Zustandswechsel steuern Einsätze, bestätigte oder stornierte Stunden, Check-ins und Nachweise, die ohne Verlust ihrer Historie ersetzt werden können."],
-        ["Governance", "Audit-Metadaten enthalten keine personenbezogenen Felder. Aufbewahrungsläufe beachten Sperren auf Schülerebene und verlangen vor begrenzten Löschbatches den exakten Fingerabdruck der Vorschau."],
-        ["Auslieferung", "Der Release-Pfad erzeugt ein reproduzierbares Quellartefakt, prüft es nach dem Entpacken und testet Sicherung, Inspektion, Wiederherstellung und Datenbankverdichtung an der paketierten Anwendung."],
+      facts: [["Produkt", "Selbst betriebene White-Label-Praktikumsverwaltung"], ["Rolle", "Clean-Room-Produkt, Architektur und Implementierung"], ["Betrieb", "Eine Schule pro Installation"], ["Status", "Open-Source-Version 3.3.0 unter der MIT-Lizenz"]],
+      evidence: { title: "Evidenzprotokoll", intro: "Das Repository der Version 3.3.0 verknüpft seine Produktversprechen mit konkreten Kontrollen:", items: [
+        ["Programmrichtlinie", "Koordinatoren veröffentlichen unveränderliche Versionen mit Zielstunden, Mindestzahl an Check-ins und Nachweispflichten. Bestehende Einsätze behalten ihre zugewiesene Version."],
+        ["Kohortenabdeckung", "Die Periodenansicht trennt abgedeckte Schüler, Schüler ohne Einsatz und Überschneidungskonflikte und startet für eine Lücke einen vorausgefüllten Einsatz."],
+        ["Operative Aufgabenliste", "Überfällige Nachweise, ausstehende Stundenprüfungen, Einsatztermine und fehlende Tutorzuweisungen folgen Rolle und Schulzeitzone mit vertraulicher stabiler Seitennavigation."],
+        ["Sitzungen", "Der Server beendet inaktive Sitzungen. Der Produktions-Bootstrap öffnet keinen Listener, bis das einmalige Administratorgeheimnis entfernt wurde."],
+        ["Verifikation", "Der geprüfte Quellstand führt 89 Node.js-Prüfungen mit einem plattformspezifischen Skip unter Windows sowie 22 Playwright-Abläufe mit eigenen 320-Pixel-Prüfungen für Arbeitsbereich und Produktdarstellung aus. Unabhängige Builds unter Ubuntu und Windows prüfen die Reproduzierbarkeit."],
       ]},
       starting: { title: "Das operative Problem", paragraphs: [
         "Praktikumsverwaltung ist mehr als ein Dashboard. Eine Schule koordiniert Kohorten, Schüler, Betriebe, Tutoren, Termine, Stunden, Check-ins und unterschriebene Nachweise. Unterschiedliche Rollen benötigen unterschiedliche Ausschnitte desselben Datensatzes, und eine Korrektur darf den früheren Stand nicht auslöschen.",
@@ -1068,14 +1070,14 @@ export const labsLocales = {
       constraints: { title: "Was ein schuleigenes System gewährleisten muss", intro: "Die Architektur beginnt mit vier praktischen Vorgaben:", items: [
         "Jede Installation gehört zu genau einer Schule, die Datenbank, Erscheinungsbild, Sicherungen und Betrieb kontrolliert.",
         "Berechtigungen und Tutorenzuständigkeit müssen auf dem Server greifen, bevor Datensätze ausgewählt, gezählt oder exportiert werden.",
-        "Bestätigte Stunden und unterschriebene Nachweise benötigen ausdrückliche Korrekturwege, die den ursprünglichen Datensatz erhalten.",
+        "Jeder Einsatz behält die Programmversion, die Stunden, Check-ins und Nachweise festlegte; Korrekturen erhalten den ursprünglichen operativen Datensatz.",
         "Import, Export, Aufbewahrung und Wiederherstellung müssen begrenzt, prüfbar und nach einem Fehler sicher wiederholbar sein.",
       ]},
       diagnosis: { title: "Zuerst die Eigentumsgrenze festlegen", paragraphs: [
         "Mehr Zustand im Browser hätte die schwierigen Fragen offengelassen. Rollenprüfungen könnten in der Oberfläche verborgen bleiben, die gesamte Schule könnte in den Speicher geladen und ein geändertes Feld so behandelt werden, als hätte der frühere Wert nie existiert.",
         "VECTOR verwendet eine Schule pro Installation, statt einen gemeinsamen mandantenfähigen Dienst aufzubauen. Die operative Verantwortung bleibt eindeutig; Sicherung, Aufbewahrung und White-Label-Konfiguration lassen sich leichter nachvollziehen. Das Projekt liefert Software aus, keine verwaltete Cloud-Plattform.",
       ]},
-      architecture: { title: "Ein kompakter Server mit klaren Grenzen", intro: "Der Browser-Arbeitsbereich spricht mit einer Express-API, die Anmeldung, Rollen und Zustandswechsel verwaltet. SQLite speichert die Datensätze einer Schule im WAL-Modus. Undurchsichtige AES-GCM-Cursor binden die Seitennavigation an Schule, Zuständigkeit und aktive Filter; begrenzte Suchendpunkte verhindern, dass Formulare ganze Tabellen laden.", labels: ["BROWSER-ARBEITSBEREICH", "EXPRESS POLICY LAYER", "SQLITE WAL", "AUDIT + AUFBEWAHRUNG", "SICHERUNG + RELEASE"], caption: "Der Server entscheidet, was ein Operator sehen und ändern darf; der Browser stellt diese Entscheidung dar." },
+      architecture: { title: "Ein kompakter Server mit klaren Grenzen", intro: "Der Browser spricht mit einer Express-API, die Anmeldung, Rollen, Programmversionen und Zustandswechsel verwaltet. SQLite speichert die Schuldaten im WAL-Modus. AES-GCM-Cursor binden Abdeckung und Aufgabenliste an Schule, Rolle, Filter und stabile Positionen, ohne ihren Inhalt offenzulegen.", labels: ["BROWSER-ARBEITSBEREICH", "EXPRESS POLICY LAYER", "PROGRAMMVERSIONEN", "SQLITE WAL", "AUDIT + WIEDERHERSTELLUNG"], caption: "Der Server entscheidet, was ein Operator sehen und ändern darf; der Browser stellt diese Entscheidung dar." },
       technology: {
         title: "Warum diese Technologien",
         intro: "Der Stack ist für eine Schule dimensioniert, die ihre eigene Installation besitzt und betreibt.",
@@ -1087,19 +1089,19 @@ export const labsLocales = {
         ],
       },
       decisions: { title: "Entscheidungen für einen sichereren Arbeitsalltag", intro: "Das Produkt bevorzugt sichtbare Regeln gegenüber bequemem, verborgenem Zustand.", items: [
-        { title: "Zuständigkeit vor Seitennavigation", body: "Jede Liste wendet Schule und Rolle vor dem Limit an. Authentifizierte undurchsichtige Cursor binden diesen Geltungsbereich an Filter und eine stabile Sortierposition. Suchendpunkte liefern nur eine kleine Menge geeigneter Datensätze.", tradeoff: "Die Oberfläche kann keine unbegrenzte Tabelle in einer Anfrage laden. Die vollständige Entnahme erfolgt über einen getrennten, gefilterten Export mit höchstens 10.000 Zeilen." },
-        { title: "Nachweise korrigieren, ohne Historie umzuschreiben", body: "Bereitschaftsregeln steuern die Zustandswechsel eines Einsatzes. Stunden werden bestätigt oder storniert; ein unterschriebenes Dokument wird durch einen neuen Datensatz ersetzt, nicht nachträglich verändert.", tradeoff: "Der Operator muss einen ausdrücklichen Korrekturschritt ausführen, dafür bleibt die Abfolge der Entscheidungen nachvollziehbar." },
-        { title: "Massenänderungen geschlossen abbrechen", body: "CSV-Importe validieren die gesamte Datei innerhalb einer Transaktion. Aufbewahrungsvorschauen zeigen gesperrte Datensätze, verbleibende Arbeit und einen exakten Fingerabdruck; die Ausführung lehnt veraltete Vorschauen ab und löscht in begrenzten Batches.", tradeoff: "Große Verwaltungsänderungen benötigen eine bewusste Vorschau und manchmal mehrere Läufe. Das ist besser als ein Teilimport oder eine ungeprüfte Massenlöschung." },
+        { title: "Regeln versionieren, nicht nur den Einsatz", body: "Eine veröffentlichte Programmversion ist unveränderlich. Neue Regeln gelten für neue Zuweisungen; ein bestehender Einsatz behält Zielstunden, Check-in-Minimum und Nachweise seines Starts.", tradeoff: "Eine Korrektur braucht eine neue Version, und unberührte Einsätze werden nur ausdrücklich neu zugewiesen. Der Abschluss ändert sich nicht rückwirkend." },
+        { title: "Planungslücken vor Ausnahmen zeigen", body: "Die Abdeckung wird je Kohorte und Zeitraum berechnet und unterscheidet gültige Zuweisung, fehlende Zuweisung und Überschneidung. Eine Lücke startet einen vorausgefüllten Einsatz im gleichen Kontext.", tradeoff: "Die Ansicht ist bewusst operativ begrenzt und kein allgemeines Berichtssystem. Dadurch bleibt das Ergebnis handlungsnah und rollenkorrekt." },
+        { title: "Aufmerksamkeit aus vorhandenen Datensätzen ableiten", body: "Die Queue leitet fällige Arbeit aus Nachweisen, Stunden, Terminen und Tutorzuweisungen ab, statt eine zweite Aufgabenliste zu pflegen. Der Server wendet die Rolle vor Zählung und Paging an.", tradeoff: "Beliebige Erinnerungen gehören nicht in die Queue. Sie bleibt mit dem Einsatzdatensatz konsistent und vermeidet eine zweite Wahrheitsquelle." },
       ]},
       delivery: { title: "Self-Hosting und Wiederherstellung", paragraphs: [
         "Schulen können Name, Farben, Logo und Supportdaten mit Revisionsschutz für gleichzeitige Änderungen festlegen. Das Docker-Image läuft als unprivilegierter Benutzer und unterstützt ein schreibgeschütztes Root-Dateisystem. Health- und Doctor-Befehle zeigen Konfigurations- und Speicherprobleme vor dem normalen Betrieb.",
         "Die Backup-Werkzeuge erstellen einen privaten SQLite-Snapshot, prüfen ihn ohne Anwendungsstart, stellen ihn über einen geschützten Wartungspfad wieder her und verdichten die Datenbank bei Bedarf. Die Release-Automatisierung baut das Quellpaket zweimal, prüft Inventar und Commit, sucht nach Geheimnissen, installiert aus dem entpackten Artefakt und führt dort die Abnahme aus.",
       ]},
       result: { title: "Was VECTOR heute unterstützt", paragraphs: [
-        "Eine Schule kann Kohorten, Schüler, Betriebe, Zeiträume und Einsätze verwalten; Stunden bestätigen; Check-ins erfassen; Dokumenthistorien bewahren; zuständige Audit-Ereignisse prüfen; Daten atomar importieren und einen gefilterten operativen Stand exportieren. Administratoren können einen Schüler außerdem von der Aufbewahrungslöschung ausnehmen, bevor ältere Datensätze entfernt werden.",
+        "Eine Schule kann Programmregeln veröffentlichen, Kohortenabdeckung prüfen, Einsätze aus Planungslücken erstellen und eine rollenbezogene Aufgabenliste abarbeiten. Derselbe Datensatz trägt Stunden, Check-ins, Nachweishistorie, Audit, atomaren Import, gefilterten Export und geregelte Aufbewahrung.",
         "VECTOR ist selbst betriebene Open-Source-Software. Es ist kein verwaltetes SaaS und beansprucht weder Compliance-Zertifizierung noch Hochverfügbarkeit oder SSO. Für Institutionen mit solchen Anforderungen bleiben diese Punkte Produkt- und Betriebsarbeit.",
       ]},
-      scope: "Diese Fallstudie beschreibt die eingecheckte Architektur der Version 3.0.0 und ihre Self-Hosting-Kontrollen. GitHub Pages präsentiert das Produkt ohne operative Daten; die eigentliche Anwendung läuft aus dem Serverpaket. Reale Schuldaten, institutionelle Integrationen und Praktikumsergebnisse werden nicht dargestellt.",
+      scope: "Diese Fallstudie beschreibt die veröffentlichte Architektur von Version 3.3.0 am Commit 0a99a9f und ihre Self-Hosting-Kontrollen. GitHub Pages ist eine Produkttour; die operative Anwendung läuft aus dem Serverpaket. Reale Schuldaten, institutionelle Integrationen und Ergebnisse werden nicht dargestellt.",
     }),
     "jdoor-security-lab": localize("jdoor-security-lab", {
       category: "Sichere Fernunterstützung",
@@ -1326,26 +1328,27 @@ export const labsLocales = {
     "djenis-ai-agent": localize("djenis-ai-agent", {
       category: "Systèmes agentiques",
       title: "Construire une automatisation qui expose ses permissions avant d’agir",
-      summary: "DjenisAiAgent observe une interface Windows ou web, demande une action Gemini structurée, la confronte aux permissions du runtime puis transmet le résultat vérifié au tour suivant.",
+      summary: "DjenisAiAgent automatise un ordinateur avec un modèle déjà installé chez l’opérateur. Ollama ou un serveur local compatible OpenAI propose une seule action structurée ; la politique de l’hôte décide si elle peut s’exécuter et une nouvelle observation en vérifie le résultat.",
       readMinutes: "12",
-      facts: [["Produit", "Agent expérimental d’utilisation de l’ordinateur"], ["Rôle", "Architecture, couche de politique et implémentation"], ["Runtime", "Windows natif ou Docker orienté navigateur"], ["État", "Alpha fonctionnelle aux capacités bornées"]],
-      evidence: { title: "Registre des preuves", intro: "Les affirmations reposent sur des limites vérifiées, pas sur des anecdotes d’autonomie :", items: [
-        ["Vérification", "155 déclarations de tests unitaires et un seuil de couverture du dépôt de 70 %."],
-        ["Limites des tâches", "Par défaut : 50 tours, 900 secondes par tâche, 120 secondes par requête modèle et 45 secondes par action."],
-        ["Plan de contrôle", "Jeton opérateur d’au moins 24 caractères, huit WebSockets et deux flux natifs au maximum par défaut."],
-        ["Limite", "Gemini est une dépendance cloud ; Docker ne contrôle pas le bureau hôte et la fiabilité native dépend de l’accessibilité et du focus."],
+      facts: [["Produit", "Agent expérimental d’utilisation de l’ordinateur"], ["Rôle", "Architecture, couche de politique et implémentation"], ["Inférence", "Modèle local déjà présent, sans repli hébergé"], ["Runtime", "Windows natif ou Docker navigateur isolé"]],
+      evidence: { title: "Registre des preuves", intro: "L’implémentation actuelle se mesure à des limites exécutables, pas à des anecdotes d’autonomie :", items: [
+        ["Vérification", "Le code source vérifié réussit plus de 600 tests ainsi que les contrôles Ruff, mypy, Bandit et l’audit des dépendances."],
+        ["Frontière du modèle", "L’inférence utilise un modèle présent dans Ollama ou un serveur local compatible OpenAI. Aucun identifiant de fournisseur hébergé, repli distant ou téléchargement automatique n’existe."],
+        ["Preuve d’exécution", "Un seul appel d’outil déclaré doit franchir schéma et politique. Après une modification, la fin exige une observation fraîche et différente ou une lecture ciblée de la ressource."],
+        ["Frontière réseau", "En natif, l’inférence reste sur loopback. Dans Docker, agent et modèle restent sur un réseau de contrôle interne et seule une passerelle durcie est publiée."],
+        ["Frontière bureau", "Docker pilote son navigateur Selenium isolé, pas le bureau hôte. La fiabilité native dépend encore de l’accessibilité et du focus."],
       ]},
       starting: { title: "Le problème d’automatisation", paragraphs: ["Une boucle computer use devient dangereuse si suggestion du modèle et autorité du programme se confondent. Un prompt décrit un objectif ; il ne doit pas accorder silencieusement l’accès aux fichiers, au shell ou au bureau.", "Le projet devait n’exposer que les capacités réellement disponibles, appliquer le niveau de permission choisi par l’opérateur et exiger une observation après chaque action."] },
       constraints: { title: "Les limites imposées par le runtime", intro: "L’agent repose sur des limites explicites :", items: ["Le niveau observe par défaut fournit des contrôles du runtime et un accès en lecture seule aux chemins approuvés.", "Les outils bureau, navigateur, fichiers et système n’apparaissent que si runtime et niveau de permission les autorisent.", "Il n’existe pas de shell généraliste. Le lanceur borné invoque directement un seul exécutable en allowlist et refuse pipelines, substitutions et chaînage.", "Une tâche n’est terminée qu’après une observation post-action vérifiée."] },
       diagnosis: { title: "Séparer raisonnement et autorité", paragraphs: ["Le modèle choisit l’action déclarée qu’il souhaite demander. Il ne décide ni de sa permission, ni de sa durée, ni de la quantité de sortie ajoutée au prompt suivant.", "J’ai placé ces décisions dans un registre d’outils protégé par politique et une orchestration bornée. Les outils inconnus échouent, les tentatives et la durée sont limitées, et les événements d’audit sont expurgés avant écriture."] },
-      architecture: { title: "Une boucle qui observe, décide, autorise et vérifie", intro: "La perception capture une image ou l’arbre d’accessibilité. Gemini renvoie un appel de fonction déclaré. La politique vérifie runtime, niveau et allowlists avant exécution. L’observation obtenue devient la preuve du tour suivant.", labels: ["PERCEPTION", "GEMINI TOOL CALL", "CONTRÔLE DE POLITIQUE", "ACTION", "OBSERVATION VÉRIFIÉE"], caption: "Le modèle propose ; le runtime décide de l’autorité réelle." },
+      architecture: { title: "Une boucle qui observe, décide, autorise et vérifie", intro: "La perception capture une image ou l’arbre d’accessibilité. Le modèle local renvoie exactement un appel déclaré. L’hôte vérifie sa forme, le runtime, le niveau et les allowlists avant exécution ; une nouvelle observation devient la preuve du tour suivant.", labels: ["PERCEPTION", "MODÈLE LOCAL", "CONTRÔLE DE POLITIQUE", "ACTION", "OBSERVATION VÉRIFIÉE"], caption: "Le modèle propose ; le runtime décide de l’autorité réelle." },
       technology: {
         title: "Pourquoi ces technologies",
         intro: "Les technologies séparent le raisonnement du modèle de l’autorité réellement accordée sur l’ordinateur.",
         items: [
-          { choice: "Python pour l’orchestration.", why: "Il permet d’intégrer rapidement Gemini, l’automatisation Windows et le navigateur autour de schémas d’outils déclarés, sans typage strict, et d’un registre de capacités gouverné par des politiques.", alternative: "Une implémentation entièrement native ou compilée allégerait une partie du packaging, mais fragmenterait les intégrations et ralentirait l’expérience.", cost: "Nous acceptons un runtime et des dépendances Python à verrouiller, distribuer et contrôler." },
+          { choice: "Python pour l’orchestration.", why: "Il relie automatisation Windows, Selenium, FastAPI et client de modèle local borné à des schémas d’outils déclarés et à un registre gouverné par politiques.", alternative: "Une implémentation entièrement native ou compilée allégerait une partie du packaging, mais fragmenterait les intégrations et ralentirait l’expérience.", cost: "Nous acceptons un runtime et des dépendances Python à verrouiller, distribuer et contrôler." },
           { choice: "UI Automation et Selenium comme canaux principaux.", why: "Éléments accessibles, rôles et DOM fournissent des cibles sémantiques plus stables qu’une position à l’écran.", alternative: "Pixels et coordonnées seraient fragiles face au DPI, au focus, à la mise en page et au redimensionnement.", cost: "Nous acceptons les différences entre plateformes et des fallbacks limités pour Canvas ou les contrôles non accessibles." },
-          { choice: "Une seule action Gemini structurée.", why: "Chaque tour propose une action déclarée qui passe par les niveaux de permission et les allowlists avant exécution ; délais et état observé au tour suivant bornent et vérifient le résultat.", alternative: "Une commande libre imposerait un parsing ambigu et accroîtrait le risque de chaînage ou d’instructions imprévues.", cost: "Nous acceptons la dépendance au cloud, la latence et un vocabulaire d’actions volontairement restreint." },
+          { choice: "Une seule action structurée du modèle local.", why: "Chaque tour propose une action déclarée qui passe par les niveaux de permission et les allowlists avant exécution ; délais et état observé au tour suivant bornent et vérifient le résultat.", alternative: "Une commande libre imposerait un parsing ambigu et accroîtrait le risque de chaînage ou d’instructions imprévues.", cost: "Chaque capacité demande un schéma maintenu ; le modèle local doit accepter les tool calls et, pour le parcours par défaut, les images." },
           { choice: "Une console FastAPI locale.", why: "L’opérateur peut inspecter permissions et activité sur la même machine, dans une frontière loopback authentifiée.", alternative: "Un plan de contrôle hébergé transférerait captures, journaux et autorité opérationnelle à un service distant et exigerait une isolation multi-tenant.", cost: "Nous acceptons la gestion locale du processus, des jetons et des sessions, sans orchestration distante intégrée." },
         ],
       },
@@ -1355,37 +1358,37 @@ export const labsLocales = {
         { title: "Authentifier la console locale", body: "Le plan de contrôle échange un jeton opérateur contre une session HttpOnly courte et limite origine, débit, uploads et concurrence.", tradeoff: "Il reste local et mono-processus, pas un service public multi-tenant." },
       ]},
       delivery: { title: "Vérification du runtime et des publications", paragraphs: ["Les tests portables tournent sous Linux et la CI Windows couvre les fonctions de bureau. Analyse statique, audit des dépendances, validation du site et smoke tests Docker vérifient les autres chemins de livraison.", "Les conteneurs ne sont promus par digest qu’après contrôles des vulnérabilités, SBOM et provenance. Le contrôle natif reste hors de Docker ; le site Pages est une présentation, pas une console opérateur."] },
-      result: { title: "Ce que prouve l’alpha", paragraphs: ["L’agent utilise des outils déclarés dans une boucle dont l’autorité est visible et bornée en dehors de la réponse du modèle.", "Il ne revendique pas d’autonomie générale. Qualité de l’interface, focus, latence tierce et surfaces Canvas limitent encore sa fiabilité ; il doit rester dans un environnement jetable ou soigneusement borné."] },
-      scope: "Cette étude reflète l’alpha documentée. Elle ne revendique ni fonctionnement autonome sûr, ni protection complète contre les options propres à un programme autorisé, ni compatibilité avec toutes les applications Windows.",
+      result: { title: "Ce que prouve l’alpha", paragraphs: ["L’agent utilise des outils bureau et navigateur déclarés sans envoyer son contexte de raisonnement à un modèle hébergé. Schémas, capacités du runtime, permissions et preuves restent imposés par l’hôte.", "Il ne revendique pas d’autonomie générale. L’inférence locale retire une frontière externe des données, pas les risques du contrôle informatique. Interface, focus et surfaces Canvas limitent encore sa fiabilité ; le projet doit donc rester dans un environnement jetable ou strictement isolé."] },
+      scope: "Cette étude reflète le commit 946160f. Elle ne revendique ni fonctionnement autonome sûr, ni protection complète contre les options d’un programme autorisé, ni prise en charge de tout modèle local, ni contrôle du bureau hôte depuis Docker.",
     }),
     "dig-gopher-explorer": localize("dig-gopher-explorer", {
       category: "Outils de protocole",
       title: "Faire de Gopher un outil local borné et inspectable",
       summary:
-        "DIG 3.0.0 est un vrai client Gopher décliné en trois surfaces bien séparées : une CLI sur TCP, un explorateur web connecté derrière une passerelle locale same-origin et un site GitHub Pages alimenté uniquement par des fixtures. Le cœur partagé traite les réponses RFC 1436 et les adresses RFC 4266 sans prétendre qu’une page statique peut ouvrir des sockets bruts.",
+        "DIG 3.2.0 ouvre de vraies ressources Gopher depuis une CLI, un atelier web local et une application Android autonome. La PWA garde une fixture vérifiée hors ligne ; le trafic web réel passe toujours par la passerelle same-origin.",
       readMinutes: "13",
       facts: [
-        ["Produit", "CLI Gopher, passerelle locale et explorateur web"],
+        ["Produit", "CLI Gopher, explorateur local, PWA hors ligne et app Android"],
         ["Protocole", "Requêtes, menus et texte RFC 1436 ; URL et recherche RFC 4266"],
         ["Sécurité", "Politique de destination restrictive avec DNS pinning"],
-        ["État", "Version open source 3.0.0 sous licence MIT"],
+        ["État", "Version open source 3.2.0 sous licence MIT"],
       ],
       evidence: {
         title: "Registre des preuves",
-        intro: "Les affirmations sur la version 3.0.0 reposent sur des contrôles exécutables et des limites visibles :",
+        intro: "Les affirmations sur la version 3.2.0 reposent sur des contrôles exécutables et des limites visibles :",
         items: [
-          ["Vérification", "90 tests Node.js et quatre E2E Chromium réussissent, y compris le parcours connecté complet dans une fenêtre de 320 px exactement."],
+          ["Vérification", "Le code source vérifié passe 102 tests Node.js et 15 parcours web sous Chromium et WebKit mobile ; un test est volontairement ignoré sur la plateforme où il ne s’applique pas."],
+          ["Android", "L’application Capacitor 8 prend en charge Android 7/API 24 et plus, cible l’API 36 et utilise un transport TCP natif direct au lieu de charger le site hébergé."],
           ["Politique réseau", "Le mode hébergé exige un jeton d’accès, refuse un nom d’hôte dès qu’une réponse DNS n’est pas publique et se connecte uniquement à l’adresse déjà validée."],
           ["Intégrité des sorties", "La CLI écrit dans un fichier temporaire du même répertoire puis rend le chemin final visible de façon atomique ; aucun octet binaire n’est imprimé dans un terminal interactif."],
-          ["Runtime", "L’audit des dépendances signale zéro vulnérabilité et l’image Docker de production réussit son smoke test en tant que processus non privilégié."],
-          ["Frontière publique", "GitHub Pages sert l’explorateur uniquement avec des fixtures versionnées. Les requêtes Gopher réelles passent nécessairement par la passerelle same-origin."],
+          ["Frontière hors ligne", "La PWA met en cache l’interface statique et le contenu de démonstration vérifié, jamais les réponses API. Au retour de la connexion, elle ne reprend qu’une session de passerelle auparavant active."],
         ],
       },
       starting: {
         title: "L’écart entre un schéma de protocole et un client utile",
         paragraphs: [
           "L’ancienne interface pouvait illustrer un menu Gopher, mais pas prouver l’essentiel : comment un selector devient des octets sur un socket, où se termine le framing du texte ou ce qui se passe lorsqu’un serveur distant se bloque, annonce un mauvais type ou renvoie du binaire.",
-          "La version 3.0.0 reconstruit le projet autour du véritable chemin de requête. La CLI ouvre des connexions TCP bornées. Le navigateur local utilise le même client par une passerelle same-origin. Pages reste limité aux fixtures, car le JavaScript du navigateur ne peut pas créer le socket TCP brut dont Gopher a besoin.",
+          "La version 3.2.0 conserve le chemin Node.js borné de la CLI et de la passerelle, puis ajoute un transport Android natif pour l’usage mobile direct. L’édition web est installable et sûre hors ligne ; Pages reste sur fixtures car le navigateur ne peut pas ouvrir de socket TCP brut.",
         ],
       },
       constraints: {
@@ -1406,11 +1409,11 @@ export const labsLocales = {
         ],
       },
       architecture: {
-        title: "Un chemin d’accès, deux interfaces connectées",
+        title: "Deux transports bornés, quatre surfaces honnêtes",
         intro:
-          "Une URL Gopher et son éventuelle recherche passent par la validation d’adresse, la politique de destination et une connexion TCP bornée vers l’adresse épinglée. La réponse entre ensuite dans le parser RFC partagé. La CLI l’affiche ou l’enregistre directement ; la passerelle same-origin renvoie un résultat typé à l’explorateur.",
-        labels: ["URL + RECHERCHE", "POLITIQUE CIBLE", "TCP ÉPINGLÉ", "PARSER RFC", "CLI + EXPLORATEUR"],
-        caption: "La CLI et l’explorateur local partagent le vrai chemin du protocole ; Pages s’arrête à la frontière des fixtures.",
+          "CLI et explorateur local partagent politique, TCP épinglé et parser Node.js. Android applique nativement les mêmes limites de destination publique et de réponse, puis remet des octets typés à l’explorateur embarqué. PWA et Pages restent sur la fixture sans passerelle authentifiée.",
+        labels: ["URL + RECHERCHE", "POLITIQUE CIBLE", "TCP NODE / ANDROID", "PARSER RFC", "CLI + EXPLORATEUR"],
+        caption: "Chaque surface dit si ses octets viennent du TCP direct, de la passerelle same-origin ou de la fixture hors ligne.",
       },
       technology: {
         title: "Pourquoi ces technologies",
@@ -1419,7 +1422,7 @@ export const labsLocales = {
           { choice: "Une passerelle TCP locale en Node.js.", why: "Le navigateur ne peut pas ouvrir de socket Gopher brut ; la passerelle applique résolution, politique de destination, délais et limites de taille avant la connexion.", alternative: "Un proxy générique ou distant offrirait une surface SSRF et de relais bien plus large que ne l’exige le protocole.", cost: "Nous acceptons un processus Node local et renonçons explicitement à prendre en charge des protocoles arbitraires." },
           { choice: "Des endpoints connectés, bornés et same-origin.", why: "L’explorateur utilise la passerelle sous la même origine, avec des requêtes et réponses maintenues dans des contrats étroits.", alternative: "Un proxy public cross-origin pourrait servir au scan, à l’accès aux réseaux privés ou à du trafic imprévu.", cost: "Nous acceptons que le site public n’affiche que des fixtures et que l’accès connecté exige l’installation locale." },
           { choice: "Préserver les octets jusqu’à la frontière de présentation.", why: "Gopher transporte texte, menus et données binaires ; garder les octets intacts évite d’altérer téléchargements ou terminateurs du protocole.", alternative: "Tout décoder en amont imposerait un jeu de caractères, pourrait corrompre les payloads binaires et confondre contenu et transport.", cost: "Nous acceptons des buffers, métadonnées de type et limites explicites plus exigeants à gérer." },
-          { choice: "Des fixtures de contrat et Playwright.", why: "URI, menus, octets, politique réseau et surfaces web deviennent reproductibles sans dépendre de serveurs Gopher externes.", alternative: "Les tests manuels ne couvriraient pas fiablement les cas limites, régressions navigateur et blocages SSRF.", cost: "Nous acceptons l’entretien des fixtures et des navigateurs en CI, sans prétendre vérifier la fiabilité de chaque serveur Internet." },
+          { choice: "Un transport Capacitor natif sous Android.", why: "L’explorateur embarqué ouvre des connexions TCP bornées et conserve ses assets dans l’APK ; sa politique ne propose aucun contournement vers les réseaux privés.", alternative: "Embarquer le site hébergé laisserait la dépendance à la passerelle, et installer une PWA ne donne pas accès aux sockets bruts.", cost: "Nous acceptons une frontière Kotlin, le SDK, la signature Android et des tests de parité avec la politique Node.js." },
         ],
       },
       decisions: {
@@ -1444,21 +1447,21 @@ export const labsLocales = {
         ],
       },
       delivery: {
-        title: "Comment la version 3.0.0 est vérifiée",
+        title: "Comment la version 3.2.0 est vérifiée",
         paragraphs: [
-          "Les 90 tests Node.js couvrent le parsing RFC, de vraies fixtures TCP, la politique réseau, le contrat HTTP, la sortie atomique de la CLI, les ressources statiques et les règles de publication. Quatre parcours Chromium utilisent l’explorateur par la passerelle locale et vérifient recherche, historique, favoris, inspection brute, export, téléchargement binaire et mise en page à 320 px.",
-          "Le contrôle de publication exécute aussi un audit des dépendances avec zéro vulnérabilité et démarre l’image Docker non privilégiée pour un smoke test du runtime. Le projet est distribué sous MIT ; Pages reste statique, tandis que le conteneur ne lance que la passerelle hébergée authentifiée.",
+          "Les 102 tests Node.js couvrent parsing RFC, fixtures TCP, politique réseau, contrat HTTP, sortie atomique, état PWA, bundle Android et contrats de publication. Quinze parcours Playwright vérifient Chromium et WebKit mobile, dont navigation réelle et reprise hors ligne.",
+          "La CI Android compile et analyse le projet natif, exécute ses tests et vérifie les assets embarqués. Le contrôle couvre aussi archives déterministes, audit des dépendances, smoke test du conteneur et contrat de l’APK signé.",
         ],
       },
       result: {
         title: "Ce qui fonctionne aujourd’hui",
         paragraphs: [
-          "Dans le terminal, on peut récupérer de vrais menus, textes, résultats de recherche et types binaires courants, vérifier taille et empreinte ou enregistrer les octets exacts sans exposer un fichier cible partiel. L’explorateur local ajoute au même parcours l’historique, les favoris, les formulaires de recherche, l’inspection brute, l’export JSON et le téléchargement binaire.",
+          "Dans le terminal ou l’application Android, on peut récupérer menus, textes, recherches et types binaires réels. L’explorateur local ajoute historique, favoris, recherche, inspection brute, export JSON et téléchargement via la passerelle ; la PWA installée garde la fixture hors ligne.",
           "DIG ne transforme pas Gopher en HTTP. Le trafic vers le serveur Gopher reste en clair, Pages ne récupère aucune ressource réelle, et Gopher+, TLS, les sessions Telnet ainsi que le crawling récursif restent hors du contrat pris en charge.",
         ],
       },
       scope:
-        "Cette étude décrit l’implémentation vérifiée de la version 3.0.0 : framing RFC 1436 des menus et textes, URL et recherche RFC 4266, types binaires courants, TCP borné, passerelle same-origin et explorateur Pages sur fixtures. UTF-8 est l’encodage pris en charge pour les champs URL ; le projet ne fournit ni authentification du serveur ni transport Gopher chiffré.",
+        "Cette étude décrit la version 3.2.0 vérifiée : framing RFC 1436, URL et recherche RFC 4266, types binaires, transports TCP bornés en Node.js et Android, passerelle same-origin et PWA hors ligne sur fixture. Gopher reste non authentifié et non chiffré.",
     }),
     integradraw: localize("integradraw", {
       category: "Mathématiques computationnelles", title: "Maintenir deux outils d’intégration numérique cohérents grâce à un corpus partagé", summary: "IntegraDraw est un atelier Java desktop et TypeScript Canvas qui compare sommes des milieux et des trapèzes à une référence Simpson. Les deux runtimes partagent des cas versionnés et des tolérances explicites.",
@@ -1485,14 +1488,14 @@ export const labsLocales = {
       scope: "IntegraDraw est un outil pédagogique exploratoire. Il ne fournit ni intégration symbolique, ni preuve, ni gestion garantie des discontinuités, ni résultat exact pour une fonction arbitraire.",
     }),
     "vector-placement-operations": localize("vector-placement-operations", {
-      category: "Logiciel de gestion scolaire", title: "Concevoir un système de stages que chaque école peut héberger et maîtriser", summary: "VECTOR 3.0.0 est un système white label de gestion des stages qu’une école peut exploiter sur sa propre infrastructure. Cohortes, élèves, organismes d’accueil, affectations, heures, suivis et justificatifs partagent un même flux côté serveur, avec des règles d’accès appliquées par l’API.",
+      category: "Logiciel de gestion scolaire", title: "Concevoir un système de stages que chaque école peut héberger et maîtriser", summary: "VECTOR 3.3.0 est un système en marque blanche exploité sur l’infrastructure d’une école. Des règles de programme versionnées définissent les critères d’achèvement, la vue par cohorte révèle les élèves sans affectation et une file adaptée à chaque rôle transforme les retards en actions concrètes.",
       readMinutes: "14",
-      facts: [["Produit", "Gestion white label des stages en auto-hébergement"], ["Rôle", "Produit, architecture et implémentation en clean room"], ["Déploiement", "Une école par installation"], ["État", "Version open source 3.0.0 sous licence MIT"]],
-      evidence: { title: "Registre des preuves", intro: "Le dépôt de la version 3.0.0 rattache ses promesses produit à des contrôles concrets :", items: [["Accès", "Le serveur vérifie les droits des administrateurs, coordinateurs, tuteurs et lecteurs. L’administrateur initial doit remplacer son mot de passe temporaire avant d’accéder aux données opérationnelles."], ["Données", "SQLite fonctionne en mode WAL derrière des migrations explicites. Les contrôles de révision empêchent un opérateur d’écraser silencieusement les changements d’un autre."], ["Flux", "Les critères de préparation et les transitions couvrent les stages, les heures validées ou annulées, les suivis et les justificatifs, qui peuvent être remplacés sans effacer leur historique."], ["Gouvernance", "Les métadonnées d’audit excluent les champs personnels. La rétention respecte les blocages placés sur les élèves et exige l’empreinte exacte de l’aperçu avant chaque lot de suppression limité."], ["Livraison", "Le parcours de publication construit une archive source reproductible, la vérifie après extraction et teste sauvegarde, inspection, restauration et compactage sur l’application empaquetée."]] },
+      facts: [["Produit", "Gestion white label des stages en auto-hébergement"], ["Rôle", "Produit, architecture et implémentation en clean room"], ["Déploiement", "Une école par installation"], ["État", "Version open source 3.3.0 sous licence MIT"]],
+      evidence: { title: "Registre des preuves", intro: "Le dépôt de la version 3.3.0 rattache ses promesses produit à des contrôles concrets :", items: [["Politique de programme", "Les coordinateurs publient des versions immuables avec heures cibles, minimum de suivis et justificatifs requis. Les stages existants gardent leur version."], ["Couverture de cohorte", "La vue par période sépare élèves couverts, sans stage et affectations en conflit, puis préremplit un nouveau stage pour un élève non couvert."], ["File opérationnelle", "Justificatifs en retard, heures à vérifier, dates de stage et tuteurs manquants suivent le rôle et le fuseau de l’école avec pagination stable et confidentielle."], ["Sessions", "Le serveur expire les sessions inactives. Le bootstrap de production s’arrête avant l’écoute tant que le secret administrateur à usage unique n’a pas été retiré."], ["Vérification", "Le code source vérifié exécute 89 contrôles Node.js, dont un skip lié à la plateforme sous Windows, et 22 parcours Playwright avec des vérifications dédiées à 320 px pour l’espace de travail et la présentation. Des builds indépendants sous Ubuntu et Windows contrôlent la reproductibilité."]] },
       starting: { title: "Le problème opérationnel", paragraphs: ["La gestion des stages ne se résume pas à un tableau de bord. Une école coordonne des cohortes, des élèves, des organismes, des tuteurs, des dates, des heures, des suivis et des justificatifs signés. Chaque rôle a besoin d’une vue différente du même dossier, et une correction ne doit pas effacer ce qui l’a précédée.", "L’ancienne implémentation scolaire ne pouvait pas servir de base à un produit. J’ai reconstruit VECTOR depuis zéro en ne gardant que la compréhension du métier. Aucun code historique, dossier personnel, nom ou asset de l’ancien projet n’a été repris dans le nouveau dépôt."] },
-      constraints: { title: "Ce qu’un système maîtrisé par l’école doit garantir", intro: "L’architecture part de quatre contraintes concrètes :", items: ["Chaque installation appartient à une seule école, qui contrôle sa base, son identité visuelle, ses sauvegardes et son déploiement.", "Les droits et le périmètre des tuteurs doivent être appliqués par le serveur avant toute sélection, tout comptage ou tout export.", "Les heures validées et les justificatifs signés ont besoin de parcours de correction explicites qui préservent le dossier initial.", "Imports, exports, rétention et restauration doivent être bornés, vérifiables et relançables sans risque après un échec."] },
+      constraints: { title: "Ce qu’un système maîtrisé par l’école doit garantir", intro: "L’architecture part de quatre contraintes concrètes :", items: ["Chaque installation appartient à une seule école, qui contrôle sa base, son identité visuelle, ses sauvegardes et son déploiement.", "Les droits et le périmètre des tuteurs doivent être appliqués par le serveur avant toute sélection, tout comptage ou tout export.", "Chaque stage garde la version du programme qui a fixé heures, suivis et justificatifs ; les corrections préservent le dossier opérationnel initial.", "Imports, exports, rétention et restauration doivent être bornés, vérifiables et relançables sans risque après un échec."] },
       diagnosis: { title: "Définir d’abord la frontière de propriété", paragraphs: ["Déplacer davantage d’état dans le navigateur aurait laissé les questions difficiles intactes. Les contrôles de rôle auraient pu rester cachés dans l’interface, toute l’école être chargée en mémoire et un champ modifié être traité comme si sa valeur précédente n’avait jamais existé.", "VECTOR consacre chaque installation à une seule école au lieu de construire un service multi-tenant partagé. La responsabilité opérationnelle est nette, et les sauvegardes, la rétention et le white label restent plus simples à raisonner. Le projet distribue un logiciel, pas une plateforme cloud administrée."] },
-      architecture: { title: "Un serveur compact aux frontières explicites", intro: "L’espace de travail web appelle une API Express qui gère authentification, rôles et transitions. SQLite conserve les dossiers d’une école en mode WAL. Des curseurs opaques AES-GCM lient la pagination à l’école, au périmètre et aux filtres actifs ; des recherches bornées évitent de charger des tables entières dans les formulaires.", labels: ["ESPACE DE TRAVAIL WEB", "POLICY LAYER EXPRESS", "SQLITE WAL", "AUDIT + RÉTENTION", "SAUVEGARDE + RELEASE"], caption: "Le serveur décide ce qu’un opérateur peut consulter et modifier ; le navigateur présente cette décision." },
+      architecture: { title: "Un serveur compact aux frontières explicites", intro: "L’espace web appelle une API Express qui gère authentification, rôles, versions de programme et transitions. SQLite conserve les dossiers en WAL. Des curseurs AES-GCM lient couverture et attention à l’école, au rôle, aux filtres et à une position stable sans en révéler le contenu.", labels: ["ESPACE DE TRAVAIL WEB", "POLICY LAYER EXPRESS", "VERSIONS PROGRAMME", "SQLITE WAL", "AUDIT + RESTAURATION"], caption: "Le serveur décide ce qu’un opérateur peut consulter et modifier ; le navigateur présente cette décision." },
       technology: {
         title: "Pourquoi ces technologies",
         intro: "La stack est dimensionnée pour une école qui possède et exploite sa propre installation.",
@@ -1503,10 +1506,10 @@ export const labsLocales = {
           { choice: "Docker avec des outils explicites de sauvegarde et restauration.", why: "L’établissement obtient une installation reproductible et un parcours de reprise vérifiable sur sa propre infrastructure.", alternative: "Une plateforme gérée simplifierait les opérations, mais déplacerait le contrôle et la dépendance vers un fournisseur.", cost: "Nous acceptons que l’opérateur surveille le stockage, teste les restaurations et planifie les mises à jour." },
         ],
       },
-      decisions: { title: "Les choix qui sécurisent le travail quotidien", intro: "Le produit préfère des règles visibles à un état caché mais pratique.", items: [{ title: "Appliquer le périmètre avant la pagination", body: "Chaque liste applique l’école et le rôle avant sa limite. Les curseurs opaques authentifiés lient ce périmètre aux filtres et à une position de tri stable. Les recherches ne renvoient qu’un petit ensemble de dossiers admissibles.", tradeoff: "L’interface ne peut pas télécharger une table sans limite en une requête. L’extraction complète passe par un export filtré séparé, plafonné à 10 000 lignes." }, { title: "Corriger les justificatifs sans réécrire l’historique", body: "Les critères de préparation gouvernent les transitions du stage. Les heures sont validées ou annulées ; un document signé est corrigé par un nouveau dossier qui le remplace, jamais par une modification sur place.", tradeoff: "L’opérateur suit une étape explicite, mais le contrôle peut reconstituer toute la suite des décisions." }, { title: "Faire échouer proprement les opérations massives", body: "Un import CSV valide le fichier entier dans une seule transaction. L’aperçu de rétention montre dossiers bloqués, travail restant et empreinte exacte ; l’exécution refuse un aperçu périmé et supprime par lots bornés.", tradeoff: "Les changements administratifs importants demandent un aperçu délibéré et parfois plusieurs passages. Cela vaut mieux qu’un import partiel ou une suppression massive non relue." }] },
+      decisions: { title: "Les choix qui sécurisent le travail quotidien", intro: "Le produit préfère des règles visibles à un état caché mais pratique.", items: [{ title: "Versionner les règles, pas seulement le stage", body: "Une version de programme publiée est immuable. Les nouvelles règles valent pour les nouvelles affectations ; un stage existant garde heures cibles, minimum de suivis et justificatifs de son départ.", tradeoff: "Une correction exige une nouvelle version et une réaffectation explicite des stages intacts. La fin d’un stage ne change jamais rétroactivement." }, { title: "Montrer les trous avant qu’ils deviennent des exceptions", body: "La couverture est calculée par cohorte et période et distingue affectation valide, absence et chevauchement. Une ligne non couverte ouvre un stage prérempli sans perdre le contexte.", tradeoff: "La vue reste volontairement opérationnelle, pas un moteur de reporting général. Elle reste ainsi actionnable et correcte pour chaque rôle." }, { title: "Dériver l’attention des dossiers déjà possédés", body: "La file déduit le travail à faire des justificatifs, heures, dates et tuteurs au lieu de maintenir une seconde liste. Le serveur applique le rôle avant comptage et pagination.", tradeoff: "La file n’accepte pas de rappels arbitraires : elle reste cohérente avec le dossier de stage et évite une seconde source de vérité." }] },
       delivery: { title: "Auto-hébergement et restauration", paragraphs: ["Chaque école peut définir nom, couleurs, logo et coordonnées de support avec des révisions qui protègent les modifications concurrentes. L’image Docker s’exécute sans privilège et accepte un système de fichiers racine en lecture seule. Les commandes health et doctor signalent les problèmes de configuration et de stockage avant l’usage courant.", "Les outils créent un instantané SQLite privé, l’inspectent sans démarrer l’application, le restaurent par un parcours de maintenance protégé et compactent les données conservées si nécessaire. L’automatisation construit deux fois l’archive source, vérifie inventaire et commit, recherche les secrets, installe depuis l’artefact extrait et y exécute le parcours d’acceptation."] },
-      result: { title: "Ce que VECTOR prend en charge aujourd’hui", paragraphs: ["Une école peut gérer cohortes, élèves, organismes, périodes et affectations ; valider les heures ; enregistrer les suivis ; préserver l’historique des documents ; examiner les événements d’audit dans son périmètre ; importer les données de façon atomique et exporter une vue opérationnelle filtrée. Un administrateur peut aussi placer un élève sous blocage de rétention avant la suppression d’anciens dossiers.", "VECTOR est un logiciel open source auto-hébergé. Ce n’est pas un SaaS administré et il ne revendique ni certification de conformité, ni haute disponibilité, ni SSO. Une institution qui en a besoin devra encore traiter ces sujets côté produit et déploiement."] },
-      scope: "Cette étude décrit l’architecture versionnée 3.0.0 et ses contrôles d’auto-hébergement. GitHub Pages présente le produit sans données opérationnelles ; l’application elle-même s’exécute depuis le paquet serveur. Aucun dossier scolaire réel, aucune intégration institutionnelle et aucun résultat de stage n’y sont représentés.",
+      result: { title: "Ce que VECTOR prend en charge aujourd’hui", paragraphs: ["Une école peut publier ses règles, contrôler la couverture d’une cohorte, créer un stage depuis un trou de planification et traiter une file par rôle. Le même dossier conserve heures, suivis, historique des preuves, audit, import atomique, export filtré et rétention gouvernée.", "VECTOR est un logiciel open source auto-hébergé. Ce n’est pas un SaaS administré et il ne revendique ni certification de conformité, ni haute disponibilité, ni SSO. Une institution qui en a besoin devra encore traiter ces sujets côté produit et déploiement."] },
+      scope: "Cette étude décrit l’architecture publiée avec la version 3.3.0 au commit 0a99a9f et ses contrôles d’auto-hébergement. GitHub Pages est un tour du produit ; l’application opérationnelle s’exécute depuis le paquet serveur. Aucun dossier réel, aucune intégration institutionnelle ni aucun résultat n’y sont représentés.",
     }),
     "jdoor-security-lab": localize("jdoor-security-lab", {
       category: "Assistance à distance sécurisée",

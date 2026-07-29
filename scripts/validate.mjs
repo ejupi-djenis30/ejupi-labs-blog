@@ -194,6 +194,12 @@ for (const localeKey of localeOrder) {
       if (definition?.kind === "labs" && !html.includes(definition.projectUrl)) errors.push(`${label} is missing its working product link.`);
       if (definition?.kind === "labs") {
         if (!html.includes('class="evidence-citation"')) errors.push(`${label} is missing its source citation.`);
+        if (!html.includes(`data-source-state="${definition.sourceState}"`)) errors.push(`${label} has the wrong visible source state.`);
+        const sourceStateLabel =
+          definition.sourceState === "release"
+            ? editorial.verifiedRelease
+            : editorial.verifiedCommitSnapshot;
+        if (!html.includes(sourceStateLabel)) errors.push(`${label} is missing its localized source-state label.`);
         if (!html.includes(`href="${definition.sourceUrl}"`)) errors.push(`${label} has the wrong immutable source URL.`);
         if (!html.includes(definition.sourceRef)) errors.push(`${label} is missing its source reference.`);
         if (!html.includes(`<time datetime="${definition.verifiedAt}">`)) errors.push(`${label} is missing its evidence verification date.`);
@@ -465,13 +471,13 @@ if (!Array.isArray(catalog.cases) || catalog.cases.length !== caseDefinitions.le
       errors.push(`Machine-readable catalog metadata differs for ${definition.slug}.`);
     }
     if (definition.kind === "labs") {
-      for (const key of ["projectUrl", "sourceRef", "sourceUrl", "verifiedAt"]) {
+      for (const key of ["projectUrl", "sourceState", "sourceRef", "sourceUrl", "verifiedAt"]) {
         if (entry[key] !== definition[key]) {
           errors.push(`Machine-readable catalog has the wrong ${key} for ${definition.slug}.`);
         }
       }
     } else if (
-      ["projectUrl", "sourceRef", "sourceUrl", "verifiedAt"].some(
+      ["projectUrl", "sourceState", "sourceRef", "sourceUrl", "verifiedAt"].some(
         (key) => entry[key] !== undefined,
       )
     ) {

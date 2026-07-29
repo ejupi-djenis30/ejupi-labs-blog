@@ -78,6 +78,13 @@ The production hostname is declared as a Cloudflare Custom Domain in `wrangler.j
 npm run deploy
 ```
 
+The deploy lifecycle first checks every Labs commit against GitHub. Entries marked
+`release` must also have a tag that resolves to that exact commit and a published,
+non-draft, non-prerelease Release. Entries marked `snapshot` stop at the immutable
+commit check. `GH_TOKEN` or `GITHUB_TOKEN` is optional, but a dedicated read-only
+token avoids the low anonymous API rate limit. Ordinary `test` and `check` runs
+mock this boundary and never contact GitHub.
+
 `workers_dev` and preview URLs are disabled so the custom domain remains the only public production origin.
 
 ## Licensing

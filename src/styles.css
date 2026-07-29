@@ -1129,6 +1129,26 @@ li {
   text-transform: uppercase;
 }
 
+.evidence-citation__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink);
+}
+
+.evidence-citation__state::before {
+  width: 0.46rem;
+  height: 0.46rem;
+  flex: 0 0 auto;
+  background: var(--oxide);
+  content: "";
+}
+
+.evidence-citation[data-source-state="snapshot"] .evidence-citation__state::before {
+  border: 1px solid currentColor;
+  background: transparent;
+}
+
 .evidence-citation a {
   color: var(--ink);
   text-underline-offset: 0.22em;

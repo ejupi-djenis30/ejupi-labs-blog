@@ -109,7 +109,7 @@ export function createCaseDraft(slug, { kind = "labs" } = {}) {
       published: null,
       updated: null,
       stack: [],
-      ...(kind === "labs" ? { projectUrl: "" } : {}),
+      ...(kind === "labs" ? { projectUrl: "", sourceState: "release" } : {}),
     },
     locales: Object.fromEntries(
       LOCALES.map((locale) => [locale, localizedDraft(locale, slug, kind)]),

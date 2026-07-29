@@ -9,6 +9,7 @@ test("new-case scaffold stays unpublished and contains all four complete locale 
   assert.equal(draft.status, "draft");
   assert.equal(draft.definition.slug, "future-utility");
   assert.equal(draft.definition.kind, "labs");
+  assert.equal(draft.definition.sourceState, "release");
   assert.deepEqual(draft.definition.availableLocales, ["en", "it", "de", "fr"]);
   assert.deepEqual(Object.keys(draft.locales), ["en", "it", "de", "fr"]);
   for (const locale of draft.definition.availableLocales) {

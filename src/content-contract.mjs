@@ -2,6 +2,7 @@ const CASE_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/u;
 const NUMBER_PATTERN = /^\d{2}$/u;
 const CASE_KINDS = new Set(["professional", "labs"]);
+const SOURCE_STATES = new Set(["release", "snapshot"]);
 
 function fail(path, message) {
   throw new Error(`${path}: ${message}`);
@@ -217,7 +218,13 @@ export function assertDefinitionCatalog(
     fail("caseDefinitions", "expected at least one definition.");
   }
 
-  const labsOnlyKeys = ["projectUrl", "sourceRef", "sourceUrl", "verifiedAt"];
+  const labsOnlyKeys = [
+    "projectUrl",
+    "sourceState",
+    "sourceRef",
+    "sourceUrl",
+    "verifiedAt",
+  ];
   const slugs = new Set();
   const numbers = new Set();
   definitions.forEach((definition, index) => {
@@ -286,8 +293,12 @@ export function assertDefinitionCatalog(
 
     if (definition.kind === "labs") {
       assertNonEmptyString(definition.projectUrl, `${path}.projectUrl`);
+      assertNonEmptyString(definition.sourceState, `${path}.sourceState`);
       assertNonEmptyString(definition.sourceRef, `${path}.sourceRef`);
       assertNonEmptyString(definition.sourceUrl, `${path}.sourceUrl`);
+      if (!SOURCE_STATES.has(definition.sourceState)) {
+        fail(`${path}.sourceState`, "expected release or snapshot.");
+      }
       if (!/^v\d+\.\d+\.\d+$/u.test(definition.sourceRef)) {
         fail(`${path}.sourceRef`, "expected a semantic version reference.");
       }
