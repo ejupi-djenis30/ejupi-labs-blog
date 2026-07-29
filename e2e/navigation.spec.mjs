@@ -319,7 +319,7 @@ test("localized Labs article exposes evidence and its working product page", asy
   expect(await page.locator(".evidence-ledger > div").count()).toBeGreaterThanOrEqual(4);
   await expect(page.locator(".project-action")).toHaveAttribute(
     "href",
-    "https://ejupi-djenis30.github.io/PsychologistRustBot/",
+    "https://ejupi-djenis30.github.io/eliza-lab/",
   );
   await expect(page.locator('.language-list a[hreflang="fr"]')).toHaveAttribute(
     "href",
