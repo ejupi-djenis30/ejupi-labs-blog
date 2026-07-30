@@ -221,7 +221,7 @@ export const methodology = Object.freeze({
           paragraphs: [
             "Jede Labs-Fallstudie verweist auf einen öffentlichen, unveränderlichen GitHub-Commit. Vor der Veröffentlichung prüfe ich Versionsangaben, Testergebnisse und Implementierungsdetails gegen genau diesen Stand.",
             "Die funktionierende Produktseite bleibt der primäre Projektlink. Das Evidenzprotokoll zeigt, was ich geprüft habe und wo die jeweilige Aussage endet.",
-            "Technologievergleiche sind kontextbezogen und keine allgemeine Rangliste. Jede Wahl wird an den tatsächlichen Produktanforderungen und der stärksten realistischen Alternative gemessen – einschließlich der bewusst verbleibenden Komplexität oder Grenze.",
+            "Technologievergleiche sind kontextbezogen und keine allgemeine Rangliste. Jede Wahl wird an den tatsächlichen Produktanforderungen und der stärksten realistischen Alternative gemessen. Dabei benenne ich auch die Komplexität oder Grenze, die bewusst bestehen bleibt.",
           ],
         },
         {
