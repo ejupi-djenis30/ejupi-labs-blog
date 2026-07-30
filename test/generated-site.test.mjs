@@ -71,10 +71,99 @@ test("English case-study index links to every canonical article", async () => {
   const cards = [...html.matchAll(/<article class="case-card"[\s\S]*?<\/article>/gu)];
   assert.equal(cards.length, caseDefinitions.length);
   for (const card of cards) {
-    const tags = card[0].match(/<div class="tag-list"[^>]*>(?<tags>[\s\S]*?)<\/div>/u)?.groups?.tags;
+    const tags = card[0].match(/<ul class="tag-list" role="list"[^>]*>(?<tags>[\s\S]*?)<\/ul>/u)?.groups?.tags;
     assert.ok(tags);
-    assert.ok((tags.match(/<span>/gu) ?? []).length <= 3);
+    assert.ok((tags.match(/<li>/gu) ?? []).length <= 3);
+    assert.doesNotMatch(tags, /<span>/u);
   }
+});
+
+test("technology tags are labelled semantic lists on indexes and articles", async () => {
+  for (const localeKey of localeOrder) {
+    const locale = locales[localeKey];
+    const prefix = locale.prefix.replace(/^\//u, "");
+    const outputDirectory = prefix ? `${prefix}/` : "";
+    const indexHtml = await readFile(
+      new URL(`../dist/${outputDirectory}index.html`, import.meta.url),
+      "utf8",
+    );
+    const visibleDefinitions = caseDefinitions.filter(({ availableLocales }) =>
+      availableLocales.includes(localeKey),
+    );
+    assert.equal(
+      (indexHtml.match(/<ul class="tag-list" role="list" aria-label="[^"]+">/gu) ?? []).length,
+      visibleDefinitions.length,
+    );
+    assert.doesNotMatch(indexHtml, /<div class="tag-list"/u);
+
+    for (const definition of visibleDefinitions) {
+      const articleHtml = await readFile(
+        new URL(
+          `../dist/${outputDirectory}case-studies/${definition.slug}/index.html`,
+          import.meta.url,
+        ),
+        "utf8",
+      );
+      const list = articleHtml.match(
+        /<ul class="tag-list" role="list" aria-label="[^"]+">(?<items>[\s\S]*?)<\/ul>/u,
+      );
+      assert.ok(list, `${localeKey}/${definition.slug} has no technology list`);
+      assert.equal(
+        (list.groups.items.match(/<li>/gu) ?? []).length,
+        definition.stack.length,
+        `${localeKey}/${definition.slug} has the wrong technology item count`,
+      );
+      assert.doesNotMatch(articleHtml, /<div class="tag-list"/u);
+    }
+  }
+});
+
+test("the index omits its self-link while articles keep the case-study index link", async () => {
+  for (const localeKey of localeOrder) {
+    const locale = locales[localeKey];
+    const prefix = locale.prefix.replace(/^\//u, "");
+    const outputDirectory = prefix ? `${prefix}/` : "";
+    const homeRoute = locale.prefix ? `${locale.prefix}/` : "/";
+    const homeHtml = await readFile(
+      new URL(`../dist/${outputDirectory}index.html`, import.meta.url),
+      "utf8",
+    );
+    const homeNavigation = homeHtml.match(
+      /<nav class="site-nav"[\s\S]*?<\/nav>/u,
+    )?.[0];
+    assert.ok(homeNavigation);
+    assert.ok(!homeNavigation.includes(`>${locale.ui.allWork}</a>`));
+    assert.ok(homeHtml.includes(locale.ui.allWork));
+
+    const definition = caseDefinitions.find(({ availableLocales }) =>
+      availableLocales.includes(localeKey),
+    );
+    assert.ok(definition);
+    const articleHtml = await readFile(
+      new URL(
+        `../dist/${outputDirectory}case-studies/${definition.slug}/index.html`,
+        import.meta.url,
+      ),
+      "utf8",
+    );
+    const articleNavigation = articleHtml.match(
+      /<nav class="site-nav"[\s\S]*?<\/nav>/u,
+    )?.[0];
+    assert.ok(articleNavigation);
+    assert.ok(articleNavigation.includes(`href="${homeRoute}"`));
+    assert.ok(articleNavigation.includes(locale.ui.allWork));
+  }
+});
+
+test("JDoor cites the immutable human-readable commit page", () => {
+  const definition = caseDefinitions.find(
+    ({ slug }) => slug === "jdoor-security-lab",
+  );
+  assert.ok(definition);
+  assert.equal(
+    definition.sourceUrl,
+    "https://github.com/ejupi-djenis30/JDoor/commit/ac94dd82cdff17551826b7254165d123190aeec7",
+  );
 });
 
 test("canonical pages expose locale-matched large social previews", async () => {

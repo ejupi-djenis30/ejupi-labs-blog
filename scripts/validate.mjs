@@ -198,6 +198,28 @@ for (const localeKey of localeOrder) {
       if (count(html, /data-story-section/g) !== expectedSections) errors.push(`${label} must contain ${expectedSections} complete story sections.`);
       if (!html.includes("architecture-frame")) errors.push(`${label} is missing its architecture figure.`);
       if (count(html, /class="technology-choice"/g) !== 4) errors.push(`${label} must contain four explicit technology rationales.`);
+      const technologyList = html.match(
+        /<ul class="tag-list" role="list" aria-label="[^"]+">(?<items>[\s\S]*?)<\/ul>/u,
+      );
+      if (!technologyList) {
+        errors.push(`${label} is missing its labelled semantic technology list.`);
+      } else if (
+        count(technologyList.groups.items, /<li>/g) !==
+        (definition?.stack.length ?? 0)
+      ) {
+        errors.push(`${label} has the wrong number of semantic technology items.`);
+      }
+      if (html.includes('<div class="tag-list"')) {
+        errors.push(`${label} uses non-list markup for its technologies.`);
+      }
+      const articleNavigation =
+        html.match(/<nav class="site-nav"[\s\S]*?<\/nav>/u)?.[0] ?? "";
+      if (
+        !articleNavigation.includes(`href="${routeFor(localeKey, null)}"`) ||
+        !articleNavigation.includes(locales[localeKey].ui.allWork)
+      ) {
+        errors.push(`${label} is missing the case-study index link in its primary navigation.`);
+      }
       for (const rationaleLabel of [
         editorial.choiceLabel,
         editorial.whyLabel,
@@ -248,6 +270,34 @@ for (const localeKey of localeOrder) {
       }
     } else {
       if (!html.includes(uppercase(editorial.caseLabel))) errors.push(`${label} has an untranslated case-card label.`);
+      const indexTechnologyLists = [
+        ...html.matchAll(
+          /<ul class="tag-list" role="list" aria-label="[^"]+">(?<items>[\s\S]*?)<\/ul>/gu,
+        ),
+      ];
+      const visibleDefinitionCount = caseDefinitions.filter(({ availableLocales }) =>
+        availableLocales.includes(localeKey),
+      ).length;
+      if (indexTechnologyLists.length !== visibleDefinitionCount) {
+        errors.push(`${label} must expose one semantic technology list per case card.`);
+      }
+      if (
+        indexTechnologyLists.some(
+          (list) =>
+            count(list.groups.items, /<li>/g) < 1 ||
+            count(list.groups.items, /<li>/g) > 3,
+        )
+      ) {
+        errors.push(`${label} has a case-card technology list outside the one-to-three item range.`);
+      }
+      if (html.includes('<div class="tag-list"')) {
+        errors.push(`${label} uses non-list markup for its technologies.`);
+      }
+      const indexNavigation =
+        html.match(/<nav class="site-nav"[\s\S]*?<\/nav>/u)?.[0] ?? "";
+      if (indexNavigation.includes(`>${locales[localeKey].ui.allWork}</a>`)) {
+        errors.push(`${label} repeats a self-link to the case-study index in its primary navigation.`);
+      }
       if (!/data-search-index-url="\/assets\/search\.[a-z]{2}\.[0-9a-f]{12}\.json"/u.test(html)) {
         errors.push(`${label} has no fingerprinted full-text search index.`);
       }

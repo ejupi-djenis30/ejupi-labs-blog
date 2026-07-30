@@ -656,10 +656,13 @@ li {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin: 0;
+  padding: 0;
   color: var(--card-muted);
+  list-style: none;
 }
 
-.tag-list span {
+.tag-list li {
   padding: 0.5rem 0.65rem;
   border: 1px solid currentColor;
 }

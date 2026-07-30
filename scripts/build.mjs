@@ -311,7 +311,7 @@ function header(localeKey, slug, onIndex = false, pageKind = "case") {
       <span class="brand-label">${escapeHtml(locale.ui.home)}</span>
     </a>
     <nav class="site-nav" id="site-navigation" aria-label="${escapeHtml(locale.ui.navigation)}" data-menu data-open="false">
-      <a href="${homeRoute}"${onIndex ? ' aria-current="page"' : ""}>${escapeHtml(locale.ui.allWork)}</a>
+      ${onIndex ? "" : `<a href="${homeRoute}">${escapeHtml(locale.ui.allWork)}</a>`}
       <a href="${studioRouteFor(localeKey)}">${escapeHtml(locale.ui.portfolio)}</a>
       <a class="personal-link" href="${authorRouteFor(localeKey)}" rel="author">${escapeHtml(editorialUi[localeKey].personal)}</a>
       ${languageList(localeKey, slug, pageKind)}
@@ -362,7 +362,7 @@ function caseCard(localeKey, definition) {
     <p class="case-card__summary" itemprop="description">${escapeHtml(study.summary)}</p>
   </div>
   <div class="case-card__foot">
-    <div class="tag-list" aria-label="${escapeHtml(locale.ui.stack)}">${definition.stack.slice(0, 3).map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+    <ul class="tag-list" role="list" aria-label="${escapeHtml(locale.ui.stack)}">${definition.stack.slice(0, 3).map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>
     <a class="text-link" href="${routeFor(localeKey, definition.slug)}" itemprop="url">${escapeHtml(locale.ui.readCase)} <span aria-hidden="true">↗</span></a>
   </div>
 </article>`;
@@ -622,7 +622,7 @@ ${header(localeKey, definition.slug)}
     </div>
     <div class="article-meta-bar shell">
       <div class="article-meta-bar__group"><span>${escapeHtml(locale.ui.published)} <time datetime="${definition.published}">${escapeHtml(formattedDate)}</time></span><span>${study.readMinutes} ${escapeHtml(locale.ui.readTime)}</span></div>
-      <div class="tag-list" aria-label="${escapeHtml(locale.ui.stack)}">${definition.stack.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+      <ul class="tag-list" role="list" aria-label="${escapeHtml(locale.ui.stack)}">${definition.stack.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>
     </div>
     <div class="case-layout shell">
       <aside class="case-toc"><span class="toc-title">${escapeHtml(locale.ui.contents)}</span><ol>${toc}</ol></aside>
