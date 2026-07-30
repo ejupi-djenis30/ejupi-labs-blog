@@ -154,6 +154,16 @@ function socialImageUrl(localeKey) {
   return absolute(socialImagePath(localeKey));
 }
 
+function publisherSchema() {
+  return {
+    "@type": "Organization",
+    "@id": `${site.portfolioUrl}/#organization`,
+    name: site.name,
+    url: `${site.portfolioUrl}/`,
+    logo: `${site.portfolioUrl}/icons/apple-touch-icon.png`,
+  };
+}
+
 function latestCatalogUpdate() {
   return caseDefinitions.reduce(
     (latest, definition) => definition.updated > latest ? definition.updated : latest,
@@ -385,6 +395,7 @@ function indexPage(localeKey) {
     inLanguage: locale.lang,
     description: locale.index.description,
     image: socialImageUrl(localeKey),
+    publisher: publisherSchema(),
     blogPost: visibleDefinitions.map((definition) => ({
       "@type": "BlogPosting",
       headline: locale.cases[definition.slug].title,
@@ -586,7 +597,7 @@ function articlePage(localeKey, definition, index) {
       name: site.author.name,
       url: authorRouteFor(localeKey),
     },
-    publisher: { "@type": "Organization", name: site.name, url: studioRouteFor(localeKey) },
+    publisher: publisherSchema(),
     about: definition.stack,
     isPartOf: {
       "@type": "Blog",
@@ -595,7 +606,7 @@ function articlePage(localeKey, definition, index) {
     },
   };
 
-  return `${pageHead({ localeKey, title: study.title, description: study.summary, slug: definition.slug, type: "article", published: definition.published, updated: definition.updated })}
+  return `${pageHead({ localeKey, title: study.seoTitle, description: study.seoDescription, slug: definition.slug, type: "article", published: definition.published, updated: definition.updated })}
 <body>
 <script type="application/ld+json">${safeJson(articleSchema)}</script>
 ${header(localeKey, definition.slug)}

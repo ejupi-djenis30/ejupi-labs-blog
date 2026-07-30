@@ -3,7 +3,15 @@ import { labsLocales } from "./labs-locales.mjs";
 import {
   assertDefinitionCatalog,
   assertRawLocaleCatalog,
+  assertSeoCatalog,
 } from "./content-contract.mjs";
+import {
+  caseSeoByLocale,
+  SEO_DESCRIPTION_MAX,
+  SEO_DESCRIPTION_MIN,
+  SEO_PAGE_TITLE_MAX,
+  SEO_TITLE_MIN,
+} from "./seo-content.mjs";
 
 export const site = {
   name: "Ejupi Labs",
@@ -21,21 +29,22 @@ export const site = {
 export const localeOrder = ["en", "it", "de", "fr"];
 
 const careerOsReleaseAssets = [
-  "CareerOS-Local_1.9.0_linux-arm64.AppImage",
-  "CareerOS-Local_1.9.0_linux-arm64.deb",
-  "CareerOS-Local_1.9.0_linux-x64.AppImage",
-  "CareerOS-Local_1.9.0_linux-x64.deb",
-  "CareerOS-Local_1.9.0_macos-arm64.dmg",
-  "CareerOS-Local_1.9.0_macos-x64.dmg",
-  "CareerOS-Local_1.9.0_windows-arm64-setup.exe",
-  "CareerOS-Local_1.9.0_windows-arm64.msi",
-  "CareerOS-Local_1.9.0_windows-x64-setup.exe",
-  "CareerOS-Local_1.9.0_windows-x64.msi",
+  "CareerOS-Local_1.10.0_linux-arm64.AppImage",
+  "CareerOS-Local_1.10.0_linux-arm64.deb",
+  "CareerOS-Local_1.10.0_linux-x64.AppImage",
+  "CareerOS-Local_1.10.0_linux-x64.deb",
+  "CareerOS-Local_1.10.0_macos-arm64.dmg",
+  "CareerOS-Local_1.10.0_macos-x64.dmg",
+  "CareerOS-Local_1.10.0_windows-arm64-setup.exe",
+  "CareerOS-Local_1.10.0_windows-arm64.msi",
+  "CareerOS-Local_1.10.0_windows-x64-setup.exe",
+  "CareerOS-Local_1.10.0_windows-x64.msi",
   "LICENSE",
   "SHA256SUMS",
-  "careeros-backend-1.9.0.cdx.json",
-  "careeros-frontend-1.9.0.cdx.json",
-  "careeros-rust-1.9.0.cdx.json",
+  "careeros-backend-1.10.0.cdx.json",
+  "careeros-frontend-1.10.0.cdx.json",
+  "careeros-rust-1.10.0.cdx.json",
+  "careeros_local-1.10.0-py3-none-any.whl",
   "checksums-aarch64-apple-darwin.sha256",
   "checksums-aarch64-pc-windows-msvc.sha256",
   "checksums-aarch64-unknown-linux-gnu.sha256",
@@ -43,6 +52,7 @@ const careerOsReleaseAssets = [
   "checksums-x86_64-pc-windows-msvc.sha256",
   "checksums-x86_64-unknown-linux-gnu.sha256",
   "release-manifest.json",
+  "requirements.lock",
   "supply-chain-evidence.tar.gz",
 ];
 
@@ -114,8 +124,8 @@ export const caseDefinitions = [
     updated: "2026-07-30",
     projectUrl: "https://ejupi-djenis30.github.io/careeros-local/",
     sourceState: "release",
-    sourceRef: "v1.9.0",
-    sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/commit/d1c1bdde076af0bea096c772684c1d9b47c14ed6",
+    sourceRef: "v1.10.0",
+    sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/commit/6fa804e7925e1d1420bd3f3f56e10cee0d3ea637",
     releaseAssets: careerOsReleaseAssets,
     verifiedAt: "2026-07-30",
     stack: ["Tauri 2", "React 19", "FastAPI", "SQLite", "llama.cpp"],
@@ -1936,6 +1946,24 @@ const completeCasesByLocale = assertRawLocaleCatalog({
   },
 });
 
+assertSeoCatalog({
+  definitions: caseDefinitions,
+  localeOrder,
+  seoByLocale: caseSeoByLocale,
+  siteName: site.name,
+  pageTitleMax: SEO_PAGE_TITLE_MAX,
+  descriptionMax: SEO_DESCRIPTION_MAX,
+  titleMin: SEO_TITLE_MIN,
+  descriptionMin: SEO_DESCRIPTION_MIN,
+});
+
 for (const localeKey of localeOrder) {
   locales[localeKey].cases = completeCasesByLocale[localeKey];
+  for (const definition of caseDefinitions) {
+    if (!definition.availableLocales.includes(localeKey)) continue;
+    Object.assign(
+      locales[localeKey].cases[definition.slug],
+      caseSeoByLocale[localeKey][definition.slug],
+    );
+  }
 }

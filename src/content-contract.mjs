@@ -419,3 +419,115 @@ export function assertRawLocaleCatalog({
 
   return materialized;
 }
+
+export function assertSeoCatalog({
+  definitions,
+  localeOrder,
+  seoByLocale,
+  siteName,
+  pageTitleMax,
+  descriptionMax,
+  titleMin,
+  descriptionMin,
+}) {
+  if (!isPlainObject(seoByLocale)) {
+    fail("caseSeoByLocale", "expected an object.");
+  }
+
+  const unexpectedLocales = Object.keys(seoByLocale).filter(
+    (localeKey) => !localeOrder.includes(localeKey),
+  );
+  if (unexpectedLocales.length > 0) {
+    fail(
+      "caseSeoByLocale",
+      `unexpected locales: ${unexpectedLocales.join(", ")}.`,
+    );
+  }
+
+  for (const localeKey of localeOrder) {
+    const localeSeo = seoByLocale[localeKey];
+    if (!isPlainObject(localeSeo)) {
+      fail(`caseSeoByLocale.${localeKey}`, "expected an object.");
+    }
+
+    const expectedSlugs = definitions
+      .filter(({ availableLocales }) => availableLocales.includes(localeKey))
+      .map(({ slug }) => slug);
+    const missingSlugs = expectedSlugs.filter((slug) => !localeSeo[slug]);
+    const unexpectedSlugs = Object.keys(localeSeo).filter(
+      (slug) => !expectedSlugs.includes(slug),
+    );
+    if (missingSlugs.length > 0) {
+      fail(
+        `caseSeoByLocale.${localeKey}`,
+        `missing case studies: ${missingSlugs.join(", ")}.`,
+      );
+    }
+    if (unexpectedSlugs.length > 0) {
+      fail(
+        `caseSeoByLocale.${localeKey}`,
+        `unexpected case studies: ${unexpectedSlugs.join(", ")}.`,
+      );
+    }
+
+    for (const slug of expectedSlugs) {
+      const path = `caseSeoByLocale.${localeKey}.${slug}`;
+      const seo = localeSeo[slug];
+      if (!isPlainObject(seo)) fail(path, "expected an object.");
+      const keys = Object.keys(seo);
+      if (
+        keys.length !== 2 ||
+        !keys.includes("seoTitle") ||
+        !keys.includes("seoDescription")
+      ) {
+        fail(path, "expected only seoTitle and seoDescription.");
+      }
+
+      assertNonEmptyString(seo.seoTitle, `${path}.seoTitle`);
+      assertNonEmptyString(seo.seoDescription, `${path}.seoDescription`);
+      const titleLength = [...seo.seoTitle.trim()].length;
+      const pageTitleLength = [
+        ...`${seo.seoTitle.trim()} | ${siteName}`,
+      ].length;
+      const descriptionLength = [...seo.seoDescription.trim()].length;
+
+      if (titleLength < titleMin) {
+        fail(
+          `${path}.seoTitle`,
+          `expected at least ${titleMin} characters, received ${titleLength}.`,
+        );
+      }
+      if (pageTitleLength > pageTitleMax) {
+        fail(
+          `${path}.seoTitle`,
+          `branded page title exceeds ${pageTitleMax} characters (${pageTitleLength}).`,
+        );
+      }
+      if (descriptionLength < descriptionMin) {
+        fail(
+          `${path}.seoDescription`,
+          `expected at least ${descriptionMin} characters, received ${descriptionLength}.`,
+        );
+      }
+      if (descriptionLength > descriptionMax) {
+        fail(
+          `${path}.seoDescription`,
+          `exceeds ${descriptionMax} characters (${descriptionLength}).`,
+        );
+      }
+      if (!/[.!?]$/u.test(seo.seoDescription.trim())) {
+        fail(
+          `${path}.seoDescription`,
+          "expected a complete sentence with terminal punctuation.",
+        );
+      }
+      if (
+        seo.seoTitle.includes("…") ||
+        seo.seoDescription.includes("…") ||
+        /(?:\s-|-\s)$/u.test(seo.seoDescription.trim())
+      ) {
+        fail(path, "metadata must not contain a truncation marker.");
+      }
+    }
+  }
+}

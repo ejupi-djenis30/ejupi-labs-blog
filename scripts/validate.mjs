@@ -90,6 +90,15 @@ function count(source, expression) {
   return [...source.matchAll(expression)].length;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function assertSocialMetadata(html, label, localeKey) {
   const imageUrl = socialImageUrl(localeKey);
   const expectedTags = [
@@ -192,8 +201,66 @@ for (const localeKey of localeOrder) {
     if (/href=""|src=""/.test(html)) errors.push(`${label} contains an empty link or source.`);
     if (/\.\.|\?\.|!\./.test(html.replaceAll("https://", ""))) errors.push(`${label} contains duplicated terminal punctuation.`);
     if (/<img(?![^>]*\balt=)[^>]*>/i.test(html)) errors.push(`${label} contains an image without alt text.`);
+    const structuredDataText = html.match(
+      /<script type="application\/ld\+json">(?<json>.*?)<\/script>/su,
+    )?.groups?.json;
+    if (!structuredDataText) {
+      errors.push(`${label} has no JSON-LD document.`);
+    } else {
+      try {
+        const structuredData = JSON.parse(structuredDataText);
+        const expectedPublisher = {
+          "@type": "Organization",
+          "@id": "https://ejupilabs.com/#organization",
+          name: site.name,
+          url: "https://ejupilabs.com/",
+          logo: "https://ejupilabs.com/icons/apple-touch-icon.png",
+        };
+        if (
+          JSON.stringify(structuredData.publisher) !==
+          JSON.stringify(expectedPublisher)
+        ) {
+          errors.push(`${label} has an inconsistent canonical publisher.`);
+        }
+      } catch {
+        errors.push(`${label} has invalid JSON-LD.`);
+      }
+    }
 
     if (slug) {
+      const study = locale.cases[slug];
+      const expectedPageTitle = `${study.seoTitle} | ${site.name}`;
+      const expectedDescription = study.seoDescription;
+      const visibleTitle = /[.!?]$/u.test(study.title)
+        ? study.title.slice(0, -1)
+        : study.title;
+      if (
+        !html.includes(
+          `<title>${escapeHtml(expectedPageTitle)}</title>`,
+        )
+      ) {
+        errors.push(`${label} has the wrong concise page title.`);
+      }
+      if (
+        !html.includes(
+          `<meta name="description" content="${escapeHtml(expectedDescription)}" />`,
+        )
+      ) {
+        errors.push(`${label} has the wrong concise meta description.`);
+      }
+      if ([...expectedPageTitle].length > 70) {
+        errors.push(`${label} page title exceeds 70 characters.`);
+      }
+      if ([...expectedDescription].length > 180) {
+        errors.push(`${label} meta description exceeds 180 characters.`);
+      }
+      if (
+        !html.includes(
+          `<h1 itemprop="headline">${escapeHtml(visibleTitle)}<span class="title-stop">`,
+        )
+      ) {
+        errors.push(`${label} no longer preserves its full visible H1.`);
+      }
       const expectedSections = definition?.kind === "labs" ? 9 : 8;
       if (count(html, /data-story-section/g) !== expectedSections) errors.push(`${label} must contain ${expectedSections} complete story sections.`);
       if (!html.includes("architecture-frame")) errors.push(`${label} is missing its architecture figure.`);
