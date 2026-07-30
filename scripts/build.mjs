@@ -319,7 +319,7 @@ function footer(localeKey) {
       <p>${escapeHtml(locale.ui.footerLine)}</p>
     </div>
     <div class="site-footer__links">
-      <nav aria-label="${escapeHtml(locale.ui.navigation)}">
+      <nav aria-label="${escapeHtml(locale.ui.footerNavigation)}">
         <a href="${routeFor(localeKey, null)}">${escapeHtml(locale.ui.allWork)}</a>
         <a href="${methodologyRoute(localeKey)}">${escapeHtml(ui.methodology)}</a>
         <a href="${studioRouteFor(localeKey)}">${escapeHtml(locale.ui.portfolio)}</a>
@@ -412,7 +412,7 @@ ${header(localeKey, null, true)}
       <span>00 / 00</span>
       <h2>${heading(ui.emptyTitle)}</h2>
       <p>${escapeHtml(ui.emptyBody)}</p>
-      <button class="text-link" type="button" data-case-clear>${escapeHtml(ui.clear)} <span aria-hidden="true">↺</span></button>
+      <button class="text-link" type="button" data-case-clear>${escapeHtml(ui.showAll)} <span aria-hidden="true">↺</span></button>
     </div>
   </section>
 </main>

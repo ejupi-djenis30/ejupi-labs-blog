@@ -53,6 +53,9 @@ test("English case-study index links to every canonical article", async () => {
   assert.match(html, /data-search-state/);
   assert.match(html, /data-case-count/);
   assert.match(html, /data-case-clear/);
+  assert.equal((html.match(/aria-label="Primary navigation"/gu) ?? []).length, 1);
+  assert.equal((html.match(/aria-label="Footer navigation"/gu) ?? []).length, 1);
+  assert.match(html, />Show all case studies <span aria-hidden="true">↺<\/span>/u);
   assert.doesNotMatch(html, /data-case-type|data-case-topic/u);
   assert.match(html, /"@type":"Blog"/);
   assert.doesNotMatch(html, /card-schematic|case-card__rail/u);

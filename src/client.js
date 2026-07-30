@@ -45,6 +45,7 @@ if (typeof document !== "undefined") {
     const countLabel = discovery.querySelector("[data-case-count-label]");
     const searchState = discovery.querySelector("[data-search-state]");
     const empty = document.querySelector("[data-case-empty]");
+    const caseList = document.querySelector("[data-case-list]");
     const searchIndexUrl = discovery.dataset.searchIndexUrl ?? "";
     const fullTextBySlug = new Map();
     let searchIndexState = "idle";
@@ -55,7 +56,8 @@ if (typeof document !== "undefined") {
       count instanceof HTMLElement &&
       countLabel instanceof HTMLElement &&
       searchState instanceof HTMLElement &&
-      empty instanceof HTMLElement
+      empty instanceof HTMLElement &&
+      caseList instanceof HTMLElement
     ) {
       discovery.hidden = false;
 
@@ -148,9 +150,15 @@ if (typeof document !== "undefined") {
             },
           );
           card.hidden = !visible;
-          if (visible) visibleCount += 1;
+          if (visible) {
+            card.dataset.resultTone = ["paper", "oxide", "ink"][visibleCount % 3];
+            visibleCount += 1;
+          } else {
+            delete card.dataset.resultTone;
+          }
         }
 
+        caseList.dataset.visibleCount = String(visibleCount);
         count.textContent = String(visibleCount);
         countLabel.textContent =
           visibleCount === 1

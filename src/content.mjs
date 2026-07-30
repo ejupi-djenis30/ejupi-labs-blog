@@ -229,6 +229,7 @@ export const locales = {
       home: "Case studies",
       portfolio: "Studio",
       navigation: "Primary navigation",
+      footerNavigation: "Footer navigation",
       languages: "Choose language",
       menuOpen: "Open navigation",
       menuClose: "Close navigation",
@@ -239,7 +240,7 @@ export const locales = {
       readTime: "min read",
       contents: "On this page",
       stack: "Technology",
-      sourceNote: "Evidence boundary",
+      sourceNote: "What this case can prove",
       socialImageAlt: "Ejupi Labs wordmark beside the headline “Engineering decisions, explained” and an editorial decision diagram.",
       footerLine: "Product software, cloud systems and automation from Switzerland.",
       rights: "All rights reserved.",
@@ -250,7 +251,7 @@ export const locales = {
     index: {
       title: "Engineering decisions, explained.",
       description:
-        "Case studies tracing constraints, choices, credible alternatives, accepted costs and evidence across anonymised professional systems and open-source Labs projects.",
+        "A closer look at work by Djenis and Ejupi Labs: what was difficult, what I chose, what I ruled out and what the available evidence supports.",
       eyebrow: "Engineering case studies / 01 / 10",
       ctaTitle: "Need a clearer route through a complex system?",
       ctaBody: "Share the difficult part. We can frame the architecture, delivery path and first useful release together.",
@@ -261,12 +262,12 @@ export const locales = {
         cardTitle: "AI workflow platform cloud migration",
         title: "Moving an AI workflow platform to a repeatable cloud foundation",
         summary:
-          "In roughly one month, I moved a multi-component document and AI-workflow platform from an environment-specific on-premise setup to reusable Terraform, GKE and a controlled blue/red delivery path on Google Cloud.",
+          "I moved a multi-component document and AI-workflow platform from an environment-specific on-premise setup to reusable Terraform, GKE and a controlled blue/red delivery path on Google Cloud.",
         readMinutes: "14",
         facts: [
           ["Discipline", "Cloud platform engineering"],
           ["Scope", "Infrastructure, workloads and release path"],
-          ["Delivery", "Approximately one month"],
+          ["Delivered", "Platform migration and repeatable release"],
           ["Boundary", "Anonymised professional case"],
         ],
         starting: {
@@ -377,19 +378,19 @@ export const locales = {
           ],
         },
         scope:
-          "The organisation, product name, endpoints, storage configuration, costs and workload volumes are omitted. The approximate delivery period, component boundaries and release sequence come from the project record.",
+          "The organisation, product name, endpoints, storage configuration, costs, workload volumes and delivery dates are omitted. Component boundaries and the release sequence come from the project record.",
       },
       "archival-workflow-management": {
         category: "Workflow software",
         cardTitle: "Archival workflow management",
         title: "Giving operators one clear route through a complex archival workflow",
         summary:
-          "Over roughly three months, I built a Spring Boot service and React Single-SPA microfrontend around Camunda so operators could create archival sessions, move source packages through a nine-step lifecycle and track the resulting output.",
+          "I built a Spring Boot service and React Single-SPA microfrontend around Camunda so operators could create archival sessions, move source packages through a nine-step lifecycle and track the resulting output.",
         readMinutes: "13",
         facts: [
           ["Discipline", "Workflow and product engineering"],
           ["Scope", "Service, microfrontend and workflow boundary"],
-          ["Delivery", "Approximately three months"],
+          ["Delivered", "Service, microfrontend and workflow integration"],
           ["Boundary", "Anonymised professional case"],
         ],
         starting: {
@@ -500,19 +501,19 @@ export const locales = {
           ],
         },
         scope:
-          "The organisation, product name, internal session types, storage endpoints, bucket names and credentials are omitted. The approximate delivery period and domain lifecycle come from the project record.",
+          "The organisation, product name, internal session types, storage endpoints, bucket names, credentials and delivery dates are omitted. The domain lifecycle comes from the project record.",
       },
       "retail-erp-evolution": {
         category: "Enterprise software",
         cardTitle: "Retail ERP maintenance and evolution",
         title: "Improving a retail ERP without stepping outside daily operations",
         summary:
-          "Across approximately nineteen months, I worked through SQL Server, .NET Framework 4.8 and a KnockoutJS frontend in a live retail ERP, covering features, defects, reporting, two courier integrations and stock-receipt modernisation.",
+          "I worked through SQL Server, .NET Framework 4.8 and a KnockoutJS frontend in a live retail ERP, covering features, defects, reporting, courier integrations and stock-receipt modernisation.",
         readMinutes: "14",
         facts: [
           ["Discipline", "Enterprise product engineering"],
           ["Scope", "Database, backend, frontend and integrations"],
-          ["Delivery", "Approximately nineteen months"],
+          ["Delivered", "Application, database, reporting and integrations"],
           ["Boundary", "Anonymised professional case"],
         ],
         starting: {
@@ -624,7 +625,7 @@ export const locales = {
           ],
         },
         scope:
-          "The organisation, product name, users, vendors, commercial data and operational KPIs are omitted. The approximate engagement length, technologies and two-integration scope come from the project record.",
+          "The organisation, product name, users, vendors, commercial data, operational KPIs and delivery dates are omitted. The technologies and integration boundaries come from the project record.",
       },
     },
   },
@@ -639,6 +640,7 @@ export const locales = {
       home: "Case study",
       portfolio: "Studio",
       navigation: "Navigazione principale",
+      footerNavigation: "Navigazione nel footer",
       languages: "Scegli la lingua",
       menuOpen: "Apri la navigazione",
       menuClose: "Chiudi la navigazione",
@@ -649,7 +651,7 @@ export const locales = {
       readTime: "min di lettura",
       contents: "In questa pagina",
       stack: "Tecnologie",
-      sourceNote: "Limiti delle informazioni",
+      sourceNote: "Cosa dimostra questo caso",
       socialImageAlt: "Il wordmark Ejupi Labs accanto al titolo «Decisioni tecniche, spiegate» e a un diagramma editoriale delle scelte.",
       footerLine: "Software di prodotto, sistemi cloud e automazione dalla Svizzera.",
       rights: "Tutti i diritti riservati.",
@@ -660,7 +662,7 @@ export const locales = {
     index: {
       title: "Decisioni tecniche, spiegate.",
       description:
-        "Case study che ricostruiscono vincoli, scelte, alternative credibili, costi accettati ed evidenze dietro sistemi professionali anonimizzati e progetti Labs open source.",
+        "Uno sguardo più vicino al lavoro di Djenis e di Ejupi Labs: cosa era difficile, quali scelte ho fatto, cosa ho escluso e fin dove arrivano le evidenze.",
       eyebrow: "Case study di engineering / 01 / 10",
       ctaTitle: "Serve un percorso più chiaro per un sistema complesso?",
       ctaBody: "Partiamo dalla parte difficile. Possiamo definire insieme architettura, percorso di delivery e prima release utile.",
@@ -671,12 +673,12 @@ export const locales = {
         cardTitle: "Migrazione cloud di una piattaforma AI",
         title: "Portare una piattaforma AI su una base cloud ripetibile",
         summary:
-          "In circa un mese ho portato una piattaforma multicomponente per documenti e workflow AI da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
+          "Ho portato una piattaforma multicomponente per documenti e workflow AI da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
         readMinutes: "14",
         facts: [
           ["Disciplina", "Cloud platform engineering"],
           ["Perimetro", "Infrastruttura, workload e percorso di rilascio"],
-          ["Consegna", "Circa un mese"],
+          ["Consegnato", "Migrazione della piattaforma e rilascio ripetibile"],
           ["Confine", "Caso professionale anonimizzato"],
         ],
         starting: {
@@ -787,19 +789,19 @@ export const locales = {
           ],
         },
         scope:
-          "Organizzazione, prodotto, endpoint, configurazione storage, costi e volumi sono omessi. Durata approssimativa, componenti e sequenza di rilascio provengono dal record di progetto.",
+          "Organizzazione, prodotto, endpoint, configurazione storage, costi, volumi e date di consegna sono omessi. Componenti e sequenza di rilascio provengono dal record di progetto.",
       },
       "archival-workflow-management": {
         category: "Software di workflow",
         cardTitle: "Gestione di workflow archivistici",
         title: "Un percorso chiaro per gestire un workflow archivistico complesso",
         summary:
-          "In circa tre mesi ho costruito un servizio Spring Boot e un microfrontend React Single-SPA attorno a Camunda, per creare sessioni archivistiche, muovere pacchetti sorgente lungo un ciclo di nove passaggi e seguirne l’output.",
+          "Ho costruito un servizio Spring Boot e un microfrontend React Single-SPA attorno a Camunda, per creare sessioni archivistiche, muovere pacchetti sorgente lungo un ciclo di nove passaggi e seguirne l’output.",
         readMinutes: "13",
         facts: [
           ["Disciplina", "Workflow e product engineering"],
           ["Perimetro", "Servizio, microfrontend e confine workflow"],
-          ["Consegna", "Circa tre mesi"],
+          ["Consegnato", "Servizio, microfrontend e integrazione del workflow"],
           ["Confine", "Caso professionale anonimizzato"],
         ],
         starting: {
@@ -910,19 +912,19 @@ export const locales = {
           ],
         },
         scope:
-          "Organizzazione, prodotto, tipologie interne, endpoint, bucket e credenziali sono omessi. Durata approssimativa e lifecycle derivano dal record di progetto.",
+          "Organizzazione, prodotto, tipologie interne, endpoint, bucket, credenziali e date di consegna sono omessi. Il ciclo operativo deriva dal record di progetto.",
       },
       "retail-erp-evolution": {
         category: "Software enterprise",
         cardTitle: "Manutenzione ed evoluzione di un ERP retail",
         title: "Migliorare un ERP retail senza interrompere le operazioni quotidiane",
         summary:
-          "Per circa diciannove mesi ho lavorato su SQL Server, .NET Framework 4.8 e un frontend KnockoutJS di un ERP retail operativo: feature, bug, report, due integrazioni con corrieri e modernizzazione della ricezione stock.",
+          "Ho lavorato su SQL Server, .NET Framework 4.8 e un frontend KnockoutJS di un ERP retail operativo: feature, bug, report, integrazioni con corrieri e modernizzazione della ricezione stock.",
         readMinutes: "14",
         facts: [
           ["Disciplina", "Enterprise product engineering"],
           ["Perimetro", "Database, backend, frontend e integrazioni"],
-          ["Consegna", "Circa diciannove mesi"],
+          ["Consegnato", "Applicazione, database, report e integrazioni"],
           ["Confine", "Caso professionale anonimizzato"],
         ],
         starting: {
@@ -1034,7 +1036,7 @@ export const locales = {
           ],
         },
         scope:
-          "Organizzazione, prodotto, utenti, vendor, dati commerciali e KPI sono omessi. Durata approssimativa, tecnologie e due integrazioni derivano dal record di progetto.",
+          "Organizzazione, prodotto, utenti, fornitori, dati commerciali, KPI e date di consegna sono omessi. Tecnologie e confini delle integrazioni derivano dal record di progetto.",
       },
     },
   },
@@ -1049,6 +1051,7 @@ export const locales = {
       home: "Fallstudien",
       portfolio: "Studio",
       navigation: "Hauptnavigation",
+      footerNavigation: "Navigation im Footer",
       languages: "Sprache wählen",
       menuOpen: "Navigation öffnen",
       menuClose: "Navigation schliessen",
@@ -1059,7 +1062,7 @@ export const locales = {
       readTime: "Min. Lesezeit",
       contents: "Auf dieser Seite",
       stack: "Technologien",
-      sourceNote: "Informationsgrenze",
+      sourceNote: "Was dieser Fall belegt",
       socialImageAlt: "Die Wortmarke Ejupi Labs neben der Überschrift «Technische Entscheidungen, erklärt» und einem redaktionellen Entscheidungsdiagramm.",
       footerLine: "Produktsoftware, Cloud-Systeme und Automatisierung aus der Schweiz.",
       rights: "Alle Rechte vorbehalten.",
@@ -1070,7 +1073,7 @@ export const locales = {
     index: {
       title: "Technische Entscheidungen, erklärt.",
       description:
-        "Fallstudien zu Anforderungen, Entscheidungen, realistischen Alternativen, bewusst akzeptierten Kosten und Nachweisen hinter anonymisierten beruflichen Systemen und Open-Source-Projekten aus Labs.",
+        "Ein genauer Blick auf die Arbeit von Djenis und Ejupi Labs: was schwierig war, wofür ich mich entschied, was ich ausschloss und was die Nachweise tatsächlich tragen.",
       eyebrow: "Engineering-Fallstudien / 01 / 10",
       ctaTitle: "Braucht ein komplexes System einen klareren Weg?",
       ctaBody: "Bringen Sie den schwierigen Teil mit. Gemeinsam klären wir Architektur, Auslieferungspfad und die erste nützliche Version.",
@@ -1081,12 +1084,12 @@ export const locales = {
         cardTitle: "Cloud-Migration einer AI-Workflow-Plattform",
         title: "Eine AI-Workflow-Plattform auf ein wiederholbares Cloud-Fundament stellen",
         summary:
-          "In etwa einem Monat überführte ich eine mehrteilige Dokument- und AI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
+          "Ich überführte eine mehrteilige Dokument- und AI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
         readMinutes: "14",
         facts: [
           ["Disziplin", "Cloud Platform Engineering"],
           ["Umfang", "Infrastruktur, Workloads und Releaseweg"],
-          ["Lieferzeit", "Etwa ein Monat"],
+          ["Geliefert", "Plattformmigration und wiederholbare Releases"],
           ["Grenze", "Anonymisierte berufliche Fallstudie"],
         ],
         starting: {
@@ -1197,19 +1200,19 @@ export const locales = {
           ],
         },
         scope:
-          "Organisation, Produkt, Endpunkte, Storage-Konfiguration, Kosten und Volumen sind weggelassen. Ungefähre Dauer, Komponenten und Releasesequenz stammen aus der Projektdokumentation.",
+          "Organisation, Produkt, Endpunkte, Storage-Konfiguration, Kosten, Volumen und Liefertermine sind weggelassen. Komponenten und Releasesequenz stammen aus der Projektdokumentation.",
       },
       "archival-workflow-management": {
         category: "Workflow-Software",
         cardTitle: "Verwaltung von Archivierungs-Workflows",
         title: "Ein klarer Arbeitsweg durch einen komplexen Archivierungsprozess",
         summary:
-          "In etwa drei Monaten baute ich einen Spring-Boot-Dienst und ein React-Single-SPA-Microfrontend um Camunda, um Archivierungssitzungen, Quellpakete und den Output eines neunstufigen Ablaufs zu steuern.",
+          "Ich baute einen Spring-Boot-Dienst und ein React-Single-SPA-Microfrontend um Camunda, um Archivierungssitzungen, Quellpakete und den Output eines neunstufigen Ablaufs zu steuern.",
         readMinutes: "13",
         facts: [
           ["Disziplin", "Workflow- und Product Engineering"],
           ["Umfang", "Dienst, Microfrontend und Workflow-Grenze"],
-          ["Lieferzeit", "Etwa drei Monate"],
+          ["Geliefert", "Service, Microfrontend und Workflow-Integration"],
           ["Grenze", "Anonymisierte berufliche Fallstudie"],
         ],
         starting: {
@@ -1320,19 +1323,19 @@ export const locales = {
           ],
         },
         scope:
-          "Organisation, Produkt, interne Typen, Endpunkte, Buckets und Zugangsdaten sind weggelassen. Ungefähre Dauer und Lebenszyklus stammen aus der Projektdokumentation.",
+          "Organisation, Produkt, interne Typen, Endpunkte, Buckets, Zugangsdaten und Liefertermine sind weggelassen. Der fachliche Lebenszyklus stammt aus der Projektdokumentation.",
       },
       "retail-erp-evolution": {
         category: "Enterprise-Software",
         cardTitle: "Wartung und Weiterentwicklung eines Retail-ERP",
         title: "Ein Retail-ERP verbessern, ohne den täglichen Betrieb zu verlassen",
         summary:
-          "Über etwa neunzehn Monate arbeitete ich an SQL Server, .NET Framework 4.8 und einem KnockoutJS-Frontend eines laufenden Retail-ERP: Features, Fehler, Reports, zwei Kuriereinbindungen und Modernisierung des Wareneingangs.",
+          "Ich arbeitete an SQL Server, .NET Framework 4.8 und einem KnockoutJS-Frontend eines laufenden Retail-ERP: Features, Fehler, Reports, Kuriereinbindungen und Modernisierung des Wareneingangs.",
         readMinutes: "14",
         facts: [
           ["Disziplin", "Enterprise Product Engineering"],
           ["Umfang", "Datenbank, Backend, Frontend und Integrationen"],
-          ["Lieferzeit", "Etwa neunzehn Monate"],
+          ["Geliefert", "Anwendung, Datenbank, Reporting und Integrationen"],
           ["Grenze", "Anonymisierte berufliche Fallstudie"],
         ],
         starting: {
@@ -1444,7 +1447,7 @@ export const locales = {
           ],
         },
         scope:
-          "Organisation, Produkt, Benutzer, Anbieter, kommerzielle Daten und KPIs sind weggelassen. Ungefähre Dauer, Technologien und zwei Integrationen stammen aus der Projektdokumentation.",
+          "Organisation, Produkt, Benutzer, Anbieter, kommerzielle Daten, KPIs und Liefertermine sind weggelassen. Technologien und Integrationsgrenzen stammen aus der Projektdokumentation.",
       },
     },
   },
@@ -1459,6 +1462,7 @@ export const locales = {
       home: "Études de cas",
       portfolio: "Studio",
       navigation: "Navigation principale",
+      footerNavigation: "Navigation du pied de page",
       languages: "Choisir la langue",
       menuOpen: "Ouvrir la navigation",
       menuClose: "Fermer la navigation",
@@ -1469,7 +1473,7 @@ export const locales = {
       readTime: "min de lecture",
       contents: "Sur cette page",
       stack: "Technologies",
-      sourceNote: "Limite des informations",
+      sourceNote: "Ce que ce cas peut démontrer",
       socialImageAlt: "Le mot-symbole Ejupi Labs à côté du titre «Les décisions techniques, expliquées» et d’un schéma éditorial de décision.",
       footerLine: "Logiciels produit, systèmes cloud et automatisation depuis la Suisse.",
       rights: "Tous droits réservés.",
@@ -1480,7 +1484,7 @@ export const locales = {
     index: {
       title: "Les décisions techniques, expliquées.",
       description:
-        "Des études de cas qui retracent les contraintes, les choix, les alternatives crédibles, les coûts acceptés et les preuves derrière des systèmes professionnels anonymisés et des projets Labs open source.",
+        "Un regard précis sur le travail de Djenis et d’Ejupi Labs : ce qui était difficile, mes choix, ce que j’ai écarté et ce que les preuves permettent réellement d’affirmer.",
       eyebrow: "Études de cas d’ingénierie / 01 / 10",
       ctaTitle: "Un système complexe a besoin d’un parcours plus clair ?",
       ctaBody: "Commençons par la partie difficile. Nous pouvons cadrer ensemble l’architecture, le parcours de livraison et la première version utile.",
@@ -1491,12 +1495,12 @@ export const locales = {
         cardTitle: "Migration cloud d’une plateforme de workflow IA",
         title: "Installer une plateforme de workflow IA sur une base cloud reproductible",
         summary:
-          "En environ un mois, j’ai transféré une plateforme documentaire et de workflows IA depuis un déploiement on-premise propre à chaque environnement vers Terraform, GKE et une livraison blue/red contrôlée.",
+          "J’ai transféré une plateforme documentaire et de workflows IA depuis un déploiement on-premise propre à chaque environnement vers Terraform, GKE et une livraison blue/red contrôlée.",
         readMinutes: "14",
         facts: [
           ["Discipline", "Ingénierie de plateforme cloud"],
           ["Périmètre", "Infrastructure, workloads et parcours de livraison"],
-          ["Livraison", "Environ un mois"],
+          ["Livré", "Migration de la plateforme et livraisons reproductibles"],
           ["Frontière", "Cas professionnel anonymisé"],
         ],
         starting: {
@@ -1607,19 +1611,19 @@ export const locales = {
           ],
         },
         scope:
-          "Organisation, produit, endpoints, configuration du stockage, coûts et volumes sont omis. La durée approximative, les composants et la séquence de livraison proviennent du dossier de projet.",
+          "Organisation, produit, endpoints, configuration du stockage, coûts, volumes et dates de livraison sont omis. Les composants et la séquence de livraison proviennent du dossier de projet.",
       },
       "archival-workflow-management": {
         category: "Logiciel de workflow",
         cardTitle: "Gestion d’un workflow d’archivage",
         title: "Offrir un parcours clair dans un workflow d’archivage complexe",
         summary:
-          "En environ trois mois, j’ai construit un service Spring Boot et un microfrontend React Single-SPA autour de Camunda pour créer des sessions, faire avancer les paquets sources dans un cycle de neuf étapes et suivre leur sortie.",
+          "J’ai construit un service Spring Boot et un microfrontend React Single-SPA autour de Camunda pour créer des sessions, faire avancer les paquets sources dans un cycle de neuf étapes et suivre leur sortie.",
         readMinutes: "13",
         facts: [
           ["Discipline", "Ingénierie produit et workflow"],
           ["Périmètre", "Service, microfrontend et frontière workflow"],
-          ["Livraison", "Environ trois mois"],
+          ["Livré", "Service, microfrontend et intégration du workflow"],
           ["Frontière", "Cas professionnel anonymisé"],
         ],
         starting: {
@@ -1730,19 +1734,19 @@ export const locales = {
           ],
         },
         scope:
-          "Organisation, produit, types internes, endpoints, buckets et identifiants sont omis. La durée approximative et le cycle proviennent du dossier de projet.",
+          "Organisation, produit, types internes, endpoints, buckets, identifiants et dates de livraison sont omis. Le cycle métier provient du dossier de projet.",
       },
       "retail-erp-evolution": {
         category: "Logiciel d’entreprise",
         cardTitle: "Maintenance et évolution d’un ERP retail",
         title: "Améliorer un ERP retail sans interrompre les opérations quotidiennes",
         summary:
-          "Pendant environ dix-neuf mois, j’ai travaillé sur SQL Server, .NET Framework 4.8 et un frontend KnockoutJS d’un ERP retail actif : fonctionnalités, correctifs, rapports, deux intégrations transporteurs et modernisation de la réception de stock.",
+          "J’ai travaillé sur SQL Server, .NET Framework 4.8 et un frontend KnockoutJS d’un ERP retail actif : fonctionnalités, correctifs, rapports, intégrations transporteurs et modernisation de la réception de stock.",
         readMinutes: "14",
         facts: [
           ["Discipline", "Ingénierie produit d’entreprise"],
           ["Périmètre", "Base de données, backend, frontend et intégrations"],
-          ["Livraison", "Environ dix-neuf mois"],
+          ["Livré", "Application, base de données, rapports et intégrations"],
           ["Frontière", "Cas professionnel anonymisé"],
         ],
         starting: {
@@ -1854,7 +1858,7 @@ export const locales = {
           ],
         },
         scope:
-          "Organisation, produit, utilisateurs, fournisseurs, données commerciales et KPI sont omis. Durée approximative, technologies et deux intégrations proviennent du dossier de projet.",
+          "Organisation, produit, utilisateurs, fournisseurs, données commerciales, KPI et dates de livraison sont omis. Les technologies et les frontières d’intégration proviennent du dossier de projet.",
       },
     },
   },

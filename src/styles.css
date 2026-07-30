@@ -556,6 +556,50 @@ li {
   color: var(--signal);
 }
 
+.case-card[data-result-tone="paper"] {
+  --card-bg: var(--paper-raised);
+  --card-fg: var(--ink);
+  --card-muted: var(--muted);
+}
+
+.case-card[data-result-tone="paper"] .title-stop {
+  color: var(--oxide);
+}
+
+.case-card[data-result-tone="oxide"] {
+  --card-bg: var(--oxide);
+  --card-fg: var(--paper);
+  --card-muted: rgba(244, 241, 234, 0.76);
+}
+
+.case-card[data-result-tone="oxide"] .title-stop {
+  color: var(--ink);
+}
+
+.case-card[data-result-tone="ink"] {
+  --card-bg: var(--ink);
+  --card-fg: var(--paper);
+  --card-muted: #aeb4b0;
+}
+
+.case-card[data-result-tone="ink"] .title-stop {
+  color: var(--signal);
+}
+
+.case-list[data-visible-count="0"] {
+  display: none;
+}
+
+@media (min-width: 821px) {
+  .case-list[data-visible-count="1"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .case-list[data-visible-count="2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .case-card__meta,
 .case-card__category {
   display: flex;
