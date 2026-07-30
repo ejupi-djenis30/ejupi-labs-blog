@@ -93,6 +93,7 @@ function verifiedReleaseRoutes({
       TAG_OBJECT_URL,
       {
         sha: TAG_SHA,
+        tag: "v1.2.3",
         verification,
         object: { type: "commit", sha: targetSha },
       },
@@ -172,7 +173,7 @@ test("a verified annotated tag and immutable release verify the exact source com
   }
 });
 
-test("release verification rejects lightweight and unverified tags", async (context) => {
+test("release verification rejects lightweight, misbound and unverified tags", async (context) => {
   await context.test("lightweight tag", async () => {
     const fetchImpl = routeFetch(
       new Map([
@@ -203,6 +204,24 @@ test("release verification rejects lightweight and unverified tags", async (cont
       /does not have a verified signature/u,
     );
   });
+
+  for (const [label, signedTag] of [
+    ["mismatched signed tag", "v9.9.9"],
+    ["missing signed tag", undefined],
+  ]) {
+    await context.test(label, async () => {
+      const routes = verifiedReleaseRoutes();
+      const tag = routes.get(TAG_OBJECT_URL);
+      if (signedTag === undefined) delete tag.tag;
+      else tag.tag = signedTag;
+      routes.delete(RELEASE_URL);
+      const fetchImpl = routeFetch(routes);
+      await assert.rejects(
+        verifyLabsSources([releaseDefinition()], { fetchImpl }),
+        /is signed for .*not v1\.2\.3/u,
+      );
+    });
+  }
 });
 
 test("a snapshot verifies only its exact numeric-repository commit endpoint", async () => {

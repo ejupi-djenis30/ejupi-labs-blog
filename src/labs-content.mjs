@@ -16,11 +16,11 @@ export const labsCases = {
       title: "Evidence ledger",
       intro: "The current repository records these reproducible checks and boundaries:",
       items: [
-        ["Backend", "The v1.9.0 preparation suite passes 1,532 backend tests with 4 expected skips and 81.42% branch coverage."],
-        ["Frontend + shell", "All 396 frontend tests in 70 files pass. The merged feature tree also passed all 17 Rust tests, locked Clippy and its supply-chain gates."],
+        ["Backend", "The v1.9.0 preparation suite passed 1,534 backend tests; 4 were skipped as expected. Total coverage reached 81.33%, with branches included."],
+        ["Frontend + shell", "All 396 frontend tests in 70 files pass. The merged feature tree also passed all 17 Rust tests, Clippy with the Cargo lockfile enforced and its supply-chain gates."],
         ["CV-first import", "A new vault can create its minimum revisioned profile before importing a CV. Extracted facts stay unconfirmed and the interface moves directly to review."],
         ["Revisioned dossiers", "SQLite keeps one bounded working draft per application. Archive v6 carries those drafts and still inspects and restores formats v1 through v5."],
-        ["Agent Access", "The desktop issues scoped, revocable grants for seven read-only CLI and MCP tools. It shows the bearer once, while SQLite stores only its digest."],
+        ["Agent Access", "The desktop issues scoped, revocable grants for seven read-only operations exposed through the CLI and MCP server. It shows the bearer token once, while SQLite stores only its digest."],
       ],
     },
     starting: {
@@ -113,7 +113,7 @@ export const labsCases = {
         },
         {
           title: "Give agents a separate read-only door",
-          body: "Agent Access asks the signed-in user to choose scopes and reauthenticate before issuing a one-time bearer. Grants expire and can be revoked; the CLI and MCP server expose a closed set of read-only tools over stdio, not a general prompt or remote write API.",
+          body: "Agent Access asks the signed-in user to choose scopes and reauthenticate before displaying a bearer token once. Grants expire and can be revoked; the CLI and MCP server expose a closed set of read-only tools over stdio, not a general prompt or remote write API.",
           tradeoff: "Source-installed commands still require manual client setup, and an external client may transmit the data it reads. The narrower contract keeps automation useful without sharing the desktop session.",
         },
       ],
@@ -121,7 +121,7 @@ export const labsCases = {
     delivery: {
       title: "How the product is verified",
       paragraphs: [
-        "Release checks for v1.9.0 passed 1,532 backend tests with 4 expected skips and 81.42% branch coverage, plus 396 frontend tests across 70 files. The release tree passed all 17 Rust tests. Migration and archive suites cover the dossier draft schema, archive v6 and restore compatibility for v1 through v5.",
+        "Release checks for v1.9.0 passed 1,534 backend tests; 4 were skipped as expected. Total coverage reached 81.33%, with branches included. Another 396 frontend tests passed across 70 files, and the release tree passed all 17 Rust tests. Migration and archive suites cover the dossier draft schema, archive v6 and restore compatibility for v1 through v5.",
         "Protected-branch CI, CodeQL and container checks are green on the exact release commit. A non-publishing rehearsal and the signed-tag workflow independently assembled and verified native packages for macOS Intel and Apple Silicon, Linux x64 and ARM64, and Windows x64 and ARM64 before publication.",
       ],
     },
@@ -129,7 +129,7 @@ export const labsCases = {
       title: "What exists today",
       paragraphs: [
         "The v1.9.0 release is a working desktop utility with CV-first setup, a Career Vault, guided search, a revisioned Job Library, one application timeline per opportunity, a resume studio, persistent dossier drafts, archive v6 and required local analysis.",
-        "The authenticated desktop now manages grants for seven bearer-authenticated, read-only agent commands and stdio MCP tools. Codex, Claude Code and shell scripts can inspect a deliberately small view of one authorized account, but they cannot edit the vault, invoke free-form prompts or open a remote transport.",
+        "The authenticated desktop now manages grants for seven read-only operations exposed through a bearer-token-authenticated CLI and stdio MCP server. Codex, Claude Code and shell scripts can inspect a deliberately small view of one authorized account, but they cannot edit the vault, invoke free-form prompts or open a remote transport.",
         "It does not claim that an LLM can decide a career. The model helps interpret an owned body of evidence; the user keeps the record, the source and the final decision.",
       ],
     },

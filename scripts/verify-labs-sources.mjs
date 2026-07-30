@@ -244,6 +244,12 @@ async function resolveTagTarget(
         `annotated tag object ${targetSha} returned a different object SHA.`,
       );
     }
+    if (depth === 0 && tag?.tag !== definition.sourceRef) {
+      throw sourceError(
+        definition,
+        `annotated tag object ${targetSha} is signed for ${String(tag?.tag)}, not ${definition.sourceRef}.`,
+      );
+    }
     if (tag?.verification?.verified !== true) {
       throw sourceError(
         definition,

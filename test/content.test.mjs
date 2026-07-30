@@ -348,8 +348,8 @@ test("CareerOS documents the immutable v1.9.0 release", () => {
     const claims = localizedClaims[localeKey];
     assert.match(copy, /v1\.9\.0/u);
     assert.doesNotMatch(copy, /v1\.8\.0/u);
-    assert.match(copy, /1(?:,|\.| )532/u);
-    assert.match(copy, /81(?:,|\.)42\s?(?:%| %)/u);
+    assert.match(copy, /1(?:,|\.| )534/u);
+    assert.match(copy, /81(?:,|\.)33\s?(?:%| %)/u);
     assert.match(copy, /396/u);
     assert.match(copy, /\b17\b/u);
     assert.match(copy, /archive v6|archivio v6|Archiv v6|format v6/iu);
