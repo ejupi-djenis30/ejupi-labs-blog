@@ -77,6 +77,22 @@ test("every locale contains the same complete case-study structure", () => {
   }
 });
 
+test("the cloud-migration case title uses each locale's own AI terminology", () => {
+  const expectedCardTitles = {
+    en: "AI workflow platform cloud migration",
+    it: "Migrazione cloud di una piattaforma di workflow IA",
+    de: "Cloud-Migration einer KI-Workflow-Plattform",
+    fr: "Migration cloud d’une plateforme de workflow IA",
+  };
+
+  for (const localeKey of localeOrder) {
+    assert.equal(
+      locales[localeKey].cases["ai-workflow-cloud-migration"].cardTitle,
+      expectedCardTitles[localeKey],
+    );
+  }
+});
+
 test("professional cases preserve the documented constraints without exposing client identities", () => {
   const localizedExpectations = {
     en: {

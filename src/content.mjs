@@ -670,10 +670,10 @@ export const locales = {
     cases: {
       "ai-workflow-cloud-migration": {
         category: "Piattaforme cloud",
-        cardTitle: "Migrazione cloud di una piattaforma AI",
-        title: "Portare una piattaforma AI su una base cloud ripetibile",
+        cardTitle: "Migrazione cloud di una piattaforma di workflow IA",
+        title: "Portare una piattaforma di workflow IA su una base cloud ripetibile",
         summary:
-          "Ho portato una piattaforma multicomponente per documenti e workflow AI da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
+          "Ho portato una piattaforma multicomponente per documenti e workflow IA da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
         readMinutes: "14",
         facts: [
           ["Disciplina", "Cloud platform engineering"],
@@ -684,7 +684,7 @@ export const locales = {
         starting: {
           title: "Il punto di partenza",
           paragraphs: [
-            "La piattaforma on-premise riuniva un’interfaccia Vue, due servizi Spring Boot, un worker Python Temporal, Temporal, Keycloak, PostgreSQL e MinIO. Gestiva estrazione documentale e workflow assistiti dall’AI, ma gli ambienti non condividevano un percorso di setup affidabile.",
+            "La piattaforma on-premise riuniva un’interfaccia Vue, due servizi Spring Boot, un worker Python Temporal, Temporal, Keycloak, PostgreSQL e MinIO. Gestiva estrazione documentale e workflow assistiti dall’IA, ma gli ambienti non condividevano un percorso di setup affidabile.",
             "Definirla soltanto una migrazione cloud avrebbe descritto la destinazione, non il lavoro. Bisognava spostare con criterio componenti stateful e stateless, separare la delivery dimostrativa da quella di produzione e offrire agli operatori uno switch controllato tra due slot.",
             "Ho scomposto il cambiamento in quattro confini collegati: packaging dei workload, dati gestiti, configurazione degli ambienti e controllo del rilascio. Così “metterla su Kubernetes” non poteva diventare l’intero design.",
           ],
@@ -1081,10 +1081,10 @@ export const locales = {
     cases: {
       "ai-workflow-cloud-migration": {
         category: "Cloud-Plattformen",
-        cardTitle: "Cloud-Migration einer AI-Workflow-Plattform",
-        title: "Eine AI-Workflow-Plattform auf ein wiederholbares Cloud-Fundament stellen",
+        cardTitle: "Cloud-Migration einer KI-Workflow-Plattform",
+        title: "Eine KI-Workflow-Plattform auf ein wiederholbares Cloud-Fundament stellen",
         summary:
-          "Ich überführte eine mehrteilige Dokument- und AI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
+          "Ich überführte eine mehrteilige Dokument- und KI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
         readMinutes: "14",
         facts: [
           ["Disziplin", "Cloud Platform Engineering"],
@@ -1095,7 +1095,7 @@ export const locales = {
         starting: {
           title: "Der Ausgangspunkt",
           paragraphs: [
-            "Die On-Premise-Plattform verband eine Vue-Oberfläche, zwei Spring-Boot-Dienste, einen Python-Temporal-Worker, Temporal, Keycloak, PostgreSQL und MinIO. Sie verarbeitete Dokumente und AI-gestützte Workflows, doch die Umgebungen hatten keinen gemeinsamen, verlässlichen Setup-Weg.",
+            "Die On-Premise-Plattform verband eine Vue-Oberfläche, zwei Spring-Boot-Dienste, einen Python-Temporal-Worker, Temporal, Keycloak, PostgreSQL und MinIO. Sie verarbeitete Dokumente und KI-gestützte Workflows, doch die Umgebungen hatten keinen gemeinsamen, verlässlichen Setup-Weg.",
             "Nur von einer Cloud-Migration zu sprechen, hätte das Ziel beschrieben, nicht die eigentliche Arbeit. Stateful und stateless Komponenten mussten bewusst verschoben, Demo und Produktion getrennt und der Wechsel zwischen zwei Produktionsslots kontrolliert werden.",
             "Ich zerlegte die Änderung in vier verbundene Grenzen: Workload-Paketierung, verwaltete Daten, Umgebungskonfiguration und Releasekontrolle. So konnte „auf Kubernetes verschieben“ nicht zum gesamten Design werden.",
           ],
