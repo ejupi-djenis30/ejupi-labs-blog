@@ -9,6 +9,18 @@ import {
   site,
 } from "../src/content.mjs";
 import { editorialUi, methodology } from "../src/editorial.mjs";
+import { assertPublicDomainTopology } from "../src/public-url-policy.mjs";
+
+assertPublicDomainTopology({
+  caseDefinitions,
+  publicContent: {
+    caseDefinitions,
+    editorialUi,
+    locales,
+    methodology,
+    site,
+  },
+});
 
 const root = resolve(import.meta.dirname, "..");
 const outputRoot = join(root, "dist");
