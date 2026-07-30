@@ -6,6 +6,7 @@ import {
   locales,
   protectedLegacySlugs,
   relatedCaseDefinitions,
+  site,
 } from "../src/content.mjs";
 import { editorialUi, methodology } from "../src/editorial.mjs";
 import {
@@ -13,6 +14,12 @@ import {
   assertLocalizedCopy,
   assertProtectedLegacySlugs,
 } from "../src/content-contract.mjs";
+import {
+  SEO_DESCRIPTION_MAX,
+  SEO_DESCRIPTION_MIN,
+  SEO_PAGE_TITLE_MAX,
+  SEO_TITLE_MIN,
+} from "../src/seo-content.mjs";
 
 test("every locale contains the same complete case-study structure", () => {
   const expectedSections = ["starting", "constraints", "diagnosis", "architecture", "technology", "decisions", "delivery", "result"];
@@ -73,6 +80,57 @@ test("every locale contains the same complete case-study structure", () => {
           );
         }
       }
+    }
+  }
+});
+
+test("every case study has concise, complete metadata separate from its visible copy", () => {
+  for (const localeKey of localeOrder) {
+    const availableDefinitions = caseDefinitions.filter(({ availableLocales }) =>
+      availableLocales.includes(localeKey),
+    );
+
+    for (const definition of availableDefinitions) {
+      const study = locales[localeKey].cases[definition.slug];
+      const brandedTitle = `${study.seoTitle} | ${site.name}`;
+      const titleLength = [...study.seoTitle].length;
+      const brandedTitleLength = [...brandedTitle].length;
+      const descriptionLength = [...study.seoDescription].length;
+      const label = `${localeKey}/${definition.slug}`;
+
+      assert.ok(titleLength >= SEO_TITLE_MIN, `${label} SEO title is too short`);
+      assert.ok(
+        brandedTitleLength <= SEO_PAGE_TITLE_MAX,
+        `${label} branded SEO title is too long`,
+      );
+      assert.ok(
+        descriptionLength >= SEO_DESCRIPTION_MIN,
+        `${label} SEO description is too short`,
+      );
+      assert.ok(
+        descriptionLength <= SEO_DESCRIPTION_MAX,
+        `${label} SEO description is too long`,
+      );
+      assert.match(
+        study.seoDescription,
+        /[.!?]$/u,
+        `${label} SEO description is not a complete sentence`,
+      );
+      assert.doesNotMatch(
+        `${study.seoTitle}\n${study.seoDescription}`,
+        /…/u,
+        `${label} metadata contains a truncation marker`,
+      );
+      assert.notEqual(
+        study.seoTitle,
+        study.title,
+        `${label} should not reuse its long H1 as the SEO title`,
+      );
+      assert.notEqual(
+        study.seoDescription,
+        study.summary,
+        `${label} should not reuse its on-page summary as the SEO description`,
+      );
     }
   }
 });
@@ -290,24 +348,30 @@ test("Labs source metadata is required and must resolve to an immutable commit",
   );
 });
 
-test("CareerOS documents the immutable v1.9.0 release", () => {
+test("CareerOS documents the immutable v1.10.0 release", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "careeros-local");
   assert.ok(definition);
   assert.equal(definition.updated, "2026-07-30");
   assert.equal(definition.verifiedAt, "2026-07-30");
   assert.equal(definition.sourceState, "release");
-  assert.equal(definition.sourceRef, "v1.9.0");
+  assert.equal(definition.sourceRef, "v1.10.0");
   assert.equal(
     definition.sourceUrl,
-    "https://github.com/ejupi-djenis30/careeros-local/commit/d1c1bdde076af0bea096c772684c1d9b47c14ed6",
+    "https://github.com/ejupi-djenis30/careeros-local/commit/6fa804e7925e1d1420bd3f3f56e10cee0d3ea637",
   );
-  assert.equal(definition.releaseAssets.length, 23);
-  assert.equal(new Set(definition.releaseAssets).size, 23);
+  assert.equal(definition.releaseAssets.length, 25);
+  assert.equal(new Set(definition.releaseAssets).size, 25);
   assert.ok(definition.releaseAssets.includes("release-manifest.json"));
   assert.ok(definition.releaseAssets.includes("SHA256SUMS"));
+  assert.ok(definition.releaseAssets.includes("requirements.lock"));
   assert.ok(
     definition.releaseAssets.includes(
-      "CareerOS-Local_1.9.0_windows-arm64-setup.exe",
+      "careeros_local-1.10.0-py3-none-any.whl",
+    ),
+  );
+  assert.ok(
+    definition.releaseAssets.includes(
+      "CareerOS-Local_1.10.0_windows-arm64-setup.exe",
     ),
   );
 
@@ -346,10 +410,10 @@ test("CareerOS documents the immutable v1.9.0 release", () => {
     const study = locales[localeKey].cases[definition.slug];
     const copy = JSON.stringify(study);
     const claims = localizedClaims[localeKey];
-    assert.match(copy, /v1\.9\.0/u);
-    assert.doesNotMatch(copy, /v1\.8\.0/u);
-    assert.match(copy, /1(?:,|\.| )534/u);
-    assert.match(copy, /81(?:,|\.)33\s?(?:%| %)/u);
+    assert.match(copy, /v1\.10\.0/u);
+    assert.doesNotMatch(copy, /v1\.(?:8|9)\.0/u);
+    assert.match(copy, /1(?:,|\.| )573/u);
+    assert.match(copy, /81(?:,|\.)28\s?(?:%| %)/u);
     assert.match(copy, /396/u);
     assert.match(copy, /\b17\b/u);
     assert.match(copy, /archive v6|archivio v6|Archiv v6|format v6/iu);
@@ -360,8 +424,11 @@ test("CareerOS documents the immutable v1.9.0 release", () => {
     assert.match(copy, claims.dossier);
     assert.match(copy, claims.agentAccess);
     assert.match(copy, claims.readOnly);
-    assert.match(copy, /d1c1bdde/u);
-    assert.match(copy, /\b23\b/u);
+    assert.match(copy, /6fa804e/u);
+    assert.match(copy, /\b25\b/u);
+    assert.match(copy, /wheel/iu);
+    assert.match(copy, /Python 3\.12/iu);
+    assert.match(copy, /Python 3\.13/iu);
     assert.match(
       copy,
       /six(?:-| )(?:native )?targets?|sei (?:target|piattaforme)|sechs native[nr]? Ziel(?:en|plattformen)|six (?:cibles|plateformes)/iu,

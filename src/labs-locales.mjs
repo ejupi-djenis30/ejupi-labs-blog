@@ -19,17 +19,17 @@ export const labsLocales = {
         ["Prodotto", "Utility desktop open source"],
         ["Ruolo", "Prodotto, architettura e implementazione"],
         ["Confine di fiducia", "Dispositivo locale per impostazione predefinita"],
-        ["Stato", "v1.9.0 rilasciata a partire dal commit d1c1bdde dopo la verifica su sei piattaforme native"],
+        ["Stato", "v1.10.0 rilasciata dal commit 6fa804e dopo le verifiche native e Agent Access"],
       ],
       evidence: {
         title: "Registro delle evidenze",
         intro: "Il repository documenta questi controlli e limiti riproducibili:",
         items: [
-          ["Backend", "La suite di preparazione della v1.9.0 ha superato 1.534 test backend; 4 sono stati saltati come previsto. La copertura complessiva ha raggiunto l’81,33%, rami inclusi."],
+          ["Backend", "La suite della release v1.10.0 ha superato 1.573 test backend; 4 sono stati saltati come previsto. La copertura complessiva ha raggiunto l’81,28%, rami inclusi."],
           ["Frontend + shell", "Passano 396 test frontend in 70 file. L’albero delle feature già integrato ha superato anche tutti i 17 test Rust, Clippy con il lockfile Cargo applicato e i controlli della supply chain."],
           ["Importazione dal CV", "Un nuovo vault può creare il profilo revisionato minimo prima di importare un CV. I fatti estratti restano da confermare e l’interfaccia porta direttamente alla revisione."],
           ["Dossier revisionati", "SQLite conserva una bozza di lavoro limitata per ogni candidatura. L’archivio v6 include le bozze e continua a ispezionare e ripristinare i formati dalla v1 alla v5."],
-          ["Accesso agenti", "L’app desktop rilascia autorizzazioni con ambiti e revoca per sette operazioni in sola lettura esposte dalla CLI e dal server MCP. Mostra il token bearer una volta sola, mentre SQLite ne conserva soltanto il digest."],
+          ["Accesso agenti", "L’app desktop rilascia autorizzazioni con ambiti e revoca per sette operazioni in sola lettura esposte dalla CLI e dal server MCP. La release include entrambi i comandi in un wheel Python installabile, mostra il token bearer una volta sola e ne conserva soltanto il digest."],
         ],
       },
       starting: {
@@ -89,28 +89,28 @@ export const labsLocales = {
           },
           {
             title: "Dare agli agenti un accesso separato e in sola lettura",
-            body: "Agent Access chiede all’utente autenticato di scegliere gli ambiti e autenticarsi di nuovo prima di mostrare il token bearer una sola volta. Le autorizzazioni scadono e sono revocabili; CLI e server MCP espongono su stdio un insieme chiuso di strumenti in sola lettura, non prompt liberi o API remote di scrittura.",
-            tradeoff: "I comandi installati dai sorgenti richiedono ancora una configurazione manuale del client e un client esterno può trasmettere i dati letti. Il contratto ristretto rende utile l’automazione senza condividere la sessione desktop.",
+            body: "Agent Access chiede all’utente autenticato di scegliere gli ambiti e autenticarsi di nuovo prima di mostrare il token bearer una sola volta. Le autorizzazioni scadono e sono revocabili; la CLI installabile e il server MCP espongono su stdio un insieme chiuso di strumenti in sola lettura, non prompt liberi o API remote di scrittura.",
+            tradeoff: "L’utente deve comunque configurare il client dell’agente e un client esterno può trasmettere i dati letti. Il contratto ristretto rende utile l’automazione senza condividere la sessione desktop.",
           },
         ],
       },
       delivery: {
         title: "Come viene verificato il prodotto",
         paragraphs: [
-          "I controlli della release v1.9.0 hanno superato 1.534 test backend; 4 sono stati saltati come previsto. La copertura complessiva ha raggiunto l’81,33%, rami inclusi. Si aggiungono 396 test frontend superati in 70 file e tutti i 17 test Rust passati dall’albero di release. Le suite di migrazione e archivio coprono lo schema delle bozze, il formato v6 e il ripristino dalla v1 alla v5.",
-          "CI protetta, CodeQL e controlli dei container sono verdi sul commit esatto della release. Una prova generale senza pubblicazione e il workflow del tag firmato hanno assemblato e verificato separatamente i pacchetti per macOS Intel e Apple Silicon, Linux x64 e ARM64, Windows x64 e ARM64 prima della pubblicazione.",
+          "I controlli della release v1.10.0 hanno superato 1.573 test backend; 4 sono stati saltati come previsto. La copertura complessiva ha raggiunto l’81,28%, rami inclusi. Si aggiungono 396 test frontend superati in 70 file e tutti i 17 test Rust passati dall’albero di release. Le suite di migrazione e archivio coprono lo schema delle bozze, il formato v6 e il ripristino dalla v1 alla v5.",
+          "CI protetta, CodeQL e controlli dei container sono verdi sul commit esatto della release. Una prova generale senza pubblicazione e il workflow del tag firmato hanno assemblato e verificato sei pacchetti nativi. Gli stessi byte del wheel Agent Access sono stati provati su Linux, macOS e Windows con Python 3.12 e Python 3.13 prima della pubblicazione.",
         ],
       },
       result: {
         title: "Cosa esiste oggi",
         paragraphs: [
-          "La release v1.9.0 è una utility desktop funzionante con configurazione dal CV, Career Vault, ricerca guidata, Job Library revisionata, una timeline per opportunità, studio per il CV, bozze dossier persistenti, archivio v6 e analisi locale obbligatoria.",
-          "L’app desktop autenticata ora gestisce le autorizzazioni per sette operazioni in sola lettura esposte tramite una CLI e un server MCP su stdio, entrambi autenticati con token bearer. Codex, Claude Code e script shell possono consultare una vista volutamente ridotta di un solo account autorizzato, ma non possono modificare il vault, invocare prompt liberi o aprire un trasporto remoto.",
+          "La release v1.10.0 è una utility desktop funzionante con configurazione dal CV, Career Vault, ricerca guidata, Job Library revisionata, una timeline per opportunità, studio per il CV, bozze dossier persistenti, archivio v6 e analisi locale obbligatoria.",
+          "L’app desktop autenticata ora gestisce le autorizzazioni per sette operazioni in sola lettura esposte tramite una CLI e un server MCP su stdio, entrambi inclusi nel wheel di release e autenticati con token bearer. Codex, Claude Code e script shell possono consultare una vista volutamente ridotta di un solo account autorizzato, ma non possono modificare il vault, invocare prompt liberi o aprire un trasporto remoto.",
           "Non sostiene che un LLM possa decidere una carriera. Il modello aiuta a interpretare un insieme di evidenze di proprietà dell’utente; l’utente conserva il registro, la fonte e la decisione finale.",
         ],
       },
       scope:
-        "Questo case study descrive la release immutabile v1.9.0 al commit d1c1bdde. Il tag firmato e i 23 artefatti pubblicati seguono una prova generale senza pubblicazione su sei piattaforme native. Non afferma risultati occupazionali, accuratezza del modello su dati privati né supporto per ogni modello locale e ogni macchina.",
+        "Questo case study descrive la release immutabile v1.10.0 al commit 6fa804e. Il tag firmato e i 25 artefatti pubblicati seguono una prova generale senza pubblicazione su sei piattaforme native e sei combinazioni sistema operativo/Python per Agent Access. Non afferma risultati occupazionali, accuratezza del modello su dati privati né supporto per ogni modello locale e ogni macchina.",
     }),
     "eliza-lab": localize("eliza-lab", {
       category: "Machine learning",
@@ -741,13 +741,13 @@ export const labsLocales = {
       title: "Ein privater Karriere-Arbeitsbereich, der auf Belegen statt auf generierten Behauptungen beruht",
       summary: "CareerOS Local macht aus einem vorhandenen Lebenslauf einen privaten, revisionsgeführten Karrieredatensatz und nutzt danach verpflichtende lokale LLM-Analysen für Matching und Coaching. Tauri, FastAPI und SQLite halten Fakten, Entwürfe und Agentenzugriffe auf dem Gerät.",
       readMinutes: "14",
-      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "v1.9.0 aus dem Commit d1c1bdde für sechs native Zielplattformen veröffentlicht"]],
+      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "v1.10.0 aus Commit 6fa804e nach nativer und Agent-Access-Prüfung veröffentlicht"]],
       evidence: { title: "Evidenzprotokoll", intro: "Das aktuelle Repository dokumentiert diese reproduzierbaren Prüfungen und Grenzen:", items: [
-        ["Backend", "In der Release-Suite bestanden 1.534 Backend-Tests; 4 wurden erwartungsgemäß übersprungen. Die Gesamtabdeckung betrug 81,33 %, Verzweigungen eingeschlossen."],
+        ["Backend", "In der Release-Suite für v1.10.0 bestanden 1.573 Backend-Tests; 4 wurden erwartungsgemäß übersprungen. Die Gesamtabdeckung betrug 81,28 %, Verzweigungen eingeschlossen."],
         ["Frontend + Shell", "Alle 396 Frontend-Tests in 70 Dateien bestehen. Der bereits integrierte Feature-Stand bestand außerdem alle 17 Rust-Tests, Clippy mit erzwungener Cargo-Lockdatei und seine Supply-Chain-Prüfungen."],
         ["Lebenslauf-Import", "Ein neuer Tresor kann vor dem Import den kleinsten revisionsgeführten Profildatensatz anlegen. Extrahierte Fakten bleiben unbestätigt und die Oberfläche führt direkt zur Prüfung."],
         ["Revisionsgeführte Dossiers", "SQLite hält pro Bewerbung genau einen begrenzten Arbeitsentwurf. Archiv v6 nimmt diese Entwürfe mit und kann die Formate v1 bis v5 weiterhin prüfen und wiederherstellen."],
-        ["Agentenzugriff", "Die Desktop-App erteilt begrenzte, widerrufbare Berechtigungen für sieben schreibgeschützte Operationen, die über CLI und MCP-Server erreichbar sind. Sie zeigt das Bearer-Token einmal, während SQLite nur dessen Digest speichert."],
+        ["Agentenzugriff", "Die Desktop-App erteilt begrenzte, widerrufbare Berechtigungen für sieben schreibgeschützte Operationen über CLI und MCP-Server. Das Release liefert beide Befehle als installierbares Python-Wheel, zeigt das Bearer-Token einmal und speichert nur dessen Digest."],
       ]},
       starting: { title: "Das Produktproblem", paragraphs: [
         "Karriereinformationen verteilen sich häufig auf alte Lebensläufe, Jobportale, Notizen und Bewerbungsplattformen. Allgemeine AI-Werkzeuge schaffen ein weiteres Problem: Eine überzeugend formulierte Antwort kann den Bezug zu dem Fakt verlieren, der sie stützt.",
@@ -777,18 +777,18 @@ export const labsLocales = {
       decisions: { title: "Entscheidungen, die daraus ein echtes Werkzeug machen", intro: "Die nützliche Arbeit geschieht vor und nach dem Modellaufruf.", items: [
         { title: "Den Datensatz vor dem Lebenslauf-Import anlegen", body: "Der erste Start erzeugt einen minimalen revisionsgeführten Profildatensatz und führt erst danach einen begrenzten lokalen Import aus. Extrahierte Fakten bleiben Kandidaten, bis der Benutzer sie prüft. Der Lebenslauf beschleunigt damit die Einrichtung, ohne zur ungeprüften Wahrheit zu werden.", tradeoff: "Das Onboarding braucht einen ausdrücklichen Prüfschritt. Dafür hinterlässt eine fehlgeschlagene oder unvollständige Extraktion keinen mehrdeutigen Tresorzustand." },
         { title: "Genau den geprüften Dossierentwurf veröffentlichen", body: "Jede Bewerbung besitzt einen revisionsgeführten Arbeitsentwurf in SQLite. Autosave-Konflikte lassen das sichtbare Formular unverändert. Die Veröffentlichung verbraucht nur die exakt gespeicherte Revision, und zwar in derselben Transaktion wie das unveränderliche Dossierereignis.", tradeoff: "Der Schreibpfad muss Revisionen und Konflikte behandeln. Dafür kann ein verspätetes Autosave keinen anderen Inhalt als den geprüften veröffentlichen." },
-        { title: "Agenten einen getrennten Lesezugang geben", body: "Agent Access lässt den angemeldeten Benutzer Geltungsbereiche wählen und verlangt vor der einmaligen Ausgabe eines Bearer-Tokens eine erneute Anmeldung. Berechtigungen laufen ab und sind widerrufbar. CLI und MCP-Server stellen über stdio einen geschlossenen Satz schreibgeschützter Werkzeuge bereit, keine freien Prompts oder entfernte Schreib-API.", tradeoff: "Aus dem Quellcode installierte Befehle benötigen weiterhin eine manuelle Client-Einrichtung, und ein externer Client kann gelesene Daten übertragen. Der enge Vertrag ermöglicht nützliche Automatisierung, ohne die Desktop-Sitzung zu teilen." },
+        { title: "Agenten einen getrennten Lesezugang geben", body: "Agent Access lässt den angemeldeten Benutzer Geltungsbereiche wählen und verlangt vor der einmaligen Ausgabe eines Bearer-Tokens eine erneute Anmeldung. Berechtigungen laufen ab und sind widerrufbar. Die installierbare CLI und der MCP-Server stellen über stdio einen geschlossenen Satz schreibgeschützter Werkzeuge bereit, keine freien Prompts oder entfernte Schreib-API.", tradeoff: "Der Benutzer muss den Agent-Client weiterhin einrichten, und ein externer Client kann gelesene Daten übertragen. Der enge Vertrag ermöglicht nützliche Automatisierung, ohne die Desktop-Sitzung zu teilen." },
       ]},
       delivery: { title: "Wie das Produkt verifiziert wird", paragraphs: [
-        "In den Release-Prüfungen für v1.9.0 bestanden 1.534 Backend-Tests; 4 wurden erwartungsgemäß übersprungen. Die Gesamtabdeckung betrug 81,33 %, Verzweigungen eingeschlossen. Hinzu kamen 396 bestandene Frontend-Tests in 70 Dateien und alle 17 Rust-Tests des Release-Stands. Migrations- und Archiv-Suites decken das Entwurfsschema, Archiv v6 und die Wiederherstellung der Formate v1 bis v5 ab.",
-        "Protected-Branch-CI, CodeQL und Containerprüfungen sind am exakten Release-Commit grün. Ein Probelauf ohne Veröffentlichung und der Workflow des signierten Tags haben Pakete für macOS Intel und Apple Silicon, Linux x64 und ARM64 sowie Windows x64 und ARM64 vor der Veröffentlichung unabhängig aufgebaut und geprüft.",
+        "In den Release-Prüfungen für v1.10.0 bestanden 1.573 Backend-Tests; 4 wurden erwartungsgemäß übersprungen. Die Gesamtabdeckung betrug 81,28 %, Verzweigungen eingeschlossen. Hinzu kamen 396 bestandene Frontend-Tests in 70 Dateien und alle 17 Rust-Tests des Release-Stands. Migrations- und Archiv-Suites decken das Entwurfsschema, Archiv v6 und die Wiederherstellung der Formate v1 bis v5 ab.",
+        "Protected-Branch-CI, CodeQL und Containerprüfungen sind am exakten Release-Commit grün. Ein Probelauf ohne Veröffentlichung und der Workflow des signierten Tags haben sechs native Pakete aufgebaut und geprüft. Dieselben Bytes des Agent-Access-Wheels wurden vor der Veröffentlichung unter Linux, macOS und Windows mit Python 3.12 und Python 3.13 getestet.",
       ]},
       result: { title: "Was heute vorhanden ist", paragraphs: [
-        "Das Release v1.9.0 ist eine funktionsfähige Desktop-Utility mit Einrichtung aus dem Lebenslauf, Career Vault, geführter Suche, revisionsgeführter Job Library, einer Zeitleiste pro Opportunity, Lebenslauf-Studio, dauerhaften Dossierentwürfen, Archiv v6 und verpflichtender lokaler Analyse.",
-        "Die authentifizierte Desktop-App verwaltet nun Berechtigungen für sieben schreibgeschützte Operationen, die eine per Bearer-Token authentifizierte CLI und ein MCP-Server über stdio bereitstellen. Codex, Claude Code und Shell-Skripte können eine bewusst kleine Ansicht eines autorisierten Kontos lesen, aber weder den Tresor ändern noch freie Prompts aufrufen oder einen entfernten Transport öffnen.",
+        "Das Release v1.10.0 ist eine funktionsfähige Desktop-Utility mit Einrichtung aus dem Lebenslauf, Career Vault, geführter Suche, revisionsgeführter Job Library, einer Zeitleiste pro Opportunity, Lebenslauf-Studio, dauerhaften Dossierentwürfen, Archiv v6 und verpflichtender lokaler Analyse.",
+        "Die authentifizierte Desktop-App verwaltet nun Berechtigungen für sieben schreibgeschützte Operationen, die eine per Bearer-Token authentifizierte CLI und ein MCP-Server über stdio bereitstellen. Beide Befehle sind im Release-Wheel enthalten. Codex, Claude Code und Shell-Skripte können eine bewusst kleine Ansicht eines autorisierten Kontos lesen, aber weder den Tresor ändern noch freie Prompts aufrufen oder einen entfernten Transport öffnen.",
         "Das Produkt behauptet nicht, ein LLM könne eine Karriere entscheiden. Das Modell hilft, einen eigenen Belegbestand auszuwerten; Datensatz, Quelle und letzte Entscheidung bleiben beim Benutzer.",
       ]},
-      scope: "Diese Fallstudie beschreibt das unveränderliche Release v1.9.0 am Commit d1c1bdde. Der signierte Tag und 23 veröffentlichte Artefakte folgen einem Probelauf ohne Veröffentlichung auf sechs nativen Zielplattformen. Sie behauptet weder Beschäftigungsergebnisse noch Modellgenauigkeit auf privaten Benutzerdaten oder Unterstützung für jedes lokale Modell und jede Maschine.",
+      scope: "Diese Fallstudie beschreibt das unveränderliche Release v1.10.0 am Commit 6fa804e. Der signierte Tag und 25 veröffentlichte Artefakte folgen einem Probelauf ohne Veröffentlichung auf sechs nativen Zielplattformen und sechs Agent-Access-Kombinationen aus Betriebssystem und Python. Sie behauptet weder Beschäftigungsergebnisse noch Modellgenauigkeit auf privaten Benutzerdaten oder Unterstützung für jedes lokale Modell und jede Maschine.",
     }),
     "eliza-lab": localize("eliza-lab", {
       category: "Machine Learning",
@@ -1223,13 +1223,13 @@ export const labsLocales = {
       title: "Construire un espace de travail privé pour sa carrière, fondé sur des preuves plutôt que sur des affirmations générées",
       summary: "CareerOS Local transforme un CV existant en dossier professionnel privé et révisionné, puis utilise un LLM local obligatoire pour le matching et le coaching. Tauri, FastAPI et SQLite gardent les faits, les brouillons et l’accès des agents sur l’appareil.",
       readMinutes: "14",
-      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "v1.9.0 publiée à partir du commit d1c1bdde après vérification sur six plateformes natives"]],
+      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "v1.10.0 publiée depuis le commit 6fa804e après vérification native et Agent Access"]],
       evidence: { title: "Registre des preuves", intro: "Le dépôt actuel consigne ces vérifications et limites reproductibles :", items: [
-        ["Backend", "La suite de préparation de la v1.9.0 réussit 1 534 tests backend ; 4 sont ignorés comme prévu. La couverture globale atteint 81,33 %, branches comprises."],
+        ["Backend", "La suite de publication de la v1.10.0 réussit 1 573 tests backend ; 4 sont ignorés comme prévu. La couverture globale atteint 81,28 %, branches comprises."],
         ["Frontend + shell", "Les 396 tests frontend répartis dans 70 fichiers réussissent. L’arbre des fonctionnalités déjà intégré a aussi réussi les 17 tests Rust, Clippy avec le fichier de verrouillage Cargo imposé et les contrôles de supply chain."],
         ["Import depuis le CV", "Un nouveau coffre peut créer son profil révisionné minimal avant l’import du CV. Les faits extraits restent non confirmés et l’interface conduit directement à leur relecture."],
         ["Dossiers révisionnés", "SQLite conserve un brouillon de travail borné par candidature. L’archive v6 transporte ces brouillons et continue d’inspecter et de restaurer les formats v1 à v5."],
-        ["Accès des agents", "L’application de bureau délivre des autorisations limitées et révocables pour sept opérations en lecture seule exposées par la CLI et le serveur MCP. Elle affiche une fois le jeton bearer, tandis que SQLite ne conserve que son condensat."],
+        ["Accès des agents", "L’application de bureau délivre des autorisations limitées et révocables pour sept opérations en lecture seule exposées par la CLI et le serveur MCP. La version fournit les deux commandes dans un wheel Python installable, affiche une fois le jeton bearer et ne conserve que son condensat."],
       ]},
       starting: { title: "Le problème produit", paragraphs: [
         "Les informations professionnelles se dispersent souvent entre d’anciens CV, des plateformes d’emploi, des notes et des portails de candidature. Les outils AI génériques ajoutent un risque : une réponse soignée peut perdre le lien avec le fait qui la justifie.",
@@ -1259,18 +1259,18 @@ export const labsLocales = {
       decisions: { title: "Les choix qui en font un véritable utilitaire", intro: "Le travail utile se déroule avant et après l’appel au modèle.", items: [
         { title: "Créer le registre avant d’importer le CV", body: "Le premier démarrage crée un profil révisionné minimal, puis lance un import local borné. Les faits extraits restent des candidats jusqu’à leur validation. Le CV accélère donc la configuration sans devenir une vérité incontestable.", tradeoff: "L’onboarding exige une relecture explicite, mais une extraction incomplète ou en échec ne laisse pas le coffre dans un état ambigu." },
         { title: "Publier exactement le brouillon relu", body: "Chaque candidature possède un brouillon de travail révisionné dans SQLite. Les conflits d’enregistrement automatique préservent le formulaire visible. La publication ne consomme que la révision enregistrée exacte, dans la même transaction que l’événement immuable du dossier.", tradeoff: "Le chemin d’écriture doit gérer les révisions et les conflits, mais un enregistrement tardif ne peut pas publier un contenu différent de celui qui a été relu." },
-        { title: "Donner aux agents une porte séparée en lecture seule", body: "Agent Access demande à l’utilisateur connecté de choisir les périmètres et de s’authentifier à nouveau avant d’afficher une seule fois le jeton bearer. Les autorisations expirent et restent révocables. La CLI et le serveur MCP exposent sur stdio un ensemble fermé d’outils en lecture seule, sans prompt libre ni API distante d’écriture.", tradeoff: "Les commandes installées depuis les sources demandent encore une configuration manuelle du client, et un client externe peut transmettre les données lues. Ce contrat étroit rend l’automatisation utile sans partager la session de bureau." },
+        { title: "Donner aux agents une porte séparée en lecture seule", body: "Agent Access demande à l’utilisateur connecté de choisir les périmètres et de s’authentifier à nouveau avant d’afficher une seule fois le jeton bearer. Les autorisations expirent et restent révocables. La CLI installable et le serveur MCP exposent sur stdio un ensemble fermé d’outils en lecture seule, sans prompt libre ni API distante d’écriture.", tradeoff: "L’utilisateur doit encore configurer son client agent, et un client externe peut transmettre les données lues. Ce contrat étroit rend l’automatisation utile sans partager la session de bureau." },
       ]},
       delivery: { title: "Comment le produit est vérifié", paragraphs: [
-        "Les contrôles de la version v1.9.0 ont réussi 1 534 tests backend ; 4 sont ignorés comme prévu. La couverture globale atteint 81,33 %, branches comprises. S’y ajoutent 396 tests frontend réussis dans 70 fichiers et les 17 tests Rust de l’arbre de publication. Les suites de migration et d’archive couvrent le schéma des brouillons, le format v6 et la restauration des formats v1 à v5.",
-        "La CI de la branche protégée, CodeQL et les contrôles des conteneurs sont au vert sur le commit exact de publication. Une répétition sans publication et le workflow du tag signé ont assemblé et vérifié séparément les paquets macOS Intel et Apple Silicon, Linux x64 et ARM64, Windows x64 et ARM64 avant publication.",
+        "Les contrôles de la version v1.10.0 ont réussi 1 573 tests backend ; 4 sont ignorés comme prévu. La couverture globale atteint 81,28 %, branches comprises. S’y ajoutent 396 tests frontend réussis dans 70 fichiers et les 17 tests Rust de l’arbre de publication. Les suites de migration et d’archive couvrent le schéma des brouillons, le format v6 et la restauration des formats v1 à v5.",
+        "La CI de la branche protégée, CodeQL et les contrôles des conteneurs sont au vert sur le commit exact de publication. Une répétition sans publication et le workflow du tag signé ont assemblé et vérifié six paquets natifs. Les mêmes octets du wheel Agent Access ont été testés sous Linux, macOS et Windows avec Python 3.12 et Python 3.13 avant publication.",
       ]},
       result: { title: "Ce qui existe aujourd’hui", paragraphs: [
-        "La version v1.9.0 est un utilitaire de bureau fonctionnel avec démarrage depuis un CV, Career Vault, recherche guidée, Job Library révisionnée, une timeline par opportunité, studio de CV, brouillons de dossier persistants, archive v6 et analyse locale obligatoire.",
-        "L’application de bureau authentifiée gère maintenant les autorisations de sept opérations en lecture seule exposées par une CLI et un serveur MCP sur stdio, tous deux authentifiés par jeton bearer. Codex, Claude Code et les scripts shell peuvent consulter une vue volontairement réduite d’un compte autorisé, mais ne peuvent ni modifier le coffre, ni invoquer de prompts libres, ni ouvrir de transport distant.",
+        "La version v1.10.0 est un utilitaire de bureau fonctionnel avec démarrage depuis un CV, Career Vault, recherche guidée, Job Library révisionnée, une timeline par opportunité, studio de CV, brouillons de dossier persistants, archive v6 et analyse locale obligatoire.",
+        "L’application de bureau authentifiée gère maintenant les autorisations de sept opérations en lecture seule exposées par une CLI et un serveur MCP sur stdio, tous deux livrés dans le wheel de publication et authentifiés par jeton bearer. Codex, Claude Code et les scripts shell peuvent consulter une vue volontairement réduite d’un compte autorisé, mais ne peuvent ni modifier le coffre, ni invoquer de prompts libres, ni ouvrir de transport distant.",
         "Il ne prétend pas qu’un LLM puisse décider d’une carrière. Le modèle aide à interpréter un ensemble de preuves maîtrisé ; l’utilisateur conserve le registre, les sources et la décision finale.",
       ]},
-      scope: "Cette étude de cas décrit la version immuable v1.9.0 au commit d1c1bdde. Le tag signé et les 23 artefacts publiés suivent une répétition sans publication sur six plateformes natives. Elle ne revendique ni résultats professionnels, ni précision du modèle sur des données privées, ni prise en charge de tous les modèles locaux et de toutes les machines.",
+      scope: "Cette étude de cas décrit la version immuable v1.10.0 au commit 6fa804e. Le tag signé et les 25 artefacts publiés suivent une répétition sans publication sur six plateformes natives et six combinaisons système/Python pour Agent Access. Elle ne revendique ni résultats professionnels, ni précision du modèle sur des données privées, ni prise en charge de tous les modèles locaux et de toutes les machines.",
     }),
     "eliza-lab": localize("eliza-lab", {
       category: "Machine learning",
