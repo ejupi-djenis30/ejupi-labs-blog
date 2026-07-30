@@ -2,7 +2,7 @@
 
 The editorial site for [blog.ejupilabs.com](https://blog.ejupilabs.com). It publishes multilingual engineering case studies in English, Italian, German and French, spanning anonymised professional systems and open-source Ejupi Labs projects.
 
-The site is intentionally static. A small Node.js generator builds every route, search surface, feed and metadata record ahead of time. Cloudflare Workers Static Assets serves the result from the custom domain without invoking Worker code for normal page requests.
+The site is intentionally static. A small Node.js generator builds every route, search surface, feed and metadata record ahead of time. A minimal Cloudflare Worker permanently redirects HTTP requests to the same URL over HTTPS, then delegates HTTPS requests unchanged to Workers Static Assets.
 
 ## Published routes
 
@@ -39,6 +39,7 @@ npm run generate:social # regenerate the reviewed social-preview SVG and PNG ass
 npm run validate   # validate routes, SEO, localisation and asset policy
 npm run new:case -- --slug example-case # create an unpublished four-language draft
 npm test           # build, validate and run Node tests
+npm run test:worker:integration # exercise the redirect in Wrangler's local runtime
 npm run test:e2e   # exercise mobile navigation and responsive state in Chromium
 npm run check      # full test suite plus a Cloudflare deployment dry-run
 ```
@@ -61,7 +62,8 @@ site/assets/        Local fonts, Ejupi Labs brand assets and social previews
 site/_headers       Cloudflare security and cache headers
 test/               Content, navigation and generated-route tests
 e2e/                Browser-level keyboard, focus, scroll and resize checks
-wrangler.jsonc      Assets-only Worker and custom-domain configuration
+src/worker.mjs      HTTPS redirect and Static Assets delegation
+wrangler.jsonc      Worker, Static Assets and custom-domain configuration
 ```
 
 ## Content rules
@@ -72,7 +74,7 @@ The case studies describe engineering decisions supported by the source portfoli
 
 ## Deployment
 
-The production hostname is declared as a Cloudflare Custom Domain in `wrangler.jsonc`. After the quality checks pass and Cloudflare authentication is available:
+The production hostname is declared as a Cloudflare Custom Domain in `wrangler.jsonc`. The Worker runs before Static Assets so every HTTP path, including direct asset and missing-page requests, receives a same-host HTTPS 301; HTTPS requests retain the existing asset, 404 and canonical behavior. After the quality checks pass and Cloudflare authentication is available:
 
 ```bash
 npm run deploy

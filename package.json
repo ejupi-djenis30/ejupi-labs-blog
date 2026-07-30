@@ -13,8 +13,9 @@
     "validate": "node scripts/validate.mjs",
     "verify:sources": "node scripts/verify-labs-sources.mjs",
     "test": "npm run check:social && npm run build && npm run validate && node --test",
+    "test:worker:integration": "node scripts/worker-runtime-check.mjs",
     "test:e2e": "playwright test",
-    "check": "npm run test && npm run test:e2e && wrangler deploy --dry-run",
+    "check": "npm run test && npm run test:worker:integration && npm run test:e2e && wrangler deploy --dry-run",
     "dev": "npm run build && wrangler dev",
     "predeploy": "npm run verify:sources",
     "deploy": "npm run check && wrangler deploy"
