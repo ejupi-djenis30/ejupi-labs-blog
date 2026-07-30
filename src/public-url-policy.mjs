@@ -63,6 +63,10 @@ function decodeBrowserText(value) {
       },
     );
 
+  // Keep policy results stable across supported Node/ICU versions. These code
+  // points are ignored by browser IDNA processing and must not split a host.
+  decoded = decoded.replace(/[\u00ad\u200b\u2060-\u2063]/gu, "");
+
   decoded = decoded.replace(/(?:%[\da-f]{2})+/giu, (encodedRun) => {
     try {
       const percentDecoded = decodeURIComponent(encodedRun);
