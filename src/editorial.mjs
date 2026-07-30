@@ -139,7 +139,7 @@ export const editorialUi = {
 
 export const methodology = Object.freeze({
   published: "2026-07-25",
-  updated: "2026-07-28",
+  updated: "2026-07-30",
   copy: {
     en: {
       eyebrow: "Editorial methodology",
@@ -178,8 +178,8 @@ export const methodology = Object.freeze({
     it: {
       eyebrow: "Metodologia editoriale",
       title: "Come viene costruito questo archivio",
-      description: "Come Ejupi Labs gestisce evidenze, motivazioni tecniche, anonimizzazione e correzioni nell’archivio dei case study.",
-      intro: "Ogni articolo separa ciò che è stato costruito dal perché è stato costruito così: il vincolo, la scelta, l’alternativa credibile e il costo accettato.",
+      description: "Come verifico i fatti, spiego le scelte tecniche, proteggo le identità e correggo gli errori in questo archivio.",
+      intro: "Ogni articolo dice cosa ho costruito, perché ho scelto quella strada, quali alternative ho escluso e dove finiscono le evidenze.",
       sections: [
         {
           id: "labs-evidence",
@@ -212,8 +212,8 @@ export const methodology = Object.freeze({
     de: {
       eyebrow: "Redaktionelle Methodik",
       title: "Wie dieses Archiv entsteht",
-      description: "Wie Ejupi Labs im Fallstudien-Archiv mit Nachweisen, technischen Begründungen, Anonymisierung und Korrekturen umgeht.",
-      intro: "Jeder Beitrag trennt das Ergebnis von seiner Begründung: Einschränkung, gewählte Systemgrenze, tragfähige Alternative und bewusst akzeptierter Preis.",
+      description: "Wie ich in diesem Archiv Fakten prüfe, technische Entscheidungen erkläre, Identitäten schütze und Fehler korrigiere.",
+      intro: "Jeder Beitrag zeigt, was ich gebaut habe, warum ich diesen Weg gewählt habe, welche Alternativen ich verworfen habe und wo die Belege enden.",
       sections: [
         {
           id: "labs-evidence",
@@ -246,8 +246,8 @@ export const methodology = Object.freeze({
     fr: {
       eyebrow: "Méthodologie éditoriale",
       title: "Comment ces archives sont construites",
-      description: "Comment Ejupi Labs traite les preuves, les raisons techniques, l’anonymisation et les corrections dans ses études de cas.",
-      intro: "Chaque article distingue ce qui a été construit de la raison du choix : contrainte, option retenue, alternative crédible et coût accepté.",
+      description: "Comment je vérifie les faits, explique les choix techniques, protège les identités et corrige les erreurs dans ces archives.",
+      intro: "Chaque article précise ce que j’ai construit, pourquoi j’ai choisi cette voie, quelles alternatives j’ai écartées et où s’arrêtent les preuves.",
       sections: [
         {
           id: "labs-evidence",

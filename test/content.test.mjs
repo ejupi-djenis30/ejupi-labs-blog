@@ -502,7 +502,13 @@ test("related case studies have a deterministic editorial order", () => {
 
 test("methodology copy is complete and localized in every supported language", () => {
   assert.match(methodology.published, /^\d{4}-\d{2}-\d{2}$/u);
-  assert.match(methodology.updated, /^\d{4}-\d{2}-\d{2}$/u);
+  assert.equal(methodology.updated, "2026-07-30");
+  const firstPersonPatterns = {
+    en: /\bI\b/u,
+    it: /\b(?:verifico|spiego|proteggo|correggo)\b/u,
+    de: /\bich\b/iu,
+    fr: /\bje\b/iu,
+  };
 
   for (const localeKey of localeOrder) {
     const copy = methodology.copy[localeKey];
@@ -517,6 +523,8 @@ test("methodology copy is complete and localized in every supported language", (
     );
     assert.ok(copy.sections.every(({ paragraphs }) => paragraphs.length > 0));
     assert.ok(copy.sections.at(-1).paragraphs.join(" ").includes("info@ejupilabs.com"));
+    assert.match(`${copy.description} ${copy.intro}`, firstPersonPatterns[localeKey]);
+    assert.doesNotMatch(`${copy.description} ${copy.intro}`, /\bEjupi Labs\b/u);
     if (localeKey !== "en") assert.notEqual(copy.intro, methodology.copy.en.intro);
   }
 });

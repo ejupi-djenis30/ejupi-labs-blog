@@ -29,7 +29,7 @@ export const caseDefinitions = [
     categoryKey: "cloud-platforms",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-22",
-    updated: "2026-07-28",
+    updated: "2026-07-30",
     stack: ["GKE", "Terraform", "Helm", "Cloud Build", "GitLab CI/CD"],
   },
   {
@@ -40,7 +40,7 @@ export const caseDefinitions = [
     categoryKey: "workflow-software",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-22",
-    updated: "2026-07-28",
+    updated: "2026-07-30",
     stack: ["Spring Boot", "React", "Single-SPA", "Camunda", "S3-compatible storage"],
   },
   {
@@ -51,7 +51,7 @@ export const caseDefinitions = [
     categoryKey: "enterprise-software",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-22",
-    updated: "2026-07-28",
+    updated: "2026-07-30",
     stack: ["C#", ".NET Framework 4.8", "SQL Server", "KnockoutJS", "Crystal Reports"],
   },
   {
