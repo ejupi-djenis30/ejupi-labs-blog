@@ -53,6 +53,9 @@ test("English case-study index links to every canonical article", async () => {
   assert.match(html, /data-search-state/);
   assert.match(html, /data-case-count/);
   assert.match(html, /data-case-clear/);
+  assert.equal((html.match(/aria-label="Primary navigation"/gu) ?? []).length, 1);
+  assert.equal((html.match(/aria-label="Footer navigation"/gu) ?? []).length, 1);
+  assert.match(html, />Show all case studies <span aria-hidden="true">↺<\/span>/u);
   assert.doesNotMatch(html, /data-case-type|data-case-topic/u);
   assert.match(html, /"@type":"Blog"/);
   assert.doesNotMatch(html, /card-schematic|case-card__rail/u);
@@ -130,7 +133,7 @@ test("articles identify Djenis as the Person author and Ejupi Labs as publisher"
   assert.match(html, /itemprop="author" itemscope itemtype="https:\/\/schema\.org\/Person" itemid="https:\/\/djenis\.ejupilabs\.com\/#person"/u);
   assert.match(html, /rel="author" itemprop="url" href="https:\/\/djenis\.ejupilabs\.com\/"/u);
   assert.match(html, /itemprop="jobTitle">Engineer and case-study author/u);
-  assert.match(html, /Updated <time datetime="2026-07-28" itemprop="dateModified">/u);
+  assert.match(html, /Updated <time datetime="2026-07-30" itemprop="dateModified">/u);
   assert.match(html, /class="site-cta"/u);
 });
 
@@ -172,7 +175,7 @@ test("localized chrome, bylines and cross-site routes stay in the selected langu
     );
     assert.ok(workflow.includes(`rel="author" itemprop="url" href="${authorRoute}"`));
     assert.ok(workflow.includes(ui.authorRole));
-    assert.ok(workflow.includes(`${ui.updated} <time datetime="2026-07-28"`));
+    assert.ok(workflow.includes(`${ui.updated} <time datetime="2026-07-30"`));
     assert.ok(workflow.includes(uppercase(ui.systemViewLabel)));
     assert.ok(workflow.includes(uppercase(ui.processStateReturnLabel)));
 
@@ -364,7 +367,10 @@ test("sitemap and feed include the expanded editorial archive", async () => {
   const feed = await readFile(new URL("../dist/feed.xml", import.meta.url), "utf8");
   assert.match(sitemap, /\/fr\/case-studies\/vector-placement-operations\//);
   assert.match(sitemap, /\/de\/methodology\//);
-  assert.match(sitemap, /<lastmod>2026-07-28<\/lastmod>/);
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/blog\.ejupilabs\.com\/de\/methodology\/<\/loc><lastmod>2026-07-30<\/lastmod>/u,
+  );
   assert.match(feed, /<category>Machine learning<\/category>/);
   assert.match(feed, /\/case-studies\/careeros-local\//);
 });

@@ -75,6 +75,8 @@ test("homepage search no longer depends on visible taxonomy controls", async () 
   assert.doesNotMatch(source, /data-case-type|data-case-topic/u);
   assert.match(source, /url\.searchParams\.delete\("type"\)/u);
   assert.match(source, /url\.searchParams\.delete\("topic"\)/u);
+  assert.match(source, /caseList\.dataset\.visibleCount = String\(visibleCount\)/u);
+  assert.match(source, /card\.dataset\.resultTone/u);
 });
 
 test("README describes the archive as search-only", async () => {
