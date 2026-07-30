@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { access, readFile, readdir } from "node:fs/promises";
-import { basename, extname, join, resolve } from "node:path";
+import { basename, extname, join, relative, resolve } from "node:path";
 import {
   caseDefinitions,
   localeOrder,
@@ -11,10 +11,29 @@ import {
 } from "../src/content.mjs";
 import { assertProtectedLegacySlugs } from "../src/content-contract.mjs";
 import { editorialUi, methodology } from "../src/editorial.mjs";
+import {
+  assertPublicDomainTopology,
+  findDisallowedEjupiLabsUrls,
+} from "../src/public-url-policy.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = join(root, "dist");
 const errors = [];
+
+try {
+  assertPublicDomainTopology({
+    caseDefinitions,
+    publicContent: {
+      caseDefinitions,
+      editorialUi,
+      locales,
+      methodology,
+      site,
+    },
+  });
+} catch (error) {
+  errors.push(error instanceof Error ? error.message : String(error));
+}
 
 const expectedSlugs = caseDefinitions.map(({ slug }) => slug);
 const articleCount = caseDefinitions.reduce(
@@ -334,6 +353,31 @@ for (const localeKey of localeOrder) {
 }
 
 const files = await allFiles(dist);
+const binaryExtensions = new Set([
+  ".avif",
+  ".gif",
+  ".ico",
+  ".jpeg",
+  ".jpg",
+  ".mp4",
+  ".png",
+  ".webm",
+  ".webp",
+  ".woff",
+  ".woff2",
+]);
+for (const file of files) {
+  if (binaryExtensions.has(extname(file).toLowerCase())) continue;
+
+  const contents = await readFile(file, "utf8");
+  for (const { hostname, url } of findDisallowedEjupiLabsUrls(contents)) {
+    errors.push(
+      `${relative(dist, file)} publishes disallowed Ejupi Labs hostname ` +
+        `"${hostname}" (${url}).`,
+    );
+  }
+}
+
 const rasterFiles = files.filter((file) => [".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif"].includes(extname(file).toLowerCase()));
 const expectedRasterFiles = new Set(
   localeOrder.map((localeKey) =>
