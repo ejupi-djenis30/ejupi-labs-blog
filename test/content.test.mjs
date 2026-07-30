@@ -123,6 +123,38 @@ test("professional cases preserve the documented constraints without exposing cl
   }
 });
 
+test("the index speaks in a direct first-person voice in every locale", () => {
+  const expectations = {
+    en: {
+      firstPerson: /\bI\b/u,
+      labsCase: "Founder project · open source",
+    },
+    it: {
+      firstPerson: /\b(?:Spiego|Racconto|Posso)\b/u,
+      labsCase: "Progetto del fondatore · open source",
+    },
+    de: {
+      firstPerson: /\bIch\b/u,
+      labsCase: "Gründerprojekt · Open Source",
+    },
+    fr: {
+      firstPerson: /\b(?:J’explique|Je)\b/u,
+      labsCase: "Projet du fondateur · open source",
+    },
+  };
+
+  for (const localeKey of localeOrder) {
+    const indexCopy = locales[localeKey].index;
+    const copy = `${indexCopy.description} ${indexCopy.ctaTitle} ${indexCopy.ctaBody}`;
+
+    assert.match(indexCopy.description, expectations[localeKey].firstPerson);
+    assert.match(indexCopy.ctaBody, expectations[localeKey].firstPerson);
+    assert.equal(editorialUi[localeKey].labsCase, expectations[localeKey].labsCase);
+    assert.doesNotMatch(copy, /\bEjupi Labs\b/u);
+    assert.doesNotMatch(copy, /(?:\s-\s|—)/u);
+  }
+});
+
 test("protected public routes cannot be removed but new cases are allowed", () => {
   assert.doesNotThrow(() =>
     assertProtectedLegacySlugs(caseDefinitions, protectedLegacySlugs),

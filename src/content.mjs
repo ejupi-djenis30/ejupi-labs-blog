@@ -251,10 +251,10 @@ export const locales = {
     index: {
       title: "Engineering decisions, explained.",
       description:
-        "A closer look at work by Djenis and Ejupi Labs: what was difficult, what I chose, what I ruled out and what the available evidence supports.",
+        "I explain the engineering decisions behind the systems I have delivered and the open-source projects I build. I cover what was difficult, why I chose one path over another and what the evidence can support.",
       eyebrow: "Engineering case studies / 01 / 10",
-      ctaTitle: "Need a clearer route through a complex system?",
-      ctaBody: "Share the difficult part. We can frame the architecture, delivery path and first useful release together.",
+      ctaTitle: "Is a difficult part of the system holding the project back?",
+      ctaBody: "Bring me that part. I can help you define the architecture, plan the delivery and get to a useful first release.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
@@ -662,10 +662,10 @@ export const locales = {
     index: {
       title: "Decisioni tecniche, spiegate.",
       description:
-        "Uno sguardo più vicino al lavoro di Djenis e di Ejupi Labs: cosa era difficile, quali scelte ho fatto, cosa ho escluso e fin dove arrivano le evidenze.",
+        "Spiego le decisioni tecniche alla base dei sistemi che ho realizzato e dei progetti open source che sviluppo. Racconto cosa era difficile, perché ho scelto una strada invece di un’altra e cosa posso dimostrare con i fatti.",
       eyebrow: "Case study di engineering / 01 / 10",
-      ctaTitle: "Serve un percorso più chiaro per un sistema complesso?",
-      ctaBody: "Partiamo dalla parte difficile. Possiamo definire insieme architettura, percorso di delivery e prima release utile.",
+      ctaTitle: "Una parte complessa del sistema sta bloccando il progetto?",
+      ctaBody: "Partiamo proprio da lì. Posso aiutarti a definire l’architettura, pianificare il rilascio e arrivare a una prima versione utile.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
@@ -1073,10 +1073,10 @@ export const locales = {
     index: {
       title: "Technische Entscheidungen, erklärt.",
       description:
-        "Ein genauer Blick auf die Arbeit von Djenis und Ejupi Labs: was schwierig war, wofür ich mich entschied, was ich ausschloss und was die Nachweise tatsächlich tragen.",
+        "Ich erkläre, wie ich bei ausgelieferten Systemen und meinen Open-Source-Projekten technische Entscheidungen getroffen habe. Dabei zeige ich, was schwierig war, warum ich einen Weg gewählt habe und was sich wirklich belegen lässt.",
       eyebrow: "Engineering-Fallstudien / 01 / 10",
-      ctaTitle: "Braucht ein komplexes System einen klareren Weg?",
-      ctaBody: "Bringen Sie den schwierigen Teil mit. Gemeinsam klären wir Architektur, Auslieferungspfad und die erste nützliche Version.",
+      ctaTitle: "Hält ein schwieriger Teil des Systems Ihr Projekt auf?",
+      ctaBody: "Bringen Sie mir genau diesen Teil. Ich helfe Ihnen, die Architektur zu klären, die Auslieferung zu planen und eine erste brauchbare Version auf den Weg zu bringen.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
@@ -1484,10 +1484,10 @@ export const locales = {
     index: {
       title: "Les décisions techniques, expliquées.",
       description:
-        "Un regard précis sur le travail de Djenis et d’Ejupi Labs : ce qui était difficile, mes choix, ce que j’ai écarté et ce que les preuves permettent réellement d’affirmer.",
+        "J’explique les choix techniques qui ont façonné les systèmes que j’ai livrés et les projets open source que je développe. Je raconte ce qui posait problème, pourquoi j’ai choisi une voie plutôt qu’une autre et ce que les faits permettent vraiment d’affirmer.",
       eyebrow: "Études de cas d’ingénierie / 01 / 10",
-      ctaTitle: "Un système complexe a besoin d’un parcours plus clair ?",
-      ctaBody: "Commençons par la partie difficile. Nous pouvons cadrer ensemble l’architecture, le parcours de livraison et la première version utile.",
+      ctaTitle: "Une partie complexe du système bloque votre projet ?",
+      ctaBody: "Parlons précisément de ce point. Je peux vous aider à cadrer l’architecture, organiser la livraison et parvenir à une première version utile.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
