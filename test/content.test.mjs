@@ -230,7 +230,7 @@ test("Labs source metadata is required and must resolve to an immutable commit",
     caseDefinitions
       .filter(({ kind, sourceState }) => kind === "labs" && sourceState === "snapshot")
       .map(({ slug }) => slug),
-    ["jdoor-security-lab"],
+    ["careeros-local", "jdoor-security-lab"],
   );
   assert.ok(
     caseDefinitions
@@ -242,48 +242,69 @@ test("Labs source metadata is required and must resolve to an immutable commit",
   );
 });
 
-test("CareerOS documents the released v1.8.0 workflow and its verified gates", () => {
+test("CareerOS documents the v1.9.0 candidate without presenting it as a published release", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "careeros-local");
   assert.ok(definition);
-  assert.equal(definition.updated, "2026-07-29");
-  assert.equal(definition.verifiedAt, "2026-07-29");
-  assert.equal(definition.sourceState, "release");
-  assert.equal(definition.sourceRef, "v1.8.0");
+  assert.equal(definition.updated, "2026-07-30");
+  assert.equal(definition.verifiedAt, "2026-07-30");
+  assert.equal(definition.sourceState, "snapshot");
+  assert.equal(definition.sourceRef, "v1.9.0");
   assert.equal(
     definition.sourceUrl,
-    "https://github.com/ejupi-djenis30/careeros-local/commit/6dfeb12d180a2342a01bc264c3963bcc4373aeee",
+    "https://github.com/ejupi-djenis30/careeros-local/commit/253cde2b75b085808ff11902eb3be0be0ce19e36",
   );
 
   const localizedClaims = {
     en: {
-      provenance: /provenance|revision/iu,
-      pipeline: /application (?:pipeline|timeline)/iu,
+      candidate: /candidate/iu,
+      cvFirst: /CV-first|existing CV/iu,
+      dossier: /revisioned dossier|dossier draft/iu,
+      agentAccess: /Agent Access/iu,
+      readOnly: /read-only/iu,
     },
     it: {
-      provenance: /provenienza|revisione/iu,
-      pipeline: /pipeline di candidatura/iu,
+      candidate: /candidato/iu,
+      cvFirst: /CV/iu,
+      dossier: /dossier revisionati|bozz[ae] dossier/iu,
+      agentAccess: /Accesso agenti|Agent Access/iu,
+      readOnly: /sola lettura/iu,
     },
     de: {
-      provenance: /provenienz|revision/iu,
-      pipeline: /bewerbungs-pipeline/iu,
+      candidate: /Kandidat/iu,
+      cvFirst: /Lebenslauf/iu,
+      dossier: /Dossierentwurf|revisionsgeführte Dossiers/iu,
+      agentAccess: /Agentenzugriff|Agent Access/iu,
+      readOnly: /schreibgeschützt/iu,
     },
     fr: {
-      provenance: /provenance|révision/iu,
-      pipeline: /pipeline de candidature/iu,
+      candidate: /candidat/iu,
+      cvFirst: /\bCV\b/u,
+      dossier: /dossiers révisionnés|brouillons? de dossier/iu,
+      agentAccess: /Accès des agents|Agent Access/iu,
+      readOnly: /lecture seule/iu,
     },
   };
 
   for (const localeKey of localeOrder) {
     const study = locales[localeKey].cases[definition.slug];
     const copy = JSON.stringify(study);
-    assert.match(copy, /v1\.8\.0/u);
-    assert.match(copy, /1(?:,|\.| )456/u);
-    assert.match(copy, /354/u);
-    assert.match(copy, /archive v5|archivio v5|Archiv v5|format v5/iu);
+    const claims = localizedClaims[localeKey];
+    assert.match(copy, /v1\.9\.0/u);
+    assert.doesNotMatch(copy, /v1\.8\.0/u);
+    assert.match(copy, /1(?:,|\.| )532/u);
+    assert.match(copy, /81(?:,|\.)42\s?(?:%| %)/u);
+    assert.match(copy, /396/u);
+    assert.match(copy, /\b17\b/u);
+    assert.match(copy, /archive v6|archivio v6|Archiv v6|format v6/iu);
     assert.match(copy, /\bCLI\b/u);
     assert.match(copy, /\bMCP\b/u);
-    assert.match(copy, localizedClaims[localeKey].provenance);
-    assert.match(copy, localizedClaims[localeKey].pipeline);
+    assert.match(copy, claims.candidate);
+    assert.match(copy, claims.cvFirst);
+    assert.match(copy, claims.dossier);
+    assert.match(copy, claims.agentAccess);
+    assert.match(copy, claims.readOnly);
+    assert.doesNotMatch(copy, /signed v1\.9\.0|v1\.9\.0 firmata|signiertes v1\.9\.0|v1\.9\.0 signée/iu);
+    assert.doesNotMatch(copy, /published v1\.9\.0|v1\.9\.0 pubblicata|veröffentlichtes v1\.9\.0|v1\.9\.0 publiée/iu);
   }
 });
 

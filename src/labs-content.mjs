@@ -4,30 +4,30 @@ export const labsCases = {
     cardTitle: "CareerOS Local",
     title: "Building a private career workspace around evidence, not generated claims",
     summary:
-      "CareerOS Local combines a Tauri desktop shell, a FastAPI sidecar, a versioned SQLite vault and a required local LLM runtime. The result is a career utility that keeps source facts, documents and analysis on the user’s device.",
-    readMinutes: "13",
+      "CareerOS Local turns an existing CV into a private, revisioned career record, then uses a required local LLM for matching and coaching. Tauri, FastAPI and SQLite keep facts, drafts and agent access on the user’s device.",
+    readMinutes: "14",
     facts: [
       ["Product", "Open-source desktop utility"],
       ["Role", "Product, architecture and implementation"],
       ["Trust boundary", "Local device by default"],
-      ["Status", "Signed v1.8.0 release with verified native packages for six platform and architecture targets"],
+      ["Status", "v1.9.0 candidate verified at commit 253cde2; tag and publication gates remain open"],
     ],
     evidence: {
       title: "Evidence ledger",
       intro: "The current repository records these reproducible checks and boundaries:",
       items: [
-        ["Backend", "The v1.8.0 candidate passes 1,456 backend tests with 4 expected skips."],
-        ["Frontend + shell", "354 frontend checks and all 17 Rust tests pass, alongside lint, production build and dependency-audit gates."],
-        ["Portable archive", "Archive format v5 preserves the logical opportunity relationship and can still inspect and restore formats v1 through v4."],
-        ["Search provenance", "Listings record first seen, last seen and content revision; a newer advert invalidates older analysis still in flight."],
-        ["CLI + MCP", "The read-only CLI and stdio MCP server expose seven bounded tools through revocable, account-bound grants without opening a network listener."],
+        ["Backend", "The v1.9.0 preparation suite passes 1,532 backend tests with 4 expected skips and 81.42% branch coverage."],
+        ["Frontend + shell", "All 396 frontend tests in 70 files pass. The merged feature tree also passed all 17 Rust tests, locked Clippy and its supply-chain gates."],
+        ["CV-first import", "A new vault can create its minimum revisioned profile before importing a CV. Extracted facts stay unconfirmed and the interface moves directly to review."],
+        ["Revisioned dossiers", "SQLite keeps one bounded working draft per application. Archive v6 carries those drafts and still inspects and restores formats v1 through v5."],
+        ["Agent Access", "The desktop issues scoped, revocable grants for seven read-only CLI and MCP tools. It shows the bearer once, while SQLite stores only its digest."],
       ],
     },
     starting: {
       title: "The product problem",
       paragraphs: [
         "Career information tends to fragment across old CVs, job boards, notes and application portals. Generic AI tools add another problem: a polished answer can lose the connection to the fact that supports it.",
-        "CareerOS Local was designed as a working record first. Experience, education, skills and achievements keep provenance, verification state and revision history. The guided search now starts from confirmed, contact-redacted Career Vault facts, and the LLM analyses that owned record instead of inventing a second profile.",
+        "The first-use flow now starts where many people already are: an existing CV. CareerOS creates the smallest valid, revisioned profile first, imports the document locally within fixed limits and leaves every extracted candidate unconfirmed. The user lands on fact review instead of a half-created account or an unexplained error.",
       ],
     },
     constraints: {
@@ -99,42 +99,42 @@ export const labsCases = {
     },
     decisions: {
       title: "Decisions that make it a utility",
-      intro: "The useful product is the complete workflow around the model.",
+      intro: "The useful work happens before and after the model call.",
       items: [
         {
-          title: "Keep provenance in the record",
-          body: "Career facts retain their source, verification status and revisions. Job listings separately record their observation history and content revision, so stale model work cannot overwrite a newer advert.",
-          tradeoff: "This requires more structure than a free-form profile or replace-in-place job table, but corrections and analysis remain traceable.",
+          title: "Create the record before importing the CV",
+          body: "The first-use flow creates a minimum revisioned profile, then runs a bounded local import. Extracted facts remain candidates until the user reviews them, so a CV can accelerate setup without becoming unquestioned truth.",
+          tradeoff: "Onboarding needs an explicit review step, but failed or partial extraction cannot leave the vault in an ambiguous state.",
         },
         {
-          title: "Keep model output downstream of evidence",
-          body: "The vault supplies explicit context to matching and coaching. Model output may interpret or draft from that evidence, but it cannot become the source of record or silently overwrite verified facts.",
-          tradeoff: "The user must review useful suggestions before they enter the workflow, trading seamless automation for provenance that remains inspectable and correctable.",
+          title: "Publish the exact dossier draft that was reviewed",
+          body: "Each application owns one revisioned working draft in SQLite. Autosave conflicts keep the visible form intact, and publication consumes only the exact saved revision in the same transaction that records the immutable dossier event.",
+          tradeoff: "The write path carries revision checks and conflict handling, but a late autosave cannot silently publish different content.",
         },
         {
-          title: "Track one application per opportunity",
-          body: "A job card opens one logical application timeline with its stage, next action, versioned resumes, answers, requirement mappings and verified files. The dossier exports with a canonical SHA-256 manifest.",
-          tradeoff: "The pipeline enforces a deliberate record instead of allowing duplicate ad-hoc trackers, but that record stays coherent across provider duplicates and concurrent requests.",
+          title: "Give agents a separate read-only door",
+          body: "Agent Access asks the signed-in user to choose scopes and reauthenticate before issuing a one-time bearer. Grants expire and can be revoked; the CLI and MCP server expose a closed set of read-only tools over stdio, not a general prompt or remote write API.",
+          tradeoff: "Source-installed commands still require manual client setup, and an external client may transmit the data it reads. The narrower contract keeps automation useful without sharing the desktop session.",
         },
       ],
     },
     delivery: {
       title: "How the product is verified",
       paragraphs: [
-        "The v1.8.0 release candidate passed 1,456 backend tests with 4 expected skips, 354 frontend checks and 17 Rust tests. Database migrations ran as upgrade, downgrade and upgrade round trips, while archive tests exercised v5 plus inspection and restore compatibility for v1 through v4.",
-        "Release automation checked dependency licences, SBOMs, containers and vulnerability policy before building the published Windows, macOS and Linux packages for x64 and ARM64. The source-installed CLI and stdio MCP server also run through bounded grant, redaction and entry-point tests.",
+        "Release-preparation checks on the v1.9.0 candidate passed 1,532 backend tests with 4 expected skips and 81.42% branch coverage, plus 396 frontend tests across 70 files. The merged feature tree passed all 17 Rust tests. Migration and archive suites cover the new dossier draft schema, archive v6 and restore compatibility for v1 through v5.",
+        "Protected-branch CI, CodeQL, container checks and the Linux x64 package lifecycle are green on the reviewed feature tree. The other five native targets still need a read-only rehearsal on the exact release commit, followed by asset review, a verified tag and the immutable GitHub release.",
       ],
     },
     result: {
       title: "What exists today",
       paragraphs: [
-        "CareerOS Local v1.8.0 is a working desktop utility with a Career Vault, guided search, a revisioned Job Library, one application timeline for each opportunity, a resume studio, dossiers, archive v5 and a supervised local analysis runtime.",
-        "A read-only CLI and stdio MCP server let Codex, Claude Code and shell scripts inspect a deliberately small view of an authorized account. Grants are scoped, expiring and revocable; the automation surface cannot edit the vault or run free-form prompts.",
+        "The v1.9.0 candidate on main is a working desktop utility with CV-first setup, a Career Vault, guided search, a revisioned Job Library, one application timeline per opportunity, a resume studio, persistent dossier drafts, archive v6 and required local analysis.",
+        "The authenticated desktop now manages access for the read-only CLI and stdio MCP server. Codex, Claude Code and shell scripts can inspect a deliberately small view of one authorized account, but they cannot edit the vault, invoke free-form prompts or open a remote transport.",
         "It does not claim that an LLM can decide a career. The model helps interpret an owned body of evidence; the user keeps the record, the source and the final decision.",
       ],
     },
     scope:
-      "This case study describes the checked-in architecture and documented product behaviour. It does not claim employment outcomes, model accuracy on private user data or support for every local model and machine.",
+      "This case study describes the v1.9.0 candidate source snapshot at commit 253cde2. The tag, six-target native rehearsal and immutable release are not complete. It does not claim employment outcomes, model accuracy on private user data or support for every local model and machine.",
   },
   "eliza-lab": {
     category: "Machine learning",
