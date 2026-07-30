@@ -154,12 +154,195 @@ test("the generated-output scanner catches project subdomains without false posi
 });
 
 test("plain forbidden host references remain visible to the policy scanner", () => {
+  for (const [example, expectedHostname] of [
+    [
+      "Retired address: jdoor.ejupilabs.com, followed by ordinary prose.",
+      "jdoor.ejupilabs.com",
+    ],
+    [
+      "The old endpoint—jdoor.ejupilabs.com—was retired.",
+      "jdoor.ejupilabs.com",
+    ],
+    [
+      "Retired host: jdoor.ejupilabs.com—do not use it.",
+      "jdoor.ejupilabs.com",
+    ],
+    [
+      "Retired host: jdoor.ejupilabs.com,do not use it.",
+      "jdoor.ejupilabs.com",
+    ],
+    [
+      "Retired host: jdoor.ejupilabs.com;do not use it.",
+      "jdoor.ejupilabs.com",
+    ],
+    ["Retired host: 💩.ejupilabs.com.", "xn--ls8h.ejupilabs.com"],
+    ["Retired host: ♯www.ejupilabs.com.", "xn--www-3y5a.ejupilabs.com"],
+    ["Retired host: ∑www.ejupilabs.com.", "xn--www-cc2a.ejupilabs.com"],
+    ["Retired host: €www.ejupilabs.com.", "xn--www-j50a.ejupilabs.com"],
+  ]) {
+    assert.deepEqual(
+      findDisallowedEjupiLabsUrls(example).map(({ hostname }) => hostname),
+      [expectedHostname],
+      example,
+    );
+  }
+
+  assert.deepEqual(
+    findDisallowedEjupiLabsUrls("jdoor.ejupilabs.comevil.example"),
+    [],
+  );
+});
+
+test("presentation punctuation cannot hide a forbidden project subdomain", () => {
+  for (const example of [
+    "See https://jdoor.ejupilabs.com, before continuing.",
+    "See (https://jdoor.ejupilabs.com).",
+    "Retired: https://jdoor.ejupilabs.com...",
+    "Do not use **jdoor.ejupilabs.com**.",
+    "Read [the old page](https://jdoor.ejupilabs.com).",
+    "Typography can say “jdoor.ejupilabs.com”.",
+    "Typography can say «jdoor.ejupilabs.com».",
+    "Retired host: jdoor.ejupilabs.com…",
+    "Typography can say “https://jdoor.ejupilabs.com”.",
+    "Typography can say ‘https://jdoor.ejupilabs.com’.",
+    "Typography can say （https://jdoor.ejupilabs.com）.",
+    "Typography can say 「https://jdoor.ejupilabs.com」.",
+    "Typography can say 【https://jdoor.ejupilabs.com】.",
+  ]) {
+    assert.deepEqual(
+      findDisallowedEjupiLabsUrls(example).map(({ hostname }) => hostname),
+      ["jdoor.ejupilabs.com"],
+      example,
+    );
+  }
+});
+
+test("browser URL controls and source escapes cannot hide a forbidden subdomain", () => {
+  for (const example of [
+    "https://jdoor.ejupi&Tab;labs.com/",
+    "https://jdoor.ejupi&NewLine;labs.com/",
+    "https://jdoor.ejupi&#9;labs.com/",
+    "https://jdoor.ejupi&#x0a;labs.com/",
+    "https://jdoor.ejupi\tlabs.com/",
+    "https://jdoor.ejupi\nlabs.com/",
+    String.raw`https://jdoor\u002eejupilabs.com/`,
+    String.raw`https://jdoor\x2eejupilabs.com/`,
+    String.raw`https://jdoor\u{2e}ejupilabs.com/`,
+  ]) {
+    assert.deepEqual(
+      findDisallowedEjupiLabsUrls(example).map(({ hostname }) => hostname),
+      ["jdoor.ejupilabs.com"],
+      JSON.stringify(example),
+    );
+  }
+
+  assert.deepEqual(
+    findDisallowedEjupiLabsUrls("https://jdoor.ejupi%09labs.com/"),
+    [],
+  );
   assert.deepEqual(
     findDisallowedEjupiLabsUrls(
-      "Retired address: jdoor.ejupilabs.com, followed by ordinary prose.",
+      "https://example.com/archive/jdoor.ejupilabs.com\nOrdinary prose.",
+    ),
+    [],
+  );
+
+  assert.deepEqual(
+    findDisallowedEjupiLabsUrls(
+      "https://example.com/\njdoor.ejupilabs.com",
     ).map(({ hostname }) => hostname),
     ["jdoor.ejupilabs.com"],
   );
+
+  for (const example of [
+    "https://example.com/\nhttps://jdoor.ejupi&Tab;labs.com/",
+    "https://example.com/\r\nhttps://jdoor.ejupi&#9;labs.com/",
+    "https://example.com/\r\nhttps://jdoor.ejupi\tlabs.com/",
+    "https://example.com/\n//jdoor.ejupi&Tab;labs.com/",
+    "https://example.com/\nh\tttps://jdoor.ejupi&Tab;labs.com/",
+    "https://example.com/\n(https://jdoor.ejupi&Tab;labs.com/)",
+    "https://example.com/\n[old](https://jdoor.ejupi&Tab;labs.com/)",
+    "https://example.com/\n«https://jdoor.ejupi&Tab;labs.com/»",
+    "https://example.com/\n**https://jdoor.ejupi&Tab;labs.com/**",
+    "https://example.com/\n-https://jdoor.ejupi&Tab;labs.com/",
+  ]) {
+    assert.deepEqual(
+      findDisallowedEjupiLabsUrls(example).map(({ hostname }) => hostname),
+      ["jdoor.ejupilabs.com"],
+      JSON.stringify(example),
+    );
+  }
+});
+
+test("IDNA-ignored HTML entities cannot hide a forbidden subdomain", () => {
+  for (const entity of [
+    "shy",
+    "ZeroWidthSpace",
+    "NegativeVeryThinSpace",
+    "NegativeThinSpace",
+    "NegativeMediumSpace",
+    "NegativeThickSpace",
+    "NoBreak",
+    "ApplyFunction",
+    "InvisibleTimes",
+    "InvisibleComma",
+    "af",
+    "it",
+    "ic",
+  ]) {
+    const example = `https://jdoor.ejupi&${entity};labs.com/`;
+    assert.deepEqual(
+      findDisallowedEjupiLabsUrls(example).map(({ hostname }) => hostname),
+      ["jdoor.ejupilabs.com"],
+      example,
+    );
+  }
+});
+
+test("plain host scanning follows browser IDNA hostname normalization", () => {
+  for (const example of [
+    "jdoor.ejupilabs。com",
+    "jdoor．ejupilabs.com",
+    "jdoor｡ejupilabs.com",
+    "jdoor.ejupi\u00adlabs.com",
+    "jdoor.ejupi\u200blabs.com",
+  ]) {
+    assert.deepEqual(
+      findDisallowedEjupiLabsUrls(example).map(({ hostname }) => hostname),
+      ["jdoor.ejupilabs.com"],
+      JSON.stringify(example),
+    );
+  }
+});
+
+test("WHATWG named entities cannot hide IDNA hostname symbols", () => {
+  for (const [entity, decimal, hexadecimal, expectedHostname] of [
+    ["sharp", "9839", "266f", "xn--www-3y5a.ejupilabs.com"],
+    ["sum", "8721", "2211", "xn--www-cc2a.ejupilabs.com"],
+    ["euro", "8364", "20ac", "xn--www-j50a.ejupilabs.com"],
+  ]) {
+    for (const reference of [
+      `&${entity};www.ejupilabs.com`,
+      `&#${decimal};www.ejupilabs.com`,
+      `&#x${hexadecimal};www.ejupilabs.com`,
+    ]) {
+      assert.deepEqual(
+        findDisallowedEjupiLabsUrls(reference).map(({ hostname }) => hostname),
+        [expectedHostname],
+        reference,
+      );
+    }
+  }
+});
+
+test("URL hostname symbols are not mistaken for trailing presentation marks", () => {
+  for (const symbol of ["€", "♯", "∑", "💩"]) {
+    assert.deepEqual(
+      findDisallowedEjupiLabsUrls(`https://jdoor.ejupilabs.com${symbol}`),
+      [],
+      symbol,
+    );
+  }
 });
 
 test("the current public content satisfies the domain topology", () => {

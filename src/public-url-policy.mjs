@@ -1,3 +1,5 @@
+import { decodeHTML, DecodingMode } from "entities";
+
 export const EJUPI_LABS_PUBLIC_HOSTS = Object.freeze([
   "ejupilabs.com",
   "www.ejupilabs.com",
@@ -22,11 +24,13 @@ const EJUPI_LABS_ZONE = "ejupilabs.com";
 const publicHostSet = new Set(EJUPI_LABS_PUBLIC_HOSTS);
 const publicWebUrlPattern =
   /(?:https?:[\\/]{1,2}|(?<!:)[\\/]{2})[^\s"'<>`]+/giu;
-const plainEjupiLabsHostTokenPattern =
-  /[^\s"'<>`\\/@:?#]*ejupilabs\.com[^\s"'<>`\\/@:?#]*/giu;
+const plainHostnameSegmentPattern =
+  /[\p{L}\p{N}\p{M}\p{Cf}\p{S}_.\-\u3002\uff0e\uff61]+/gu;
+const controlJoinedHostTokenPattern =
+  /[^\s"'<>`\\/@:?#]+(?:[\t\n\r]+[^\s"'<>`\\/@:?#]+)+/gu;
 
 function decodeBrowserText(value) {
-  let decoded = String(value)
+  let decoded = decodeHTML(String(value), DecodingMode.Strict)
     .replace(
       /&#(?:x([\da-f]+)|(\d+));?/giu,
       (reference, hexadecimal, decimal) => {
@@ -44,19 +48,25 @@ function decodeBrowserText(value) {
         return String.fromCodePoint(codePoint);
       },
     )
-    .replace(/&(colon|period|sol|bsol);/gu, (reference, entity) => {
-      const replacements = {
-        colon: ":",
-        period: ".",
-        sol: "/",
-        bsol: "\\",
-      };
-      return replacements[entity] || reference;
-    });
+    .replace(
+      /\\(?:u\{([\da-fA-F]{1,6})\}|u([\da-fA-F]{4})|x([\da-fA-F]{2}))/gu,
+      (escape, braced, fixed, hexadecimal) => {
+        const codePoint = Number.parseInt(braced || fixed || hexadecimal, 16);
+        if (
+          !Number.isInteger(codePoint) ||
+          codePoint < 0 ||
+          codePoint > 0x10ffff
+        ) {
+          return escape;
+        }
+        return String.fromCodePoint(codePoint);
+      },
+    );
 
   decoded = decoded.replace(/(?:%[\da-f]{2})+/giu, (encodedRun) => {
     try {
-      return decodeURIComponent(encodedRun);
+      const percentDecoded = decodeURIComponent(encodedRun);
+      return /[\t\n\r]/u.test(percentDecoded) ? encodedRun : percentDecoded;
     } catch {
       return encodedRun;
     }
@@ -69,6 +79,10 @@ function normalizeHostname(hostname) {
   return hostname.toLowerCase().replace(/\.$/u, "");
 }
 
+function trimTrailingPresentationDelimiters(candidate) {
+  return candidate.replace(/[\p{Pe}\p{Pf}.,;:!?…。*]+$/gu, "");
+}
+
 function normalizeHostnameCandidate(candidate) {
   try {
     return normalizeHostname(new URL(`https://${candidate}`).hostname);
@@ -79,7 +93,10 @@ function normalizeHostnameCandidate(candidate) {
 
 function normalizeWebUrlHostname(candidate) {
   try {
-    let browserUrl = candidate.replaceAll("\\", "/");
+    let browserUrl = trimTrailingPresentationDelimiters(candidate).replaceAll(
+      "\\",
+      "/",
+    );
     if (browserUrl.startsWith("//")) browserUrl = `https:${browserUrl}`;
     return normalizeHostname(new URL(browserUrl).hostname);
   } catch {
@@ -125,15 +142,16 @@ export function findDisallowedEjupiLabsUrls(text) {
     plainText.fill(" ", match.index, match.index + match[0].length);
   }
 
-  for (
-    const match of plainText
-      .join("")
-      .matchAll(plainEjupiLabsHostTokenPattern)
-  ) {
-    const candidate = match[0]
-      .replace(/^[([{]+/gu, "")
-      .replace(/[)\]},;!?]+$/gu, "");
-    recordViolation(normalizeHostnameCandidate(candidate), match[0]);
+  const scanPlainHostTokens = (candidateText) => {
+    for (const match of candidateText.matchAll(plainHostnameSegmentPattern)) {
+      recordViolation(normalizeHostnameCandidate(match[0]), match[0]);
+    }
+  };
+
+  scanPlainHostTokens(plainText.join(""));
+
+  for (const match of decodedText.matchAll(controlJoinedHostTokenPattern)) {
+    scanPlainHostTokens(match[0].replace(/[\t\n\r]/gu, ""));
   }
 
   return violations;
