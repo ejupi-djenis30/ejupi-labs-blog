@@ -60,7 +60,7 @@ const wrangler = fileURLToPath(
   new URL("../node_modules/wrangler/bin/wrangler.js", import.meta.url),
 );
 
-async function withWrangler(check) {
+async function runWithWrangler(check) {
   const port = await availablePort();
   const output = [];
   const child = spawn(
@@ -93,8 +93,9 @@ async function withWrangler(check) {
   try {
     await check({ child, port });
   } catch (error) {
-    const details = output.join("").trim();
-    if (details) process.stderr.write(`${details}\n`);
+    if (error instanceof Error) {
+      error.wranglerOutput = output.join("").trim();
+    }
     throw error;
   } finally {
     if (child.exitCode === null && child.signalCode === null) {
@@ -104,6 +105,27 @@ async function withWrangler(check) {
         exited,
         new Promise((resolve) => setTimeout(resolve, 5_000)),
       ]);
+    }
+  }
+}
+
+async function withWrangler(check) {
+  const maximumAttempts = 3;
+
+  for (let attempt = 1; attempt <= maximumAttempts; attempt += 1) {
+    try {
+      await runWithWrangler(check);
+      return;
+    } catch (error) {
+      const details =
+        error instanceof Error && typeof error.wranglerOutput === "string"
+          ? error.wranglerOutput
+          : "";
+      const portWasClaimed =
+        /Address already in use|EADDRINUSE/iu.test(details);
+      if (portWasClaimed && attempt < maximumAttempts) continue;
+      if (details) process.stderr.write(`${details}\n`);
+      throw error;
     }
   }
 }
