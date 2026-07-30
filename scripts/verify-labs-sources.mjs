@@ -200,7 +200,15 @@ async function resolveTagTarget(
       definition,
       "the Git tag reference",
     );
-    if (object.type === "commit") return targetSha;
+    if (object.type === "commit") {
+      if (depth === 0) {
+        throw sourceError(
+          definition,
+          "the Git tag is lightweight; a verified annotated tag is required.",
+        );
+      }
+      return targetSha;
+    }
     if (object.type !== "tag") {
       throw sourceError(
         definition,
@@ -236,10 +244,97 @@ async function resolveTagTarget(
         `annotated tag object ${targetSha} returned a different object SHA.`,
       );
     }
+    if (tag?.verification?.verified !== true) {
+      throw sourceError(
+        definition,
+        `annotated tag object ${targetSha} does not have a verified signature.`,
+      );
+    }
     object = tag.object;
   }
 
   throw sourceError(definition, "the annotated Git tag could not be resolved.");
+}
+
+function expectedReleaseAssets(definition) {
+  if (definition.releaseAssets === undefined) return undefined;
+  if (!Array.isArray(definition.releaseAssets) || definition.releaseAssets.length === 0) {
+    throw sourceError(
+      definition,
+      "releaseAssets must contain at least one expected asset name.",
+    );
+  }
+
+  const names = definition.releaseAssets.map((asset, index) => {
+    if (
+      typeof asset !== "string" ||
+      !/^[A-Za-z0-9][A-Za-z0-9._+-]*$/u.test(asset)
+    ) {
+      throw sourceError(
+        definition,
+        `releaseAssets[${index}] is not a safe asset name.`,
+      );
+    }
+    return asset;
+  });
+  if (new Set(names).size !== names.length) {
+    throw sourceError(definition, "releaseAssets contains duplicate names.");
+  }
+  return names;
+}
+
+function verifyReleaseAssets(definition, release, sourceRef) {
+  const expected = expectedReleaseAssets(definition);
+  if (expected === undefined) return;
+  if (!Array.isArray(release.assets)) {
+    throw sourceError(
+      definition,
+      `GitHub Release ${sourceRef} returned no asset inventory.`,
+    );
+  }
+
+  const actual = release.assets.map((asset, index) => {
+    const name = asset?.name;
+    if (
+      typeof name !== "string" ||
+      !/^[A-Za-z0-9][A-Za-z0-9._+-]*$/u.test(name)
+    ) {
+      throw sourceError(
+        definition,
+        `GitHub Release ${sourceRef} asset ${index + 1} has an invalid name.`,
+      );
+    }
+    if (asset.state !== "uploaded" || !Number.isInteger(asset.size) || asset.size < 1) {
+      throw sourceError(
+        definition,
+        `GitHub Release ${sourceRef} asset ${name} is not a complete non-empty upload.`,
+      );
+    }
+    return name;
+  });
+  if (new Set(actual).size !== actual.length) {
+    throw sourceError(
+      definition,
+      `GitHub Release ${sourceRef} contains duplicate asset names.`,
+    );
+  }
+
+  const actualSet = new Set(actual);
+  const expectedSet = new Set(expected);
+  const missing = expected.filter((name) => !actualSet.has(name));
+  const unexpected = actual.filter((name) => !expectedSet.has(name));
+  if (missing.length > 0 || unexpected.length > 0) {
+    const details = [
+      missing.length > 0 ? `missing ${missing.join(", ")}` : "",
+      unexpected.length > 0 ? `unexpected ${unexpected.join(", ")}` : "",
+    ]
+      .filter(Boolean)
+      .join("; ");
+    throw sourceError(
+      definition,
+      `GitHub Release ${sourceRef} asset inventory differs: ${details}.`,
+    );
+  }
 }
 
 async function verifyPublishedRelease(
@@ -313,15 +408,13 @@ async function verifyPublishedRelease(
       `GitHub Release ${sourceRef} has not been published.`,
     );
   }
-  if (
-    Object.prototype.hasOwnProperty.call(release, "immutable") &&
-    release.immutable !== true
-  ) {
+  if (release.immutable !== true) {
     throw sourceError(
       definition,
       `GitHub Release ${sourceRef} is not immutable.`,
     );
   }
+  verifyReleaseAssets(definition, release, sourceRef);
 }
 
 export async function verifyLabsSources(

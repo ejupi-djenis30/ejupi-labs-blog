@@ -20,6 +20,32 @@ export const site = {
 
 export const localeOrder = ["en", "it", "de", "fr"];
 
+const careerOsReleaseAssets = [
+  "CareerOS-Local_1.9.0_linux-arm64.AppImage",
+  "CareerOS-Local_1.9.0_linux-arm64.deb",
+  "CareerOS-Local_1.9.0_linux-x64.AppImage",
+  "CareerOS-Local_1.9.0_linux-x64.deb",
+  "CareerOS-Local_1.9.0_macos-arm64.dmg",
+  "CareerOS-Local_1.9.0_macos-x64.dmg",
+  "CareerOS-Local_1.9.0_windows-arm64-setup.exe",
+  "CareerOS-Local_1.9.0_windows-arm64.msi",
+  "CareerOS-Local_1.9.0_windows-x64-setup.exe",
+  "CareerOS-Local_1.9.0_windows-x64.msi",
+  "LICENSE",
+  "SHA256SUMS",
+  "careeros-backend-1.9.0.cdx.json",
+  "careeros-frontend-1.9.0.cdx.json",
+  "careeros-rust-1.9.0.cdx.json",
+  "checksums-aarch64-apple-darwin.sha256",
+  "checksums-aarch64-pc-windows-msvc.sha256",
+  "checksums-aarch64-unknown-linux-gnu.sha256",
+  "checksums-x86_64-apple-darwin.sha256",
+  "checksums-x86_64-pc-windows-msvc.sha256",
+  "checksums-x86_64-unknown-linux-gnu.sha256",
+  "release-manifest.json",
+  "supply-chain-evidence.tar.gz",
+];
+
 export const caseDefinitions = [
   {
     slug: "ai-workflow-cloud-migration",
@@ -64,9 +90,10 @@ export const caseDefinitions = [
     published: "2026-07-24",
     updated: "2026-07-30",
     projectUrl: "https://ejupi-djenis30.github.io/careeros-local/",
-    sourceState: "snapshot",
+    sourceState: "release",
     sourceRef: "v1.9.0",
-    sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/commit/253cde2b75b085808ff11902eb3be0be0ce19e36",
+    sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/commit/d1c1bdde076af0bea096c772684c1d9b47c14ed6",
+    releaseAssets: careerOsReleaseAssets,
     verifiedAt: "2026-07-30",
     stack: ["Tauri 2", "React 19", "FastAPI", "SQLite", "llama.cpp"],
   },

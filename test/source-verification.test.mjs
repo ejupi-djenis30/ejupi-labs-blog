@@ -11,6 +11,7 @@ const TAG_SHA = "c".repeat(40);
 const API_BASE = "https://api.github.com/repos/example/product";
 const COMMIT_URL = `${API_BASE}/commits/${SOURCE_SHA}`;
 const REF_URL = `${API_BASE}/git/ref/tags/v1.2.3`;
+const TAG_OBJECT_URL = `${API_BASE}/git/tags/${TAG_SHA}`;
 const RELEASE_URL = `${API_BASE}/releases/tags/v1.2.3`;
 
 function releaseDefinition(overrides = {}) {
@@ -68,6 +69,43 @@ function publishedRelease(overrides = {}) {
     draft: false,
     prerelease: false,
     published_at: "2026-07-29T10:00:00Z",
+    immutable: true,
+    assets: [],
+    ...overrides,
+  };
+}
+
+function verifiedReleaseRoutes({
+  release = publishedRelease(),
+  targetSha = SOURCE_SHA,
+  verification = { reason: "valid", verified: true },
+} = {}) {
+  return new Map([
+    [COMMIT_URL, { sha: SOURCE_SHA }],
+    [
+      REF_URL,
+      {
+        ref: "refs/tags/v1.2.3",
+        object: { type: "tag", sha: TAG_SHA },
+      },
+    ],
+    [
+      TAG_OBJECT_URL,
+      {
+        sha: TAG_SHA,
+        verification,
+        object: { type: "commit", sha: targetSha },
+      },
+    ],
+    [RELEASE_URL, release],
+  ]);
+}
+
+function releaseAsset(name, overrides = {}) {
+  return {
+    name,
+    size: 128,
+    state: "uploaded",
     ...overrides,
   };
 }
@@ -102,21 +140,9 @@ test("GitHub commit parser supports public repository URLs and numeric API URLs"
   );
 });
 
-test("a lightweight tag and published release verify the exact source commit", async () => {
+test("a verified annotated tag and immutable release verify the exact source commit", async () => {
   const token = "test-token-that-must-not-be-logged";
-  const fetchImpl = routeFetch(
-    new Map([
-      [COMMIT_URL, { sha: SOURCE_SHA }],
-      [
-        REF_URL,
-        {
-          ref: "refs/tags/v1.2.3",
-          object: { type: "commit", sha: SOURCE_SHA },
-        },
-      ],
-      [RELEASE_URL, publishedRelease()],
-    ]),
-  );
+  const fetchImpl = routeFetch(verifiedReleaseRoutes());
 
   const result = await verifyLabsSources([releaseDefinition()], {
     fetchImpl,
@@ -136,7 +162,7 @@ test("a lightweight tag and published release verify the exact source commit", a
   ]);
   assert.deepEqual(
     fetchImpl.calls.map(({ href }) => href),
-    [COMMIT_URL, REF_URL, RELEASE_URL],
+    [COMMIT_URL, REF_URL, TAG_OBJECT_URL, RELEASE_URL],
   );
   for (const { options } of fetchImpl.calls) {
     const headers = new Headers(options.headers);
@@ -146,36 +172,37 @@ test("a lightweight tag and published release verify the exact source commit", a
   }
 });
 
-test("an annotated tag is dereferenced before its immutable release is accepted", async () => {
-  const tagObjectUrl = `${API_BASE}/git/tags/${TAG_SHA}`;
-  const fetchImpl = routeFetch(
-    new Map([
-      [COMMIT_URL, { sha: SOURCE_SHA }],
-      [
-        REF_URL,
-        {
-          ref: "refs/tags/v1.2.3",
-          object: { type: "tag", sha: TAG_SHA },
-        },
-      ],
-      [
-        tagObjectUrl,
-        {
-          sha: TAG_SHA,
-          object: { type: "commit", sha: SOURCE_SHA },
-        },
-      ],
-      [RELEASE_URL, publishedRelease({ immutable: true })],
-    ]),
-  );
+test("release verification rejects lightweight and unverified tags", async (context) => {
+  await context.test("lightweight tag", async () => {
+    const fetchImpl = routeFetch(
+      new Map([
+        [COMMIT_URL, { sha: SOURCE_SHA }],
+        [
+          REF_URL,
+          {
+            ref: "refs/tags/v1.2.3",
+            object: { type: "commit", sha: SOURCE_SHA },
+          },
+        ],
+      ]),
+    );
+    await assert.rejects(
+      verifyLabsSources([releaseDefinition()], { fetchImpl }),
+      /tag is lightweight; a verified annotated tag is required/u,
+    );
+  });
 
-  await assert.doesNotReject(() =>
-    verifyLabsSources([releaseDefinition()], { fetchImpl }),
-  );
-  assert.deepEqual(
-    fetchImpl.calls.map(({ href }) => href),
-    [COMMIT_URL, REF_URL, tagObjectUrl, RELEASE_URL],
-  );
+  await context.test("unverified annotated tag", async () => {
+    const routes = verifiedReleaseRoutes({
+      verification: { reason: "unsigned", verified: false },
+    });
+    routes.delete(RELEASE_URL);
+    const fetchImpl = routeFetch(routes);
+    await assert.rejects(
+      verifyLabsSources([releaseDefinition()], { fetchImpl }),
+      /does not have a verified signature/u,
+    );
+  });
 });
 
 test("a snapshot verifies only its exact numeric-repository commit endpoint", async () => {
@@ -201,25 +228,16 @@ test("verification rejects a missing commit and a tag that targets another commi
   });
 
   await context.test("mismatched tag target", async () => {
-    const fetchImpl = routeFetch(
-      new Map([
-        [COMMIT_URL, { sha: SOURCE_SHA }],
-        [
-          REF_URL,
-          {
-            ref: "refs/tags/v1.2.3",
-            object: { type: "commit", sha: OTHER_SHA },
-          },
-        ],
-      ]),
-    );
+    const routes = verifiedReleaseRoutes({ targetSha: OTHER_SHA });
+    routes.delete(RELEASE_URL);
+    const fetchImpl = routeFetch(routes);
     await assert.rejects(
       verifyLabsSources([releaseDefinition()], { fetchImpl }),
       new RegExp(`resolves to ${OTHER_SHA}, not source commit ${SOURCE_SHA}`, "u"),
     );
     assert.deepEqual(
       fetchImpl.calls.map(({ href }) => href),
-      [COMMIT_URL, REF_URL],
+      [COMMIT_URL, REF_URL, TAG_OBJECT_URL],
     );
   });
 });
@@ -230,22 +248,13 @@ test("verification rejects unpublished, draft, prerelease and mutable releases",
     ["prerelease", { prerelease: true }, /is a prerelease/u],
     ["unpublished", { published_at: null }, /has not been published/u],
     ["mutable", { immutable: false }, /is not immutable/u],
+    ["missing immutable state", { immutable: undefined }, /is not immutable/u],
   ];
 
   for (const [label, overrides, expectation] of invalidReleases) {
     await context.test(label, async () => {
       const fetchImpl = routeFetch(
-        new Map([
-          [COMMIT_URL, { sha: SOURCE_SHA }],
-          [
-            REF_URL,
-            {
-              ref: "refs/tags/v1.2.3",
-              object: { type: "commit", sha: SOURCE_SHA },
-            },
-          ],
-          [RELEASE_URL, publishedRelease(overrides)],
-        ]),
+        verifiedReleaseRoutes({ release: publishedRelease(overrides) }),
       );
       await assert.rejects(
         verifyLabsSources([releaseDefinition()], { fetchImpl }),
@@ -253,6 +262,68 @@ test("verification rejects unpublished, draft, prerelease and mutable releases",
       );
     });
   }
+});
+
+test("a declared release asset contract requires the exact complete inventory", async (context) => {
+  const definition = releaseDefinition({
+    releaseAssets: ["product.bin", "SHA256SUMS"],
+  });
+  const validRelease = publishedRelease({
+    assets: [releaseAsset("product.bin"), releaseAsset("SHA256SUMS")],
+  });
+
+  await assert.doesNotReject(() =>
+    verifyLabsSources([definition], {
+      fetchImpl: routeFetch(verifiedReleaseRoutes({ release: validRelease })),
+    }),
+  );
+
+  const invalidInventories = [
+    [
+      "missing asset",
+      [releaseAsset("product.bin")],
+      /asset inventory differs: missing SHA256SUMS/u,
+    ],
+    [
+      "unexpected asset",
+      [
+        releaseAsset("product.bin"),
+        releaseAsset("SHA256SUMS"),
+        releaseAsset("extra.bin"),
+      ],
+      /asset inventory differs: unexpected extra\.bin/u,
+    ],
+    [
+      "empty asset",
+      [releaseAsset("product.bin", { size: 0 }), releaseAsset("SHA256SUMS")],
+      /product\.bin is not a complete non-empty upload/u,
+    ],
+  ];
+
+  for (const [label, assets, expectation] of invalidInventories) {
+    await context.test(label, async () => {
+      const fetchImpl = routeFetch(
+        verifiedReleaseRoutes({
+          release: publishedRelease({ assets }),
+        }),
+      );
+      await assert.rejects(
+        verifyLabsSources([definition], { fetchImpl }),
+        expectation,
+      );
+    });
+  }
+
+  await context.test("missing inventory field", async () => {
+    const release = publishedRelease();
+    delete release.assets;
+    await assert.rejects(
+      verifyLabsSources([definition], {
+        fetchImpl: routeFetch(verifiedReleaseRoutes({ release })),
+      }),
+      /returned no asset inventory/u,
+    );
+  });
 });
 
 test("tokens are trimmed once and transport failures redact the normalized credential", async () => {

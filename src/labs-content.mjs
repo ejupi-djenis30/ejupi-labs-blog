@@ -10,7 +10,7 @@ export const labsCases = {
       ["Product", "Open-source desktop utility"],
       ["Role", "Product, architecture and implementation"],
       ["Trust boundary", "Local device by default"],
-      ["Status", "v1.9.0 candidate verified at commit 253cde2; tag and publication gates remain open"],
+      ["Status", "v1.9.0 released from commit d1c1bdde after verification on six native targets"],
     ],
     evidence: {
       title: "Evidence ledger",
@@ -66,7 +66,7 @@ export const labsCases = {
           alternative:
             "Electron would package another browser runtime around the same local services, while a browser-only build could not honestly own the Python process, local model runtime and native artifact lifecycle.",
           cost:
-            "The project accepts Rust integration, operating-system prerequisites and cross-platform packaging work instead of treating the interface as a standalone website.",
+            "I accept Rust integration, operating-system prerequisites and cross-platform packaging work instead of pretending the interface is a standalone website.",
         },
         {
           choice: "A loopback FastAPI sidecar owns the application services.",
@@ -75,7 +75,7 @@ export const labsCases = {
           alternative:
             "Moving everything into Rust would require rebuilding that service layer and its Python-oriented integrations; putting it in the browser would expose storage and local-runtime concerns to an environment that cannot supervise them.",
           cost:
-            "Two processes must start, authenticate and stop together, and the release has to package the sidecar and defend its loopback boundary.",
+            "That leaves me responsible for starting, authenticating and stopping two processes together, then packaging the sidecar without weakening its loopback boundary.",
         },
         {
           choice: "SQLite and local artifacts form the durable vault.",
@@ -84,7 +84,7 @@ export const labsCases = {
           alternative:
             "A separate database server would add an administered process and credentials; a cloud store would add a network and provider data boundary. Neither solves a shared-service requirement in this product’s scope.",
           cost:
-            "Concurrency and scale remain those of a local utility, and migrations, archive preflight and verified restore need deliberate engineering.",
+            "The tradeoff is local-utility concurrency and scale. Migrations, archive preflight and verified restore therefore need deliberate engineering.",
         },
         {
           choice: "A managed llama.cpp-compatible runtime performs required analysis locally.",
@@ -93,7 +93,7 @@ export const labsCases = {
           alternative:
             "A cloud API would simplify first use and offer different model capacity, but it would send task context outside the device and make privacy depend on a provider and network connection.",
           cost:
-            "Users accept model provisioning, hardware-dependent latency and a narrower set of supported runtimes; the application must also fail closed when the approved local model is unavailable.",
+            "Users take on model provisioning, hardware-dependent latency and a narrower set of runtimes. The application must fail closed when the approved local model is unavailable.",
         },
       ],
     },
@@ -121,20 +121,20 @@ export const labsCases = {
     delivery: {
       title: "How the product is verified",
       paragraphs: [
-        "Release-preparation checks on the v1.9.0 candidate passed 1,532 backend tests with 4 expected skips and 81.42% branch coverage, plus 396 frontend tests across 70 files. The merged feature tree passed all 17 Rust tests. Migration and archive suites cover the new dossier draft schema, archive v6 and restore compatibility for v1 through v5.",
-        "Protected-branch CI, CodeQL, container checks and the Linux x64 package lifecycle are green on the reviewed feature tree. The other five native targets still need a read-only rehearsal on the exact release commit, followed by asset review, a verified tag and the immutable GitHub release.",
+        "Release checks for v1.9.0 passed 1,532 backend tests with 4 expected skips and 81.42% branch coverage, plus 396 frontend tests across 70 files. The release tree passed all 17 Rust tests. Migration and archive suites cover the dossier draft schema, archive v6 and restore compatibility for v1 through v5.",
+        "Protected-branch CI, CodeQL and container checks are green on the exact release commit. A non-publishing rehearsal and the signed-tag workflow independently assembled and verified native packages for macOS Intel and Apple Silicon, Linux x64 and ARM64, and Windows x64 and ARM64 before publication.",
       ],
     },
     result: {
       title: "What exists today",
       paragraphs: [
-        "The v1.9.0 candidate on main is a working desktop utility with CV-first setup, a Career Vault, guided search, a revisioned Job Library, one application timeline per opportunity, a resume studio, persistent dossier drafts, archive v6 and required local analysis.",
-        "The authenticated desktop now manages access for the read-only CLI and stdio MCP server. Codex, Claude Code and shell scripts can inspect a deliberately small view of one authorized account, but they cannot edit the vault, invoke free-form prompts or open a remote transport.",
+        "The v1.9.0 release is a working desktop utility with CV-first setup, a Career Vault, guided search, a revisioned Job Library, one application timeline per opportunity, a resume studio, persistent dossier drafts, archive v6 and required local analysis.",
+        "The authenticated desktop now manages grants for seven bearer-authenticated, read-only agent commands and stdio MCP tools. Codex, Claude Code and shell scripts can inspect a deliberately small view of one authorized account, but they cannot edit the vault, invoke free-form prompts or open a remote transport.",
         "It does not claim that an LLM can decide a career. The model helps interpret an owned body of evidence; the user keeps the record, the source and the final decision.",
       ],
     },
     scope:
-      "This case study describes the v1.9.0 candidate source snapshot at commit 253cde2. The tag, six-target native rehearsal and immutable release are not complete. It does not claim employment outcomes, model accuracy on private user data or support for every local model and machine.",
+      "This case study describes the immutable v1.9.0 release at commit d1c1bdde. Its signed tag and 23 published assets follow a non-publishing rehearsal across six native targets. It does not claim employment outcomes, model accuracy on private user data or support for every local model and machine.",
   },
   "eliza-lab": {
     category: "Machine learning",
