@@ -81,11 +81,14 @@ npm run deploy
 ```
 
 The deploy lifecycle first checks every Labs commit against GitHub. Entries marked
-`release` must also have a tag that resolves to that exact commit and a published,
-non-draft, non-prerelease Release. Entries marked `snapshot` stop at the immutable
-commit check. `GH_TOKEN` or `GITHUB_TOKEN` is optional, but a dedicated read-only
-token avoids the low anonymous API rate limit. Ordinary `test` and `check` runs
-mock this boundary and never contact GitHub.
+`release` must resolve through a verified annotated tag whose signed name matches
+`sourceRef` and whose target is the exact source commit. The corresponding Release
+must be published, non-draft, non-prerelease and immutable. When a definition
+declares `releaseAssets`, the remote Release must contain that exact inventory as
+complete, non-empty uploads, with no missing or extra files. Entries marked
+`snapshot` stop at the immutable commit check. `GH_TOKEN` or `GITHUB_TOKEN` is
+optional, but a dedicated read-only token avoids the low anonymous API rate limit.
+Ordinary `test` and `check` runs mock this boundary and never contact GitHub.
 
 `workers_dev` and preview URLs are disabled so the custom domain remains the only public production origin.
 

@@ -20,6 +20,32 @@ export const site = {
 
 export const localeOrder = ["en", "it", "de", "fr"];
 
+const careerOsReleaseAssets = [
+  "CareerOS-Local_1.9.0_linux-arm64.AppImage",
+  "CareerOS-Local_1.9.0_linux-arm64.deb",
+  "CareerOS-Local_1.9.0_linux-x64.AppImage",
+  "CareerOS-Local_1.9.0_linux-x64.deb",
+  "CareerOS-Local_1.9.0_macos-arm64.dmg",
+  "CareerOS-Local_1.9.0_macos-x64.dmg",
+  "CareerOS-Local_1.9.0_windows-arm64-setup.exe",
+  "CareerOS-Local_1.9.0_windows-arm64.msi",
+  "CareerOS-Local_1.9.0_windows-x64-setup.exe",
+  "CareerOS-Local_1.9.0_windows-x64.msi",
+  "LICENSE",
+  "SHA256SUMS",
+  "careeros-backend-1.9.0.cdx.json",
+  "careeros-frontend-1.9.0.cdx.json",
+  "careeros-rust-1.9.0.cdx.json",
+  "checksums-aarch64-apple-darwin.sha256",
+  "checksums-aarch64-pc-windows-msvc.sha256",
+  "checksums-aarch64-unknown-linux-gnu.sha256",
+  "checksums-x86_64-apple-darwin.sha256",
+  "checksums-x86_64-pc-windows-msvc.sha256",
+  "checksums-x86_64-unknown-linux-gnu.sha256",
+  "release-manifest.json",
+  "supply-chain-evidence.tar.gz",
+];
+
 export const caseDefinitions = [
   {
     slug: "ai-workflow-cloud-migration",
@@ -62,12 +88,13 @@ export const caseDefinitions = [
     categoryKey: "local-first-product",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-29",
+    updated: "2026-07-30",
     projectUrl: "https://ejupi-djenis30.github.io/careeros-local/",
     sourceState: "release",
-    sourceRef: "v1.8.0",
-    sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/commit/6dfeb12d180a2342a01bc264c3963bcc4373aeee",
-    verifiedAt: "2026-07-29",
+    sourceRef: "v1.9.0",
+    sourceUrl: "https://github.com/ejupi-djenis30/careeros-local/commit/d1c1bdde076af0bea096c772684c1d9b47c14ed6",
+    releaseAssets: careerOsReleaseAssets,
+    verifiedAt: "2026-07-30",
     stack: ["Tauri 2", "React 19", "FastAPI", "SQLite", "llama.cpp"],
   },
   {
@@ -251,10 +278,10 @@ export const locales = {
     index: {
       title: "Engineering decisions, explained.",
       description:
-        "A closer look at work by Djenis and Ejupi Labs: what was difficult, what I chose, what I ruled out and what the available evidence supports.",
+        "I explain the engineering decisions behind the systems I have delivered and the open-source projects I build. I cover what was difficult, why I chose one path over another and what the evidence can support.",
       eyebrow: "Engineering case studies / 01 / 10",
-      ctaTitle: "Need a clearer route through a complex system?",
-      ctaBody: "Share the difficult part. We can frame the architecture, delivery path and first useful release together.",
+      ctaTitle: "Is a difficult part of the system holding the project back?",
+      ctaBody: "Bring me that part. I can help you define the architecture, plan the delivery and get to a useful first release.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
@@ -662,18 +689,18 @@ export const locales = {
     index: {
       title: "Decisioni tecniche, spiegate.",
       description:
-        "Uno sguardo più vicino al lavoro di Djenis e di Ejupi Labs: cosa era difficile, quali scelte ho fatto, cosa ho escluso e fin dove arrivano le evidenze.",
+        "Spiego le decisioni tecniche alla base dei sistemi che ho realizzato e dei progetti open source che sviluppo. Racconto cosa era difficile, perché ho scelto una strada invece di un’altra e cosa posso dimostrare con i fatti.",
       eyebrow: "Case study di engineering / 01 / 10",
-      ctaTitle: "Serve un percorso più chiaro per un sistema complesso?",
-      ctaBody: "Partiamo dalla parte difficile. Possiamo definire insieme architettura, percorso di delivery e prima release utile.",
+      ctaTitle: "Una parte complessa del sistema sta bloccando il progetto?",
+      ctaBody: "Partiamo proprio da lì. Posso aiutarti a definire l’architettura, pianificare il rilascio e arrivare a una prima versione utile.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
         category: "Piattaforme cloud",
-        cardTitle: "Migrazione cloud di una piattaforma AI",
-        title: "Portare una piattaforma AI su una base cloud ripetibile",
+        cardTitle: "Migrazione cloud di una piattaforma di workflow IA",
+        title: "Portare una piattaforma di workflow IA su una base cloud ripetibile",
         summary:
-          "Ho portato una piattaforma multicomponente per documenti e workflow AI da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
+          "Ho portato una piattaforma multicomponente per documenti e workflow IA da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
         readMinutes: "14",
         facts: [
           ["Disciplina", "Cloud platform engineering"],
@@ -684,7 +711,7 @@ export const locales = {
         starting: {
           title: "Il punto di partenza",
           paragraphs: [
-            "La piattaforma on-premise riuniva un’interfaccia Vue, due servizi Spring Boot, un worker Python Temporal, Temporal, Keycloak, PostgreSQL e MinIO. Gestiva estrazione documentale e workflow assistiti dall’AI, ma gli ambienti non condividevano un percorso di setup affidabile.",
+            "La piattaforma on-premise riuniva un’interfaccia Vue, due servizi Spring Boot, un worker Python Temporal, Temporal, Keycloak, PostgreSQL e MinIO. Gestiva estrazione documentale e workflow assistiti dall’IA, ma gli ambienti non condividevano un percorso di setup affidabile.",
             "Definirla soltanto una migrazione cloud avrebbe descritto la destinazione, non il lavoro. Bisognava spostare con criterio componenti stateful e stateless, separare la delivery dimostrativa da quella di produzione e offrire agli operatori uno switch controllato tra due slot.",
             "Ho scomposto il cambiamento in quattro confini collegati: packaging dei workload, dati gestiti, configurazione degli ambienti e controllo del rilascio. Così “metterla su Kubernetes” non poteva diventare l’intero design.",
           ],
@@ -1073,18 +1100,18 @@ export const locales = {
     index: {
       title: "Technische Entscheidungen, erklärt.",
       description:
-        "Ein genauer Blick auf die Arbeit von Djenis und Ejupi Labs: was schwierig war, wofür ich mich entschied, was ich ausschloss und was die Nachweise tatsächlich tragen.",
+        "Ich erkläre, wie ich bei ausgelieferten Systemen und meinen Open-Source-Projekten technische Entscheidungen getroffen habe. Dabei zeige ich, was schwierig war, warum ich einen Weg gewählt habe und was sich wirklich belegen lässt.",
       eyebrow: "Engineering-Fallstudien / 01 / 10",
-      ctaTitle: "Braucht ein komplexes System einen klareren Weg?",
-      ctaBody: "Bringen Sie den schwierigen Teil mit. Gemeinsam klären wir Architektur, Auslieferungspfad und die erste nützliche Version.",
+      ctaTitle: "Hält ein schwieriger Teil des Systems Ihr Projekt auf?",
+      ctaBody: "Bringen Sie mir genau diesen Teil. Ich helfe Ihnen, die Architektur zu klären, die Auslieferung zu planen und eine erste brauchbare Version auf den Weg zu bringen.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
         category: "Cloud-Plattformen",
-        cardTitle: "Cloud-Migration einer AI-Workflow-Plattform",
-        title: "Eine AI-Workflow-Plattform auf ein wiederholbares Cloud-Fundament stellen",
+        cardTitle: "Cloud-Migration einer KI-Workflow-Plattform",
+        title: "Eine KI-Workflow-Plattform auf ein wiederholbares Cloud-Fundament stellen",
         summary:
-          "Ich überführte eine mehrteilige Dokument- und AI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
+          "Ich überführte eine mehrteilige Dokument- und KI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
         readMinutes: "14",
         facts: [
           ["Disziplin", "Cloud Platform Engineering"],
@@ -1095,7 +1122,7 @@ export const locales = {
         starting: {
           title: "Der Ausgangspunkt",
           paragraphs: [
-            "Die On-Premise-Plattform verband eine Vue-Oberfläche, zwei Spring-Boot-Dienste, einen Python-Temporal-Worker, Temporal, Keycloak, PostgreSQL und MinIO. Sie verarbeitete Dokumente und AI-gestützte Workflows, doch die Umgebungen hatten keinen gemeinsamen, verlässlichen Setup-Weg.",
+            "Die On-Premise-Plattform verband eine Vue-Oberfläche, zwei Spring-Boot-Dienste, einen Python-Temporal-Worker, Temporal, Keycloak, PostgreSQL und MinIO. Sie verarbeitete Dokumente und KI-gestützte Workflows, doch die Umgebungen hatten keinen gemeinsamen, verlässlichen Setup-Weg.",
             "Nur von einer Cloud-Migration zu sprechen, hätte das Ziel beschrieben, nicht die eigentliche Arbeit. Stateful und stateless Komponenten mussten bewusst verschoben, Demo und Produktion getrennt und der Wechsel zwischen zwei Produktionsslots kontrolliert werden.",
             "Ich zerlegte die Änderung in vier verbundene Grenzen: Workload-Paketierung, verwaltete Daten, Umgebungskonfiguration und Releasekontrolle. So konnte „auf Kubernetes verschieben“ nicht zum gesamten Design werden.",
           ],
@@ -1484,10 +1511,10 @@ export const locales = {
     index: {
       title: "Les décisions techniques, expliquées.",
       description:
-        "Un regard précis sur le travail de Djenis et d’Ejupi Labs : ce qui était difficile, mes choix, ce que j’ai écarté et ce que les preuves permettent réellement d’affirmer.",
+        "J’explique les choix techniques qui ont façonné les systèmes que j’ai livrés et les projets open source que je développe. Je raconte ce qui posait problème, pourquoi j’ai choisi une voie plutôt qu’une autre et ce que les faits permettent vraiment d’affirmer.",
       eyebrow: "Études de cas d’ingénierie / 01 / 10",
-      ctaTitle: "Un système complexe a besoin d’un parcours plus clair ?",
-      ctaBody: "Commençons par la partie difficile. Nous pouvons cadrer ensemble l’architecture, le parcours de livraison et la première version utile.",
+      ctaTitle: "Une partie complexe du système bloque votre projet ?",
+      ctaBody: "Parlons précisément de ce point. Je peux vous aider à cadrer l’architecture, organiser la livraison et parvenir à une première version utile.",
     },
     cases: {
       "ai-workflow-cloud-migration": {

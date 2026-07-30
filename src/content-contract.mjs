@@ -223,6 +223,7 @@ export function assertDefinitionCatalog(
     "sourceState",
     "sourceRef",
     "sourceUrl",
+    "releaseAssets",
     "verifiedAt",
   ];
   const slugs = new Set();
@@ -310,6 +311,24 @@ export function assertDefinitionCatalog(
       }
       if (definition.verifiedAt > definition.updated) {
         fail(`${path}.verifiedAt`, "cannot be later than updated.");
+      }
+      if (definition.releaseAssets !== undefined) {
+        if (definition.sourceState !== "release") {
+          fail(`${path}.releaseAssets`, "is only valid for a published release.");
+        }
+        assertStringArray(definition.releaseAssets, `${path}.releaseAssets`);
+        const duplicateAssets = definition.releaseAssets.filter(
+          (asset, assetIndex, assets) => assets.indexOf(asset) !== assetIndex,
+        );
+        if (duplicateAssets.length > 0) {
+          fail(`${path}.releaseAssets`, "contains duplicate asset names.");
+        }
+        const invalidAssets = definition.releaseAssets.filter(
+          (asset) => !/^[A-Za-z0-9][A-Za-z0-9._+-]*$/u.test(asset),
+        );
+        if (invalidAssets.length > 0) {
+          fail(`${path}.releaseAssets`, "contains an invalid asset name.");
+        }
       }
 
       let projectUrl;

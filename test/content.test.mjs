@@ -77,6 +77,22 @@ test("every locale contains the same complete case-study structure", () => {
   }
 });
 
+test("the cloud-migration case title uses each locale's own AI terminology", () => {
+  const expectedCardTitles = {
+    en: "AI workflow platform cloud migration",
+    it: "Migrazione cloud di una piattaforma di workflow IA",
+    de: "Cloud-Migration einer KI-Workflow-Plattform",
+    fr: "Migration cloud d’une plateforme de workflow IA",
+  };
+
+  for (const localeKey of localeOrder) {
+    assert.equal(
+      locales[localeKey].cases["ai-workflow-cloud-migration"].cardTitle,
+      expectedCardTitles[localeKey],
+    );
+  }
+});
+
 test("professional cases preserve the documented constraints without exposing client identities", () => {
   const localizedExpectations = {
     en: {
@@ -120,6 +136,38 @@ test("professional cases preserve the documented constraints without exposing cl
       `${cloud}${archival}${erp}`,
       /Jmatica|Archivio Centrale|Var4Retail|Sky Store|DHL|GLS/iu,
     );
+  }
+});
+
+test("the index speaks in a direct first-person voice in every locale", () => {
+  const expectations = {
+    en: {
+      firstPerson: /\bI\b/u,
+      labsCase: "Founder project · open source",
+    },
+    it: {
+      firstPerson: /\b(?:Spiego|Racconto|Posso)\b/u,
+      labsCase: "Progetto del fondatore · open source",
+    },
+    de: {
+      firstPerson: /\bIch\b/u,
+      labsCase: "Gründerprojekt · Open Source",
+    },
+    fr: {
+      firstPerson: /\b(?:J’explique|Je)\b/u,
+      labsCase: "Projet du fondateur · open source",
+    },
+  };
+
+  for (const localeKey of localeOrder) {
+    const indexCopy = locales[localeKey].index;
+    const copy = `${indexCopy.description} ${indexCopy.ctaTitle} ${indexCopy.ctaBody}`;
+
+    assert.match(indexCopy.description, expectations[localeKey].firstPerson);
+    assert.match(indexCopy.ctaBody, expectations[localeKey].firstPerson);
+    assert.equal(editorialUi[localeKey].labsCase, expectations[localeKey].labsCase);
+    assert.doesNotMatch(copy, /\bEjupi Labs\b/u);
+    assert.doesNotMatch(copy, /(?:\s-\s|—)/u);
   }
 });
 
@@ -242,48 +290,87 @@ test("Labs source metadata is required and must resolve to an immutable commit",
   );
 });
 
-test("CareerOS documents the released v1.8.0 workflow and its verified gates", () => {
+test("CareerOS documents the immutable v1.9.0 release", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "careeros-local");
   assert.ok(definition);
-  assert.equal(definition.updated, "2026-07-29");
-  assert.equal(definition.verifiedAt, "2026-07-29");
+  assert.equal(definition.updated, "2026-07-30");
+  assert.equal(definition.verifiedAt, "2026-07-30");
   assert.equal(definition.sourceState, "release");
-  assert.equal(definition.sourceRef, "v1.8.0");
+  assert.equal(definition.sourceRef, "v1.9.0");
   assert.equal(
     definition.sourceUrl,
-    "https://github.com/ejupi-djenis30/careeros-local/commit/6dfeb12d180a2342a01bc264c3963bcc4373aeee",
+    "https://github.com/ejupi-djenis30/careeros-local/commit/d1c1bdde076af0bea096c772684c1d9b47c14ed6",
+  );
+  assert.equal(definition.releaseAssets.length, 23);
+  assert.equal(new Set(definition.releaseAssets).size, 23);
+  assert.ok(definition.releaseAssets.includes("release-manifest.json"));
+  assert.ok(definition.releaseAssets.includes("SHA256SUMS"));
+  assert.ok(
+    definition.releaseAssets.includes(
+      "CareerOS-Local_1.9.0_windows-arm64-setup.exe",
+    ),
   );
 
   const localizedClaims = {
     en: {
-      provenance: /provenance|revision/iu,
-      pipeline: /application (?:pipeline|timeline)/iu,
+      release: /release/iu,
+      cvFirst: /CV-first|existing CV/iu,
+      dossier: /revisioned dossier|dossier draft/iu,
+      agentAccess: /Agent Access/iu,
+      readOnly: /read-only/iu,
     },
     it: {
-      provenance: /provenienza|revisione/iu,
-      pipeline: /pipeline di candidatura/iu,
+      release: /release|pubblicat[ao]/iu,
+      cvFirst: /CV/iu,
+      dossier: /dossier revisionati|bozz[ae] dossier/iu,
+      agentAccess: /Accesso agenti|Agent Access/iu,
+      readOnly: /sola lettura/iu,
     },
     de: {
-      provenance: /provenienz|revision/iu,
-      pipeline: /bewerbungs-pipeline/iu,
+      release: /Release|veröffentlicht/iu,
+      cvFirst: /Lebenslauf/iu,
+      dossier: /Dossierentwurf|revisionsgeführte Dossiers/iu,
+      agentAccess: /Agentenzugriff|Agent Access/iu,
+      readOnly: /schreibgeschützt/iu,
     },
     fr: {
-      provenance: /provenance|révision/iu,
-      pipeline: /pipeline de candidature/iu,
+      release: /version|publiée/iu,
+      cvFirst: /\bCV\b/u,
+      dossier: /dossiers révisionnés|brouillons? de dossier/iu,
+      agentAccess: /Accès des agents|Agent Access/iu,
+      readOnly: /lecture seule/iu,
     },
   };
 
   for (const localeKey of localeOrder) {
     const study = locales[localeKey].cases[definition.slug];
     const copy = JSON.stringify(study);
-    assert.match(copy, /v1\.8\.0/u);
-    assert.match(copy, /1(?:,|\.| )456/u);
-    assert.match(copy, /354/u);
-    assert.match(copy, /archive v5|archivio v5|Archiv v5|format v5/iu);
+    const claims = localizedClaims[localeKey];
+    assert.match(copy, /v1\.9\.0/u);
+    assert.doesNotMatch(copy, /v1\.8\.0/u);
+    assert.match(copy, /1(?:,|\.| )534/u);
+    assert.match(copy, /81(?:,|\.)33\s?(?:%| %)/u);
+    assert.match(copy, /396/u);
+    assert.match(copy, /\b17\b/u);
+    assert.match(copy, /archive v6|archivio v6|Archiv v6|format v6/iu);
     assert.match(copy, /\bCLI\b/u);
     assert.match(copy, /\bMCP\b/u);
-    assert.match(copy, localizedClaims[localeKey].provenance);
-    assert.match(copy, localizedClaims[localeKey].pipeline);
+    assert.match(copy, claims.release);
+    assert.match(copy, claims.cvFirst);
+    assert.match(copy, claims.dossier);
+    assert.match(copy, claims.agentAccess);
+    assert.match(copy, claims.readOnly);
+    assert.match(copy, /d1c1bdde/u);
+    assert.match(copy, /\b23\b/u);
+    assert.match(
+      copy,
+      /six(?:-| )(?:native )?targets?|sei (?:target|piattaforme)|sechs native[nr]? Ziel(?:en|plattformen)|six (?:cibles|plateformes)/iu,
+    );
+    assert.match(copy, /signed tag|tag firmato|signierte(?:r|n)? Tag|tag signé/iu);
+    assert.doesNotMatch(
+      copy,
+      /remain open|ancora da completare|stehen noch aus|rest(?:e|ent) à terminer|not complete|non sono ancora completi|nicht abgeschlossen|ne sont pas terminés/iu,
+    );
   }
 });
 
