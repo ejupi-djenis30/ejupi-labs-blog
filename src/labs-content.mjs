@@ -147,7 +147,7 @@ export const labsCases = {
       ["Product", "Educational ML pipeline and browser lab"],
       ["Role", "ML protocol, Rust implementation and safety redesign"],
       ["Data", "Versioned synthetic fixtures"],
-      ["Status", "Reproducible v3 bundle, nested selection audit and CLI"],
+      ["Status", "Immutable v1.6.0 release with 20 attested assets"],
     ],
     evidence: {
       title: "Evidence ledger",
@@ -270,7 +270,7 @@ export const labsCases = {
       ],
     },
     scope:
-      "All reported dataset sizes and protocol details come from the versioned repository documentation. The synthetic corpus does not establish clinical validity, broad language coverage or production readiness.",
+      "This case study describes the immutable v1.6.0 release at commit cacd4448. Its signed tag and 20 attested assets cover Linux x64, Windows x64, macOS Intel and Apple Silicon. The synthetic corpus does not establish clinical validity, broad language coverage or production readiness.",
   },
   "djenis-ai-agent": {
     category: "Agent systems",

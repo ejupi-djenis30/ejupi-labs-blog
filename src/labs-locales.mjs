@@ -122,7 +122,7 @@ export const labsLocales = {
         ["Prodotto", "Pipeline ML didattica e laboratorio nel browser"],
         ["Ruolo", "Protocollo ML, implementazione Rust e riprogettazione della sicurezza"],
         ["Dati", "Fixture sintetiche versionate"],
-        ["Stato", "Bundle v3 riproducibile, audit annidato della selezione e CLI"],
+        ["Stato", "Release immutabile v1.6.0 con 20 artefatti attestati"],
       ],
       evidence: {
         title: "Registro delle evidenze",
@@ -212,7 +212,7 @@ export const labsLocales = {
         ],
       },
       scope:
-        "Tutte le dimensioni dei dataset e i dettagli del protocollo riportati provengono dalla documentazione versionata del repository. Il corpus sintetico non dimostra validità clinica, ampia copertura linguistica o idoneità alla produzione.",
+        "Questo case study descrive la release immutabile v1.6.0 al commit cacd4448. Il tag firmato e i 20 artefatti attestati coprono Linux x64, Windows x64, macOS Intel e Apple Silicon. Il corpus sintetico non dimostra validità clinica, ampia copertura linguistica o idoneità alla produzione.",
     }),
     "djenis-ai-agent": localize("djenis-ai-agent", {
       category: "Sistemi agentici",
@@ -795,7 +795,7 @@ export const labsLocales = {
       title: "Aus einem riskanten Chatbot-Prototyp wird ein prüfbares Open-Set-ML-Experiment",
       summary: "ELIZA Lab ist eine Rust-Pipeline zum lokalen Trainieren, Kalibrieren und Untersuchen eines Intent-Klassifikators. Sie ersetzt die irreführende Idee eines Therapie-Bots durch ein reproduzierbares, nicht klinisches Experiment, das sich enthalten kann.",
       readMinutes: "14",
-      facts: [["Produkt", "Lernorientierte ML-Pipeline und Browser-Labor"], ["Rolle", "ML-Protokoll, Rust-Implementierung und Sicherheitsneugestaltung"], ["Daten", "Versionierte synthetische Fixtures"], ["Status", "Reproduzierbares v3-Bundle, verschachteltes Auswahl-Audit und CLI"]],
+      facts: [["Produkt", "Lernorientierte ML-Pipeline und Browser-Labor"], ["Rolle", "ML-Protokoll, Rust-Implementierung und Sicherheitsneugestaltung"], ["Daten", "Versionierte synthetische Fixtures"], ["Status", "Unveränderliches Release v1.6.0 mit 20 attestierten Artefakten"]],
       evidence: { title: "Evidenzprotokoll", intro: "Die geprüften Artefakte zeigen Auswahlresultat, eingefrorenen Test und Schwachstellen gemeinsam:", items: [
         ["Auswahlprotokoll", "385 Trainings- und Entwicklungszeilen in 77 Familien durchlaufen 11 äußere und 5 innere Gruppen-Folds; dabei werden 506 Modelle trainiert."],
         ["Auswahlergebnis", "Die Out-of-Fold-Accuracy beträgt 62,597% und der Macro-F1 62,640%; das familiengeclusterte 95%-Intervall der Accuracy reicht von 57,143 bis 68,571%."],
@@ -841,7 +841,7 @@ export const labsLocales = {
         "ELIZA Lab zeigt einen vollständigen Ablauf für ein kleines Modell: verschachtelte gruppenbewusste Auswahl, Kalibrierung, Open-Set-Richtlinienwahl, eingefrorene Tests, Artefaktprüfung und lokale Inferenz.",
         "Es ist weder Therapeut noch Krisenerkennung oder produktives Sprachmodell. Sein Wert liegt darin, dass Lernende das Experiment prüfen und das Ergebnis reproduzieren können, statt einer Black-Box-Demo zu vertrauen.",
       ]},
-      scope: "Alle genannten Datensatzgrößen und Protokolldetails stammen aus der versionierten Repository-Dokumentation. Der synthetische Korpus belegt weder klinische Validität noch breite Sprachabdeckung oder Produktionsreife.",
+      scope: "Diese Fallstudie beschreibt das unveränderliche Release v1.6.0 am Commit cacd4448. Der signierte Tag und 20 attestierte Artefakte decken Linux x64, Windows x64, macOS Intel und Apple Silicon ab. Der synthetische Korpus belegt weder klinische Validität noch breite Sprachabdeckung oder Produktionsreife.",
     }),
     "djenis-ai-agent": localize("djenis-ai-agent", {
       category: "Agentensysteme",
@@ -1277,7 +1277,7 @@ export const labsLocales = {
       title: "Transformer un prototype de chatbot risqué en expérience ML open-set vérifiable",
       summary: "ELIZA Lab est un pipeline Rust pour entraîner, calibrer et examiner localement un classificateur d’intentions. Il remplace la prémisse trompeuse d’un bot thérapeutique par une expérience reproductible, non clinique et capable de s’abstenir.",
       readMinutes: "14",
-      facts: [["Produit", "Pipeline ML pédagogique et laboratoire web"], ["Rôle", "Protocole ML, implémentation Rust et refonte de la sécurité"], ["Données", "Fixtures synthétiques versionnées"], ["État", "Bundle v3 reproductible, audit de sélection imbriqué et CLI"]],
+      facts: [["Produit", "Pipeline ML pédagogique et laboratoire web"], ["Rôle", "Protocole ML, implémentation Rust et refonte de la sécurité"], ["Données", "Fixtures synthétiques versionnées"], ["État", "Version immuable v1.6.0 avec 20 artefacts attestés"]],
       evidence: { title: "Registre des preuves", intro: "Les artefacts vérifiés présentent ensemble le résultat de sélection, le test gelé et les cas faibles :", items: [
         ["Protocole de sélection", "385 lignes d’entraînement et de développement réparties en 77 familles passent par 11 folds externes et 5 internes groupés, soit 506 modèles ajustés."],
         ["Résultat de sélection", "L’exactitude out-of-fold est de 62,597 % et le macro-F1 de 62,640 % ; l’intervalle à 95 % par famille pour l’exactitude va de 57,143 à 68,571 %."],
@@ -1323,7 +1323,7 @@ export const labsLocales = {
         "ELIZA Lab démontre un workflow complet pour petit modèle : sélection imbriquée par groupes, calibration, choix de politique open-set, test gelé, vérification d’artefact et inférence locale.",
         "Ce n’est ni un thérapeute, ni un détecteur de crise, ni un modèle de langage de production. Sa valeur tient à une expérience inspectable et reproductible plutôt qu’à une démo opaque.",
       ]},
-      scope: "Toutes les tailles de dataset et tous les détails du protocole proviennent de la documentation versionnée. Le corpus synthétique n’établit ni validité clinique, ni large couverture linguistique, ni aptitude à la production.",
+      scope: "Cette étude de cas décrit la version immuable v1.6.0 au commit cacd4448. Le tag signé et les 20 artefacts attestés couvrent Linux x64, Windows x64, macOS Intel et Apple Silicon. Le corpus synthétique n’établit ni validité clinique, ni large couverture linguistique, ni aptitude à la production.",
     }),
     "djenis-ai-agent": localize("djenis-ai-agent", {
       category: "Systèmes agentiques",

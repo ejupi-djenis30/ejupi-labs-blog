@@ -374,6 +374,38 @@ test("CareerOS documents the immutable v1.9.0 release", () => {
   }
 });
 
+test("ELIZA Lab documents the immutable v1.6.0 release", () => {
+  const definition = caseDefinitions.find(({ slug }) => slug === "eliza-lab");
+  assert.ok(definition);
+  assert.equal(definition.updated, "2026-07-30");
+  assert.equal(definition.verifiedAt, "2026-07-30");
+  assert.equal(definition.sourceState, "release");
+  assert.equal(definition.sourceRef, "v1.6.0");
+  assert.equal(
+    definition.sourceUrl,
+    "https://github.com/ejupi-djenis30/eliza-lab/commit/cacd44485d3948030ba82084e9ac8a4391e79b49",
+  );
+  assert.equal(definition.releaseAssets.length, 20);
+  assert.equal(new Set(definition.releaseAssets).size, 20);
+  assert.ok(definition.releaseAssets.includes("SHA256SUMS"));
+  assert.ok(definition.releaseAssets.includes("eliza-lab-v1.6.0.spdx.json"));
+  assert.ok(
+    definition.releaseAssets.includes(
+      "eliza-lab-v1.6.0-macos-aarch64.tar.gz",
+    ),
+  );
+
+  for (const localeKey of localeOrder) {
+    const copy = JSON.stringify(locales[localeKey].cases[definition.slug]);
+    assert.match(copy, /v1\.6\.0/u);
+    assert.doesNotMatch(copy, /v1\.5\.0/u);
+    assert.match(copy, /cacd4448/u);
+    assert.match(copy, /\b20\b/u);
+    assert.match(copy, /signed tag|tag firmato|signierte(?:r|n)? Tag|tag signé/iu);
+    assert.match(copy, /attest/iu);
+  }
+});
+
 test("DjenisAiAgent documents the checked local-first model boundary in every locale", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "djenis-ai-agent");
   assert.ok(definition);

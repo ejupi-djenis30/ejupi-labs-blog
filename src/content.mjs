@@ -46,6 +46,29 @@ const careerOsReleaseAssets = [
   "supply-chain-evidence.tar.gz",
 ];
 
+const elizaReleaseAssets = [
+  "cargo-metadata.json",
+  "cargo-tree.txt",
+  "Cargo.lock",
+  "eliza-lab-v1.6.0-linux-x86_64.tar.gz",
+  "eliza-lab-v1.6.0-linux-x86_64.tar.gz.json",
+  "eliza-lab-v1.6.0-linux-x86_64.tar.gz.sha256",
+  "eliza-lab-v1.6.0-macos-aarch64.tar.gz",
+  "eliza-lab-v1.6.0-macos-aarch64.tar.gz.json",
+  "eliza-lab-v1.6.0-macos-aarch64.tar.gz.sha256",
+  "eliza-lab-v1.6.0-macos-x86_64.tar.gz",
+  "eliza-lab-v1.6.0-macos-x86_64.tar.gz.json",
+  "eliza-lab-v1.6.0-macos-x86_64.tar.gz.sha256",
+  "eliza-lab-v1.6.0-windows-x86_64.zip",
+  "eliza-lab-v1.6.0-windows-x86_64.zip.json",
+  "eliza-lab-v1.6.0-windows-x86_64.zip.sha256",
+  "eliza-lab-v1.6.0.spdx.json",
+  "release-contract.json",
+  "rustsec-audit-policy.json",
+  "rustsec-audit.json",
+  "SHA256SUMS",
+];
+
 export const caseDefinitions = [
   {
     slug: "ai-workflow-cloud-migration",
@@ -105,12 +128,13 @@ export const caseDefinitions = [
     categoryKey: "machine-learning",
     availableLocales: ["en", "it", "de", "fr"],
     published: "2026-07-24",
-    updated: "2026-07-28",
+    updated: "2026-07-30",
     projectUrl: "https://ejupi-djenis30.github.io/eliza-lab/",
     sourceState: "release",
-    sourceRef: "v1.5.0",
-    sourceUrl: "https://github.com/ejupi-djenis30/eliza-lab/commit/79f5a5722289ce2c2c0801995ae2c91b48d9e1d2",
-    verifiedAt: "2026-07-25",
+    sourceRef: "v1.6.0",
+    sourceUrl: "https://github.com/ejupi-djenis30/eliza-lab/commit/cacd44485d3948030ba82084e9ac8a4391e79b49",
+    releaseAssets: elizaReleaseAssets,
+    verifiedAt: "2026-07-30",
     stack: ["Rust", "TF-IDF", "Logistic regression", "Open-set ML"],
   },
   {
