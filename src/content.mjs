@@ -213,7 +213,7 @@ export const caseDefinitions = [
     projectUrl: "https://ejupi-djenis30.github.io/JDoor/",
     sourceState: "snapshot",
     sourceRef: "v1.0.0",
-    sourceUrl: "https://api.github.com/repositories/567343188/commits/ac94dd82cdff17551826b7254165d123190aeec7",
+    sourceUrl: "https://github.com/ejupi-djenis30/JDoor/commit/ac94dd82cdff17551826b7254165d123190aeec7",
     verifiedAt: "2026-07-26",
     stack: ["Java 21", "Swing", "TLS", "Maven", "JUnit"],
   },
@@ -670,9 +670,9 @@ export const locales = {
         result: {
           title: "The qualitative result",
           paragraphs: [
-            "Performance, integrations and daily reliability improved together because the work crossed the boundaries where those concerns met.",
-            "The web ERP continued to evolve while preserving the shared database behaviour needed by the older desktop and till applications.",
-            "The practical route was not to pretend that a business-critical ERP could be paused and replaced in one clean move. It was to understand the real workflow with the client, make compatible changes and keep the system useful throughout.",
+            "The documented outcome was not a single modernisation launch. It was a series of bounded changes across application features and defects, SQL Server procedures and views, Crystal Reports, two courier integrations and stock-receipt workflows.",
+            "Each change was checked against the web path and, whenever it touched shared records, the database contract used by the VB6 desktop ERP and till application. This let the web ERP evolve without treating the shared schema as if it had only one consumer.",
+            "This case study does not claim a measured increase in performance or reliability. It records the delivery method used for the live estate: trace the operational workflow with the client, define compatibility at the affected boundaries and verify the complete slice before calling it finished.",
           ],
         },
         scope:
@@ -1081,9 +1081,9 @@ export const locales = {
         result: {
           title: "Il risultato qualitativo",
           paragraphs: [
-            "Performance, integrazioni e affidabilità quotidiana sono migliorate insieme perché il lavoro ha attraversato i confini in cui questi aspetti si incontravano.",
-            "L’ERP web ha continuato a evolvere preservando il comportamento del database condiviso necessario alle vecchie applicazioni desktop e cassa.",
-            "La strada pratica non era fingere che un ERP business-critical potesse essere fermato e sostituito in un solo gesto. Era capire il flusso reale con il cliente, introdurre modifiche compatibili e mantenere utile il sistema per tutto il percorso.",
+            "Il risultato documentato non è stato un unico lancio di modernizzazione, ma una serie di modifiche circoscritte a funzionalità e difetti applicativi, procedure e viste SQL Server, Crystal Reports, due integrazioni con corrieri e flussi di ricezione della merce.",
+            "Ogni modifica è stata verificata sul percorso web e, quando toccava record condivisi, sul contratto dati usato dall’ERP desktop VB6 e dall’applicazione di cassa. In questo modo l’ERP web ha potuto evolvere senza trattare lo schema condiviso come se avesse un solo consumatore.",
+            "Questo case study non dichiara un aumento misurato di performance o affidabilità. Documenta il metodo di delivery usato sul sistema in esercizio: ricostruire il flusso con il cliente, definire la compatibilità ai confini interessati e verificare l’intera modifica prima di considerarla conclusa.",
           ],
         },
         scope:
@@ -1492,9 +1492,9 @@ export const locales = {
         result: {
           title: "Das qualitative Ergebnis",
           paragraphs: [
-            "Performance, Integrationen und tägliche Zuverlässigkeit verbesserten sich gemeinsam, weil die Arbeit die Grenzen überquerte, an denen diese Themen zusammenkamen.",
-            "Das Web-ERP entwickelte sich weiter und bewahrte zugleich das Verhalten der gemeinsamen Datenbank, auf das die älteren Desktop- und Kassenanwendungen angewiesen waren.",
-            "Der praktische Weg war nicht, so zu tun, als liesse sich ein geschäftskritisches ERP in einem sauberen Schritt anhalten und ersetzen. Er bestand darin, den realen Ablauf mit dem Kunden zu verstehen, kompatible Änderungen einzuführen und das System währenddessen nützlich zu halten.",
+            "Das dokumentierte Ergebnis war kein einzelner Modernisierungsstart, sondern eine Reihe klar begrenzter Änderungen an Anwendungsfunktionen und Fehlern, SQL-Server-Prozeduren und -Views, Crystal Reports, zwei Kuriereinbindungen und Abläufen für den Wareneingang.",
+            "Jede Änderung wurde im Webpfad und, sobald gemeinsame Datensätze betroffen waren, gegen den Datenbankvertrag des VB6-Desktop-ERP und der Kassenanwendung geprüft. So konnte sich das Web-ERP weiterentwickeln, ohne so zu tun, als würde nur eine Anwendung auf das gemeinsame Schema zugreifen.",
+            "Diese Fallstudie behauptet keine gemessene Steigerung von Performance oder Zuverlässigkeit. Sie dokumentiert die Liefermethode für das laufende System: den Betriebsablauf mit dem Kunden nachverfolgen, Kompatibilität an den betroffenen Grenzen definieren und den vollständigen Änderungsschnitt prüfen, bevor er als abgeschlossen gilt.",
           ],
         },
         scope:
@@ -1903,9 +1903,9 @@ export const locales = {
         result: {
           title: "Le résultat qualitatif",
           paragraphs: [
-            "Performances, intégrations et fiabilité quotidienne ont progressé ensemble parce que le travail a traversé les frontières où ces sujets se rejoignaient.",
-            "L’ERP web a continué d’évoluer tout en préservant le comportement de la base partagée dont dépendaient les anciennes applications desktop et caisse.",
-            "La voie pragmatique n’était pas de prétendre qu’un ERP critique pouvait être arrêté et remplacé d’un seul geste. Elle consistait à comprendre le workflow réel avec le client, introduire des changements compatibles et garder le système utile pendant tout le processus.",
+            "Le résultat documenté n’est pas un lancement unique de modernisation, mais une série de changements circonscrits aux fonctionnalités et défauts de l’application, aux procédures et vues SQL Server, à Crystal Reports, à deux intégrations de transporteurs et aux parcours de réception des stocks.",
+            "Chaque changement a été vérifié dans le parcours web et, lorsqu’il touchait des enregistrements partagés, par rapport au contrat de données utilisé par l’ERP desktop VB6 et l’application de caisse. L’ERP web a ainsi pu évoluer sans traiter le schéma partagé comme s’il n’avait qu’un seul consommateur.",
+            "Cette étude de cas ne revendique aucune hausse mesurée de performance ou de fiabilité. Elle documente la méthode de livraison appliquée au système en activité : retracer le parcours opérationnel avec le client, définir la compatibilité aux frontières concernées et vérifier la tranche complète avant de la considérer comme terminée.",
           ],
         },
         scope:

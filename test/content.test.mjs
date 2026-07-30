@@ -547,7 +547,7 @@ test("JDoor preserves co-authorship, authorized use and the requested Labs topol
   assert.equal(definition.sourceRef, "v1.0.0");
   assert.equal(
     definition.sourceUrl,
-    "https://api.github.com/repositories/567343188/commits/ac94dd82cdff17551826b7254165d123190aeec7",
+    "https://github.com/ejupi-djenis30/JDoor/commit/ac94dd82cdff17551826b7254165d123190aeec7",
   );
 
   const coCreationClaims = {
@@ -579,7 +579,7 @@ test("JDoor preserves co-authorship, authorized use and the requested Labs topol
   }
   assert.doesNotMatch(
     definition.sourceUrl,
-    /^https:\/\/github\.com\/[^/]+\/JDoor\//iu,
+    /^https:\/\/api\.github\.com\//iu,
   );
 });
 
