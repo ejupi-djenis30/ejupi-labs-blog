@@ -411,6 +411,18 @@ for (const localeKey of localeOrder) {
       }
     } else {
       if (!html.includes(uppercase(editorial.caseLabel))) errors.push(`${label} has an untranslated case-card label.`);
+      if (count(html, /class="case-card__decision"/g) !== currentLocaleDefinitions.length) {
+        errors.push(`${label} must expose one key decision per case card.`);
+      }
+      if (!html.includes(editorial.decisionPreview)) {
+        errors.push(`${label} has an untranslated key-decision label.`);
+      }
+      for (const visibleDefinition of currentLocaleDefinitions) {
+        const decisionTitle = locales[localeKey].cases[visibleDefinition.slug].decisions.items[0].title;
+        if (!html.includes(escapeHtml(decisionTitle))) {
+          errors.push(`${label} is missing the ${visibleDefinition.slug} key decision.`);
+        }
+      }
       const indexTechnologyLists = [
         ...html.matchAll(
           /<ul class="tag-list" role="list" aria-label="[^"]+">(?<items>[\s\S]*?)<\/ul>/gu,

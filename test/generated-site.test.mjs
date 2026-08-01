@@ -406,6 +406,21 @@ test("localized chrome, bylines and cross-site routes stay in the selected langu
     assert.ok(index.includes(`class="personal-link" href="${authorRoute}"`));
     assert.ok(index.includes(`>${ui.personal}</a>`));
     assert.ok(index.includes(`${uppercase(ui.caseLabel)} / 01`));
+    const visibleDefinitions = currentCaseDefinitions.filter(({ availableLocales }) =>
+      availableLocales.includes(localeKey),
+    );
+    assert.equal(
+      (index.match(/class="case-card__decision"/gu) ?? []).length,
+      visibleDefinitions.length,
+    );
+    assert.ok(index.includes(`<dt>${escapeHtml(ui.decisionPreview)}</dt>`));
+    for (const definition of visibleDefinitions) {
+      assert.ok(
+        index.includes(
+          `<dd>${escapeHtml(locale.cases[definition.slug].decisions.items[0].title)}</dd>`,
+        ),
+      );
+    }
     assert.ok(ui.emptyTitle.endsWith("."));
     assert.ok(
       index.includes(
