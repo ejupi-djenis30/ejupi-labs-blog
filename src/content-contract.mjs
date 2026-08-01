@@ -1,6 +1,7 @@
 const CASE_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/u;
 const NUMBER_PATTERN = /^\d{2}$/u;
+const IDENTIFIER_PATTERN = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u;
 const CASE_KINDS = new Set(["professional", "labs"]);
 const SOURCE_STATES = new Set(["release", "snapshot"]);
 
@@ -15,6 +16,20 @@ function isPlainObject(value) {
 function assertNonEmptyString(value, path) {
   if (typeof value !== "string" || value.trim().length === 0) {
     fail(path, "expected a non-empty string.");
+  }
+}
+
+function assertIsoDate(value, path) {
+  if (typeof value !== "string" || !DATE_PATTERN.test(value)) {
+    fail(path, "expected YYYY-MM-DD.");
+  }
+
+  const parsed = new Date(`${value}T00:00:00Z`);
+  if (
+    Number.isNaN(parsed.getTime()) ||
+    parsed.toISOString().slice(0, 10) !== value
+  ) {
+    fail(path, "expected a real calendar date in YYYY-MM-DD form.");
   }
 }
 
@@ -266,6 +281,12 @@ export function assertDefinitionCatalog(
     }
     assertNonEmptyString(definition.categoryKey, `${path}.categoryKey`);
     assertNonEmptyString(definition.diagram, `${path}.diagram`);
+    if (!IDENTIFIER_PATTERN.test(definition.categoryKey)) {
+      fail(`${path}.categoryKey`, "expected a lowercase kebab-case identifier.");
+    }
+    if (!IDENTIFIER_PATTERN.test(definition.diagram)) {
+      fail(`${path}.diagram`, "expected a lowercase kebab-case identifier.");
+    }
     if (!Array.isArray(definition.availableLocales) || definition.availableLocales.length === 0) {
       fail(`${path}.availableLocales`, "expected at least one locale.");
     }
@@ -281,12 +302,8 @@ export function assertDefinitionCatalog(
     if (unknownLocales.length > 0) {
       fail(`${path}.availableLocales`, `unknown locales: ${unknownLocales.join(", ")}.`);
     }
-    if (!DATE_PATTERN.test(definition.published)) {
-      fail(`${path}.published`, "expected YYYY-MM-DD.");
-    }
-    if (!DATE_PATTERN.test(definition.updated)) {
-      fail(`${path}.updated`, "expected YYYY-MM-DD.");
-    }
+    assertIsoDate(definition.published, `${path}.published`);
+    assertIsoDate(definition.updated, `${path}.updated`);
     if (definition.updated < definition.published) {
       fail(`${path}.updated`, "cannot be earlier than published.");
     }
@@ -303,9 +320,7 @@ export function assertDefinitionCatalog(
       if (!/^v\d+\.\d+\.\d+$/u.test(definition.sourceRef)) {
         fail(`${path}.sourceRef`, "expected a semantic version reference.");
       }
-      if (!DATE_PATTERN.test(definition.verifiedAt)) {
-        fail(`${path}.verifiedAt`, "expected YYYY-MM-DD.");
-      }
+      assertIsoDate(definition.verifiedAt, `${path}.verifiedAt`);
       if (definition.verifiedAt < definition.published) {
         fail(`${path}.verifiedAt`, "cannot be earlier than published.");
       }

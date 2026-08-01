@@ -1,22 +1,42 @@
+/**
+ * @param {string} key
+ * @param {boolean} expanded
+ * @returns {boolean}
+ */
 export function shouldCloseOnEscape(key, expanded) {
   return key === "Escape" && expanded;
 }
 
+/**
+ * @param {number} scrollY
+ * @param {number} scrollHeight
+ * @param {number} viewportHeight
+ * @returns {number}
+ */
 export function calculateReadingProgress(scrollY, scrollHeight, viewportHeight) {
   const scrollable = Math.max(0, scrollHeight - viewportHeight);
   if (scrollable === 0) return 0;
   return Math.min(1, Math.max(0, scrollY / scrollable));
 }
 
+/**
+ * @param {unknown} value
+ * @returns {string}
+ */
 export function normalizeSearchValue(value) {
   return String(value)
     .normalize("NFKD")
     .replace(/\p{Diacritic}/gu, "")
-    .toLocaleLowerCase()
+    .toLowerCase()
     .trim()
     .replace(/\s+/g, " ");
 }
 
+/**
+ * @param {{ text: string, kind?: string, topic?: string }} candidate
+ * @param {{ query?: string, selectedKind?: string, selectedTopic?: string }} filters
+ * @returns {boolean}
+ */
 export function matchesCaseStudy(
   { text, kind, topic },
   { query = "", selectedKind = "", selectedTopic = "" },
@@ -33,32 +53,43 @@ export function matchesCaseStudy(
 if (typeof document !== "undefined") {
   document.documentElement.classList.remove("no-js");
 
-  const discovery = document.querySelector("[data-discovery]");
-  const caseCards = [...document.querySelectorAll("[data-case-card]")];
+  const discoveryCandidate = document.querySelector("[data-discovery]");
+  const caseCards = [...document.querySelectorAll("[data-case-card]")].filter(
+    (element) => element instanceof HTMLElement,
+  );
 
-  if (discovery instanceof HTMLElement && caseCards.length > 0) {
-    const search = discovery.querySelector("[data-case-search]");
+  if (discoveryCandidate instanceof HTMLElement && caseCards.length > 0) {
+    const discovery = discoveryCandidate;
+    const searchCandidate = discovery.querySelector("[data-case-search]");
     const clearButtons = [
       ...document.querySelectorAll("[data-case-clear]"),
     ].filter((element) => element instanceof HTMLButtonElement);
-    const count = discovery.querySelector("[data-case-count]");
-    const countLabel = discovery.querySelector("[data-case-count-label]");
-    const searchState = discovery.querySelector("[data-search-state]");
-    const empty = document.querySelector("[data-case-empty]");
-    const caseList = document.querySelector("[data-case-list]");
+    const countCandidate = discovery.querySelector("[data-case-count]");
+    const countLabelCandidate = discovery.querySelector("[data-case-count-label]");
+    const searchStateCandidate = discovery.querySelector("[data-search-state]");
+    const emptyCandidate = document.querySelector("[data-case-empty]");
+    const caseListCandidate = document.querySelector("[data-case-list]");
     const searchIndexUrl = discovery.dataset.searchIndexUrl ?? "";
+    /** @type {Map<string, string>} */
     const fullTextBySlug = new Map();
     let searchIndexState = "idle";
+    /** @type {Promise<void> | null} */
     let searchIndexPromise = null;
 
     if (
-      search instanceof HTMLInputElement &&
-      count instanceof HTMLElement &&
-      countLabel instanceof HTMLElement &&
-      searchState instanceof HTMLElement &&
-      empty instanceof HTMLElement &&
-      caseList instanceof HTMLElement
+      searchCandidate instanceof HTMLInputElement &&
+      countCandidate instanceof HTMLElement &&
+      countLabelCandidate instanceof HTMLElement &&
+      searchStateCandidate instanceof HTMLElement &&
+      emptyCandidate instanceof HTMLElement &&
+      caseListCandidate instanceof HTMLElement
     ) {
+      const search = searchCandidate;
+      const count = countCandidate;
+      const countLabel = countLabelCandidate;
+      const searchState = searchStateCandidate;
+      const empty = emptyCandidate;
+      const caseList = caseListCandidate;
       discovery.hidden = false;
 
       function readUrlState() {
@@ -94,19 +125,23 @@ if (typeof document !== "undefined") {
             const payload = await response.json();
             if (
               payload?.schemaVersion !== 1 ||
+              payload.locale !== document.documentElement.lang ||
               !Array.isArray(payload.cases) ||
               payload.cases.length !== caseCards.length
             ) {
               throw new Error("Search index has an unexpected shape.");
             }
+            const seenSlugs = new Set();
             for (const entry of payload.cases) {
               if (
                 typeof entry?.slug !== "string" ||
                 typeof entry?.text !== "string" ||
+                seenSlugs.has(entry.slug) ||
                 !caseCards.some((card) => card.dataset.caseSlug === entry.slug)
               ) {
                 throw new Error("Search index contains an invalid case.");
               }
+              seenSlugs.add(entry.slug);
               fullTextBySlug.set(entry.slug, entry.text);
             }
             searchIndexState = "loaded";
@@ -162,8 +197,8 @@ if (typeof document !== "undefined") {
         count.textContent = String(visibleCount);
         countLabel.textContent =
           visibleCount === 1
-            ? countLabel.dataset.singular
-            : countLabel.dataset.plural;
+            ? (countLabel.dataset.singular ?? "")
+            : (countLabel.dataset.plural ?? "");
         empty.hidden = visibleCount !== 0;
         if (updateUrl) writeUrlState();
       }
@@ -213,10 +248,15 @@ if (typeof document !== "undefined") {
     });
   }
 
-  const menuToggle = document.querySelector("[data-menu-toggle]");
-  const menu = document.querySelector("[data-menu]");
+  const menuToggleCandidate = document.querySelector("[data-menu-toggle]");
+  const menuCandidate = document.querySelector("[data-menu]");
 
-  if (menuToggle instanceof HTMLButtonElement && menu instanceof HTMLElement) {
+  if (
+    menuToggleCandidate instanceof HTMLButtonElement &&
+    menuCandidate instanceof HTMLElement
+  ) {
+    const menuToggle = menuToggleCandidate;
+    const menu = menuCandidate;
     const mobileNavigation = window.matchMedia("(max-width: 820px)");
     const navigationLinks = [...menu.querySelectorAll("a[href]")].filter(
       (element) => element instanceof HTMLAnchorElement,
@@ -229,8 +269,10 @@ if (typeof document !== "undefined") {
     ].filter((element) => element instanceof HTMLElement);
 
     let lockedScrollPosition = 0;
+    /** @type {Array<{ element: HTMLElement, wasInert: boolean, ariaHidden: string | null }>} */
     let backgroundStates = [];
 
+    /** @param {boolean} open */
     function setMenuAvailability(open) {
       const unavailable = mobileNavigation.matches && !open;
       menu.inert = unavailable;
@@ -269,10 +311,14 @@ if (typeof document !== "undefined") {
       window.scrollTo({
         top: lockedScrollPosition,
         left: 0,
-        behavior: "instant",
+        behavior: "auto",
       });
     }
 
+    /**
+     * @param {boolean} open
+     * @param {{ restoreFocus?: boolean }} [options]
+     */
     function setMenu(open, { restoreFocus = true } = {}) {
       const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
 
@@ -333,17 +379,22 @@ if (typeof document !== "undefined") {
 
       if (event.key !== "Tab" || !expanded || !mobileNavigation.matches) return;
 
-      const focusableItems = [menuToggle, ...navigationLinks];
-      const firstItem = focusableItems[0];
-      const lastItem = focusableItems.at(-1);
-      if (!firstItem || !lastItem) return;
+      const firstLink = navigationLinks[0];
+      const lastLink = navigationLinks.at(-1);
+      if (!firstLink || !lastLink) return;
 
-      if (event.shiftKey && document.activeElement === firstItem) {
+      if (event.shiftKey && document.activeElement === firstLink) {
         event.preventDefault();
-        lastItem.focus();
-      } else if (!event.shiftKey && document.activeElement === lastItem) {
+        menuToggle.focus();
+      } else if (event.shiftKey && document.activeElement === menuToggle) {
         event.preventDefault();
-        firstItem.focus();
+        lastLink.focus();
+      } else if (!event.shiftKey && document.activeElement === lastLink) {
+        event.preventDefault();
+        menuToggle.focus();
+      } else if (!event.shiftKey && document.activeElement === menuToggle) {
+        event.preventDefault();
+        firstLink.focus();
       }
     });
 
@@ -361,9 +412,10 @@ if (typeof document !== "undefined") {
     setMenuAvailability(false);
   }
 
-  const progress = document.querySelector("[data-reading-progress]");
+  const progressCandidate = document.querySelector("[data-reading-progress]");
 
-  if (progress instanceof HTMLElement) {
+  if (progressCandidate instanceof HTMLElement) {
+    const progress = progressCandidate;
     let progressFrame = 0;
 
     function updateReadingProgress() {
@@ -389,6 +441,35 @@ if (typeof document !== "undefined") {
   const observedSections = [...document.querySelectorAll("[data-story-section]")];
   const tocLinks = [...document.querySelectorAll("[data-toc-link]")];
 
+  for (const link of tocLinks) {
+    if (!(link instanceof HTMLAnchorElement)) continue;
+    link.addEventListener("click", () => {
+      const sectionId = decodeURIComponent(link.hash.slice(1));
+      const section = document.getElementById(sectionId);
+      if (!(section instanceof HTMLElement)) return;
+
+      for (const tocLink of tocLinks) {
+        if (tocLink === link) tocLink.setAttribute("aria-current", "true");
+        else tocLink.removeAttribute("aria-current");
+      }
+
+      const focusTarget = section.querySelector("h2") ?? section;
+      if (!(focusTarget instanceof HTMLElement)) return;
+      const hadTabIndex = focusTarget.hasAttribute("tabindex");
+      if (!hadTabIndex) focusTarget.setAttribute("tabindex", "-1");
+      window.requestAnimationFrame(() => {
+        focusTarget.focus({ preventScroll: true });
+        if (!hadTabIndex) {
+          focusTarget.addEventListener(
+            "blur",
+            () => focusTarget.removeAttribute("tabindex"),
+            { once: true },
+          );
+        }
+      });
+    });
+  }
+
   if (observedSections.length > 0 && tocLinks.length > 0 && "IntersectionObserver" in window) {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -399,10 +480,11 @@ if (typeof document !== "undefined") {
         if (!active) return;
 
         for (const link of tocLinks) {
-          link.toggleAttribute(
-            "aria-current",
-            link.getAttribute("href") === `#${active.target.id}`,
-          );
+          if (link.getAttribute("href") === `#${active.target.id}`) {
+            link.setAttribute("aria-current", "true");
+          } else {
+            link.removeAttribute("aria-current");
+          }
         }
       },
       { rootMargin: "-20% 0px -65%", threshold: [0, 0.2, 0.7] },

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import {
-  caseDefinitions,
+  currentCaseDefinitions,
   localeOrder,
 } from "../src/content.mjs";
 
@@ -77,7 +77,7 @@ function pngDimensions(png) {
 
 function socialSvg(localeKey, brandHref, fontRegularHref, fontSemiboldHref) {
   const item = copy[localeKey];
-  const count = String(caseDefinitions.length).padStart(2, "0");
+  const count = String(currentCaseDefinitions.length).padStart(2, "0");
   const nodes = item.nodes
     .map((label, index) => {
       const y = 112 + index * 108;

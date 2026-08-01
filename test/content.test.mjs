@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   caseDefinitions,
+  currentCaseDefinitions,
   localeOrder,
   locales,
   protectedLegacySlugs,
@@ -135,6 +136,21 @@ test("every case study has concise, complete metadata separate from its visible 
   }
 });
 
+test("localized index descriptions stay concise and complete", () => {
+  for (const localeKey of localeOrder) {
+    const description = locales[localeKey].index.description;
+    assert.ok(
+      [...description].length <= SEO_DESCRIPTION_MAX,
+      `${localeKey} index description is too long`,
+    );
+    assert.match(
+      description,
+      /[.!?]$/u,
+      `${localeKey} index description is not a complete sentence`,
+    );
+  }
+});
+
 test("the cloud-migration case title uses each locale's own AI terminology", () => {
   const expectedCardTitles = {
     en: "AI workflow platform cloud migration",
@@ -157,21 +173,29 @@ test("professional cases preserve the documented constraints without exposing cl
       archivalShell: /header[\s\S]*footer/iu,
       clientContact: /direct contact with the client/iu,
       compatibility: /backward-compatible/iu,
+      cloudDiscipline: "Cloud platform engineering",
+      erpDiscipline: "Enterprise product engineering",
     },
     it: {
       archivalShell: /header[\s\S]*footer/iu,
       clientContact: /contatto diretto con il cliente/iu,
       compatibility: /retrocompatibil/iu,
+      cloudDiscipline: "Ingegneria delle piattaforme cloud",
+      erpDiscipline: "Ingegneria di prodotto per software aziendale",
     },
     de: {
       archivalShell: /Header[\s\S]*Footer/u,
       clientContact: /direkt[\s\S]{0,80}Kund/iu,
       compatibility: /rückwärtskompatibel/iu,
+      cloudDiscipline: "Entwicklung von Cloud-Plattformen",
+      erpDiscipline: "Produktentwicklung für Unternehmenssoftware",
     },
     fr: {
       archivalShell: /header[\s\S]*footer/iu,
       clientContact: /contact direct avec le client/iu,
       compatibility: /rétrocompatibl/iu,
+      cloudDiscipline: "Ingénierie de plateforme cloud",
+      erpDiscipline: "Ingénierie produit d’entreprise",
     },
   };
 
@@ -181,6 +205,14 @@ test("professional cases preserve the documented constraints without exposing cl
     const erp = JSON.stringify(locales[localeKey].cases["retail-erp-evolution"]);
     const expectation = localizedExpectations[localeKey];
 
+    assert.equal(
+      locales[localeKey].cases["ai-workflow-cloud-migration"].facts[0][1],
+      expectation.cloudDiscipline,
+    );
+    assert.equal(
+      locales[localeKey].cases["retail-erp-evolution"].facts[0][1],
+      expectation.erpDiscipline,
+    );
     assert.match(archival, /single-spa/iu);
     assert.match(archival, expectation.archivalShell);
     assert.match(erp, /\.NET Framework 4\.8/u);
@@ -473,35 +505,12 @@ test("ELIZA Lab documents the immutable v1.6.0 release", () => {
   }
 });
 
-test("DjenisAiAgent documents the checked local-first model boundary in every locale", () => {
-  const definition = caseDefinitions.find(({ slug }) => slug === "djenis-ai-agent");
-  assert.ok(definition);
-  assert.equal(definition.updated, "2026-07-29");
-  assert.equal(definition.verifiedAt, "2026-07-29");
-  assert.equal(definition.sourceState, "release");
-  assert.equal(definition.sourceRef, "v0.3.0");
+test("the current editorial catalog retains VECTOR", () => {
   assert.equal(
-    definition.sourceUrl,
-    "https://github.com/ejupi-djenis30/DjenisAiAgent/commit/946160fee919566b4167126185395e2d42dfb6a6",
+    currentCaseDefinitions.some(({ slug }) => slug === "vector-placement-operations"),
+    true,
   );
-  assert.deepEqual(definition.stack, [
-    "Python",
-    "Ollama",
-    "OpenAI-compatible API",
-    "Windows UIA",
-    "Selenium",
-  ]);
-
-  for (const localeKey of localeOrder) {
-    const study = locales[localeKey].cases[definition.slug];
-    const copy = JSON.stringify(study);
-    assert.match(copy, /Ollama/u);
-    assert.match(copy, /OpenAI/u);
-    assert.match(copy, /600/u);
-    assert.match(copy, /946160f/u);
-    assert.doesNotMatch(copy, /Gemini/u);
-    assert.equal(study.evidence.items.length, 5);
-  }
+  assert.deepEqual(currentCaseDefinitions, caseDefinitions);
 });
 
 test("DIG documents the checked Android and offline-safe v3.2 product in every locale", () => {
@@ -608,7 +617,7 @@ test("VECTOR is presented as the bounded self-hosted v3.3 product in every local
 test("JDoor preserves co-authorship, authorized use and the requested Labs topology", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "jdoor-security-lab");
   assert.ok(definition);
-  assert.equal(definition.number, "10");
+  assert.equal(definition.number, "09");
   assert.equal(definition.projectUrl, "https://ejupi-djenis30.github.io/JDoor/");
   assert.equal(definition.sourceState, "snapshot");
   assert.equal(definition.sourceRef, "v1.0.0");
@@ -665,9 +674,8 @@ test("related case studies have a deterministic editorial order", () => {
       "ai-workflow-cloud-migration",
     ],
     "careeros-local": ["vector-placement-operations", "eliza-lab"],
-    "eliza-lab": ["careeros-local", "djenis-ai-agent"],
-    "djenis-ai-agent": ["eliza-lab", "dig-gopher-explorer"],
-    "dig-gopher-explorer": ["vector-placement-operations", "djenis-ai-agent"],
+    "eliza-lab": ["careeros-local", "dig-gopher-explorer"],
+    "dig-gopher-explorer": ["vector-placement-operations", "eliza-lab"],
     integradraw: ["dig-gopher-explorer", "vector-placement-operations"],
     "vector-placement-operations": ["dig-gopher-explorer", "careeros-local"],
     "jdoor-security-lab": ["vector-placement-operations", "integradraw"],
@@ -676,7 +684,7 @@ test("related case studies have a deterministic editorial order", () => {
   for (const localeKey of localeOrder) {
     for (const definition of caseDefinitions) {
       assert.deepEqual(
-        relatedCaseDefinitions(definition, caseDefinitions, {
+        relatedCaseDefinitions(definition, currentCaseDefinitions, {
           localeKey,
           limit: 2,
         }).map(({ slug }) => slug),

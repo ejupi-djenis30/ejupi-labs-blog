@@ -5,31 +5,46 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "check:runtime": "node scripts/check-runtime.mjs",
+    "prebuild": "npm run check:runtime",
     "clean": "node scripts/clean.mjs",
     "generate:social": "node scripts/generate-social-previews.mjs",
     "check:social": "node scripts/generate-social-previews.mjs --check",
+    "generate:worker-env": "node scripts/generate-worker-env.mjs",
+    "check:worker-env": "node scripts/generate-worker-env.mjs --check",
     "new:case": "node scripts/new-case.mjs",
     "build": "node scripts/build.mjs",
     "validate": "node scripts/validate.mjs",
     "verify:sources": "node scripts/verify-labs-sources.mjs",
-    "test": "npm run check:social && npm run build && npm run validate && node --test",
+    "audit": "npm audit --audit-level=moderate",
+    "typecheck": "npm run check:worker-env && tsc -p tsconfig.worker.json && tsc -p tsconfig.client.json",
+    "pretest": "npm run check:runtime",
+    "pretest:e2e": "npm run check:runtime",
+    "pretest:worker:integration": "npm run check:runtime",
+    "test": "npm run check:worker-env && npm run check:social && npm run build && npm run validate && node --test",
     "test:worker:integration": "node scripts/worker-runtime-check.mjs",
     "test:e2e": "playwright test",
-    "check": "npm run test && npm run test:worker:integration && npm run test:e2e && wrangler deploy --dry-run",
-    "dev": "npm run build && wrangler dev",
-    "predeploy": "npm run verify:sources",
-    "deploy": "npm run check && wrangler deploy"
+    "check:reproducible-build": "node scripts/check-build-reproducibility.mjs",
+    "precheck": "npm run check:runtime",
+    "check": "npm run audit && npm run typecheck && npm run test && npm run check:reproducible-build && npm run test:worker:integration && npm run test:e2e && wrangler deploy --dry-run --env=\"\"",
+    "dev": "npm run build && wrangler dev --env local",
+    "predeploy": "npm run check:runtime && npm run verify:sources",
+    "deploy": "npm run check && wrangler deploy --env=\"\""
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "5.20260727.1",
     "@playwright/test": "1.62.0",
+    "@types/node": "24.13.3",
+    "esbuild": "0.28.1",
     "entities": "8.0.0",
     "sharp": "0.35.3",
+    "typescript": "7.0.2",
     "wrangler": "4.114.0"
   },
   "overrides": {
     "sharp": "0.35.3"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.23.1 <23 || >=24.18.0 <25"
   }
 }

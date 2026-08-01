@@ -13,26 +13,26 @@
     "en": {
       "source": "design/social/case-studies-en.svg",
       "output": "site/assets/social/case-studies-en.png",
-      "sourceSha256": "1250a0a719ef7630eaae5903c8e20e6056b3cc59f4e4f66c42c54e83b0c5e57f",
-      "outputSha256": "f5cc8841d40db92b347d3df71ff50f2462daea1d60f3a7406b159bcd7ed43627"
+      "sourceSha256": "7f292ff1cf7e216c87bf27c3255733fe5031520ec889d02a1f92cf90ca5e1b52",
+      "outputSha256": "98959488089f33a19dec1623a09bd4644787c52d1094d89733915b57108f2e84"
     },
     "it": {
       "source": "design/social/case-studies-it.svg",
       "output": "site/assets/social/case-studies-it.png",
-      "sourceSha256": "181b4fbcfc37981f176b77f66cd51eac28234dc79cf0247350ab58fa77bcca55",
-      "outputSha256": "09840fbd5d5613779b99c8cd1687665fa1ca8509c4b1210cb84c5f4abd87f3b0"
+      "sourceSha256": "db9de668dfc11c0ecf456f2b5b76ed521377e99fad6494dcbabda9f3254f761d",
+      "outputSha256": "ad2a665e0dbaad9b809eeb55f3a9c3ba1f6fba57f5f4b8216bf9255198c2542d"
     },
     "de": {
       "source": "design/social/case-studies-de.svg",
       "output": "site/assets/social/case-studies-de.png",
-      "sourceSha256": "3ab4df56a69b9b6549d78d1fd116c1e06dd95646e6d8de0ef6100f1576c4881d",
-      "outputSha256": "1203ece7a9fc57c1b2b6f8482f6b3398ecccc0c5e6ca4ad2109f5423b87c005e"
+      "sourceSha256": "7c06a9f1895630b7493c4b9ffd609fc3314521e5c2226d12ec5747cd487a4d3e",
+      "outputSha256": "7bc25a484c0bca6b19e4a4e5ed8df88977a56728e6092bdafa0b48e9d686ced3"
     },
     "fr": {
       "source": "design/social/case-studies-fr.svg",
       "output": "site/assets/social/case-studies-fr.png",
-      "sourceSha256": "18c63a91e04b28f74011a02cadfcd452f9d25bb674f852e5915ad3038745111c",
-      "outputSha256": "4961633c7175a8bd3e3cf8ce063af0634475c08110a7e7310767f55b2de87bb4"
+      "sourceSha256": "fbfaab72b165c18970b87a36fd15bf2948ddf3ebf18224c9d02bf7d1dd5697fb",
+      "outputSha256": "33eb8c91bae8f3f3cf8287a3bae9e3d2e70c0cb295a761cee78d18ca1ac9988f"
     }
   }
 }
