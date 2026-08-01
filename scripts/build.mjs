@@ -400,6 +400,10 @@ function caseCard(localeKey, definition) {
     <div class="case-card__category meta-line"><span>${escapeHtml(study.category)}</span><span>${escapeHtml(study.readMinutes)} ${escapeHtml(locale.ui.readTime)}</span></div>
     <h2 itemprop="headline">${heading(study.cardTitle)}</h2>
     <p class="case-card__summary" itemprop="description">${escapeHtml(study.summary)}</p>
+    <dl class="case-card__decision">
+      <dt>${escapeHtml(ui.decisionPreview)}</dt>
+      <dd>${escapeHtml(study.decisions.items[0].title)}</dd>
+    </dl>
   </div>
   <div class="case-card__foot">
     <ul class="tag-list" role="list" aria-label="${escapeHtml(locale.ui.stack)}">${definition.stack.slice(0, 3).map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>
