@@ -13,22 +13,22 @@ export const labsLocales = {
       category: "Prodotto local-first",
       title: "Costruire uno spazio di lavoro privato per la carriera basato sui fatti, non su affermazioni generate",
       summary:
-        "CareerOS Local trasforma un CV esistente in un archivio professionale privato e revisionato, poi usa un LLM locale obbligatorio per matching e coaching. Tauri, FastAPI e SQLite mantengono sul dispositivo fatti, bozze e accesso per gli agenti.",
+        "CareerOS Local trasforma un CV esistente in un archivio professionale privato e revisionato, poi usa un LLM locale obbligatorio per matching e coaching. Tauri, FastAPI e SQLite mantengono sul dispositivo fatti, bozze, ripristino dopo il riavvio e accesso per gli agenti.",
       readMinutes: "14",
       facts: [
         ["Prodotto", "Utility desktop open source"],
         ["Ruolo", "Prodotto, architettura e implementazione"],
         ["Confine di fiducia", "Dispositivo locale per impostazione predefinita"],
-        ["Stato", "v1.10.0 rilasciata dal commit 6fa804e dopo le verifiche native e Agent Access"],
+        ["Stato", "Release immutabile v1.11.1 dal commit 96ca0f8 dopo le verifiche native e Agent Access"],
       ],
       evidence: {
         title: "Registro delle evidenze",
         intro: "Il repository documenta questi controlli e limiti riproducibili:",
         items: [
-          ["Backend", "La suite della release v1.10.0 ha superato 1.573 test backend; 4 sono stati saltati come previsto. La copertura complessiva ha raggiunto l’81,28%, rami inclusi."],
-          ["Frontend + shell", "Passano 396 test frontend in 70 file. L’albero delle feature già integrato ha superato anche tutti i 17 test Rust, Clippy con il lockfile Cargo applicato e i controlli della supply chain."],
-          ["Importazione dal CV", "Un nuovo vault può creare il profilo revisionato minimo prima di importare un CV. I fatti estratti restano da confermare e l’interfaccia porta direttamente alla revisione."],
-          ["Dossier revisionati", "SQLite conserva una bozza di lavoro limitata per ogni candidatura. L’archivio v6 include le bozze e continua a ispezionare e ripristinare i formati dalla v1 alla v5."],
+          ["Backend", "La suite della release v1.11.1 ha superato 2.194 test backend; 7 sono stati saltati come previsto. La copertura complessiva ha raggiunto l’81,91%, rami inclusi."],
+          ["Frontend + shell", "Passano tutti i 476 test frontend in 79 file e tutti i 27 test Rust. I contratti per licenze, icone, bundle, browser, container e supply chain girano sullo stesso commit della release."],
+          ["Ripristino durevole ai riavvii", "Stati del ciclo di vita persistenti e journal limitati con checksum permettono a reset, ripristino, cancellazione, migrazioni pacchettizzate e pubblicazione dei file privati di convergere dopo un riavvio senza fidarsi di path o payload illimitati."],
+          ["Sessioni e diagnostica", "La rotazione monouso dei refresh token appartiene a famiglie di sessione persistenti, il replay revoca la famiglia e le sessioni di manutenzione non possono entrare nel workspace. Le diagnostiche di ricerca e runtime attraversano i confini pubblici solo tramite un registro tipizzato, chiuso e privo di contenuti privati."],
           ["Accesso agenti", "L’app desktop rilascia autorizzazioni con ambiti e revoca per sette operazioni in sola lettura esposte dalla CLI e dal server MCP. La release include entrambi i comandi in un wheel Python installabile, mostra il token bearer una volta sola e ne conserva soltanto il digest."],
         ],
       },
@@ -83,9 +83,9 @@ export const labsLocales = {
             tradeoff: "L’onboarding richiede un passaggio esplicito di revisione, ma un’estrazione parziale o fallita non lascia il vault in uno stato ambiguo.",
           },
           {
-            title: "Pubblicare esattamente la bozza revisionata",
-            body: "Ogni candidatura possiede una bozza di lavoro revisionata in SQLite. I conflitti di autosalvataggio mantengono intatto il modulo visibile e la pubblicazione consuma soltanto la revisione salvata, nella stessa transazione che registra l’evento immutabile del dossier.",
-            tradeoff: "Il percorso di scrittura deve gestire revisioni e conflitti, ma un autosalvataggio tardivo non può pubblicare contenuto diverso da quello controllato.",
+            title: "Registrare le mutazioni private prima di cambiare i dati",
+            body: "Reset, ripristino, cancellazione, migrazioni pacchettizzate e pubblicazione di fonti, foto o CV registrano prima un intento specifico e limitato. Il recupero riapre descrittori stabili di file regolari e verifica identità, dimensione e digest prima di convergere o riprovare.",
+            tradeoff: "Ogni percorso di manutenzione include logica di ciclo di vita e recupero, ma un riavvio o un commit ambiguo non può lasciare silenziosamente un’operazione del vault applicata a metà.",
           },
           {
             title: "Dare agli agenti un accesso separato e in sola lettura",
@@ -97,20 +97,21 @@ export const labsLocales = {
       delivery: {
         title: "Come viene verificato il prodotto",
         paragraphs: [
-          "I controlli della release v1.10.0 hanno superato 1.573 test backend; 4 sono stati saltati come previsto. La copertura complessiva ha raggiunto l’81,28%, rami inclusi. Si aggiungono 396 test frontend superati in 70 file e tutti i 17 test Rust passati dall’albero di release. Le suite di migrazione e archivio coprono lo schema delle bozze, il formato v6 e il ripristino dalla v1 alla v5.",
-          "CI protetta, CodeQL e controlli dei container sono verdi sul commit esatto della release. Una prova generale senza pubblicazione e il workflow del tag firmato hanno assemblato e verificato sei pacchetti nativi. Gli stessi byte del wheel Agent Access sono stati provati su Linux, macOS e Windows con Python 3.12 e Python 3.13 prima della pubblicazione.",
+          "I controlli della release v1.11.1 hanno superato 2.194 test backend; 7 sono stati saltati come previsto. La copertura complessiva ha raggiunto l’81,91%, rami inclusi. Si aggiungono 476 test frontend superati in 79 file e tutti i 27 test Rust. Le suite di migrazione, archivio, journal, ripristino e pubblicazione concorrente esercitano i percorsi di errore dietro i nuovi controlli del ciclo di vita.",
+          "CI protetta, CodeQL e controlli dei container rinforzati sono verdi sul commit 96ca0f8. Una prova generale senza pubblicazione e il workflow del tag firmato hanno assemblato ed eseguito sei pacchetti nativi in modo indipendente. Gli stessi byte del wheel Agent Access sono stati provati su Linux, macOS e Windows con Python 3.12 e Python 3.13 prima che la release immutabile pubblicasse 26 artefatti vincolati da digest.",
         ],
       },
       result: {
         title: "Cosa esiste oggi",
         paragraphs: [
-          "La release v1.10.0 è una utility desktop funzionante con configurazione dal CV, Career Vault, ricerca guidata, Job Library revisionata, una timeline per opportunità, studio per il CV, bozze dossier persistenti, archivio v6 e analisi locale obbligatoria.",
+          "La release v1.11.1 è una utility desktop funzionante con configurazione dal CV, Career Vault, ricerca guidata, Job Library revisionata, una timeline per opportunità, studio per il CV, archivio v6 e analisi locale obbligatoria. Reset, ripristino, cancellazione completa, migrazioni e pubblicazione dei file privati dispongono ora di recupero durevole ai riavvii.",
+          "Famiglie di sessione a rotazione, configurazione fail-closed e limiti rigidi per le risposte dei provider e dei runtime locali proteggono il confine loopback. Le diagnostiche pubbliche non contengono dati privati, mentre i controlli forced-colors, tastiera e WCAG coprono login e Agent Access in italiano e inglese sui layout responsive supportati.",
           "L’app desktop autenticata ora gestisce le autorizzazioni per sette operazioni in sola lettura esposte tramite una CLI e un server MCP su stdio, entrambi inclusi nel wheel di release e autenticati con token bearer. Codex, Claude Code e script shell possono consultare una vista volutamente ridotta di un solo account autorizzato, ma non possono modificare il vault, invocare prompt liberi o aprire un trasporto remoto.",
           "Non sostiene che un LLM possa decidere una carriera. Il modello aiuta a interpretare un insieme di evidenze di proprietà dell’utente; l’utente conserva il registro, la fonte e la decisione finale.",
         ],
       },
       scope:
-        "Questo case study descrive la release immutabile v1.10.0 al commit 6fa804e. Il tag firmato e i 25 artefatti pubblicati seguono una prova generale senza pubblicazione su sei piattaforme native e sei combinazioni sistema operativo/Python per Agent Access. Non afferma risultati occupazionali, accuratezza del modello su dati privati né supporto per ogni modello locale e ogni macchina.",
+        "Questo case study descrive la release immutabile v1.11.1 al commit 96ca0f8. Il tag firmato e verificato e i 26 artefatti pubblicati seguono una prova generale senza pubblicazione su sei piattaforme native e sei combinazioni sistema operativo/Python per Agent Access. Checksum e provenienza GitHub legano i byte alla release, ma gli installer nativi restano build della comunità senza firma di piattaforma o notarizzazione. Non afferma risultati occupazionali, accuratezza del modello su dati privati né supporto per ogni modello locale e ogni macchina.",
     }),
     "eliza-lab": localize("eliza-lab", {
       category: "Machine learning",
@@ -421,23 +422,23 @@ export const labsLocales = {
       category: "Software gestionale scolastico",
       title: "Progettare un sistema per i tirocini che la scuola possa gestire in autonomia",
       summary:
-        "VECTOR 3.3.0 è un sistema white-label per i tirocini che ogni scuola può eseguire sulla propria infrastruttura. Regole di programma versionate governano il completamento, la copertura di coorte evidenzia i vuoti di pianificazione e una coda per ruolo trasforma il lavoro scaduto in azioni concrete.",
+        "VECTOR 3.4.0 è un sistema white-label per i tirocini che ogni scuola può eseguire sulla propria infrastruttura. Le regole di programma versionate continuano a guidare il lavoro quotidiano, mentre archiviazione SQLite protetta, percorsi dei dati con limiti espliciti e controlli di release rendono l’installazione self-hosted adatta all’operatività di produzione.",
       readMinutes: "14",
       facts: [
         ["Prodotto", "Gestione white-label dei tirocini in self-hosting"],
         ["Ruolo", "Prodotto, architettura e implementazione clean-room"],
         ["Distribuzione", "Una scuola per installazione"],
-        ["Stato", "Versione open source 3.3.0 con licenza MIT"],
+        ["Stato", "Release open source immutabile 3.4.0 con licenza MIT"],
       ],
       evidence: {
         title: "Registro delle evidenze",
-        intro: "Il repository della versione 3.3.0 lega le promesse del prodotto a controlli concreti:",
+        intro: "La release firmata 3.4.0 lega le promesse del prodotto a controlli concreti:",
         items: [
           ["Policy di programma", "I coordinatori pubblicano versioni immutabili con ore obiettivo, numero minimo di check-in ed evidenze richieste. I tirocini esistenti mantengono la versione assegnata."],
-          ["Copertura della coorte", "La vista per periodo distingue studenti coperti, senza tirocinio e con sovrapposizioni, offrendo la creazione precompilata di un tirocinio per chi è scoperto."],
-          ["Coda operativa", "Evidenze scadute, ore da verificare, date dei tirocini e tutor mancanti rispettano ruolo e fuso orario della scuola, con paginazione stabile e riservata."],
-          ["Sessioni", "Il server chiude le sessioni inattive e il bootstrap di produzione termina prima di aprire il listener finché il segreto amministratore monouso non viene rimosso."],
-          ["Verifica", "Il sorgente controllato esegue 89 controlli Node.js, con uno skip specifico per piattaforma su Windows, e 22 flussi Playwright con verifiche dedicate a 320 px per workspace e presentazione. Build indipendenti su Ubuntu e Windows controllano la riproducibilità."],
+          ["Operazioni limitate", "Paginazione indicizzata e stabile per studenti e aziende, validazione batch degli import e limiti di capacità nel database mantengono liste, cronologia dei tirocini, sessioni ed elenco degli amministratori entro confini operativi espliciti."],
+          ["Archiviazione e ripristino", "Avvio, doctor, backup, ispezione, compattazione e ripristino rifiutano alias SQLite non sicuri e derive dello schema, verificano i file WAL associati ed eseguono controlli d’integrità e snapshot sulla stessa connessione protetta con cui accedono al database."],
+          ["Confine richieste e sessioni", "Origini di produzione esatte, errori di login neutrali rispetto all’identità, rifiuto dei cookie duplicati, controlli CSRF timing-safe e un massimo di dieci sessioni sono applicati prima che il workspace per ruolo possa esporre i record della scuola."],
+          ["Verifica e release", "Gate su Node 22 e 24, accettazione Chromium e WebKit, soglie di coverage native, prove di scala e CRUD, scansioni Trivy e due build identiche byte per byte proteggono la release. Il tag firmato e verificato risolve al commit fb802e5 e la release GitHub immutabile pubblica otto artefatti vincolati da digest, incluso l’SBOM CycloneDX."],
         ],
       },
       starting: {
@@ -505,8 +506,8 @@ export const labsLocales = {
       delivery: {
         title: "Self-hosting e ripristino",
         paragraphs: [
-          "Ogni scuola può impostare nome, colori, logo e contatti di supporto, con revisioni che proteggono le modifiche simultanee. L’immagine Docker usa un utente non privilegiato e supporta un filesystem root in sola lettura. I comandi di health e doctor segnalano problemi di configurazione e storage prima dell’uso normale.",
-          "Gli strumenti di backup creano uno snapshot SQLite privato, lo ispezionano senza avviare l’applicazione, lo ripristinano tramite manutenzione controllata e compattano i dati quando serve. La pipeline crea due volte il pacchetto sorgente, ne verifica inventario e commit, cerca segreti e prova installazione e accettazione dall’artefatto estratto.",
+          "Ogni scuola può impostare nome, colori, logo e contatti di supporto, con revisioni che proteggono le modifiche simultanee. L’immagine Alpine con Node 24 fissato gira con utente non root, codice applicativo di proprietà root, nessun gestore di pacchetti e supporto per un filesystem radice in sola lettura. I comandi health e doctor fermano l’avvio quando configurazione, schema o proprietà dell’archiviazione non sono sicuri.",
+          "Gli strumenti creano uno snapshot SQLite privato con limite di dimensione, lo ispezionano senza avviare l’applicazione e lo ripristinano attraverso un percorso protetto che rileva sostituzioni dei path e modifiche della sorgente. L’automazione scansiona container e sorgenti per vulnerabilità e segreti, pubblica un SBOM, costruisce due volte l’archivio e verifica il percorso di accettazione estratto prima della pubblicazione.",
         ],
       },
       result: {
@@ -517,7 +518,7 @@ export const labsLocales = {
         ],
       },
       scope:
-        "Questo case study descrive l’architettura rilasciata nella v3.3.0 al commit 0a99a9f e i controlli di self-hosting. GitHub Pages è un tour del prodotto; l’applicazione operativa parte dal pacchetto server. Non sono rappresentati dati scolastici reali, integrazioni istituzionali o risultati.",
+        "Questo case study descrive la release immutabile 3.4.0 e i suoi controlli di self-hosting al commit fb802e5. GitHub Pages è un tour del prodotto; l’applicazione operativa parte dal pacchetto server. Non sono rappresentati dati scolastici reali, integrazioni istituzionali o risultati, e la release non dichiara disponibilità gestita o certificazioni di conformità.",
     }),
     "jdoor-security-lab": localize("jdoor-security-lab", {
       category: "Assistenza remota sicura",
@@ -637,14 +638,14 @@ export const labsLocales = {
     "careeros-local": localize("careeros-local", {
       category: "Local-first-Produkt",
       title: "Ein privater Karriere-Arbeitsbereich, der auf Belegen statt auf generierten Behauptungen beruht",
-      summary: "CareerOS Local macht aus einem vorhandenen Lebenslauf einen privaten, revisionsgeführten Karrieredatensatz und nutzt danach verpflichtende lokale LLM-Analysen für Matching und Coaching. Tauri, FastAPI und SQLite halten Fakten, Entwürfe und Agentenzugriffe auf dem Gerät.",
+      summary: "CareerOS Local macht aus einem Lebenslauf einen privaten, revisionsgeführten Karrieredatensatz. Tauri, FastAPI und SQLite halten lokale LLM-Analyse, Wiederherstellung nach Neustarts und Agentenzugriffe auf dem Gerät.",
       readMinutes: "14",
-      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "v1.10.0 aus Commit 6fa804e nach nativer und Agent-Access-Prüfung veröffentlicht"]],
+      facts: [["Produkt", "Open-Source-Desktop-Utility"], ["Rolle", "Produkt, Architektur und Implementierung"], ["Vertrauensgrenze", "Standardmäßig das lokale Gerät"], ["Status", "Unveränderliches Release v1.11.1 aus Commit 96ca0f8 nach nativer und Agent-Access-Prüfung"]],
       evidence: { title: "Evidenzprotokoll", intro: "Das aktuelle Repository dokumentiert diese reproduzierbaren Prüfungen und Grenzen:", items: [
-        ["Backend", "In der Release-Suite für v1.10.0 bestanden 1.573 Backend-Tests; 4 wurden erwartungsgemäß übersprungen. Die Gesamtabdeckung betrug 81,28 %, Verzweigungen eingeschlossen."],
-        ["Frontend + Shell", "Alle 396 Frontend-Tests in 70 Dateien bestehen. Der bereits integrierte Feature-Stand bestand außerdem alle 17 Rust-Tests, Clippy mit erzwungener Cargo-Lockdatei und seine Supply-Chain-Prüfungen."],
-        ["Lebenslauf-Import", "Ein neuer Tresor kann vor dem Import den kleinsten revisionsgeführten Profildatensatz anlegen. Extrahierte Fakten bleiben unbestätigt und die Oberfläche führt direkt zur Prüfung."],
-        ["Revisionsgeführte Dossiers", "SQLite hält pro Bewerbung genau einen begrenzten Arbeitsentwurf. Archiv v6 nimmt diese Entwürfe mit und kann die Formate v1 bis v5 weiterhin prüfen und wiederherstellen."],
+        ["Backend", "In der Release-Suite für v1.11.1 bestanden 2.194 Backend-Tests; 7 wurden erwartungsgemäß übersprungen. Die Gesamtabdeckung betrug 81,91 %, Verzweigungen eingeschlossen."],
+        ["Frontend + Shell", "Alle 476 Frontend-Tests in 79 Dateien und 27 Rust-Tests bestehen. Lizenz-, Symbol-, Bundle-, Browser-, Container- und Supply-Chain-Verträge laufen auf demselben Release-Commit."],
+        ["Neustartfeste Wiederherstellung", "Persistierte Zustände und begrenzte Journale mit Prüfsummen lassen Zurücksetzen, Wiederherstellung, Löschung, Migrationen und private Dateien nach einem Neustart konvergieren, ohne unbegrenzten Pfaden oder Nutzdaten zu vertrauen."],
+        ["Sitzungen und Diagnostik", "Einmalige Refresh-Rotation gehört zu persistierten Sitzungsfamilien; Replay widerruft die Familie und Wartungssitzungen bleiben vom Arbeitsbereich getrennt. Öffentliche Such- und Laufzeitdiagnostik kommt nur aus einem geschlossenen, inhaltsfreien Register."],
         ["Agentenzugriff", "Die Desktop-App erteilt begrenzte, widerrufbare Berechtigungen für sieben schreibgeschützte Operationen über CLI und MCP-Server. Das Release liefert beide Befehle als installierbares Python-Wheel, zeigt das Bearer-Token einmal und speichert nur dessen Digest."],
       ]},
       starting: { title: "Das Produktproblem", paragraphs: [
@@ -674,19 +675,20 @@ export const labsLocales = {
       },
       decisions: { title: "Entscheidungen, die daraus ein echtes Werkzeug machen", intro: "Die nützliche Arbeit geschieht vor und nach dem Modellaufruf.", items: [
         { title: "Den Datensatz vor dem Lebenslauf-Import anlegen", body: "Der erste Start erzeugt einen minimalen revisionsgeführten Profildatensatz und führt erst danach einen begrenzten lokalen Import aus. Extrahierte Fakten bleiben Kandidaten, bis der Benutzer sie prüft. Der Lebenslauf beschleunigt damit die Einrichtung, ohne zur ungeprüften Wahrheit zu werden.", tradeoff: "Das Onboarding braucht einen ausdrücklichen Prüfschritt. Dafür hinterlässt eine fehlgeschlagene oder unvollständige Extraktion keinen mehrdeutigen Tresorzustand." },
-        { title: "Genau den geprüften Dossierentwurf veröffentlichen", body: "Jede Bewerbung besitzt einen revisionsgeführten Arbeitsentwurf in SQLite. Autosave-Konflikte lassen das sichtbare Formular unverändert. Die Veröffentlichung verbraucht nur die exakt gespeicherte Revision, und zwar in derselben Transaktion wie das unveränderliche Dossierereignis.", tradeoff: "Der Schreibpfad muss Revisionen und Konflikte behandeln. Dafür kann ein verspätetes Autosave keinen anderen Inhalt als den geprüften veröffentlichen." },
+        { title: "Private Änderungen zuerst protokollieren", body: "Zurücksetzen, Wiederherstellung, Löschung, Migrationen und private Dateien halten zuerst eine begrenzte Absicht fest. Die Wiederaufnahme prüft über stabile Dateideskriptoren Identität, Größe und Digest.", tradeoff: "Wartung braucht zusätzliche Wiederherstellungslogik; dafür hinterlassen Neustart oder mehrdeutiger Commit keine unbemerkte Teiloperation." },
         { title: "Agenten einen getrennten Lesezugang geben", body: "Agent Access lässt den angemeldeten Benutzer Geltungsbereiche wählen und verlangt vor der einmaligen Ausgabe eines Bearer-Tokens eine erneute Anmeldung. Berechtigungen laufen ab und sind widerrufbar. Die installierbare CLI und der MCP-Server stellen über stdio einen geschlossenen Satz schreibgeschützter Werkzeuge bereit, keine freien Prompts oder entfernte Schreib-API.", tradeoff: "Der Benutzer muss den Agent-Client weiterhin einrichten, und ein externer Client kann gelesene Daten übertragen. Der enge Vertrag ermöglicht nützliche Automatisierung, ohne die Desktop-Sitzung zu teilen." },
       ]},
       delivery: { title: "Wie das Produkt verifiziert wird", paragraphs: [
-        "In den Release-Prüfungen für v1.10.0 bestanden 1.573 Backend-Tests; 4 wurden erwartungsgemäß übersprungen. Die Gesamtabdeckung betrug 81,28 %, Verzweigungen eingeschlossen. Hinzu kamen 396 bestandene Frontend-Tests in 70 Dateien und alle 17 Rust-Tests des Release-Stands. Migrations- und Archiv-Suites decken das Entwurfsschema, Archiv v6 und die Wiederherstellung der Formate v1 bis v5 ab.",
-        "Protected-Branch-CI, CodeQL und Containerprüfungen sind am exakten Release-Commit grün. Ein Probelauf ohne Veröffentlichung und der Workflow des signierten Tags haben sechs native Pakete aufgebaut und geprüft. Dieselben Bytes des Agent-Access-Wheels wurden vor der Veröffentlichung unter Linux, macOS und Windows mit Python 3.12 und Python 3.13 getestet.",
+        "Für v1.11.1 bestanden 2.194 Backend-Tests bei 7 erwarteten Skips und 81,91 % Gesamtabdeckung einschließlich Verzweigungen. Hinzu kamen 476 Frontend-Tests in 79 Dateien und 27 Rust-Tests. Migration, Archiv, Journale, Wiederherstellung und konkurrierende Veröffentlichung sind in Fehlerszenarien geprüft.",
+        "Protected-Branch-CI, CodeQL und Containerprüfungen sind am Commit 96ca0f8 grün. Probelauf und signierter Tag bauten und prüften jeweils sechs native Pakete; dieselben Wheel-Bytes liefen unter Linux, macOS und Windows mit Python 3.12 und 3.13. Das unveränderliche Release veröffentlicht 26 digestgebundene Artefakte.",
       ]},
       result: { title: "Was heute vorhanden ist", paragraphs: [
-        "Das Release v1.10.0 ist eine funktionsfähige Desktop-Utility mit Einrichtung aus dem Lebenslauf, Career Vault, geführter Suche, revisionsgeführter Job Library, einer Zeitleiste pro Opportunity, Lebenslauf-Studio, dauerhaften Dossierentwürfen, Archiv v6 und verpflichtender lokaler Analyse.",
+        "v1.11.1 liefert eine funktionsfähige Desktop-Utility mit CV-Einrichtung, Career Vault, geführter Suche, Job Library, Bewerbungszeitleisten, Lebenslauf-Studio, Archiv v6 und lokaler Analyse. Zurücksetzen, Wiederherstellung, Löschung, Migrationen und private Dateien sind neustartfest wiederherstellbar.",
+        "Rotierende Sitzungsfamilien, ausfallsichere Konfiguration und strenge lokale Antwortgrenzen schützen Loopback. Öffentliche Diagnostik ist inhaltsfrei; Forced-Colors-, Tastatur- und WCAG-Prüfungen decken Anmeldung und Agent Access auf Englisch und Italienisch responsiv ab.",
         "Die authentifizierte Desktop-App verwaltet nun Berechtigungen für sieben schreibgeschützte Operationen, die eine per Bearer-Token authentifizierte CLI und ein MCP-Server über stdio bereitstellen. Beide Befehle sind im Release-Wheel enthalten. Codex, Claude Code und Shell-Skripte können eine bewusst kleine Ansicht eines autorisierten Kontos lesen, aber weder den Tresor ändern noch freie Prompts aufrufen oder einen entfernten Transport öffnen.",
         "Das Produkt behauptet nicht, ein LLM könne eine Karriere entscheiden. Das Modell hilft, einen eigenen Belegbestand auszuwerten; Datensatz, Quelle und letzte Entscheidung bleiben beim Benutzer.",
       ]},
-      scope: "Diese Fallstudie beschreibt das unveränderliche Release v1.10.0 am Commit 6fa804e. Der signierte Tag und 25 veröffentlichte Artefakte folgen einem Probelauf ohne Veröffentlichung auf sechs nativen Zielplattformen und sechs Agent-Access-Kombinationen aus Betriebssystem und Python. Sie behauptet weder Beschäftigungsergebnisse noch Modellgenauigkeit auf privaten Benutzerdaten oder Unterstützung für jedes lokale Modell und jede Maschine.",
+      scope: "Diese Fallstudie beschreibt das unveränderliche Release v1.11.1 am Commit 96ca0f8. Signierter Tag und 26 Artefakte folgen einem Probelauf auf sechs nativen Zielen und sechs Agent-Access-OS/Python-Kombinationen. Prüfsummen und GitHub-Provenienz binden die Bytes; native Pakete bleiben unsignierte Community-Builds ohne Plattformsignatur oder Notarisierung. Behauptet werden weder Beschäftigungsergebnisse noch Modellgenauigkeit oder universelle Hardwareunterstützung.",
     }),
     "eliza-lab": localize("eliza-lab", {
       category: "Machine Learning",
@@ -898,15 +900,15 @@ export const labsLocales = {
     "vector-placement-operations": localize("vector-placement-operations", {
       category: "Schulische Betriebssoftware",
       title: "Ein selbst betriebenes Praktikumssystem entwickeln, das der Schule gehört",
-      summary: "VECTOR 3.3.0 ist ein White-Label-System für Praktikumsabläufe auf der Infrastruktur einer Schule. Versionierte Programmregeln steuern den Abschluss, Kohortenabdeckung zeigt Planungslücken und eine rollenbezogene Aufgabenliste macht überfällige Arbeit zu konkreten nächsten Schritten.",
+      summary: "VECTOR 3.4.0 ist ein White-Label-System für Praktikumsabläufe auf der Infrastruktur einer Schule. Versionierte Programmregeln steuern weiterhin den Arbeitsalltag; abgesicherte SQLite-Speicherung, begrenzte Datenpfade und Release-Kontrollen machen die Self-Hosting-Grenze für den Produktionseinsatz belastbar.",
       readMinutes: "14",
-      facts: [["Produkt", "Selbst betriebene White-Label-Praktikumsverwaltung"], ["Rolle", "Clean-Room-Produkt, Architektur und Implementierung"], ["Betrieb", "Eine Schule pro Installation"], ["Status", "Open-Source-Version 3.3.0 unter der MIT-Lizenz"]],
-      evidence: { title: "Evidenzprotokoll", intro: "Das Repository der Version 3.3.0 verknüpft seine Produktversprechen mit konkreten Kontrollen:", items: [
+      facts: [["Produkt", "Selbst betriebene White-Label-Praktikumsverwaltung"], ["Rolle", "Clean-Room-Produkt, Architektur und Implementierung"], ["Betrieb", "Eine Schule pro Installation"], ["Status", "Unveränderliches Open-Source-Release 3.4.0 unter der MIT-Lizenz"]],
+      evidence: { title: "Evidenzprotokoll", intro: "Das signierte Release 3.4.0 verknüpft seine Produktversprechen mit konkreten Kontrollen:", items: [
         ["Programmrichtlinie", "Koordinatoren veröffentlichen unveränderliche Versionen mit Zielstunden, Mindestzahl an Check-ins und Nachweispflichten. Bestehende Einsätze behalten ihre zugewiesene Version."],
-        ["Kohortenabdeckung", "Die Periodenansicht trennt abgedeckte Schüler, Schüler ohne Einsatz und Überschneidungskonflikte und startet für eine Lücke einen vorausgefüllten Einsatz."],
-        ["Operative Aufgabenliste", "Überfällige Nachweise, ausstehende Stundenprüfungen, Einsatztermine und fehlende Tutorzuweisungen folgen Rolle und Schulzeitzone mit vertraulicher stabiler Seitennavigation."],
-        ["Sitzungen", "Der Server beendet inaktive Sitzungen. Der Produktions-Bootstrap öffnet keinen Listener, bis das einmalige Administratorgeheimnis entfernt wurde."],
-        ["Verifikation", "Der geprüfte Quellstand führt 89 Node.js-Prüfungen mit einem plattformspezifischen Skip unter Windows sowie 22 Playwright-Abläufe mit eigenen 320-Pixel-Prüfungen für Arbeitsbereich und Produktdarstellung aus. Unabhängige Builds unter Ubuntu und Windows prüfen die Reproduzierbarkeit."],
+        ["Begrenzter Betrieb", "Indizierte stabile Seitennavigation für Schüler und Betriebe, gebündelte Importvalidierung und datenbankgestützte Kapazitätsgrenzen halten Listen, Einsatzhistorie, Sitzungen und Benutzerverwaltung in ausdrücklich festgelegten Betriebsgrenzen."],
+        ["Speicherung und Wiederherstellung", "Start, Doctor, Sicherung, Prüfung, Verdichtung und Wiederherstellung weisen unsichere SQLite-Aliase und Schemaabweichungen zurück, prüfen WAL-Begleitdateien und halten Integritätsprüfung und Snapshot auf derselben abgesicherten Verbindung."],
+        ["Anfrage- und Sitzungsgrenze", "Exakte Produktionsursprünge, identitätsneutrale Anmeldefehler, Ablehnung doppelter Cookies, Timing-sichere CSRF-Prüfungen und höchstens zehn Sitzungen greifen, bevor der rollenbezogene Arbeitsbereich Schuldaten offenlegt."],
+        ["Verifikation und Release", "Gates für Node 22 und 24, Chromium- und WebKit-Abnahme, native Abdeckungsschwellen, Skalierungs- und CRUD-Proben, Trivy-Scans und zwei bytegleiche Builds schützen das Release. Das verifizierte signierte Tag löst auf Commit fb802e5 auf; das unveränderliche GitHub-Release veröffentlicht acht digestgebundene Artefakte einschließlich CycloneDX-SBOM."],
       ]},
       starting: { title: "Das operative Problem", paragraphs: [
         "Praktikumsverwaltung ist mehr als ein Dashboard. Eine Schule koordiniert Kohorten, Schüler, Betriebe, Tutoren, Termine, Stunden, Check-ins und unterschriebene Nachweise. Unterschiedliche Rollen benötigen unterschiedliche Ausschnitte desselben Datensatzes, und eine Korrektur darf den früheren Stand nicht auslöschen.",
@@ -939,14 +941,14 @@ export const labsLocales = {
         { title: "Aufmerksamkeit aus vorhandenen Datensätzen ableiten", body: "Die Queue leitet fällige Arbeit aus Nachweisen, Stunden, Terminen und Tutorzuweisungen ab, statt eine zweite Aufgabenliste zu pflegen. Der Server wendet die Rolle vor Zählung und Paging an.", tradeoff: "Beliebige Erinnerungen gehören nicht in die Queue. Sie bleibt mit dem Einsatzdatensatz konsistent und vermeidet eine zweite Wahrheitsquelle." },
       ]},
       delivery: { title: "Self-Hosting und Wiederherstellung", paragraphs: [
-        "Schulen können Name, Farben, Logo und Supportdaten mit Revisionsschutz für gleichzeitige Änderungen festlegen. Das Docker-Image läuft als unprivilegierter Benutzer und unterstützt ein schreibgeschütztes Root-Dateisystem. Health- und Doctor-Befehle zeigen Konfigurations- und Speicherprobleme vor dem normalen Betrieb.",
-        "Die Backup-Werkzeuge erstellen einen privaten SQLite-Snapshot, prüfen ihn ohne Anwendungsstart, stellen ihn über einen geschützten Wartungspfad wieder her und verdichten die Datenbank bei Bedarf. Die Release-Automatisierung baut das Quellpaket zweimal, prüft Inventar und Commit, sucht nach Geheimnissen, installiert aus dem entpackten Artefakt und führt dort die Abnahme aus.",
+        "Schulen können Name, Farben, Logo und Supportdaten mit Revisionsschutz für gleichzeitige Änderungen festlegen. Das gepinnte Node-24-Alpine-Image läuft als unprivilegierter Benutzer, enthält root-eigenen Anwendungscode und keinen Paketmanager und unterstützt ein schreibgeschütztes Root-Dateisystem. Health und Doctor stoppen den Start bei unsicherer Konfiguration, Schema- oder Speicherzuordnung.",
+        "Die Werkzeuge erstellen einen größenbegrenzten privaten SQLite-Snapshot, prüfen ihn ohne Anwendungsstart und stellen ihn über einen geschützten Pfad wieder her, der Pfadersetzung und Quelländerungen erkennt. Die Automatisierung scannt Container und Quellen auf Schwachstellen und Geheimnisse, veröffentlicht ein SBOM, baut das Archiv zweimal und prüft vor Veröffentlichung den entpackten Abnahmepfad.",
       ]},
       result: { title: "Was VECTOR heute unterstützt", paragraphs: [
         "Eine Schule kann Programmregeln veröffentlichen, Kohortenabdeckung prüfen, Einsätze aus Planungslücken erstellen und eine rollenbezogene Aufgabenliste abarbeiten. Derselbe Datensatz trägt Stunden, Check-ins, Nachweishistorie, Audit, atomaren Import, gefilterten Export und geregelte Aufbewahrung.",
         "VECTOR ist selbst betriebene Open-Source-Software. Es ist kein verwaltetes SaaS und beansprucht weder Compliance-Zertifizierung noch Hochverfügbarkeit oder SSO. Für Institutionen mit solchen Anforderungen bleiben diese Punkte Produkt- und Betriebsarbeit.",
       ]},
-      scope: "Diese Fallstudie beschreibt die veröffentlichte Architektur von Version 3.3.0 am Commit 0a99a9f und ihre Self-Hosting-Kontrollen. GitHub Pages ist eine Produkttour; die operative Anwendung läuft aus dem Serverpaket. Reale Schuldaten, institutionelle Integrationen und Ergebnisse werden nicht dargestellt.",
+      scope: "Diese Fallstudie beschreibt das unveränderliche Release 3.4.0 und seine Self-Hosting-Kontrollen am Commit fb802e5. GitHub Pages ist eine Produkttour; die operative Anwendung läuft aus dem Serverpaket. Reale Schuldaten, institutionelle Integrationen und Ergebnisse werden nicht dargestellt; das Release beansprucht weder verwaltete Verfügbarkeit noch Compliance-Zertifizierung.",
     }),
     "jdoor-security-lab": localize("jdoor-security-lab", {
       category: "Sichere Fernunterstützung",
@@ -1066,14 +1068,14 @@ export const labsLocales = {
     "careeros-local": localize("careeros-local", {
       category: "Produit local-first",
       title: "Construire un espace de travail privé pour sa carrière, fondé sur des preuves plutôt que sur des affirmations générées",
-      summary: "CareerOS Local transforme un CV existant en dossier professionnel privé et révisionné, puis utilise un LLM local obligatoire pour le matching et le coaching. Tauri, FastAPI et SQLite gardent les faits, les brouillons et l’accès des agents sur l’appareil.",
+      summary: "CareerOS Local transforme un CV en dossier professionnel privé et révisionné. Tauri, FastAPI et SQLite gardent sur l’appareil l’analyse LLM locale, la reprise après redémarrage et l’accès des agents.",
       readMinutes: "14",
-      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "v1.10.0 publiée depuis le commit 6fa804e après vérification native et Agent Access"]],
+      facts: [["Produit", "Utilitaire de bureau open source"], ["Rôle", "Produit, architecture et implémentation"], ["Périmètre de confiance", "Appareil local par défaut"], ["État", "Version immuable v1.11.1 depuis le commit 96ca0f8 après vérification native et Agent Access"]],
       evidence: { title: "Registre des preuves", intro: "Le dépôt actuel consigne ces vérifications et limites reproductibles :", items: [
-        ["Backend", "La suite de publication de la v1.10.0 réussit 1 573 tests backend ; 4 sont ignorés comme prévu. La couverture globale atteint 81,28 %, branches comprises."],
-        ["Frontend + shell", "Les 396 tests frontend répartis dans 70 fichiers réussissent. L’arbre des fonctionnalités déjà intégré a aussi réussi les 17 tests Rust, Clippy avec le fichier de verrouillage Cargo imposé et les contrôles de supply chain."],
-        ["Import depuis le CV", "Un nouveau coffre peut créer son profil révisionné minimal avant l’import du CV. Les faits extraits restent non confirmés et l’interface conduit directement à leur relecture."],
-        ["Dossiers révisionnés", "SQLite conserve un brouillon de travail borné par candidature. L’archive v6 transporte ces brouillons et continue d’inspecter et de restaurer les formats v1 à v5."],
+        ["Backend", "La suite de publication de la v1.11.1 réussit 2 194 tests backend ; 7 sont ignorés comme prévu. La couverture globale atteint 81,91 %, branches comprises."],
+        ["Frontend + shell", "Les 476 tests frontend dans 79 fichiers et les 27 tests Rust réussissent. Les contrats de licences, d’icônes, de bundle, de navigateur, de conteneurs et de supply chain portent sur le même commit."],
+        ["Reprise durable après redémarrage", "Des états persistants et journaux bornés avec sommes de contrôle permettent à réinitialisation, restauration, effacement, migrations et fichiers privés de converger après redémarrage, sans chemin ni contenu non borné."],
+        ["Sessions et diagnostics", "La rotation à usage unique appartient à des familles de sessions persistantes ; un rejeu révoque la famille et la maintenance reste séparée de l’espace de travail. Les diagnostics publics viennent uniquement d’un registre fermé, typé et sans contenu privé."],
         ["Accès des agents", "L’application de bureau délivre des autorisations limitées et révocables pour sept opérations en lecture seule exposées par la CLI et le serveur MCP. La version fournit les deux commandes dans un wheel Python installable, affiche une fois le jeton bearer et ne conserve que son condensat."],
       ]},
       starting: { title: "Le problème produit", paragraphs: [
@@ -1103,19 +1105,20 @@ export const labsLocales = {
       },
       decisions: { title: "Les choix qui en font un véritable utilitaire", intro: "Le travail utile se déroule avant et après l’appel au modèle.", items: [
         { title: "Créer le registre avant d’importer le CV", body: "Le premier démarrage crée un profil révisionné minimal, puis lance un import local borné. Les faits extraits restent des candidats jusqu’à leur validation. Le CV accélère donc la configuration sans devenir une vérité incontestable.", tradeoff: "L’onboarding exige une relecture explicite, mais une extraction incomplète ou en échec ne laisse pas le coffre dans un état ambigu." },
-        { title: "Publier exactement le brouillon relu", body: "Chaque candidature possède un brouillon de travail révisionné dans SQLite. Les conflits d’enregistrement automatique préservent le formulaire visible. La publication ne consomme que la révision enregistrée exacte, dans la même transaction que l’événement immuable du dossier.", tradeoff: "Le chemin d’écriture doit gérer les révisions et les conflits, mais un enregistrement tardif ne peut pas publier un contenu différent de celui qui a été relu." },
+        { title: "Journaliser avant de modifier les données privées", body: "Réinitialisation, restauration, effacement, migrations et fichiers privés consignent d’abord une intention bornée. La reprise vérifie identité, taille et condensat par des descripteurs stables.", tradeoff: "La maintenance exige une logique de reprise ; en échange, redémarrage ou commit ambigu ne laisse pas d’opération partielle silencieuse." },
         { title: "Donner aux agents une porte séparée en lecture seule", body: "Agent Access demande à l’utilisateur connecté de choisir les périmètres et de s’authentifier à nouveau avant d’afficher une seule fois le jeton bearer. Les autorisations expirent et restent révocables. La CLI installable et le serveur MCP exposent sur stdio un ensemble fermé d’outils en lecture seule, sans prompt libre ni API distante d’écriture.", tradeoff: "L’utilisateur doit encore configurer son client agent, et un client externe peut transmettre les données lues. Ce contrat étroit rend l’automatisation utile sans partager la session de bureau." },
       ]},
       delivery: { title: "Comment le produit est vérifié", paragraphs: [
-        "Les contrôles de la version v1.10.0 ont réussi 1 573 tests backend ; 4 sont ignorés comme prévu. La couverture globale atteint 81,28 %, branches comprises. S’y ajoutent 396 tests frontend réussis dans 70 fichiers et les 17 tests Rust de l’arbre de publication. Les suites de migration et d’archive couvrent le schéma des brouillons, le format v6 et la restauration des formats v1 à v5.",
-        "La CI de la branche protégée, CodeQL et les contrôles des conteneurs sont au vert sur le commit exact de publication. Une répétition sans publication et le workflow du tag signé ont assemblé et vérifié six paquets natifs. Les mêmes octets du wheel Agent Access ont été testés sous Linux, macOS et Windows avec Python 3.12 et Python 3.13 avant publication.",
+        "Pour v1.11.1, 2 194 tests backend réussissent, 7 sont ignorés comme prévu et la couverture globale atteint 81,91 %, branches comprises. S’y ajoutent 476 tests frontend dans 79 fichiers et 27 tests Rust. Migration, archive, journaux, reprise et publication concurrente sont testés en échec.",
+        "CI protégée, CodeQL et conteneurs sont au vert sur 96ca0f8. La répétition et le tag signé ont chacun construit et testé six paquets natifs ; les mêmes octets du wheel ont fonctionné sous Linux, macOS et Windows avec Python 3.12 et 3.13. La version immuable publie 26 artefacts liés par digest.",
       ]},
       result: { title: "Ce qui existe aujourd’hui", paragraphs: [
-        "La version v1.10.0 est un utilitaire de bureau fonctionnel avec démarrage depuis un CV, Career Vault, recherche guidée, Job Library révisionnée, une timeline par opportunité, studio de CV, brouillons de dossier persistants, archive v6 et analyse locale obligatoire.",
+        "v1.11.1 fournit un utilitaire de bureau avec démarrage depuis un CV, Career Vault, recherche guidée, Job Library, timelines, studio de CV, archive v6 et analyse locale. Réinitialisation, restauration, effacement, migrations et fichiers privés reprennent durablement après redémarrage.",
+        "Familles de sessions à rotation, configuration fermée et réponses locales bornées protègent loopback. Les diagnostics publics sont sans contenu privé ; forced-colors, clavier et WCAG couvrent connexion et Agent Access en anglais et italien sur les layouts responsives.",
         "L’application de bureau authentifiée gère maintenant les autorisations de sept opérations en lecture seule exposées par une CLI et un serveur MCP sur stdio, tous deux livrés dans le wheel de publication et authentifiés par jeton bearer. Codex, Claude Code et les scripts shell peuvent consulter une vue volontairement réduite d’un compte autorisé, mais ne peuvent ni modifier le coffre, ni invoquer de prompts libres, ni ouvrir de transport distant.",
         "Il ne prétend pas qu’un LLM puisse décider d’une carrière. Le modèle aide à interpréter un ensemble de preuves maîtrisé ; l’utilisateur conserve le registre, les sources et la décision finale.",
       ]},
-      scope: "Cette étude de cas décrit la version immuable v1.10.0 au commit 6fa804e. Le tag signé et les 25 artefacts publiés suivent une répétition sans publication sur six plateformes natives et six combinaisons système/Python pour Agent Access. Elle ne revendique ni résultats professionnels, ni précision du modèle sur des données privées, ni prise en charge de tous les modèles locaux et de toutes les machines.",
+      scope: "Cette étude décrit la version immuable v1.11.1 au commit 96ca0f8. Tag signé et 26 artefacts suivent une répétition sur six cibles natives et six combinaisons système/Python pour Agent Access. Sommes de contrôle et provenance GitHub lient les octets ; les paquets natifs restent des builds communautaires non signés, sans signature de plateforme ni notarisation. Aucun résultat professionnel, précision de modèle ou support matériel universel n’est revendiqué.",
     }),
     "eliza-lab": localize("eliza-lab", {
       category: "Machine learning",
@@ -1297,10 +1300,10 @@ export const labsLocales = {
       scope: "IntegraDraw est un outil pédagogique exploratoire. Il ne fournit ni intégration symbolique, ni preuve, ni gestion garantie des discontinuités, ni résultat exact pour une fonction arbitraire.",
     }),
     "vector-placement-operations": localize("vector-placement-operations", {
-      category: "Logiciel de gestion scolaire", title: "Concevoir un système de stages que chaque école peut héberger et maîtriser", summary: "VECTOR 3.3.0 est un système en marque blanche exploité sur l’infrastructure d’une école. Des règles de programme versionnées définissent les critères d’achèvement, la vue par cohorte révèle les élèves sans affectation et une file adaptée à chaque rôle transforme les retards en actions concrètes.",
+      category: "Logiciel de gestion scolaire", title: "Concevoir un système de stages que chaque école peut héberger et maîtriser", summary: "VECTOR 3.4.0 est un système en marque blanche exploité sur l’infrastructure d’une école. Les règles de programme versionnées continuent de guider le travail quotidien, tandis que le stockage SQLite protégé, les parcours de données bornés et les contrôles de release rendent la frontière auto-hébergée adaptée à la production.",
       readMinutes: "14",
-      facts: [["Produit", "Gestion white label des stages en auto-hébergement"], ["Rôle", "Produit, architecture et implémentation en clean room"], ["Déploiement", "Une école par installation"], ["État", "Version open source 3.3.0 sous licence MIT"]],
-      evidence: { title: "Registre des preuves", intro: "Le dépôt de la version 3.3.0 rattache ses promesses produit à des contrôles concrets :", items: [["Politique de programme", "Les coordinateurs publient des versions immuables avec heures cibles, minimum de suivis et justificatifs requis. Les stages existants gardent leur version."], ["Couverture de cohorte", "La vue par période sépare élèves couverts, sans stage et affectations en conflit, puis préremplit un nouveau stage pour un élève non couvert."], ["File opérationnelle", "Justificatifs en retard, heures à vérifier, dates de stage et tuteurs manquants suivent le rôle et le fuseau de l’école avec pagination stable et confidentielle."], ["Sessions", "Le serveur expire les sessions inactives. Le bootstrap de production s’arrête avant l’écoute tant que le secret administrateur à usage unique n’a pas été retiré."], ["Vérification", "Le code source vérifié exécute 89 contrôles Node.js, dont un skip lié à la plateforme sous Windows, et 22 parcours Playwright avec des vérifications dédiées à 320 px pour l’espace de travail et la présentation. Des builds indépendants sous Ubuntu et Windows contrôlent la reproductibilité."]] },
+      facts: [["Produit", "Gestion white label des stages en auto-hébergement"], ["Rôle", "Produit, architecture et implémentation en clean room"], ["Déploiement", "Une école par installation"], ["État", "Release open source immuable 3.4.0 sous licence MIT"]],
+      evidence: { title: "Registre des preuves", intro: "La release signée 3.4.0 rattache ses promesses produit à des contrôles concrets :", items: [["Politique de programme", "Les coordinateurs publient des versions immuables avec heures cibles, minimum de suivis et justificatifs requis. Les stages existants gardent leur version."], ["Opérations bornées", "Pagination indexée et stable pour élèves et organismes, validation groupée des imports et limites de capacité en base maintiennent listes, historique des stages, sessions et annuaire administratif dans des enveloppes explicites."], ["Stockage et restauration", "Démarrage, doctor, sauvegarde, inspection, compactage et restauration refusent les alias SQLite non sûrs et les dérives de schéma, vérifient les fichiers WAL associés et effectuent les contrôles d’intégrité et les instantanés sur la même connexion protégée qu’ils ont ouverte."], ["Frontière des requêtes et sessions", "Origines de production exactes, échecs de connexion neutres quant à l’identité, refus des cookies dupliqués, contrôles CSRF résistants aux attaques temporelles et plafond de dix sessions s’appliquent avant que l’espace par rôle n’expose les dossiers scolaires."], ["Vérification et release", "Les gates Node 22 et 24, l’acceptation Chromium et WebKit, les seuils de couverture native, les répétitions de charge et CRUD, les scans Trivy et deux builds identiques octet par octet protègent la release. Le tag signé vérifié pointe vers le commit fb802e5 et la release GitHub immuable publie huit artefacts liés par digest, dont son SBOM CycloneDX."]] },
       starting: { title: "Le problème opérationnel", paragraphs: ["La gestion des stages ne se résume pas à un tableau de bord. Une école coordonne des cohortes, des élèves, des organismes, des tuteurs, des dates, des heures, des suivis et des justificatifs signés. Chaque rôle a besoin d’une vue différente du même dossier, et une correction ne doit pas effacer ce qui l’a précédée.", "L’ancienne implémentation scolaire ne pouvait pas servir de base à un produit. J’ai reconstruit VECTOR depuis zéro en ne gardant que la compréhension du métier. Aucun code historique, dossier personnel, nom ou asset de l’ancien projet n’a été repris dans le nouveau dépôt."] },
       constraints: { title: "Ce qu’un système maîtrisé par l’école doit garantir", intro: "L’architecture part de quatre contraintes concrètes :", items: ["Chaque installation appartient à une seule école, qui contrôle sa base, son identité visuelle, ses sauvegardes et son déploiement.", "Les droits et le périmètre des tuteurs doivent être appliqués par le serveur avant toute sélection, tout comptage ou tout export.", "Chaque stage garde la version du programme qui a fixé heures, suivis et justificatifs ; les corrections préservent le dossier opérationnel initial.", "Imports, exports, rétention et restauration doivent être bornés, vérifiables et relançables sans risque après un échec."] },
       diagnosis: { title: "Définir d’abord la frontière de propriété", paragraphs: ["Déplacer davantage d’état dans le navigateur aurait laissé les questions difficiles intactes. Les contrôles de rôle auraient pu rester cachés dans l’interface, toute l’école être chargée en mémoire et un champ modifié être traité comme si sa valeur précédente n’avait jamais existé.", "VECTOR consacre chaque installation à une seule école au lieu de construire un service multi-tenant partagé. La responsabilité opérationnelle est nette, et les sauvegardes, la rétention et le white label restent plus simples à raisonner. Le projet distribue un logiciel, pas une plateforme cloud administrée."] },
@@ -1316,9 +1319,9 @@ export const labsLocales = {
         ],
       },
       decisions: { title: "Les choix qui sécurisent le travail quotidien", intro: "Le produit préfère des règles visibles à un état caché mais pratique.", items: [{ title: "Versionner les règles, pas seulement le stage", body: "Une version de programme publiée est immuable. Les nouvelles règles valent pour les nouvelles affectations ; un stage existant garde heures cibles, minimum de suivis et justificatifs de son départ.", tradeoff: "Une correction exige une nouvelle version et une réaffectation explicite des stages intacts. La fin d’un stage ne change jamais rétroactivement." }, { title: "Montrer les trous avant qu’ils deviennent des exceptions", body: "La couverture est calculée par cohorte et période et distingue affectation valide, absence et chevauchement. Une ligne non couverte ouvre un stage prérempli sans perdre le contexte.", tradeoff: "La vue reste volontairement opérationnelle, pas un moteur de reporting général. Elle reste ainsi actionnable et correcte pour chaque rôle." }, { title: "Dériver l’attention des dossiers déjà possédés", body: "La file déduit le travail à faire des justificatifs, heures, dates et tuteurs au lieu de maintenir une seconde liste. Le serveur applique le rôle avant comptage et pagination.", tradeoff: "La file n’accepte pas de rappels arbitraires : elle reste cohérente avec le dossier de stage et évite une seconde source de vérité." }] },
-      delivery: { title: "Auto-hébergement et restauration", paragraphs: ["Chaque école peut définir nom, couleurs, logo et coordonnées de support avec des révisions qui protègent les modifications concurrentes. L’image Docker s’exécute sans privilège et accepte un système de fichiers racine en lecture seule. Les commandes health et doctor signalent les problèmes de configuration et de stockage avant l’usage courant.", "Les outils créent un instantané SQLite privé, l’inspectent sans démarrer l’application, le restaurent par un parcours de maintenance protégé et compactent les données conservées si nécessaire. L’automatisation construit deux fois l’archive source, vérifie inventaire et commit, recherche les secrets, installe depuis l’artefact extrait et y exécute le parcours d’acceptation."] },
+      delivery: { title: "Auto-hébergement et restauration", paragraphs: ["Chaque école peut définir nom, couleurs, logo et coordonnées de support avec des révisions qui protègent les modifications concurrentes. L’image Alpine avec Node 24 épinglé s’exécute sans privilège, avec code applicatif détenu par root, sans gestionnaire de paquets et avec un système de fichiers racine en lecture seule. Health et doctor bloquent le démarrage si configuration, schéma ou propriété du stockage sont dangereux.", "Les outils créent un instantané SQLite privé à taille bornée, l’inspectent sans démarrer l’application et le restaurent par un parcours protégé qui détecte remplacement du chemin et modification de la source. L’automatisation analyse conteneur et sources pour détecter vulnérabilités et secrets, publie un SBOM, construit deux fois l’archive et valide le parcours d’acceptation extrait avant publication."] },
       result: { title: "Ce que VECTOR prend en charge aujourd’hui", paragraphs: ["Une école peut publier ses règles, contrôler la couverture d’une cohorte, créer un stage depuis un trou de planification et traiter une file par rôle. Le même dossier conserve heures, suivis, historique des preuves, audit, import atomique, export filtré et rétention gouvernée.", "VECTOR est un logiciel open source auto-hébergé. Ce n’est pas un SaaS administré et il ne revendique ni certification de conformité, ni haute disponibilité, ni SSO. Une institution qui en a besoin devra encore traiter ces sujets côté produit et déploiement."] },
-      scope: "Cette étude décrit l’architecture publiée avec la version 3.3.0 au commit 0a99a9f et ses contrôles d’auto-hébergement. GitHub Pages est un tour du produit ; l’application opérationnelle s’exécute depuis le paquet serveur. Aucun dossier réel, aucune intégration institutionnelle ni aucun résultat n’y sont représentés.",
+      scope: "Cette étude décrit la release immuable 3.4.0 et ses contrôles d’auto-hébergement au commit fb802e5. GitHub Pages est un tour du produit ; l’application opérationnelle s’exécute depuis le paquet serveur. Aucun dossier réel, aucune intégration institutionnelle ni aucun résultat n’y sont représentés, et la release ne revendique ni disponibilité gérée ni certification de conformité.",
     }),
     "jdoor-security-lab": localize("jdoor-security-lab", {
       category: "Assistance à distance sécurisée",

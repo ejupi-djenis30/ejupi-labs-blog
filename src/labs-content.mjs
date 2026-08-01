@@ -4,22 +4,22 @@ export const labsCases = {
     cardTitle: "CareerOS Local",
     title: "Building a private career workspace around evidence, not generated claims",
     summary:
-      "CareerOS Local turns an existing CV into a private, revisioned career record, then uses a required local LLM for matching and coaching. Tauri, FastAPI and SQLite keep facts, drafts and agent access on the user’s device.",
+      "CareerOS Local turns an existing CV into a private, revisioned career record, then uses a required local LLM for matching and coaching. Tauri, FastAPI and SQLite keep facts, drafts, restart recovery and agent access on the user’s device.",
     readMinutes: "14",
     facts: [
       ["Product", "Open-source desktop utility"],
       ["Role", "Product, architecture and implementation"],
       ["Trust boundary", "Local device by default"],
-      ["Status", "v1.10.0 released from commit 6fa804e after native and Agent Access verification"],
+      ["Status", "Immutable v1.11.1 release from commit 96ca0f8 after native and Agent Access verification"],
     ],
     evidence: {
       title: "Evidence ledger",
       intro: "The current repository records these reproducible checks and boundaries:",
       items: [
-        ["Backend", "The v1.10.0 release suite passed 1,573 backend tests; 4 were skipped as expected. Total coverage reached 81.28%, with branches included."],
-        ["Frontend + shell", "All 396 frontend tests in 70 files pass. The merged feature tree also passed all 17 Rust tests, Clippy with the Cargo lockfile enforced and its supply-chain gates."],
-        ["CV-first import", "A new vault can create its minimum revisioned profile before importing a CV. Extracted facts stay unconfirmed and the interface moves directly to review."],
-        ["Revisioned dossiers", "SQLite keeps one bounded working draft per application. Archive v6 carries those drafts and still inspects and restores formats v1 through v5."],
+        ["Backend", "The v1.11.1 release suite passed 2,194 backend tests; 7 were skipped as expected. Total coverage reached 81.91%, with branches included."],
+        ["Frontend + shell", "All 476 frontend tests in 79 files and all 27 Rust tests pass. License, icon, bundle, browser, container and supply-chain contracts run on the same release commit."],
+        ["Restart-durable recovery", "Persisted lifecycle states and bounded, checksummed journals let reset, restore, erasure, packaged migrations and private-file publication converge after a restart without trusting an unbounded path or payload."],
+        ["Sessions and diagnostics", "Single-use refresh rotation belongs to persisted session families, replay revokes the family and maintenance sessions cannot enter the workspace. Search and runtime diagnostics cross public boundaries only through a closed, content-free typed registry."],
         ["Agent Access", "The desktop issues scoped, revocable grants for seven read-only operations exposed through the CLI and MCP server. The release ships both commands in an installable Python wheel, shows each bearer token once and stores only its digest."],
       ],
     },
@@ -107,9 +107,9 @@ export const labsCases = {
           tradeoff: "Onboarding needs an explicit review step, but failed or partial extraction cannot leave the vault in an ambiguous state.",
         },
         {
-          title: "Publish the exact dossier draft that was reviewed",
-          body: "Each application owns one revisioned working draft in SQLite. Autosave conflicts keep the visible form intact, and publication consumes only the exact saved revision in the same transaction that records the immutable dossier event.",
-          tradeoff: "The write path carries revision checks and conflict handling, but a late autosave cannot silently publish different content.",
+          title: "Journal private mutations before changing owned data",
+          body: "Reset, restore, erasure, packaged migrations and source, photo or resume publication persist bounded purpose-specific intent before they mutate private state. Recovery reopens stable regular-file descriptors and verifies identity, size and digest before it converges or retries.",
+          tradeoff: "Every maintenance path carries lifecycle and recovery logic, but a restart or ambiguous commit cannot silently strand a half-applied vault operation.",
         },
         {
           title: "Give agents a separate read-only door",
@@ -121,20 +121,21 @@ export const labsCases = {
     delivery: {
       title: "How the product is verified",
       paragraphs: [
-        "Release checks for v1.10.0 passed 1,573 backend tests; 4 were skipped as expected. Total coverage reached 81.28%, with branches included. Another 396 frontend tests passed across 70 files, and the release tree passed all 17 Rust tests. Migration and archive suites cover the dossier draft schema, archive v6 and restore compatibility for v1 through v5.",
-        "Protected-branch CI, CodeQL and container checks are green on the exact release commit. A non-publishing rehearsal and the signed-tag workflow independently assembled and verified six native packages. The same Agent Access wheel bytes were also smoke-tested on Linux, macOS and Windows with Python 3.12 and Python 3.13 before publication.",
+        "Release checks for v1.11.1 passed 2,194 backend tests; 7 were skipped as expected. Total coverage reached 81.91%, with branches included. Another 476 frontend tests passed across 79 files, and the release tree passed all 27 Rust tests. Migration, archive, journal, recovery and concurrent-publication suites exercise the failure paths behind the new lifecycle controls.",
+        "Protected-branch CI, CodeQL and hardened-container checks are green on commit 96ca0f8. A non-publishing rehearsal and the signed-tag workflow independently assembled and exercised six native packages. The same Agent Access wheel bytes were smoke-tested on Linux, macOS and Windows with Python 3.12 and Python 3.13 before the immutable release published 26 digest-bound assets.",
       ],
     },
     result: {
       title: "What exists today",
       paragraphs: [
-        "The v1.10.0 release is a working desktop utility with CV-first setup, a Career Vault, guided search, a revisioned Job Library, one application timeline per opportunity, a resume studio, persistent dossier drafts, archive v6 and required local analysis.",
+        "The v1.11.1 release is a working desktop utility with CV-first setup, a Career Vault, guided search, a revisioned Job Library, one application timeline per opportunity, a resume studio, archive v6 and required local analysis. Reset, restore, complete erasure, migrations and private-file publication now have restart-durable recovery paths.",
+        "Rotating session families, fail-closed configuration and strict provider and local-runtime response envelopes protect the loopback boundary. Public diagnostics are content-free, while forced-colors, keyboard and WCAG checks cover login and Agent Access in English and Italian across the supported responsive layouts.",
         "The authenticated desktop now manages grants for seven read-only operations exposed through a bearer-token-authenticated CLI and stdio MCP server. Both commands ship in the release wheel. Codex, Claude Code and shell scripts can inspect a deliberately small view of one authorized account, but they cannot edit the vault, invoke free-form prompts or open a remote transport.",
         "It does not claim that an LLM can decide a career. The model helps interpret an owned body of evidence; the user keeps the record, the source and the final decision.",
       ],
     },
     scope:
-      "This case study describes the immutable v1.10.0 release at commit 6fa804e. Its signed tag and 25 published assets follow a non-publishing rehearsal across six native targets and six Agent Access OS/Python combinations. It does not claim employment outcomes, model accuracy on private user data or support for every local model and machine.",
+      "This case study describes the immutable v1.11.1 release at commit 96ca0f8. Its verified signed tag and 26 published assets follow a non-publishing rehearsal across six native targets and six Agent Access OS/Python combinations. Checksums and GitHub provenance bind bytes to the release, but native installers remain unsigned community builds without platform signing or notarization. It does not claim employment outcomes, model accuracy on private user data or support for every local model and machine.",
   },
   "eliza-lab": {
     category: "Machine learning",
@@ -548,23 +549,23 @@ export const labsCases = {
     cardTitle: "VECTOR",
     title: "Designing a self-hosted placement system that a school can own",
     summary:
-      "VECTOR 3.3.0 is a white-label placement operations system that a school can run on its own infrastructure. Versioned programme rules drive completion, cohort coverage exposes planning gaps and a role-scoped attention queue turns overdue work into concrete next actions.",
+      "VECTOR 3.4.0 is a white-label placement operations system that a school can run on its own infrastructure. Versioned programme rules still drive daily work, while guarded SQLite storage, bounded data paths and release controls make the self-hosted boundary fit for production operations.",
     readMinutes: "14",
     facts: [
       ["Product", "Self-hosted white-label placement operations"],
       ["Role", "Clean-room product, architecture and implementation"],
       ["Deployment", "One school per installation"],
-      ["Status", "Open-source v3.3.0 under the MIT License"],
+      ["Status", "Immutable open-source v3.4.0 release under the MIT License"],
     ],
     evidence: {
       title: "Evidence ledger",
-      intro: "The v3.3.0 repository ties its product claims to concrete controls:",
+      intro: "The signed v3.4.0 release ties its product claims to concrete controls:",
       items: [
         ["Programme policy", "Coordinators publish immutable versions with target hours, minimum check-ins and evidence requirements. Existing placements keep the version they were assigned."],
-        ["Cohort coverage", "A period view separates covered students, students without placements and overlapping placement conflicts, with prefilled placement creation for an uncovered student."],
-        ["Attention queue", "Overdue evidence, pending hour reviews, placement dates and missing tutor assignments appear through the current role and school time zone, with confidential stable pagination."],
-        ["Sessions", "The server expires inactive sessions and production bootstrap stops before opening the listener until the one-use administrator secret has been removed."],
-        ["Verification", "The checked source runs 89 Node.js checks, including one platform-specific skip on Windows, plus 22 Playwright flows with dedicated 320 px checks for the workspace and product presentation. Independent Ubuntu and Windows builds verify reproducibility."],
+        ["Bounded operations", "Indexed, stable student and host pagination, batched import validation and database-backed capacity limits keep lists, placement history, sessions and the administrator directory within explicit operational envelopes."],
+        ["Storage and recovery", "Startup, doctor, backup, inspection, compaction and restore reject unsafe SQLite aliases and schema drift, validate WAL companion files, and keep integrity checks and snapshots on the guarded connection they opened."],
+        ["Request and session boundary", "Exact production origins, identity-blind login failures, duplicate-cookie rejection, timing-safe CSRF checks and a ten-session cap are enforced before a role-scoped workspace can expose school records."],
+        ["Verification and release", "Node 22 and 24 gates, Chromium and WebKit acceptance, native coverage floors, scale and CRUD rehearsals, Trivy scanning and two byte-identical package builds protect the release. The verified signed tag resolves to commit fb802e5, and the immutable GitHub release publishes eight digest-bound assets including its CycloneDX SBOM."],
       ],
     },
     starting: {
@@ -665,8 +666,8 @@ export const labsCases = {
     delivery: {
       title: "Self-hosting and recovery",
       paragraphs: [
-        "Schools can set their own name, colours, logo and support details with revision checks that protect concurrent edits. The Docker image runs as a non-root user and supports a read-only root filesystem. Health and doctor commands expose configuration and storage problems before normal use.",
-        "Backup tooling creates a private SQLite snapshot, inspects it without starting the application, restores it through a guarded maintenance path and compacts retained data when required. Release automation builds the source package twice, verifies its inventory and commit, scans for secrets, installs from the extracted artifact and runs the acceptance path there.",
+        "Schools can set their own name, colours, logo and support details with revision checks that protect concurrent edits. The pinned Node 24 Alpine image runs as a non-root user with root-owned application code, no package-manager toolchain and support for a read-only root filesystem. Health and doctor commands fail before normal use when configuration, schema or storage ownership is unsafe.",
+        "Backup tooling creates a size-bounded private SQLite snapshot, inspects it without starting the application and restores it through a guarded maintenance path that detects path replacement and source changes. Release automation scans the container and source for vulnerabilities and secrets, publishes an SBOM, builds the source package twice and verifies the extracted acceptance path before publication.",
       ],
     },
     result: {
@@ -677,7 +678,7 @@ export const labsCases = {
       ],
     },
     scope:
-      "This case study describes the released v3.3.0 architecture and self-hosting controls at commit 0a99a9f. GitHub Pages is a product tour; the operational application runs from the server package. No real school records, institutional integrations or placement outcomes are represented.",
+      "This case study describes the immutable v3.4.0 release and its self-hosting controls at commit fb802e5. GitHub Pages is a product tour; the operational application runs from the server package. No real school records, institutional integrations or placement outcomes are represented, and the release does not claim managed availability or compliance certification.",
   },
   "jdoor-security-lab": {
     category: "Secure remote assistance",

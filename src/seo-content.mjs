@@ -23,7 +23,7 @@ export const caseSeoByLocale = {
     "careeros-local": {
       seoTitle: "CareerOS Local: evidence-led job search",
       seoDescription:
-        "CareerOS Local keeps career evidence, CV drafts, local-LLM matching and agent access on the user’s device with Tauri, FastAPI and SQLite.",
+        "CareerOS Local keeps career evidence, local-LLM analysis and restart-durable recovery on the user’s device with Tauri, FastAPI and SQLite.",
     },
     "eliza-lab": {
       seoTitle: "ELIZA Lab: an inspectable open-set ML pipeline",
@@ -43,7 +43,7 @@ export const caseSeoByLocale = {
     "vector-placement-operations": {
       seoTitle: "VECTOR: self-hosted placement operations for schools",
       seoDescription:
-        "VECTOR 3.3.0 is a self-hosted, white-label placement system with versioned programme rules, cohort coverage and role-scoped work queues.",
+        "VECTOR 3.4.0 is a self-hosted placement system with versioned programme rules, guarded SQLite recovery and production release controls.",
     },
     "jdoor-security-lab": {
       seoTitle: "JDoor Assist: consent-first remote support",
@@ -70,7 +70,7 @@ export const caseSeoByLocale = {
     "careeros-local": {
       seoTitle: "CareerOS Local: ricerca di lavoro basata sui fatti",
       seoDescription:
-        "CareerOS Local conserva sul dispositivo fatti professionali, bozze CV, matching con LLM locale e accesso degli agenti, usando Tauri, FastAPI e SQLite.",
+        "CareerOS Local mantiene sul dispositivo fatti professionali, analisi LLM locale e ripristino durevole ai riavvii con Tauri, FastAPI e SQLite.",
     },
     "eliza-lab": {
       seoTitle: "ELIZA Lab: pipeline ML open-set verificabile",
@@ -90,7 +90,7 @@ export const caseSeoByLocale = {
     "vector-placement-operations": {
       seoTitle: "VECTOR: gestione self-hosted dei tirocini",
       seoDescription:
-        "VECTOR 3.3.0 è un sistema white-label self-hosted con regole di programma versionate, copertura della coorte e code operative per ruolo.",
+        "VECTOR 3.4.0 è un sistema self-hosted con regole di programma versionate, ripristino SQLite protetto e controlli di release adatti alla produzione.",
     },
     "jdoor-security-lab": {
       seoTitle: "JDoor Assist: supporto remoto basato sul consenso",
@@ -117,7 +117,7 @@ export const caseSeoByLocale = {
     "careeros-local": {
       seoTitle: "CareerOS Local: Jobsuche mit belegbaren Fakten",
       seoDescription:
-        "CareerOS Local hält Karrieredaten, Lebenslaufentwürfe, lokales LLM-Matching und Agentenzugriff mit Tauri, FastAPI und SQLite auf dem Gerät.",
+        "CareerOS Local hält Karrieredaten, lokale LLM-Analyse und neustartfeste Wiederherstellung mit Tauri, FastAPI und SQLite auf dem Gerät.",
     },
     "eliza-lab": {
       seoTitle: "ELIZA Lab: prüfbare Open-Set-ML-Pipeline",
@@ -137,7 +137,7 @@ export const caseSeoByLocale = {
     "vector-placement-operations": {
       seoTitle: "VECTOR: selbst gehostete Praktikumsverwaltung",
       seoDescription:
-        "VECTOR 3.3.0 ist ein White-Label-System mit versionierten Programmregeln, Kohortenübersicht und rollenbezogenen Aufgabenlisten.",
+        "VECTOR 3.4.0 verbindet versionierte Programmregeln mit abgesicherter SQLite-Wiederherstellung und kontrollierten Produktions-Releases.",
     },
     "jdoor-security-lab": {
       seoTitle: "JDoor Assist: Fernhilfe nur mit Zustimmung",
@@ -164,7 +164,7 @@ export const caseSeoByLocale = {
     "careeros-local": {
       seoTitle: "CareerOS Local : chercher un emploi à partir de faits",
       seoDescription:
-        "CareerOS Local garde sur l’appareil les faits professionnels, brouillons de CV, analyses du LLM local et accès des agents avec Tauri, FastAPI et SQLite.",
+        "CareerOS Local garde sur l’appareil les données de carrière, l’analyse LLM locale et la reprise après redémarrage avec Tauri, FastAPI et SQLite.",
     },
     "eliza-lab": {
       seoTitle: "ELIZA Lab : pipeline ML open-set vérifiable",
@@ -184,7 +184,7 @@ export const caseSeoByLocale = {
     "vector-placement-operations": {
       seoTitle: "VECTOR : gestion des stages auto-hébergée",
       seoDescription:
-        "VECTOR 3.3.0 est un système en marque blanche avec règles de programme versionnées, vue par cohorte et files de travail adaptées aux rôles.",
+        "VECTOR 3.4.0 associe règles de programme versionnées, restauration SQLite protégée et contrôles de mise en production.",
     },
     "jdoor-security-lab": {
       seoTitle: "JDoor Assist : assistance distante avec consentement",
