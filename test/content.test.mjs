@@ -380,59 +380,80 @@ test("Labs source metadata is required and must resolve to an immutable commit",
   );
 });
 
-test("CareerOS documents the immutable v1.10.0 release", () => {
+test("CareerOS documents the immutable production-hardened v1.11.1 release", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "careeros-local");
   assert.ok(definition);
-  assert.equal(definition.updated, "2026-07-30");
-  assert.equal(definition.verifiedAt, "2026-07-30");
+  assert.equal(definition.updated, "2026-08-01");
+  assert.equal(definition.verifiedAt, "2026-08-01");
   assert.equal(definition.sourceState, "release");
-  assert.equal(definition.sourceRef, "v1.10.0");
+  assert.equal(definition.sourceRef, "v1.11.1");
   assert.equal(
     definition.sourceUrl,
-    "https://github.com/ejupi-djenis30/careeros-local/commit/6fa804e7925e1d1420bd3f3f56e10cee0d3ea637",
+    "https://github.com/ejupi-djenis30/careeros-local/commit/96ca0f886a389781127cb65db9d896a154d0331e",
   );
-  assert.equal(definition.releaseAssets.length, 25);
-  assert.equal(new Set(definition.releaseAssets).size, 25);
-  assert.ok(definition.releaseAssets.includes("release-manifest.json"));
-  assert.ok(definition.releaseAssets.includes("SHA256SUMS"));
-  assert.ok(definition.releaseAssets.includes("requirements.lock"));
-  assert.ok(
-    definition.releaseAssets.includes(
-      "careeros_local-1.10.0-py3-none-any.whl",
-    ),
-  );
-  assert.ok(
-    definition.releaseAssets.includes(
-      "CareerOS-Local_1.10.0_windows-arm64-setup.exe",
-    ),
-  );
+  assert.deepEqual(definition.releaseAssets, [
+    "CareerOS-Local_1.11.1_linux-arm64.AppImage",
+    "CareerOS-Local_1.11.1_linux-arm64.deb",
+    "CareerOS-Local_1.11.1_linux-x64.AppImage",
+    "CareerOS-Local_1.11.1_linux-x64.deb",
+    "CareerOS-Local_1.11.1_macos-arm64.dmg",
+    "CareerOS-Local_1.11.1_macos-x64.dmg",
+    "CareerOS-Local_1.11.1_windows-arm64-setup.exe",
+    "CareerOS-Local_1.11.1_windows-arm64.msi",
+    "CareerOS-Local_1.11.1_windows-x64-setup.exe",
+    "CareerOS-Local_1.11.1_windows-x64.msi",
+    "LICENSE",
+    "SHA256SUMS",
+    "THIRD_PARTY_NOTICES.txt",
+    "careeros-backend-1.11.1.cdx.json",
+    "careeros-frontend-1.11.1.cdx.json",
+    "careeros-rust-1.11.1.cdx.json",
+    "careeros_local-1.11.1-py3-none-any.whl",
+    "checksums-aarch64-apple-darwin.sha256",
+    "checksums-aarch64-pc-windows-msvc.sha256",
+    "checksums-aarch64-unknown-linux-gnu.sha256",
+    "checksums-x86_64-apple-darwin.sha256",
+    "checksums-x86_64-pc-windows-msvc.sha256",
+    "checksums-x86_64-unknown-linux-gnu.sha256",
+    "release-manifest.json",
+    "requirements.lock",
+    "supply-chain-evidence.tar.gz",
+  ]);
 
   const localizedClaims = {
     en: {
       release: /release/iu,
       cvFirst: /CV-first|existing CV/iu,
-      dossier: /revisioned dossier|dossier draft/iu,
+      recovery: /restart-durable|restart recovery/iu,
+      sessions: /session families/iu,
+      diagnostics: /content-free/iu,
       agentAccess: /Agent Access/iu,
       readOnly: /read-only/iu,
     },
     it: {
       release: /release|pubblicat[ao]/iu,
       cvFirst: /CV/iu,
-      dossier: /dossier revisionati|bozz[ae] dossier/iu,
+      recovery: /durevole ai riavvii|ripristino dopo il riavvio/iu,
+      sessions: /famiglie di sessione/iu,
+      diagnostics: /privo di contenuti privati|non contengono dati privati/iu,
       agentAccess: /Accesso agenti|Agent Access/iu,
       readOnly: /sola lettura/iu,
     },
     de: {
       release: /Release|veröffentlicht/iu,
       cvFirst: /Lebenslauf/iu,
-      dossier: /Dossierentwurf|revisionsgeführte Dossiers/iu,
+      recovery: /neustartfest|Wiederherstellung nach Neustarts/iu,
+      sessions: /Sitzungsfamilien/iu,
+      diagnostics: /inhaltsfrei/iu,
       agentAccess: /Agentenzugriff|Agent Access/iu,
       readOnly: /schreibgeschützt/iu,
     },
     fr: {
       release: /version|publiée/iu,
       cvFirst: /\bCV\b/u,
-      dossier: /dossiers révisionnés|brouillons? de dossier/iu,
+      recovery: /durable[^.]{0,40}redémarrage|reprise après redémarrage/iu,
+      sessions: /familles de sessions/iu,
+      diagnostics: /sans contenu privé|ne contiennent pas de données privées/iu,
       agentAccess: /Accès des agents|Agent Access/iu,
       readOnly: /lecture seule/iu,
     },
@@ -442,30 +463,35 @@ test("CareerOS documents the immutable v1.10.0 release", () => {
     const study = locales[localeKey].cases[definition.slug];
     const copy = JSON.stringify(study);
     const claims = localizedClaims[localeKey];
-    assert.match(copy, /v1\.10\.0/u);
-    assert.doesNotMatch(copy, /v1\.(?:8|9)\.0/u);
-    assert.match(copy, /1(?:,|\.| )573/u);
-    assert.match(copy, /81(?:,|\.)28\s?(?:%| %)/u);
-    assert.match(copy, /396/u);
-    assert.match(copy, /\b17\b/u);
+    assert.match(copy, /v1\.11\.1/u);
+    assert.doesNotMatch(copy, /v1\.(?:8|9|10)\.0|v1\.11\.0/u);
+    assert.match(copy, /2(?:,|\.| )194/u);
+    assert.match(copy, /81(?:,|\.)91\s?(?:%| %)/u);
+    assert.match(copy, /476/u);
+    assert.match(copy, /\b27\b/u);
     assert.match(copy, /archive v6|archivio v6|Archiv v6|format v6/iu);
     assert.match(copy, /\bCLI\b/u);
     assert.match(copy, /\bMCP\b/u);
     assert.match(copy, claims.release);
     assert.match(copy, claims.cvFirst);
-    assert.match(copy, claims.dossier);
+    assert.match(copy, claims.recovery);
+    assert.match(copy, claims.sessions);
+    assert.match(copy, claims.diagnostics);
     assert.match(copy, claims.agentAccess);
     assert.match(copy, claims.readOnly);
-    assert.match(copy, /6fa804e/u);
-    assert.match(copy, /\b25\b/u);
+    assert.match(copy, /96ca0f8/u);
+    assert.match(copy, /\b26\b/u);
     assert.match(copy, /wheel/iu);
-    assert.match(copy, /Python 3\.12/iu);
-    assert.match(copy, /Python 3\.13/iu);
+    assert.match(copy, /Python 3\.12[\s\S]{0,80}(?:Python )?3\.13/iu);
     assert.match(
       copy,
       /six(?:-| )(?:native )?targets?|sei (?:target|piattaforme)|sechs native[nr]? Ziel(?:en|plattformen)|six (?:cibles|plateformes)/iu,
     );
     assert.match(copy, /signed tag|tag firmato|signierte(?:r|n)? Tag|tag signé/iu);
+    assert.match(copy, /forced-colors/iu);
+    assert.match(copy, /WCAG/iu);
+    assert.match(copy, /unsigned community builds|build della comunità senza firma|unsignierte Community-Builds|builds communautaires non signés/iu);
+    assert.doesNotMatch(copy, /6fa804e|v1\.10\.0|v1\.11\.0/u);
     assert.doesNotMatch(
       copy,
       /remain open|ancora da completare|stehen noch aus|rest(?:e|ent) à terminer|not complete|non sono ancora completi|nicht abgeschlossen|ne sont pas terminés/iu,
@@ -539,17 +565,27 @@ test("DIG documents the checked Android and offline-safe v3.2 product in every l
   }
 });
 
-test("VECTOR is presented as the bounded self-hosted v3.3 product in every locale", () => {
+test("VECTOR is presented as the production-hardened immutable v3.4 release in every locale", () => {
   const definition = caseDefinitions.find(({ slug }) => slug === "vector-placement-operations");
   assert.ok(definition);
-  assert.equal(definition.updated, "2026-07-29");
-  assert.equal(definition.verifiedAt, "2026-07-29");
+  assert.equal(definition.updated, "2026-08-01");
+  assert.equal(definition.verifiedAt, "2026-08-01");
   assert.equal(definition.sourceState, "release");
-  assert.equal(definition.sourceRef, "v3.3.0");
+  assert.equal(definition.sourceRef, "v3.4.0");
   assert.equal(
     definition.sourceUrl,
-    "https://github.com/ejupi-djenis30/vector-placement-operations/commit/0a99a9f2c0051a61c1f21c03c0eff48e6d0d2ef1",
+    "https://github.com/ejupi-djenis30/vector-placement-operations/commit/fb802e5c35b9d675a5c3b156ac776599da1175c5",
   );
+  assert.deepEqual(definition.releaseAssets, [
+    "RELEASE_NOTES.md",
+    "SHA256SUMS",
+    "SOURCE_COMMIT",
+    "vector-release-3.4.0.json",
+    "vector-self-hosted-3.4.0.cdx.json",
+    "vector-self-hosted-3.4.0.inventory.json",
+    "vector-self-hosted-3.4.0.tar.gz",
+    "vector-self-hosted-3.4.0.zip",
+  ]);
   assert.deepEqual(definition.stack, ["Node.js", "Express", "SQLite", "Docker", "Playwright"]);
 
   const deploymentClaims = {
@@ -568,37 +604,59 @@ test("VECTOR is presented as the bounded self-hosted v3.3 product in every local
     en: /cohort coverage/iu,
     it: /copertura della coorte/iu,
     de: /kohortenabdeckung/iu,
-    fr: /couverture de cohorte/iu,
+    fr: /couverture (?:de|d’une) cohorte/iu,
   };
   const attentionClaims = {
     en: /attention queue/iu,
-    it: /coda operativa/iu,
+    it: /coda (?:operativa|di attenzione)/iu,
     de: /aufgabenliste/iu,
-    fr: /file opérationnelle/iu,
+    fr: /file (?:opérationnelle|par rôle)/iu,
+  };
+  const recoveryClaims = {
+    en: /storage and recovery/iu,
+    it: /archiviazione e ripristino/iu,
+    de: /speicherung und wiederherstellung/iu,
+    fr: /stockage et restauration/iu,
+  };
+  const immutableReleaseClaims = {
+    en: /immutable github release/iu,
+    it: /release github immutabile/iu,
+    de: /unveränderliche github-release/iu,
+    fr: /release github immuable/iu,
   };
 
   for (const localeKey of localeOrder) {
     const study = locales[localeKey].cases[definition.slug];
     const copy = JSON.stringify(study);
-    assert.match(study.summary, /3\.3\.0/u);
+    assert.match(study.summary, /3\.4\.0/u);
     assert.match(study.facts.flat().join(" "), deploymentClaims[localeKey]);
     assert.equal(study.evidence.items.length, 5);
     assert.match(study.architecture.intro, /AES-GCM/u);
     assert.match(copy, programmeClaims[localeKey]);
     assert.match(copy, coverageClaims[localeKey]);
     assert.match(copy, attentionClaims[localeKey]);
-    assert.match(copy, /89/u);
-    assert.match(copy, /22/u);
+    assert.match(copy, recoveryClaims[localeKey]);
+    assert.match(copy, immutableReleaseClaims[localeKey]);
+    assert.match(copy, /Node 22[^\d]{1,12}24/iu);
+    assert.match(copy, /Chromium/iu);
+    assert.match(copy, /WebKit/iu);
+    assert.match(copy, /Trivy/iu);
+    assert.match(copy, /CycloneDX/iu);
+    assert.match(copy, /fb802e5/u);
+    assert.match(copy, /\b(?:eight|otto|acht|huit)\b/iu);
     assert.match(copy, /SQLite/u);
     assert.match(copy, /SaaS/u);
+    assert.doesNotMatch(copy, /3\.3\.0|0a99a9f/u);
     assert.doesNotMatch(copy, /3\.0\.0/u);
   }
 
   const englishStudy = locales.en.cases[definition.slug];
   const english = JSON.stringify(englishStudy);
   assert.match(english, /immutable/iu);
-  assert.match(english, /overlapping placement conflicts/iu);
-  assert.match(english, /inactive sessions/iu);
+  assert.match(english, /overlapping assignments/iu);
+  assert.match(english, /ten-session cap/iu);
+  assert.match(english, /byte-identical/iu);
+  assert.match(english, /signed tag/iu);
   assert.match(english, /compliance certification/iu);
   const englishPositioning = JSON.stringify({
     summary: englishStudy.summary,
