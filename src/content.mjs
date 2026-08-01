@@ -310,9 +310,9 @@ export const locales = {
       notFoundAction: "Browse all case studies",
     },
     index: {
-      title: "Engineering decisions, explained.",
+      title: "The decisions behind the software.",
       description:
-        "I explain the constraints, technical choices, trade-offs and evidence behind the systems I have delivered and the open-source products I build.",
+        "No victory laps. Each case study names the constraint, the route I chose, the strongest alternative, the cost and the evidence available.",
       eyebrow: "Engineering case studies / 01 / 10",
       ctaTitle: "Is a difficult part of the system holding the project back?",
       ctaBody: "Bring me that part. I can help you define the architecture, plan the delivery and get to a useful first release.",
@@ -721,9 +721,9 @@ export const locales = {
       notFoundAction: "Vedi tutti i case study",
     },
     index: {
-      title: "Decisioni tecniche, spiegate.",
+      title: "Le decisioni dietro il software.",
       description:
-        "Spiego vincoli, scelte tecniche, compromessi e prove dietro i sistemi che ho realizzato e i prodotti open source che sviluppo.",
+        "Niente autocelebrazione. Spiego il vincolo, la strada scelta, l’alternativa più credibile, il costo e le evidenze disponibili in ogni case study.",
       eyebrow: "Case study di engineering / 01 / 10",
       ctaTitle: "Una parte complessa del sistema sta bloccando il progetto?",
       ctaBody: "Partiamo proprio da lì. Posso aiutarti a definire l’architettura, pianificare il rilascio e arrivare a una prima versione utile.",
@@ -1132,9 +1132,9 @@ export const locales = {
       notFoundAction: "Alle Fallstudien ansehen",
     },
     index: {
-      title: "Technische Entscheidungen, erklärt.",
+      title: "Die Entscheidungen hinter der Software.",
       description:
-        "Ich erkläre die Zwänge, technischen Entscheidungen, Kompromisse und Belege hinter ausgelieferten Systemen und meinen Open-Source-Produkten.",
+        "Ich lasse die Siegesrunde aus. Jede Fallstudie nennt die Einschränkung, meinen Weg, die stärkste Alternative, den Preis und die verfügbaren Belege.",
       eyebrow: "Engineering-Fallstudien / 01 / 10",
       ctaTitle: "Hält ein schwieriger Teil des Systems Ihr Projekt auf?",
       ctaBody: "Bringen Sie mir genau diesen Teil. Ich helfe Ihnen, die Architektur zu klären, die Auslieferung zu planen und eine erste brauchbare Version auf den Weg zu bringen.",
@@ -1543,9 +1543,9 @@ export const locales = {
       notFoundAction: "Voir toutes les études de cas",
     },
     index: {
-      title: "Les décisions techniques, expliquées.",
+      title: "Les décisions derrière le logiciel.",
       description:
-        "J’explique les contraintes, les choix techniques, les compromis et les preuves derrière les systèmes livrés et les produits open source que je développe.",
+        "Pas d’autocélébration. J’explique la contrainte, la voie choisie, l’alternative la plus crédible, son coût et les preuves disponibles.",
       eyebrow: "Études de cas d’ingénierie / 01 / 10",
       ctaTitle: "Une partie complexe du système bloque votre projet ?",
       ctaBody: "Parlons précisément de ce point. Je peux vous aider à cadrer l’architecture, organiser la livraison et parvenir à une première version utile.",

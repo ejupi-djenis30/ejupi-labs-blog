@@ -185,12 +185,7 @@ if (typeof document !== "undefined") {
             },
           );
           card.hidden = !visible;
-          if (visible) {
-            card.dataset.resultTone = ["paper", "oxide", "ink"][visibleCount % 3];
-            visibleCount += 1;
-          } else {
-            delete card.dataset.resultTone;
-          }
+          if (visible) visibleCount += 1;
         }
 
         caseList.dataset.visibleCount = String(visibleCount);
@@ -478,6 +473,10 @@ if (typeof document !== "undefined") {
           .sort((first, second) => first.boundingClientRect.top - second.boundingClientRect.top)[0];
 
         if (!active) return;
+
+        for (const section of observedSections) {
+          section.classList.toggle("is-reading", section === active.target);
+        }
 
         for (const link of tocLinks) {
           if (link.getAttribute("href") === `#${active.target.id}`) {
