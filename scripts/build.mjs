@@ -395,6 +395,7 @@ function caseCard(localeKey, definition) {
     <span class="card-number">${escapeHtml(ui.caseLabel.toLocaleUpperCase(locale.lang))} / ${escapeHtml(definition.number)}</span>
     <span>${escapeHtml(collectionLabel)}</span>
   </div>
+  <div class="case-card__signal" aria-hidden="true"><span>${escapeHtml(definition.number)}</span><i></i><i></i><i></i><i></i></div>
   <div class="case-card__copy">
     <div class="case-card__category meta-line"><span>${escapeHtml(study.category)}</span><span>${escapeHtml(study.readMinutes)} ${escapeHtml(locale.ui.readTime)}</span></div>
     <h2 itemprop="headline">${heading(study.cardTitle)}</h2>
@@ -448,6 +449,11 @@ ${header(localeKey, null, true)}
       <h1 itemprop="name">${heading(locale.index.title)}</h1>
       <p class="index-hero__lead" itemprop="description">${escapeHtml(locale.index.description)}</p>
     </div>
+    <dl class="index-hero__ledger">
+      <div><dt>${escapeHtml(ui.caseLabel)}</dt><dd>${visibleDefinitions.length}</dd></div>
+      <div><dt>${escapeHtml(locale.ui.languages)}</dt><dd>${localeOrder.length.toString().padStart(2, "0")}</dd></div>
+      <div><dt>${escapeHtml(ui.methodology)}</dt><dd>${escapeHtml(ui.indexPromise)}</dd></div>
+    </dl>
   </section>
   <section class="case-index shell" aria-label="${escapeHtml(ui.archive)}">
     <div class="discovery" data-discovery data-search-index-url="${escapeHtmlAttribute(searchAssetUrls[localeKey])}" hidden>
@@ -654,7 +660,7 @@ ${header(localeKey, definition.slug)}
   <article itemscope itemtype="https://schema.org/Article">
     <meta itemprop="datePublished" content="${escapeHtmlAttribute(definition.published)}" />
     <meta itemprop="dateModified" content="${escapeHtmlAttribute(definition.updated)}" />
-    <header class="article-hero">
+    <header class="article-hero" data-case-kind="${escapeHtmlAttribute(definition.kind)}">
       <div class="article-hero__inner shell">
         <div class="article-hero__copy">
           <span class="article-kicker eyebrow">${escapeHtml(collectionLabel)} / ${escapeHtml(definition.number)}</span>
