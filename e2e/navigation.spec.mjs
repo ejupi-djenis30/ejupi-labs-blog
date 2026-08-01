@@ -111,7 +111,7 @@ for (const localePath of locales) {
 }
 
 for (const width of [390, 1440]) {
-  test(`${width}px case-card palettes keep all normal text at WCAG AA contrast`, async ({
+  test(`${width}px editorial case cards keep all normal text at WCAG AA contrast`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
@@ -139,20 +139,16 @@ for (const width of [390, 1440]) {
               foreground: channels(getComputedStyle(element).color),
               selector,
               slug: card.dataset.caseSlug,
-              tone: card.dataset.resultTone,
             };
           });
         },
       );
     });
 
-    expect(new Set(samples.map(({ tone }) => tone))).toEqual(
-      new Set(["paper", "oxide", "ink"]),
-    );
     for (const sample of samples) {
       expect(
         contrastRatio(sample.foreground, sample.background),
-        `${sample.slug} (${sample.tone}) ${sample.selector} must meet WCAG AA`,
+        `${sample.slug} ${sample.selector} must meet WCAG AA`,
       ).toBeGreaterThanOrEqual(4.5);
     }
 
@@ -402,7 +398,7 @@ test("archive search, URL state and empty state stay in sync", async ({
   await expect(page.locator("[data-case-search]")).toBeFocused();
 });
 
-test("archive previews adapt from three columns to two and one", async ({
+test("archive previews remain editorial rows at every breakpoint", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -413,9 +409,9 @@ test("archive previews adapt from three columns to two and one", async ({
         getComputedStyle(element).gridTemplateColumns.split(" ").length,
     );
 
-  await expect.poll(columnCount).toBe(3);
+  await expect.poll(columnCount).toBe(1);
   await page.setViewportSize({ width: 900, height: 900 });
-  await expect.poll(columnCount).toBe(2);
+  await expect.poll(columnCount).toBe(1);
   await page.setViewportSize({ width: 768, height: 900 });
   await expect.poll(columnCount).toBe(1);
   await page.setViewportSize({ width: 390, height: 844 });
@@ -492,7 +488,7 @@ for (const { width, localePath } of [
     expect(geometry.removedFilterCount).toBe(0);
     expect(geometry.searchHeight).toBeGreaterThanOrEqual(48);
     expect(geometry.discoveryHeight).toBeLessThan(220);
-    expect(geometry.firstCardHeight).toBeLessThan(700);
+    expect(geometry.firstCardHeight).toBeLessThan(960);
     expect(geometry.columns).toBe(1);
     expect(["", "none"]).toContain(geometry.summaryClamp);
     expect(geometry.summaryOverflow).toBe("visible");

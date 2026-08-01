@@ -92,20 +92,16 @@ function mix(first, second, firstWeight) {
     .join("")}`;
 }
 
-test("every dynamic case-card palette keeps normal text at WCAG AA contrast", () => {
-  for (const tone of ["paper", "oxide", "ink"]) {
-    const palette = declarations(
-      blockFor(`.case-card[data-result-tone="${tone}"]`),
-    );
-    const background = resolveColor(palette.get("--card-bg"));
+test("the editorial case-card palette keeps normal text at WCAG AA contrast", () => {
+  const palette = declarations(blockFor(".case-card"));
+  const background = resolveColor(palette.get("--card-bg"));
 
-    for (const token of ["--card-fg", "--card-muted"]) {
-      const foreground = resolveColor(palette.get(token));
-      assert.ok(
-        contrastRatio(foreground, background) >= 4.5,
-        `${tone} ${token} contrast is below 4.5:1`,
-      );
-    }
+  for (const token of ["--card-fg", "--card-muted"]) {
+    const foreground = resolveColor(palette.get(token));
+    assert.ok(
+      contrastRatio(foreground, background) >= 4.5,
+      `${token} contrast is below 4.5:1`,
+    );
   }
 });
 
