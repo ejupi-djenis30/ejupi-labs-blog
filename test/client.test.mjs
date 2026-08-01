@@ -20,7 +20,7 @@ test("mobile disclosure locks page scrolling while open", async () => {
 
   assert.match(source, /document\.body\.style\.top = `-\$\{lockedScrollPosition\}px`/);
   assert.match(source, /top: lockedScrollPosition/);
-  assert.match(source, /behavior: "instant"/);
+  assert.match(source, /behavior: "auto"/);
   assert.match(source, /menuToggle\.focus\(\{ preventScroll: true \}\)/);
 });
 
@@ -28,8 +28,10 @@ test("mobile disclosure isolates the page and traps keyboard focus", async () =>
   const source = await readFile(new URL("../src/client.js", import.meta.url), "utf8");
 
   assert.match(source, /element\.setAttribute\("aria-hidden", "true"\)/);
-  assert.match(source, /event\.shiftKey && document\.activeElement === firstItem/);
-  assert.match(source, /document\.activeElement === lastItem/);
+  assert.match(source, /event\.shiftKey && document\.activeElement === firstLink/);
+  assert.match(source, /event\.shiftKey && document\.activeElement === menuToggle/);
+  assert.match(source, /!event\.shiftKey && document\.activeElement === lastLink/);
+  assert.match(source, /!event\.shiftKey && document\.activeElement === menuToggle/);
 });
 
 test("skip link transfers keyboard focus to the main landmark", async () => {
@@ -67,6 +69,14 @@ test("case-study search is accent-insensitive and requires every query word", ()
     matchesCaseStudy(candidate, { selectedKind: "labs" }),
     false,
   );
+});
+
+test("search folding is deterministic instead of depending on the host locale", async () => {
+  const source = await readFile(new URL("../src/client.js", import.meta.url), "utf8");
+
+  assert.equal(normalizeSearchValue("  İNDEX  "), "index");
+  assert.match(source, /\.toLowerCase\(\)/u);
+  assert.doesNotMatch(source, /\.toLocaleLowerCase\(\)/u);
 });
 
 test("homepage search no longer depends on visible taxonomy controls", async () => {

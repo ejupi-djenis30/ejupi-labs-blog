@@ -148,24 +148,8 @@ export const caseDefinitions = [
     stack: ["Rust", "TF-IDF", "Logistic regression", "Open-set ML"],
   },
   {
-    slug: "djenis-ai-agent",
-    number: "06",
-    diagram: "agent",
-    kind: "labs",
-    categoryKey: "agent-systems",
-    availableLocales: ["en", "it", "de", "fr"],
-    published: "2026-07-24",
-    updated: "2026-07-29",
-    projectUrl: "https://ejupi-djenis30.github.io/DjenisAiAgent/",
-    sourceState: "release",
-    sourceRef: "v0.3.0",
-    sourceUrl: "https://github.com/ejupi-djenis30/DjenisAiAgent/commit/946160fee919566b4167126185395e2d42dfb6a6",
-    verifiedAt: "2026-07-29",
-    stack: ["Python", "Ollama", "OpenAI-compatible API", "Windows UIA", "Selenium"],
-  },
-  {
     slug: "dig-gopher-explorer",
-    number: "07",
+    number: "06",
     diagram: "dig",
     kind: "labs",
     categoryKey: "protocol-tooling",
@@ -181,7 +165,7 @@ export const caseDefinitions = [
   },
   {
     slug: "integradraw",
-    number: "08",
+    number: "07",
     diagram: "integradraw",
     kind: "labs",
     categoryKey: "computational-mathematics",
@@ -197,7 +181,7 @@ export const caseDefinitions = [
   },
   {
     slug: "vector-placement-operations",
-    number: "09",
+    number: "08",
     diagram: "vector",
     kind: "labs",
     categoryKey: "operations-software",
@@ -213,7 +197,7 @@ export const caseDefinitions = [
   },
   {
     slug: "jdoor-security-lab",
-    number: "10",
+    number: "09",
     diagram: "jdoor",
     kind: "labs",
     categoryKey: "secure-remote-assistance",
@@ -229,9 +213,13 @@ export const caseDefinitions = [
   },
 ];
 
+export const currentCaseDefinitions = Object.freeze(
+  [...caseDefinitions],
+);
+
 export function relatedCaseDefinitions(
   currentDefinition,
-  definitions = caseDefinitions,
+  definitions = currentCaseDefinitions,
   { localeKey, limit = 2 } = {},
 ) {
   const currentNumber = Number(currentDefinition.number);
@@ -271,7 +259,6 @@ export const protectedLegacySlugs = Object.freeze([
   "retail-erp-evolution",
   "careeros-local",
   "eliza-lab",
-  "djenis-ai-agent",
   "dig-gopher-explorer",
   "integradraw",
   "vector-placement-operations",
@@ -312,7 +299,7 @@ export const locales = {
     index: {
       title: "Engineering decisions, explained.",
       description:
-        "I explain the engineering decisions behind the systems I have delivered and the open-source projects I build. I cover what was difficult, why I chose one path over another and what the evidence can support.",
+        "I explain the constraints, technical choices, trade-offs and evidence behind the systems I have delivered and the open-source products I build.",
       eyebrow: "Engineering case studies / 01 / 10",
       ctaTitle: "Is a difficult part of the system holding the project back?",
       ctaBody: "Bring me that part. I can help you define the architecture, plan the delivery and get to a useful first release.",
@@ -723,7 +710,7 @@ export const locales = {
     index: {
       title: "Decisioni tecniche, spiegate.",
       description:
-        "Spiego le decisioni tecniche alla base dei sistemi che ho realizzato e dei progetti open source che sviluppo. Racconto cosa era difficile, perché ho scelto una strada invece di un’altra e cosa posso dimostrare con i fatti.",
+        "Spiego vincoli, scelte tecniche, compromessi e prove dietro i sistemi che ho realizzato e i prodotti open source che sviluppo.",
       eyebrow: "Case study di engineering / 01 / 10",
       ctaTitle: "Una parte complessa del sistema sta bloccando il progetto?",
       ctaBody: "Partiamo proprio da lì. Posso aiutarti a definire l’architettura, pianificare il rilascio e arrivare a una prima versione utile.",
@@ -737,7 +724,7 @@ export const locales = {
           "Ho portato una piattaforma multicomponente per documenti e workflow IA da un assetto on-premise specifico per ambiente a Terraform riutilizzabile, GKE e un rilascio blue/red controllato su Google Cloud.",
         readMinutes: "14",
         facts: [
-          ["Disciplina", "Cloud platform engineering"],
+          ["Disciplina", "Ingegneria delle piattaforme cloud"],
           ["Perimetro", "Infrastruttura, workload e percorso di rilascio"],
           ["Consegnato", "Migrazione della piattaforma e rilascio ripetibile"],
           ["Confine", "Caso professionale anonimizzato"],
@@ -983,7 +970,7 @@ export const locales = {
           "Ho lavorato su SQL Server, .NET Framework 4.8 e un frontend KnockoutJS di un ERP retail operativo: feature, bug, report, integrazioni con corrieri e modernizzazione della ricezione stock.",
         readMinutes: "14",
         facts: [
-          ["Disciplina", "Enterprise product engineering"],
+          ["Disciplina", "Ingegneria di prodotto per software aziendale"],
           ["Perimetro", "Database, backend, frontend e integrazioni"],
           ["Consegnato", "Applicazione, database, report e integrazioni"],
           ["Confine", "Caso professionale anonimizzato"],
@@ -1134,7 +1121,7 @@ export const locales = {
     index: {
       title: "Technische Entscheidungen, erklärt.",
       description:
-        "Ich erkläre, wie ich bei ausgelieferten Systemen und meinen Open-Source-Projekten technische Entscheidungen getroffen habe. Dabei zeige ich, was schwierig war, warum ich einen Weg gewählt habe und was sich wirklich belegen lässt.",
+        "Ich erkläre die Zwänge, technischen Entscheidungen, Kompromisse und Belege hinter ausgelieferten Systemen und meinen Open-Source-Produkten.",
       eyebrow: "Engineering-Fallstudien / 01 / 10",
       ctaTitle: "Hält ein schwieriger Teil des Systems Ihr Projekt auf?",
       ctaBody: "Bringen Sie mir genau diesen Teil. Ich helfe Ihnen, die Architektur zu klären, die Auslieferung zu planen und eine erste brauchbare Version auf den Weg zu bringen.",
@@ -1148,7 +1135,7 @@ export const locales = {
           "Ich überführte eine mehrteilige Dokument- und KI-Workflow-Plattform aus einem umgebungsspezifischen On-Premise-Betrieb in wiederverwendbares Terraform, GKE und einen kontrollierten Blue/Red-Releaseweg.",
         readMinutes: "14",
         facts: [
-          ["Disziplin", "Cloud Platform Engineering"],
+          ["Disziplin", "Entwicklung von Cloud-Plattformen"],
           ["Umfang", "Infrastruktur, Workloads und Releaseweg"],
           ["Geliefert", "Plattformmigration und wiederholbare Releases"],
           ["Grenze", "Anonymisierte berufliche Fallstudie"],
@@ -1394,7 +1381,7 @@ export const locales = {
           "Ich arbeitete an SQL Server, .NET Framework 4.8 und einem KnockoutJS-Frontend eines laufenden Retail-ERP: Features, Fehler, Reports, Kuriereinbindungen und Modernisierung des Wareneingangs.",
         readMinutes: "14",
         facts: [
-          ["Disziplin", "Enterprise Product Engineering"],
+          ["Disziplin", "Produktentwicklung für Unternehmenssoftware"],
           ["Umfang", "Datenbank, Backend, Frontend und Integrationen"],
           ["Geliefert", "Anwendung, Datenbank, Reporting und Integrationen"],
           ["Grenze", "Anonymisierte berufliche Fallstudie"],
@@ -1545,7 +1532,7 @@ export const locales = {
     index: {
       title: "Les décisions techniques, expliquées.",
       description:
-        "J’explique les choix techniques qui ont façonné les systèmes que j’ai livrés et les projets open source que je développe. Je raconte ce qui posait problème, pourquoi j’ai choisi une voie plutôt qu’une autre et ce que les faits permettent vraiment d’affirmer.",
+        "J’explique les contraintes, les choix techniques, les compromis et les preuves derrière les systèmes livrés et les produits open source que je développe.",
       eyebrow: "Études de cas d’ingénierie / 01 / 10",
       ctaTitle: "Une partie complexe du système bloque votre projet ?",
       ctaBody: "Parlons précisément de ce point. Je peux vous aider à cadrer l’architecture, organiser la livraison et parvenir à une première version utile.",

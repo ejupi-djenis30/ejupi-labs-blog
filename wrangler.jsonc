@@ -3,8 +3,12 @@
   "name": "ejupi-labs-blog",
   "main": "./src/worker.mjs",
   "compatibility_date": "2026-07-21",
+  "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
   "preview_urls": false,
+  "vars": {
+    "LOCAL_DEVELOPMENT": "false"
+  },
   "routes": [
     {
       "pattern": "blog.ejupilabs.com",
@@ -17,5 +21,24 @@
     "run_worker_first": true,
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 0.1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.01
+    }
+  },
+  "env": {
+    "local": {
+      "routes": [],
+      "vars": {
+        "LOCAL_DEVELOPMENT": "true"
+      }
+    }
   }
 }

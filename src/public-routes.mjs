@@ -6,7 +6,6 @@ export const PUBLIC_CASE_STUDY_SLUGS = Object.freeze([
   "retail-erp-evolution",
   "careeros-local",
   "eliza-lab",
-  "djenis-ai-agent",
   "dig-gopher-explorer",
   "integradraw",
   "vector-placement-operations",
@@ -25,6 +24,10 @@ export const PUBLIC_DIRECTORY_ROUTES = new Set([
   ),
 ]);
 
+/**
+ * @param {string} pathname
+ * @returns {string}
+ */
 export function canonicalPublicPathname(pathname) {
   if (pathname === "/" || pathname.endsWith("/")) return pathname;
 

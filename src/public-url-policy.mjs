@@ -12,7 +12,6 @@ export const PRODUCT_GITHUB_PAGES_HOST = "ejupi-djenis30.github.io";
 export const LABS_PROJECT_PAGES_URLS = Object.freeze({
   "careeros-local": "https://ejupi-djenis30.github.io/careeros-local/",
   "eliza-lab": "https://ejupi-djenis30.github.io/eliza-lab/",
-  "djenis-ai-agent": "https://ejupi-djenis30.github.io/DjenisAiAgent/",
   "dig-gopher-explorer": "https://ejupi-djenis30.github.io/Dig/",
   integradraw: "https://ejupi-djenis30.github.io/IntegraDraw/",
   "vector-placement-operations":

@@ -9,9 +9,12 @@ export default defineConfig({
   reporter: "line",
   use: {
     baseURL: "http://127.0.0.1:8792",
-    browserName: "chromium",
     trace: "retain-on-failure",
   },
+  projects: [
+    { name: "chromium", use: { browserName: "chromium" } },
+    { name: "webkit", use: { browserName: "webkit" } },
+  ],
   webServer: {
     command: "npm run build && node scripts/serve-dist.mjs --port 8792",
     url: "http://127.0.0.1:8792",

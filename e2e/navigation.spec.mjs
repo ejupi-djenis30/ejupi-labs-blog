@@ -1,8 +1,30 @@
 import { expect, test } from "@playwright/test";
-import { caseDefinitions } from "../src/content.mjs";
+import { currentCaseDefinitions } from "../src/content.mjs";
 import { editorialUi } from "../src/editorial.mjs";
 
 const locales = ["/", "/it/", "/de/", "/fr/"];
+
+function contrastRatio(foreground, background) {
+  const luminance = (channels) =>
+    channels
+      .map((channel) => channel / 255)
+      .map((channel) =>
+        channel <= 0.04045
+          ? channel / 12.92
+          : ((channel + 0.055) / 1.055) ** 2.4,
+      )
+      .reduce(
+        (total, channel, index) =>
+          total + channel * [0.2126, 0.7152, 0.0722][index],
+        0,
+      );
+  const foregroundLuminance = luminance(foreground);
+  const backgroundLuminance = luminance(background);
+  return (
+    (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
+    (Math.min(foregroundLuminance, backgroundLuminance) + 0.05)
+  );
+}
 
 for (const localePath of locales) {
   test(`${localePath} keeps mobile navigation isolated and keyboard-contained`, async ({
@@ -59,8 +81,14 @@ for (const localePath of locales) {
     expect(menuBox).not.toBeNull();
     expect(Math.abs(menuBox.y - 72)).toBeLessThanOrEqual(1);
     expect(Math.abs(menuBox.y + menuBox.height - 844)).toBeLessThanOrEqual(1);
-    await expect(menu.locator("a").first()).toBeFocused();
+    const firstLink = menu.locator("a").first();
+    await expect(firstLink).toBeFocused();
     expect(await page.locator("main").evaluate((element) => element.inert)).toBe(true);
+
+    await page.keyboard.press("Shift+Tab");
+    await expect(toggle).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(firstLink).toBeFocused();
 
     const lastLink = menu.locator("a").last();
     await lastLink.focus();
@@ -81,6 +109,195 @@ for (const localePath of locales) {
     expect(consoleErrors).toEqual([]);
   });
 }
+
+for (const width of [390, 1440]) {
+  test(`${width}px case-card palettes keep all normal text at WCAG AA contrast`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+    await page.goto("/");
+
+    const samples = await page.evaluate(() => {
+      const channels = (value) =>
+        (value.match(/[\d.]+/gu) ?? []).slice(0, 3).map(Number);
+      const selectors = [
+        ".case-card__meta",
+        ".case-card__category",
+        ".case-card__summary",
+        ".tag-list",
+        ".text-link",
+      ];
+
+      return [...document.querySelectorAll("[data-case-card]")].flatMap(
+        (card) => {
+          const background = channels(getComputedStyle(card).backgroundColor);
+          return selectors.map((selector) => {
+            const element = card.querySelector(selector);
+            if (!element) throw new Error(`Missing card sample: ${selector}`);
+            return {
+              background,
+              foreground: channels(getComputedStyle(element).color),
+              selector,
+              slug: card.dataset.caseSlug,
+              tone: card.dataset.resultTone,
+            };
+          });
+        },
+      );
+    });
+
+    expect(new Set(samples.map(({ tone }) => tone))).toEqual(
+      new Set(["paper", "oxide", "ink"]),
+    );
+    for (const sample of samples) {
+      expect(
+        contrastRatio(sample.foreground, sample.background),
+        `${sample.slug} (${sample.tone}) ${sample.selector} must meet WCAG AA`,
+      ).toBeGreaterThanOrEqual(4.5);
+    }
+
+    const languageTargets = await page
+      .locator(".language-list a")
+      .evaluateAll((links) =>
+        links.map((link) => {
+          const box = link.getBoundingClientRect();
+          return { height: box.height, width: box.width };
+        }),
+      );
+    // WebKit can expose an exact 44 CSS px layout as 43.99998 because its
+    // internal device-pixel conversion uses floating-point coordinates.
+    const layoutEpsilonPx = 0.001;
+    for (const target of languageTargets) {
+      expect(target.width).toBeGreaterThanOrEqual(44 - layoutEpsilonPx);
+      expect(target.height).toBeGreaterThanOrEqual(44 - layoutEpsilonPx);
+    }
+  });
+
+  test(`${width}px article oxide surfaces preserve text and focus contrast`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: width === 390 ? 844 : 1000 });
+    await page.goto("/case-studies/ai-workflow-cloud-migration/");
+
+    const combinations = await page.evaluate(() => {
+      const channels = (value) => {
+        const srgb = value.match(
+          /^color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/u,
+        );
+        if (srgb) return srgb.slice(1, 4).map((channel) => Number(channel) * 255);
+        return (value.match(/[\d.]+/gu) ?? []).slice(0, 3).map(Number);
+      };
+      const opaqueBackground = (element) => {
+        let current = element;
+        while (current) {
+          const color = getComputedStyle(current).backgroundColor;
+          const values = color.match(/[\d.]+/gu) ?? [];
+          if (values.length === 3 || Number(values[3]) > 0) {
+            return channels(color);
+          }
+          current = current.parentElement;
+        }
+        return [255, 255, 255];
+      };
+      return [
+        ".scope-note > strong",
+        ".scope-note > p",
+        ".site-cta__copy > p",
+        ".site-cta__action > a",
+      ].map((selector) => {
+        const element = document.querySelector(selector);
+        if (!element) throw new Error(`Missing article contrast sample: ${selector}`);
+        return {
+          background: opaqueBackground(element),
+          foreground: channels(getComputedStyle(element).color),
+          selector,
+        };
+      });
+    });
+
+    for (const combination of combinations) {
+      expect(
+        contrastRatio(combination.foreground, combination.background),
+        `${combination.selector} must meet WCAG AA`,
+      ).toBeGreaterThanOrEqual(4.5);
+    }
+
+    const action = page.locator(".site-cta__action > a");
+    await action.focus();
+    const focusIndicator = await action.evaluate((element) => {
+      const channels = (value) => {
+        const srgb = value.match(
+          /^color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/u,
+        );
+        if (srgb) return srgb.slice(1, 4).map((channel) => Number(channel) * 255);
+        return (value.match(/[\d.]+/gu) ?? []).slice(0, 3).map(Number);
+      };
+      const style = getComputedStyle(element);
+      const surface = getComputedStyle(element.parentElement);
+      return {
+        adjacent: channels(surface.backgroundColor),
+        outline: channels(style.outlineColor),
+        width: Number.parseFloat(style.outlineWidth),
+      };
+    });
+    expect(focusIndicator.width).toBeGreaterThanOrEqual(3);
+    expect(
+      contrastRatio(focusIndicator.outline, focusIndicator.adjacent),
+    ).toBeGreaterThanOrEqual(3);
+
+    await action.hover();
+    await expect(action).toHaveCSS("background-color", "rgb(244, 241, 234)");
+    await expect(action).toHaveCSS("color", "rgb(183, 77, 44)");
+    const hover = await action.evaluate((element) => {
+      const channels = (value) => {
+        const srgb = value.match(
+          /^color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/u,
+        );
+        if (srgb) return srgb.slice(1, 4).map((channel) => Number(channel) * 255);
+        return (value.match(/[\d.]+/gu) ?? []).slice(0, 3).map(Number);
+      };
+      const style = getComputedStyle(element);
+      return {
+        background: channels(style.backgroundColor),
+        foreground: channels(style.color),
+      };
+    });
+    expect(contrastRatio(hover.foreground, hover.background)).toBeGreaterThanOrEqual(
+      4.5,
+    );
+  });
+}
+
+test("localized 404 pages stay within narrow viewports", async ({ page }) => {
+  for (const width of [280, 320, 375]) {
+    await page.setViewportSize({ width, height: 844 });
+    for (const route of [
+      "/404.html",
+      "/it/404.html",
+      "/de/404.html",
+      "/fr/404.html",
+    ]) {
+      await page.goto(route);
+      const geometry = await page.evaluate(() => {
+        const main = document.querySelector(".not-found");
+        const heading = document.querySelector(".not-found h1");
+        if (!main || !heading) throw new Error("Missing 404 layout");
+        return {
+          documentOverflow:
+            document.documentElement.scrollWidth -
+            document.documentElement.clientWidth,
+          headingOverflow: heading.scrollWidth - heading.clientWidth,
+          mainOverflow: main.scrollWidth - main.clientWidth,
+        };
+      });
+      expect(geometry, `${route} must fit at ${width}px`).toEqual({
+        documentOverflow: 0,
+        headingOverflow: 0,
+        mainOverflow: 0,
+      });
+    }
+  }
+});
 
 test("desktop navigation remains available after an open mobile menu is resized", async ({
   page,
@@ -174,7 +391,7 @@ test("archive search, URL state and empty state stay in sync", async ({
   await expect(page).toHaveURL(/q=phrase-that-does-not-exist/);
 
   await page.locator("[data-case-empty] [data-case-clear]").click();
-  await expect(cards).toHaveCount(caseDefinitions.length);
+  await expect(cards).toHaveCount(currentCaseDefinitions.length);
   await expect(page.locator("[data-case-search]")).toBeFocused();
   await expect(page).toHaveURL(/^http:\/\/127\.0\.0\.1:\d+\/$/);
 
@@ -199,15 +416,36 @@ test("archive previews adapt from three columns to two and one", async ({
   await expect.poll(columnCount).toBe(3);
   await page.setViewportSize({ width: 900, height: 900 });
   await expect.poll(columnCount).toBe(2);
+  await page.setViewportSize({ width: 768, height: 900 });
+  await expect.poll(columnCount).toBe(1);
   await page.setViewportSize({ width: 390, height: 844 });
   await expect.poll(columnCount).toBe(1);
+});
+
+test("768px archive and VECTOR article remain free of clipped content", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  for (const route of ["/", "/case-studies/vector-placement-operations/"]) {
+    await page.goto(route);
+    const audit = await page.evaluate(() => ({
+      clippedHeadings: [...document.querySelectorAll("h1, h2, h3")]
+        .filter((heading) => heading.scrollWidth > heading.clientWidth + 1)
+        .map((heading) => heading.textContent?.trim().slice(0, 80)),
+      overflow:
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
+    }));
+    expect(audit.overflow, route + " horizontal overflow").toBeLessThanOrEqual(0);
+    expect(audit.clippedHeadings, route + " clipped headings").toEqual([]);
+  }
 });
 
 for (const { width, localePath } of [
   { width: 390, localePath: "/it/" },
   { width: 320, localePath: "/de/" },
 ]) {
-  test(`${width}px archive keeps search and previews compact`, async ({ page }) => {
+  test(`${width}px archive keeps search and complete previews readable`, async ({ page }) => {
     await page.setViewportSize({ width, height: 844 });
     await page.goto(localePath);
 
@@ -241,6 +479,12 @@ for (const { width, localePath } of [
         summaryClamp: summary
           ? getComputedStyle(summary).webkitLineClamp
           : "",
+        summaryOverflow: summary
+          ? getComputedStyle(summary).overflow
+          : "",
+        summaryFullyVisible: summary
+          ? summary.scrollHeight <= summary.clientHeight + 1
+          : false,
       };
     });
 
@@ -248,9 +492,11 @@ for (const { width, localePath } of [
     expect(geometry.removedFilterCount).toBe(0);
     expect(geometry.searchHeight).toBeGreaterThanOrEqual(48);
     expect(geometry.discoveryHeight).toBeLessThan(220);
-    expect(geometry.firstCardHeight).toBeLessThan(520);
+    expect(geometry.firstCardHeight).toBeLessThan(700);
     expect(geometry.columns).toBe(1);
-    expect(geometry.summaryClamp).toBe("3");
+    expect(["", "none"]).toContain(geometry.summaryClamp);
+    expect(geometry.summaryOverflow).toBe("visible");
+    expect(geometry.summaryFullyVisible).toBe(true);
 
     await page.locator("[data-case-search]").fill("llama.cpp");
     await expect(page.locator("[data-case-card]:visible")).toHaveCount(1);
@@ -293,7 +539,7 @@ test("full-text index stays lazy and finds copy that exists only inside an artic
 
   await page.goto("/");
   await expect(page.locator("[data-case-card]:visible")).toHaveCount(
-    caseDefinitions.length,
+    currentCaseDefinitions.length,
   );
   expect(searchRequests).toEqual([]);
 

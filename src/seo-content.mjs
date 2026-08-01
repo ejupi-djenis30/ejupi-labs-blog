@@ -30,11 +30,6 @@ export const caseSeoByLocale = {
       seoDescription:
         "ELIZA Lab is a reproducible Rust pipeline for training, calibrating and inspecting an open-set intent classifier that can abstain.",
     },
-    "djenis-ai-agent": {
-      seoTitle: "DjenisAiAgent: permission-aware local automation",
-      seoDescription:
-        "DjenisAiAgent lets a local model propose one computer action while host policy controls permission and fresh evidence verifies the result.",
-    },
     "dig-gopher-explorer": {
       seoTitle: "DIG: a bounded Gopher client and workbench",
       seoDescription:
@@ -81,11 +76,6 @@ export const caseSeoByLocale = {
       seoTitle: "ELIZA Lab: pipeline ML open-set verificabile",
       seoDescription:
         "ELIZA Lab è una pipeline Rust riproducibile per addestrare, calibrare e analizzare un classificatore open-set capace di astenersi.",
-    },
-    "djenis-ai-agent": {
-      seoTitle: "DjenisAiAgent: automazione locale con permessi",
-      seoDescription:
-        "DjenisAiAgent lascia al modello locale una sola proposta d’azione; le policy dell’host autorizzano l’esecuzione e una nuova osservazione verifica il risultato.",
     },
     "dig-gopher-explorer": {
       seoTitle: "DIG: client Gopher e ambiente locale controllato",
@@ -134,11 +124,6 @@ export const caseSeoByLocale = {
       seoDescription:
         "ELIZA Lab ist eine reproduzierbare Rust-Pipeline zum Trainieren, Kalibrieren und Prüfen eines Open-Set-Intent-Klassifikators, der sich enthalten kann.",
     },
-    "djenis-ai-agent": {
-      seoTitle: "DjenisAiAgent: lokale Automation mit Berechtigungen",
-      seoDescription:
-        "DjenisAiAgent lässt ein lokales Modell genau eine Aktion vorschlagen; Host-Richtlinien autorisieren sie und neue Evidenz prüft das Ergebnis.",
-    },
     "dig-gopher-explorer": {
       seoTitle: "DIG: begrenzter Gopher-Client und lokale Workbench",
       seoDescription:
@@ -185,11 +170,6 @@ export const caseSeoByLocale = {
       seoTitle: "ELIZA Lab : pipeline ML open-set vérifiable",
       seoDescription:
         "ELIZA Lab est un pipeline Rust reproductible pour entraîner, calibrer et examiner un classificateur open-set capable de s’abstenir.",
-    },
-    "djenis-ai-agent": {
-      seoTitle: "DjenisAiAgent : automatisation locale sous contrôle",
-      seoDescription:
-        "DjenisAiAgent laisse un modèle local proposer une seule action ; la politique de l’hôte l’autorise et une nouvelle observation vérifie le résultat.",
     },
     "dig-gopher-explorer": {
       seoTitle: "DIG : client Gopher et atelier local borné",

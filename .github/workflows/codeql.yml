@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
-      security-events: write
+      security-events: write # Required for CodeQL to upload SARIF findings.
 
     steps:
       - name: Check out source

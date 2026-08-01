@@ -11,7 +11,6 @@ The site is intentionally static. A small Node.js generator builds every route, 
 - `/case-studies/retail-erp-evolution/`
 - `/case-studies/careeros-local/`
 - `/case-studies/eliza-lab/`
-- `/case-studies/djenis-ai-agent/`
 - `/case-studies/dig-gopher-explorer/`
 - `/case-studies/integradraw/`
 - `/case-studies/vector-placement-operations/`
@@ -24,7 +23,7 @@ The search-only archive works with keyboard and touch input, preserves the query
 
 ## Local development
 
-Requirements: Node.js 22 or newer.
+Requirements: Node.js 22.23.1, or Node.js 24.18.0 and newer within the 24.x line.
 
 ```bash
 npm ci
@@ -43,6 +42,8 @@ npm run test:worker:integration # exercise the redirect in Wrangler's local runt
 npm run test:e2e   # exercise mobile navigation and responsive state in Chromium
 npm run check      # full test suite plus a Cloudflare deployment dry-run
 ```
+
+The Worker integration and deployment dry-run need a platform supported by `workerd`. Because `workerd` does not currently publish a Windows ARM64 binary, run those gates in the Linux ARM64 CI environment or an equivalent container on that host; unit, build and browser gates remain portable.
 
 ## Project structure
 
@@ -74,7 +75,7 @@ The case studies describe engineering decisions supported by the source portfoli
 
 ## Deployment
 
-The production hostname is declared as a Cloudflare Custom Domain in `wrangler.jsonc`. The Worker runs before Static Assets so every HTTP path, including direct asset and missing-page requests, receives a same-host HTTPS 301; HTTPS requests retain the existing asset, 404 and canonical behavior. After the quality checks pass and Cloudflare authentication is available:
+The production hostname is declared as a Cloudflare Custom Domain in `wrangler.jsonc`. The Worker runs before Static Assets so every HTTP path, including direct asset and missing-page requests, receives a same-host HTTPS 308; HTTPS requests retain the existing asset, 404 and canonical behavior. After the quality checks pass and Cloudflare authentication is available:
 
 ```bash
 npm run deploy

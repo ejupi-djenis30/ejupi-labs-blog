@@ -1,6 +1,7 @@
 node_modules/
 .wrangler/
 .dev.vars
+.env
 .tmp-workers-types/
 dist/
 playwright-report/
