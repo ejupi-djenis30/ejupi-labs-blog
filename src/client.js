@@ -20,6 +20,16 @@ export function calculateReadingProgress(scrollY, scrollHeight, viewportHeight) 
 }
 
 /**
+ * @param {number} scrollY
+ * @param {number} viewportHeight
+ * @param {number} footerTop
+ * @returns {boolean}
+ */
+export function shouldShowPageCompass(scrollY, viewportHeight, footerTop) {
+  return scrollY > Math.min(viewportHeight * 0.75, 680) && footerTop > viewportHeight;
+}
+
+/**
  * @param {unknown} value
  * @returns {string}
  */
@@ -233,13 +243,14 @@ if (typeof document !== "undefined") {
     }
   }
 
-  const skipLink = document.querySelector('.skip-link[href^="#"]');
+  const focusLinks = document.querySelectorAll('.skip-link[href^="#"], [data-page-compass][href^="#"]');
 
-  if (skipLink instanceof HTMLAnchorElement) {
-    skipLink.addEventListener("click", () => {
-      const target = document.querySelector(skipLink.hash);
+  for (const link of focusLinks) {
+    if (!(link instanceof HTMLAnchorElement)) continue;
+    link.addEventListener("click", () => {
+      const target = document.querySelector(link.hash);
       if (!(target instanceof HTMLElement)) return;
-      window.requestAnimationFrame(() => target.focus());
+      window.requestAnimationFrame(() => target.focus({ preventScroll: true }));
     });
   }
 
@@ -408,6 +419,10 @@ if (typeof document !== "undefined") {
   }
 
   const progressCandidate = document.querySelector("[data-reading-progress]");
+  const pageCompassCandidate = document.querySelector("[data-page-compass]");
+  const pageCompass =
+    pageCompassCandidate instanceof HTMLAnchorElement ? pageCompassCandidate : null;
+  const footer = document.querySelector(".site-footer");
 
   if (progressCandidate instanceof HTMLElement) {
     const progress = progressCandidate;
@@ -420,7 +435,16 @@ if (typeof document !== "undefined") {
         document.documentElement.scrollHeight,
         window.innerHeight,
       );
+      const footerTop =
+        footer instanceof HTMLElement ? footer.getBoundingClientRect().top : Number.POSITIVE_INFINITY;
       progress.style.setProperty("--reading-progress", String(ratio));
+      if (pageCompass) {
+        pageCompass.hidden = !shouldShowPageCompass(
+          window.scrollY,
+          window.innerHeight,
+          footerTop,
+        );
+      }
     }
 
     function scheduleReadingProgress() {

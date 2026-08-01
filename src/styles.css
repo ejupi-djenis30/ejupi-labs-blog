@@ -161,6 +161,17 @@ li {
   pointer-events: none;
 }
 
+.page-compass {
+  position: fixed;
+  z-index: 80;
+  right: 1rem;
+  bottom: 1rem;
+  padding-inline: 0.75rem;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+}
+
 .site-header {
   position: sticky;
   z-index: 100;
@@ -1941,11 +1952,13 @@ li {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+
 }
 
 @media print {
   .site-header,
   .reading-progress,
+  .page-compass,
   .discovery,
   .case-toc,
   .site-cta,

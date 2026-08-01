@@ -364,6 +364,7 @@ function footer(localeKey) {
   const locale = locales[localeKey];
   const ui = editorialUi[localeKey];
   return `<footer class="site-footer">
+  <a class="page-compass text-button" href="#main" aria-label="${escapeHtml(locale.ui.backToTop)}" data-page-compass hidden>${escapeHtml(locale.ui.backToTop)} <span aria-hidden="true">↑</span></a>
   <div class="site-footer__inner shell">
     <div class="site-footer__brand">
       <img src="/assets/brand/ejupi-labs-primary-on-carbon.svg" width="958" height="295" alt="Ejupi Labs" loading="lazy" />
@@ -377,6 +378,7 @@ function footer(localeKey) {
         <a class="personal-link" href="${escapeHtmlAttribute(authorRouteFor(localeKey))}" rel="author">${escapeHtml(ui.personal)}</a>
         <a href="${escapeHtmlAttribute(studioRouteFor(localeKey, "#contact"))}">${escapeHtml(locale.ui.contact)}</a>
         <a href="${escapeHtmlAttribute(feedRoute(localeKey))}">RSS</a>
+        <a href="#main">${escapeHtml(locale.ui.backToTop)} <span aria-hidden="true">↑</span></a>
       </nav>
       <p class="site-footer__meta">© ${new Date(site.published).getUTCFullYear()} ${escapeHtml(site.name)}. ${escapeHtml(locale.ui.rights)}</p>
     </div>

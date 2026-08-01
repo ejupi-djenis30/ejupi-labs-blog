@@ -6,6 +6,7 @@ import {
   matchesCaseStudy,
   normalizeSearchValue,
   shouldCloseOnEscape,
+  shouldShowPageCompass,
 } from "../src/client.js";
 
 test("mobile disclosure closes on Escape only while open", () => {
@@ -37,8 +38,9 @@ test("mobile disclosure isolates the page and traps keyboard focus", async () =>
 test("skip link transfers keyboard focus to the main landmark", async () => {
   const source = await readFile(new URL("../src/client.js", import.meta.url), "utf8");
 
-  assert.match(source, /skipLink\.addEventListener\("click"/);
-  assert.match(source, /requestAnimationFrame\(\(\) => target\.focus\(\)\)/);
+  assert.match(source, /data-page-compass/);
+  assert.match(source, /link\.addEventListener\("click"/);
+  assert.match(source, /requestAnimationFrame\(\(\) => target\.focus\(\{ preventScroll: true \}\)\)/);
 });
 
 test("reading progress is clamped and handles non-scrollable pages", () => {
@@ -46,6 +48,13 @@ test("reading progress is clamped and handles non-scrollable pages", () => {
   assert.equal(calculateReadingProgress(250, 1500, 1000), 0.5);
   assert.equal(calculateReadingProgress(-50, 1500, 1000), 0);
   assert.equal(calculateReadingProgress(1000, 1500, 1000), 1);
+});
+
+test("page compass appears after the opening viewport and yields to the footer", () => {
+  assert.equal(shouldShowPageCompass(500, 800, 1600), false);
+  assert.equal(shouldShowPageCompass(601, 800, 1600), true);
+  assert.equal(shouldShowPageCompass(900, 800, 800), false);
+  assert.equal(shouldShowPageCompass(681, 1200, 1800), true);
 });
 
 test("case-study search is accent-insensitive and requires every query word", () => {

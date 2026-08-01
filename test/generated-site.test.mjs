@@ -201,6 +201,28 @@ test("technology tags are labelled semantic lists on indexes and articles", asyn
   }
 });
 
+test("the page compass is localized and the footer keeps a non-JavaScript return path", async () => {
+  for (const localeKey of localeOrder) {
+    const locale = locales[localeKey];
+    const outputDirectory = locale.prefix ? `${locale.prefix.slice(1)}/` : "";
+    const html = await readFile(
+      new URL(`../dist/${outputDirectory}index.html`, import.meta.url),
+      "utf8",
+    );
+
+    assert.ok(
+      html.includes(
+        `<a class="page-compass text-button" href="#main" aria-label="${escapeHtml(locale.ui.backToTop)}" data-page-compass hidden>`,
+      ),
+    );
+    assert.ok(
+      html.includes(
+        `<a href="#main">${escapeHtml(locale.ui.backToTop)} <span aria-hidden="true">↑</span></a>`,
+      ),
+    );
+  }
+});
+
 test("the index omits its self-link while articles keep the case-study index link", async () => {
   for (const localeKey of localeOrder) {
     const locale = locales[localeKey];
