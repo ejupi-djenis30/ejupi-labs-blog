@@ -298,7 +298,7 @@ function pageHead({
   ${noIndex ? "" : alternates(slug, pageKind)}
   <link rel="alternate" type="application/rss+xml" title="${escapeHtml(site.name)} | ${escapeHtml(locale.ui.home)}" href="${escapeHtmlAttribute(absolute(feedRoute(localeKey)))}" />
   <link rel="search" type="application/opensearchdescription+xml" title="${escapeHtml(site.name)}" href="${escapeHtmlAttribute(searchDescriptionRoute(localeKey))}" />
-  <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/brand/favicon.svg?v=4" type="image/svg+xml" />
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="preload" href="/assets/fonts/instrument-sans-regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/instrument-sans-semibold.woff2" as="font" type="font/woff2" crossorigin />
@@ -881,7 +881,7 @@ await write("sitemap.xml", sitemap());
 await write("robots.txt", `User-agent: *\nAllow: /\n\nSitemap: ${absolute("/sitemap.xml")}\n`);
 await write("llms.txt", llmsText());
 await write("case-studies.json", `${JSON.stringify(caseCatalog(), null, 2)}\n`);
-await write("site.webmanifest", `${JSON.stringify({ id: "/", name: `${site.name} | Case Studies`, short_name: "Ejupi Labs", description: locales.en.index.description, lang: "en", start_url: "/", scope: "/", display: "standalone", background_color: "#f4f1ea", theme_color: "#f4f1ea", icons: [{ src: "/assets/brand/favicon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }] }, null, 2)}\n`);
+await write("site.webmanifest", `${JSON.stringify({ id: "/", name: `${site.name} | Case Studies`, short_name: "Ejupi Labs", description: locales.en.index.description, lang: "en", start_url: "/", scope: "/", display: "standalone", background_color: "#f4f1ea", theme_color: "#f4f1ea", icons: [{ src: "/assets/brand/favicon.svg?v=4", sizes: "any", type: "image/svg+xml", purpose: "any" }] }, null, 2)}\n`);
 
 const sourceHeaders = await readFile(join(sourceRoot, "_headers"), "utf8");
 if (!sourceHeaders.includes("Content-Security-Policy")) throw new Error("Security headers are missing.");

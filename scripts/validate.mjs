@@ -20,6 +20,7 @@ import {
 const root = resolve(import.meta.dirname, "..");
 const dist = join(root, "dist");
 const errors = [];
+const CANONICAL_FAVICON_SHA256 = "a136f26f9854259e466cac621e5b6b9a5e193a0194cbc7822302b34b9621aa87";
 
 try {
   assertPublicDomainTopology({
@@ -190,6 +191,7 @@ for (const localeKey of localeOrder) {
     assertSocialMetadata(html, label, localeKey);
     if (!html.includes(`<link rel="author" href="${expectedAuthorRoute}" />`)) errors.push(`${label} has the wrong localized author URL.`);
     if (!html.includes(`class="personal-link" href="${expectedAuthorRoute}"`)) errors.push(`${label} is missing its visible localized personal link.`);
+    if (!html.includes('<link rel="icon" href="/assets/brand/favicon.svg?v=4" type="image/svg+xml" />')) errors.push(`${label} is missing the shared versioned favicon.`);
     if (!html.includes('<link rel="manifest" href="/site.webmanifest" />')) errors.push(`${label} is missing the web manifest link.`);
     for (const font of ["regular", "semibold"]) {
       const preload = `<link rel="preload" href="/assets/fonts/instrument-sans-${font}.woff2" as="font" type="font/woff2" crossorigin />`;
@@ -862,8 +864,14 @@ if (
 ) {
   errors.push("The web manifest must remain scoped to the canonical English root.");
 }
-if (!manifest.icons?.some((icon) => icon.src === "/assets/brand/favicon.svg" && icon.sizes === "any")) {
+if (!manifest.icons?.some((icon) => icon.src === "/assets/brand/favicon.svg?v=4" && icon.sizes === "any")) {
   errors.push("The web manifest must retain the scalable Ejupi Labs icon.");
+}
+const faviconSha256 = createHash("sha256")
+  .update(await readFile(join(dist, "assets", "brand", "favicon.svg")))
+  .digest("hex");
+if (faviconSha256 !== CANONICAL_FAVICON_SHA256) {
+  errors.push("The blog favicon must be byte-for-byte identical to the canonical Ejupi Labs favicon.");
 }
 
 const securityContact = (await readFile(join(dist, ".well-known", "security.txt"), "utf8"))
