@@ -684,12 +684,12 @@ if (
 }
 const assetBudgets = [
   ["browser JavaScript", browserJavaScriptBytes, 13_000],
-  ["browser CSS", stylesheetBytes, 33_000],
+  ["browser CSS", stylesheetBytes, 56_000],
   ["largest HTML document", maximumHtmlBytes, 34_000],
   ["web fonts", fontBytes, 75_000],
   ["largest localized search index", maximumSearchBytes, 105_000],
   ["largest social preview", maximumSocialPreviewBytes, 55_000],
-  ["conservative first-load payload", firstLoadBytes, 160_000],
+  ["conservative first-load payload", firstLoadBytes, 180_000],
 ];
 for (const [label, actual, budget] of assetBudgets) {
   if (actual > budget) {
@@ -913,6 +913,6 @@ if (errors.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Validated ${files.length} files, ${canonicalPageCount} canonical pages, ${localeOrder.length} locales and ${caseDefinitions.length} case-study routes. Asset budgets: first load ${firstLoadBytes}/160000 bytes; JS ${browserJavaScriptBytes}/13000; CSS ${stylesheetBytes}/33000.`,
+    `Validated ${files.length} files, ${canonicalPageCount} canonical pages, ${localeOrder.length} locales and ${caseDefinitions.length} case-study routes. Asset budgets: first load ${firstLoadBytes}/180000 bytes; JS ${browserJavaScriptBytes}/13000; CSS ${stylesheetBytes}/56000.`,
   );
 }

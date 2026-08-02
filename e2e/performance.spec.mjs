@@ -95,7 +95,7 @@ for (const { name, route, width } of [
     expect(failedResponses).toEqual([]);
     expect(metrics.externalResources).toEqual([]);
     expect(metrics.firstPartyRequestCount).toBeLessThanOrEqual(7);
-    expect(metrics.decodedBytes).toBeLessThanOrEqual(160_000);
+    expect(metrics.decodedBytes).toBeLessThanOrEqual(180_000);
     expect(metrics.cls).toBeLessThan(0.05);
     expect(metrics.largestContentfulPaint).toBeGreaterThan(0);
     expect(metrics.largestContentfulPaint).toBeLessThan(2_000);

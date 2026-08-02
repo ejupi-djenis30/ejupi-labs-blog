@@ -311,10 +311,10 @@ export const locales = {
       notFoundAction: "Browse all case studies",
     },
     index: {
-      title: "The decisions behind the software.",
+      title: "Decisions, trade-offs, evidence.",
       description:
-        "No victory laps. Each case study names the constraint, the route I chose, the strongest alternative, the cost and the evidence available.",
-      eyebrow: "Engineering case studies / 01 / 10",
+        "In this concise archive of software work, I explain the constraint, the choice that followed, the credible alternative and what changed after delivery.",
+      eyebrow: "Ejupi Labs casebook / 01 / 10",
       ctaTitle: "Is a difficult part of the system holding the project back?",
       ctaBody: "Bring me that part. I can help you define the architecture, plan the delivery and get to a useful first release.",
     },
@@ -723,10 +723,10 @@ export const locales = {
       notFoundAction: "Vedi tutti i case study",
     },
     index: {
-      title: "Le decisioni dietro il software.",
+      title: "Decisioni, compromessi, evidenze.",
       description:
-        "Niente autocelebrazione. Spiego il vincolo, la strada scelta, l’alternativa più credibile, il costo e le evidenze disponibili in ogni case study.",
-      eyebrow: "Case study di engineering / 01 / 10",
+        "Spiego il vincolo, la scelta che ne è seguita, l’alternativa credibile e cosa è cambiato dopo il rilascio in un archivio essenziale di lavoro software.",
+      eyebrow: "Casebook Ejupi Labs / 01 / 10",
       ctaTitle: "Una parte complessa del sistema sta bloccando il progetto?",
       ctaBody: "Partiamo proprio da lì. Posso aiutarti a definire l’architettura, pianificare il rilascio e arrivare a una prima versione utile.",
     },
@@ -1135,10 +1135,10 @@ export const locales = {
       notFoundAction: "Alle Fallstudien ansehen",
     },
     index: {
-      title: "Die Entscheidungen hinter der Software.",
+      title: "Entscheidungen, Zielkonflikte, Belege.",
       description:
-        "Ich lasse die Siegesrunde aus. Jede Fallstudie nennt die Einschränkung, meinen Weg, die stärkste Alternative, den Preis und die verfügbaren Belege.",
-      eyebrow: "Engineering-Fallstudien / 01 / 10",
+        "Ich erkläre die Einschränkung, die Entscheidung, eine glaubwürdige Alternative und was sich nach der Auslieferung änderte in einem konzentrierten Archiv von Softwarearbeit.",
+      eyebrow: "Ejupi Labs Casebook / 01 / 10",
       ctaTitle: "Hält ein schwieriger Teil des Systems Ihr Projekt auf?",
       ctaBody: "Bringen Sie mir genau diesen Teil. Ich helfe Ihnen, die Architektur zu klären, die Auslieferung zu planen und eine erste brauchbare Version auf den Weg zu bringen.",
     },
@@ -1547,10 +1547,10 @@ export const locales = {
       notFoundAction: "Voir toutes les études de cas",
     },
     index: {
-      title: "Les décisions derrière le logiciel.",
+      title: "Décisions, compromis, preuves.",
       description:
-        "Pas d’autocélébration. J’explique la contrainte, la voie choisie, l’alternative la plus crédible, son coût et les preuves disponibles.",
-      eyebrow: "Études de cas d’ingénierie / 01 / 10",
+        "J’explique la contrainte, le choix qui en découle, l’alternative crédible et ce qui a changé après la livraison dans une archive concise du travail logiciel.",
+      eyebrow: "Casebook Ejupi Labs / 01 / 10",
       ctaTitle: "Une partie complexe du système bloque votre projet ?",
       ctaBody: "Parlons précisément de ce point. Je peux vous aider à cadrer l’architecture, organiser la livraison et parvenir à une première version utile.",
     },
