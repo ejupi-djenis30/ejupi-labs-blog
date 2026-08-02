@@ -200,3 +200,14 @@ test("editorial canvases stay quiet while increased contrast sharpens hierarchy"
     assert.match(contract, new RegExp(`${token}:`, "u"));
   }
 });
+
+test("case-study motion is finite and follows the reader's action", () => {
+  assert.doesNotMatch(stylesheet, /\binfinite\b/u);
+  assert.match(
+    stylesheet,
+    /\.case-card:has\(\.text-link:is\(:hover, :focus-visible\)\) \.case-card__signal i\s*\{[^}]*transition-delay:\s*var\(--bar-delay\)/u,
+  );
+  for (const delay of ["45ms", "90ms", "135ms"]) {
+    assert.match(stylesheet, new RegExp(`--bar-delay:\\s*${delay}`, "u"));
+  }
+});

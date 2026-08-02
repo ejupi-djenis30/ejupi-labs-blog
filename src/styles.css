@@ -691,22 +691,25 @@ li {
 }
 
 .case-card__signal i {
+  --bar-delay: 0ms;
   height: var(--bar, 28%);
   background: var(--signal);
-  transition: height 520ms var(--ease-out, ease);
+  transition: height 520ms var(--ease-out, ease) 0ms;
 }
 
-.case-card__signal i:nth-of-type(2) { --bar: 46%; }
-.case-card__signal i:nth-of-type(3) { --bar: 68%; }
-.case-card__signal i:nth-of-type(4) { --bar: 88%; }
+.case-card__signal i:nth-of-type(2) { --bar: 46%; --bar-delay: 45ms; }
+.case-card__signal i:nth-of-type(3) { --bar: 68%; --bar-delay: 90ms; }
+.case-card__signal i:nth-of-type(4) { --bar: 88%; --bar-delay: 135ms; }
 .case-card[data-kind="labs"] .case-card__signal i { background: var(--paper); }
 
 .case-card:has(.text-link:is(:hover, :focus-visible)) { background: var(--paper); }
 .case-card:has(.text-link:is(:hover, :focus-visible)) .case-card__signal i {
   height: calc(100% - 7rem);
+  transition-delay: var(--bar-delay);
 }
 .case-card:has(.text-link:is(:hover, :focus-visible)) .case-card__decision::before {
   width: 100%;
+  transition-delay: 135ms;
 }
 
 .case-card .tag-list { color: var(--muted); }
