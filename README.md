@@ -18,7 +18,7 @@ The site is intentionally static. A small Node.js generator builds every route, 
 - `/case-studies/jdoor-security-lab/`
 - Localised equivalents under `/it/`, `/de/` and `/fr/`
 
-English is the canonical default at the root. Every page includes canonical URLs, reciprocal `hreflang` links, an `x-default` reference and structured Blog or BlogPosting data. The build also creates four RSS feeds, a multilingual sitemap, localised OpenSearch descriptors, `robots.txt`, `llms.txt`, the machine-readable `/case-studies.json` catalog, local font assets and nearest-match 404 pages.
+English is the canonical default at the root. Every canonical page includes canonical URLs, reciprocal `hreflang` links, an `x-default` reference, structured Blog or BlogPosting data and a locale-matched 1200×630 social preview. The build also creates four RSS feeds, a multilingual sitemap, localised OpenSearch descriptors, `robots.txt`, `llms.txt`, the machine-readable `/case-studies.json` catalog, local font assets and nearest-match 404 pages.
 
 The archive search and taxonomy filters work with keyboard and touch input, preserve filter state in the URL and leave the complete archive visible when JavaScript is unavailable. The full-text index is generated from each complete article and loaded only after a visitor starts a search.
 
@@ -35,6 +35,7 @@ Useful commands:
 
 ```bash
 npm run build      # generate dist/
+npm run generate:social # regenerate the reviewed social-preview SVG and PNG assets
 npm run validate   # validate routes, SEO, localisation and asset policy
 npm run new:case -- --slug example-case # create an unpublished four-language draft
 npm test           # build, validate and run Node tests
@@ -54,8 +55,9 @@ src/styles.css      Shared visual system
 src/client.js       Archive search, mobile navigation, reading progress and section state
 scripts/build.mjs   Static-site generator
 scripts/validate.mjs Build and SEO validator
+scripts/generate-social-previews.mjs Deterministic localised social-preview generator
 scripts/new-case.mjs Safe unpublished case-study scaffold
-site/assets/        Local fonts and Ejupi Labs SVG brand assets
+site/assets/        Local fonts, Ejupi Labs brand assets and social previews
 site/_headers       Cloudflare security and cache headers
 test/               Content, navigation and generated-route tests
 e2e/                Browser-level keyboard, focus, scroll and resize checks

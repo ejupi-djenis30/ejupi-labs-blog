@@ -31,6 +31,14 @@ function methodologyRoute(localeKey) {
   return `${locales[localeKey].prefix}/methodology/`;
 }
 
+function socialImagePath(localeKey) {
+  return `/assets/social/case-studies-${localeKey}.png`;
+}
+
+function socialImageUrl(localeKey) {
+  return new URL(socialImagePath(localeKey), site.url).href;
+}
+
 function localizedExternalRoute(origin, localeKey, fragment = "") {
   const normalizedOrigin = origin.replace(/\/+$/u, "");
   return `${normalizedOrigin}${locales[localeKey].prefix}/${fragment}`;
@@ -61,6 +69,40 @@ async function allFiles(directory) {
 
 function count(source, expression) {
   return [...source.matchAll(expression)].length;
+}
+
+function assertSocialMetadata(html, label, localeKey) {
+  const imageUrl = socialImageUrl(localeKey);
+  const expectedTags = [
+    `<meta property="og:image" content="${imageUrl}" />`,
+    '<meta property="og:image:type" content="image/png" />',
+    '<meta property="og:image:width" content="1200" />',
+    '<meta property="og:image:height" content="630" />',
+    `<meta property="og:image:alt" content="${locales[localeKey].ui.socialImageAlt}" />`,
+    '<meta name="twitter:card" content="summary_large_image" />',
+    `<meta name="twitter:image" content="${imageUrl}" />`,
+    `<meta name="twitter:image:alt" content="${locales[localeKey].ui.socialImageAlt}" />`,
+  ];
+
+  for (const tag of expectedTags) {
+    if (!html.includes(tag)) errors.push(`${label} is missing social metadata: ${tag}`);
+  }
+  if (count(html, /<meta property="og:image" content=/gu) !== 1) {
+    errors.push(`${label} must contain exactly one Open Graph image.`);
+  }
+  if (count(html, /<meta name="twitter:image" content=/gu) !== 1) {
+    errors.push(`${label} must contain exactly one Twitter image.`);
+  }
+}
+
+function pngDimensions(png) {
+  if (png.subarray(0, 8).toString("hex") !== "89504e470d0a1a0a") {
+    return null;
+  }
+  return {
+    width: png.readUInt32BE(16),
+    height: png.readUInt32BE(20),
+  };
 }
 
 assertProtectedLegacySlugs(caseDefinitions, protectedLegacySlugs);
@@ -109,6 +151,7 @@ for (const localeKey of localeOrder) {
     if (!html.includes(`href="${methodologyRoute(localeKey)}"`)) errors.push(`${label} is missing its localized methodology link.`);
     if (count(html, /<meta name="twitter:title" content="[^"]+" \/>/g) !== 1) errors.push(`${label} must contain one Twitter title.`);
     if (count(html, /<meta name="twitter:description" content="[^"]+" \/>/g) !== 1) errors.push(`${label} must contain one Twitter description.`);
+    assertSocialMetadata(html, label, localeKey);
     const definition = slug
       ? caseDefinitions.find((item) => item.slug === slug)
       : null;
@@ -227,6 +270,26 @@ for (const localeKey of localeOrder) {
     }
     if (!html.includes('id="main" tabindex="-1"')) errors.push(`${label} main landmark is not focusable.`);
     if (!html.includes(`href="${methodologyRoutePath}"`)) errors.push(`${label} is missing its localized footer link.`);
+    assertSocialMetadata(html, label, localeKey);
+  }
+
+  const notFoundPath = join(
+    dist,
+    locale.prefix.replace(/^\//u, ""),
+    "404.html",
+  );
+  if (!(await exists(notFoundPath))) {
+    errors.push(`Missing generated 404 page for ${localeKey}.`);
+  } else {
+    const notFoundHtml = await readFile(notFoundPath, "utf8");
+    if (
+      /<meta (?:property="og:image"|name="twitter:image")/u.test(notFoundHtml)
+    ) {
+      errors.push(`${localeKey}:404 must not publish a social sharing image.`);
+    }
+    if (!notFoundHtml.includes('<meta name="twitter:card" content="summary" />')) {
+      errors.push(`${localeKey}:404 must retain the compact Twitter card.`);
+    }
   }
 
   const feedPath = join(dist, locale.prefix.replace(/^\//, ""), "feed.xml");
@@ -256,7 +319,29 @@ for (const localeKey of localeOrder) {
 
 const files = await allFiles(dist);
 const rasterFiles = files.filter((file) => [".png", ".jpg", ".jpeg", ".gif", ".webp", ".avif"].includes(extname(file).toLowerCase()));
-if (rasterFiles.length > 0) errors.push(`Raster assets are not allowed: ${rasterFiles.join(", ")}`);
+const expectedRasterFiles = new Set(
+  localeOrder.map((localeKey) =>
+    join(dist, "assets", "social", `case-studies-${localeKey}.png`),
+  ),
+);
+const unexpectedRasterFiles = rasterFiles.filter(
+  (file) => !expectedRasterFiles.has(file),
+);
+if (unexpectedRasterFiles.length > 0) {
+  errors.push(
+    `Only approved social-preview raster assets are allowed: ${unexpectedRasterFiles.join(", ")}`,
+  );
+}
+for (const file of expectedRasterFiles) {
+  if (!files.includes(file)) {
+    errors.push(`Missing localized social-preview asset: ${file}`);
+    continue;
+  }
+  const dimensions = pngDimensions(await readFile(file));
+  if (!dimensions || dimensions.width !== 1200 || dimensions.height !== 630) {
+    errors.push(`${file} must be a 1200×630 PNG.`);
+  }
+}
 
 const fingerprintedAssets = files.filter((file) =>
   /^(?:styles\.[0-9a-f]{12}\.css|client\.[0-9a-f]{12}\.js|search\.[a-z]{2}\.[0-9a-f]{12}\.json)$/u.test(
@@ -338,6 +423,7 @@ if (headers.includes(`/assets/*\n  ${immutablePolicy}`)) {
   errors.push("Non-fingerprinted brand and font assets must remain revalidatable.");
 }
 for (const [route, policy] of [
+  ["/assets/social/*", "Cache-Control: public, max-age=3600, must-revalidate"],
   ["/site.webmanifest", "Cache-Control: public, max-age=3600, must-revalidate"],
   ["/.well-known/security.txt", "Cache-Control: public, max-age=300, must-revalidate"],
 ]) {

@@ -134,6 +134,14 @@ function searchDescriptionRoute(localeKey) {
   return `${locales[localeKey].prefix}/opensearch.xml` || "/opensearch.xml";
 }
 
+function socialImagePath(localeKey) {
+  return `/assets/social/case-studies-${localeKey}.png`;
+}
+
+function socialImageUrl(localeKey) {
+  return absolute(socialImagePath(localeKey));
+}
+
 function latestCatalogUpdate() {
   return caseDefinitions.reduce(
     (latest, definition) => definition.updated > latest ? definition.updated : latest,
@@ -224,6 +232,7 @@ function pageHead({
   const locale = locales[localeKey];
   const canonical = absolute(pageRoute(localeKey, slug, pageKind));
   const pageTitle = title === site.name ? title : `${title} | ${site.name}`;
+  const previewUrl = socialImageUrl(localeKey);
 
   return `<!doctype html>
 <html class="no-js" lang="${locale.lang}">
@@ -250,9 +259,16 @@ function pageHead({
   <meta property="og:description" content="${escapeHtml(description)}" />
   ${noIndex ? "" : `<meta property="og:url" content="${canonical}" />`}
   <meta property="og:locale" content="${locale.locale}" />
-  <meta name="twitter:card" content="summary" />
+  ${noIndex ? "" : `<meta property="og:image" content="${previewUrl}" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="${escapeHtml(locale.ui.socialImageAlt)}" />`}
+  <meta name="twitter:card" content="${noIndex ? "summary" : "summary_large_image"}" />
   <meta name="twitter:title" content="${escapeHtml(pageTitle)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
+  ${noIndex ? "" : `<meta name="twitter:image" content="${previewUrl}" />
+  <meta name="twitter:image:alt" content="${escapeHtml(locale.ui.socialImageAlt)}" />`}
   ${type === "article" ? `<meta property="article:published_time" content="${published}" />
   <meta property="article:modified_time" content="${updated}" />` : ""}
 </head>`;
@@ -355,10 +371,12 @@ function indexPage(localeKey) {
     url: absolute(routeFor(localeKey, null)),
     inLanguage: locale.lang,
     description: locale.index.description,
+    image: socialImageUrl(localeKey),
     blogPost: visibleDefinitions.map((definition) => ({
       "@type": "BlogPosting",
       headline: locale.cases[definition.slug].title,
       url: absolute(routeFor(localeKey, definition.slug)),
+      image: socialImageUrl(localeKey),
       datePublished: definition.published,
       dateModified: definition.updated,
     })),
@@ -527,6 +545,7 @@ function articlePage(localeKey, definition, index) {
     datePublished: definition.published,
     dateModified: definition.updated,
     inLanguage: locale.lang,
+    image: socialImageUrl(localeKey),
     author: {
       "@type": "Person",
       "@id": site.author.id,
@@ -616,6 +635,7 @@ function methodologyPage(localeKey) {
     name: copy.title,
     description: copy.description,
     url: absolute(methodologyRoute(localeKey)),
+    image: socialImageUrl(localeKey),
     datePublished: methodology.published,
     dateModified: methodology.updated,
     inLanguage: locale.lang,
