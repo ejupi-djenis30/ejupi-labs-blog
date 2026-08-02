@@ -207,6 +207,21 @@ test("interface copy keeps authored casing and the primary reading face", () => 
   assert.match(blockFor(".technology-choice__number"), /font-family:\s*var\(--mono\)/u);
 });
 
+test("editorial actions expose the same response to pointer and keyboard", () => {
+  assert.match(
+    stylesheet,
+    /\.case-toc a:is\(:hover, :focus-visible\),\s*\.case-toc a\[aria-current="true"\]\s*\{[^}]*color:\s*var\(--ink\);/u,
+  );
+  assert.match(
+    blockFor(".project-action:is(:hover, :focus-visible)"),
+    /background:\s*var\(--oxide\);/u,
+  );
+  assert.match(
+    blockFor(".article-related__list a:is(:hover, :focus-visible) > span:last-child"),
+    /transform:\s*translate\(0\.2rem, -0\.2rem\);/u,
+  );
+});
+
 test("editorial canvases stay quiet while increased contrast sharpens hierarchy", () => {
   assert.doesNotMatch(stylesheet, /--grid:/u);
   assert.doesNotMatch(stylesheet, /body::before\s*\{/u);

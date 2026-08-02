@@ -991,7 +991,7 @@ li {
   text-decoration: none;
 }
 
-.case-toc a:hover,
+.case-toc a:is(:hover, :focus-visible),
 .case-toc a[aria-current="true"] {
   color: var(--ink);
 }
@@ -1327,7 +1327,7 @@ li {
   text-decoration: none;
 }
 
-.project-action:hover {
+.project-action:is(:hover, :focus-visible) {
   background: var(--oxide);
 }
 
@@ -1399,7 +1399,7 @@ li {
   transition: transform 180ms ease;
 }
 
-.article-related__list a:hover > span:last-child {
+.article-related__list a:is(:hover, :focus-visible) > span:last-child {
   transform: translate(0.2rem, -0.2rem);
 }
 
