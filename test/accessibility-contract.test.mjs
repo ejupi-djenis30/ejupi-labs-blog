@@ -186,6 +186,17 @@ test("font-relative breakpoints and complete summaries support resized text", ()
   assert.match(reducedMotion, /transition-delay:\s*0s !important/u);
 });
 
+test("compact interface text keeps a readable size floor", () => {
+  const compactSizes = [...stylesheet.matchAll(/font-size:\s*(0\.\d+)rem/gu)].map(
+    ([, size]) => Number.parseFloat(size),
+  );
+  assert.ok(compactSizes.length > 0, "Expected compact rem-based interface sizes.");
+  assert.ok(
+    Math.min(...compactSizes) >= 0.68,
+    `Compact interface text falls below 0.68rem: ${Math.min(...compactSizes)}rem.`,
+  );
+});
+
 test("interface copy keeps authored casing and the primary reading face", () => {
   assert.doesNotMatch(stylesheet, /text-transform:\s*uppercase/u);
   for (const selector of [
