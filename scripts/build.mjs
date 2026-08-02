@@ -341,21 +341,40 @@ function languageList(localeKey, slug, pageKind = "case") {
 function header(localeKey, slug, onIndex = false, pageKind = "case") {
   const locale = locales[localeKey];
   const homeRoute = routeFor(localeKey, null);
+  const navigationItems = [
+    ...(onIndex ? [] : [{ href: homeRoute, label: locale.ui.allWork }]),
+    { href: studioRouteFor(localeKey), label: locale.ui.portfolio },
+    {
+      className: "personal-link",
+      href: authorRouteFor(localeKey),
+      label: editorialUi[localeKey].personal,
+      rel: "author",
+    },
+  ];
+  const navigationAttributes = ({ className, href, rel }) =>
+    [
+      className ? `class="${escapeHtmlAttribute(className)}"` : "",
+      `href="${escapeHtmlAttribute(href)}"`,
+      rel ? `rel="${escapeHtmlAttribute(rel)}"` : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+  const desktopLinks = navigationItems
+    .map((item) => `<a ${navigationAttributes(item)}>${escapeHtml(item.label)}</a>`)
+    .join("\n      ");
   return `<a class="skip-link" href="#main">${escapeHtml(locale.ui.skip)}</a>
 <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
-<header class="site-header">
-  <div class="header-inner shell">
-    <a class="brand" href="${escapeHtmlAttribute(homeRoute)}" aria-label="${escapeHtml(site.name)}, ${escapeHtml(locale.ui.home)}">
+<header class="site-header" data-header>
+  <div class="site-header__inner header-inner shell">
+    <a class="brand-link brand" href="${escapeHtmlAttribute(homeRoute)}" aria-label="${escapeHtml(site.name)}, ${escapeHtml(locale.ui.home)}">
       <img src="/assets/brand/ejupi-labs-primary-carbon.svg" width="958" height="295" alt="Ejupi Labs" />
       <span class="brand-label">${escapeHtml(locale.ui.home)}</span>
     </a>
-    <nav class="site-nav" id="site-navigation" aria-label="${escapeHtml(locale.ui.navigation)}" data-menu data-open="false">
-      ${onIndex ? "" : `<a href="${escapeHtmlAttribute(homeRoute)}">${escapeHtml(locale.ui.allWork)}</a>`}
-      <a href="${escapeHtmlAttribute(studioRouteFor(localeKey))}">${escapeHtml(locale.ui.portfolio)}</a>
-      <a class="personal-link" href="${escapeHtmlAttribute(authorRouteFor(localeKey))}" rel="author">${escapeHtml(editorialUi[localeKey].personal)}</a>
-      ${languageList(localeKey, slug, pageKind)}
+    <nav class="site-nav site-navigation mobile-menu" id="mobile-menu" aria-label="${escapeHtml(locale.ui.navigation)}" data-menu data-open="false">
+      <div class="desktop-nav">${desktopLinks}</div>
+      <div class="header-actions">${languageList(localeKey, slug, pageKind)}</div>
     </nav>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="${escapeHtml(locale.ui.menuOpen)}" data-menu-toggle data-open-label="${escapeHtml(locale.ui.menuOpen)}" data-close-label="${escapeHtml(locale.ui.menuClose)}"><span aria-hidden="true"></span></button>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="${escapeHtml(locale.ui.menuOpen)}" data-menu-toggle data-open-label="${escapeHtml(locale.ui.menuOpen)}" data-close-label="${escapeHtml(locale.ui.menuClose)}"><span aria-hidden="true"></span><span aria-hidden="true"></span></button>
   </div>
 </header>`;
 }

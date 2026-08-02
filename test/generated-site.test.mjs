@@ -234,7 +234,7 @@ test("the index omits its self-link while articles keep the case-study index lin
       "utf8",
     );
     const homeNavigation = homeHtml.match(
-      /<nav class="site-nav"[\s\S]*?<\/nav>/u,
+      /<nav class="[^"]*\bsite-nav\b[^"]*"[\s\S]*?<\/nav>/u,
     )?.[0];
     assert.ok(homeNavigation);
     assert.ok(!homeNavigation.includes(`>${locale.ui.allWork}</a>`));
@@ -252,7 +252,7 @@ test("the index omits its self-link while articles keep the case-study index lin
       "utf8",
     );
     const articleNavigation = articleHtml.match(
-      /<nav class="site-nav"[\s\S]*?<\/nav>/u,
+      /<nav class="[^"]*\bsite-nav\b[^"]*"[\s\S]*?<\/nav>/u,
     )?.[0];
     assert.ok(articleNavigation);
     assert.ok(articleNavigation.includes(`href="${homeRoute}"`));

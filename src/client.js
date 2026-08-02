@@ -263,13 +263,13 @@ if (typeof document !== "undefined") {
   ) {
     const menuToggle = menuToggleCandidate;
     const menu = menuCandidate;
-    const mobileNavigation = window.matchMedia("(max-width: 820px)");
+    const mobileNavigation = window.matchMedia("(max-width: 1000px)");
     const navigationLinks = [...menu.querySelectorAll("a[href]")].filter(
       (element) => element instanceof HTMLAnchorElement,
     );
     const backgroundElements = [
       document.querySelector(".skip-link"),
-      document.querySelector(".brand"),
+      document.querySelector(".brand-link"),
       document.querySelector("main"),
       document.querySelector("footer"),
     ].filter((element) => element instanceof HTMLElement);
