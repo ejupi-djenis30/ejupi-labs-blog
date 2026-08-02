@@ -57,14 +57,12 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 1rem;
   line-height: 1.55;
 }
 
 ::selection {
   background: var(--signal);
   color: var(--ink);
-  text-shadow: none;
 }
 
 img,
@@ -930,12 +928,6 @@ li {
 .article-byline__identity {
   color: var(--ink);
   font-weight: 600;
-}
-
-.article-byline__identity a {
-  color: inherit;
-  text-underline-offset: 0.22em;
-  text-decoration-thickness: 1px;
 }
 
 .article-byline__role,
@@ -1949,6 +1941,12 @@ li {
   .index-hero .eyebrow::before {
     forced-color-adjust: none;
     background: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
   }
 }
 

@@ -233,6 +233,13 @@ test("touch controls retain visible branded feedback", () => {
   assert.match(stylesheet, /button:disabled\s*\{[^}]*cursor:\s*default;/u);
 });
 
+test("same-origin navigation transitions respect reduced-motion preferences", () => {
+  assert.match(
+    stylesheet,
+    /@media \(prefers-reduced-motion: no-preference\)\s*\{\s*@view-transition\s*\{\s*navigation:\s*auto;/u,
+  );
+});
+
 test("interface copy keeps authored casing and the primary reading face", () => {
   assert.doesNotMatch(stylesheet, /text-transform:\s*uppercase/u);
   for (const selector of [
