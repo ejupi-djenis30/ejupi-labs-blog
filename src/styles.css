@@ -228,11 +228,15 @@ li {
   transition: transform 180ms ease;
 }
 
-.site-nav > a:hover::after,
-.language-list a:hover::after,
+.site-nav > a:is(:hover, :focus-visible)::after,
+.language-list a:is(:hover, :focus-visible)::after,
 .language-list a[aria-current="page"]::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+.language-list a[aria-current="page"]::after {
+  height: 2px;
 }
 
 .language-list {
