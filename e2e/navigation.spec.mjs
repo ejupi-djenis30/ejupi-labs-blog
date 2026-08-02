@@ -244,6 +244,8 @@ for (const width of [390, 1440]) {
     await action.hover();
     await expect(action).toHaveCSS("background-color", "rgb(244, 241, 234)");
     await expect(action).toHaveCSS("color", "rgb(183, 77, 44)");
+    await expect(action).toHaveCSS("transform", "none");
+    await expect(action.locator("span")).not.toHaveCSS("transform", "none");
     const hover = await action.evaluate((element) => {
       const channels = (value) => {
         const srgb = value.match(
