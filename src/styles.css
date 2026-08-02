@@ -27,9 +27,9 @@
   --rule-light: rgba(244, 241, 234, 0.22);
   --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --shell: min(94vw, 1580px);
-  --reading: 760px;
-  --header-height: 84px;
+  --shell: min(calc(100% - clamp(40px, 5vw, 72px)), 1480px);
+  --reading: 740px;
+  --header-height: 80px;
   color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -107,8 +107,8 @@ h1,
 h2,
 h3 {
   font-weight: 600;
-  letter-spacing: -0.045em;
-  line-height: 0.96;
+  letter-spacing: -0.052em;
+  line-height: 0.95;
   text-wrap: balance;
 }
 
@@ -356,7 +356,7 @@ li {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: clamp(1rem, 2vw, 2rem);
   align-items: start;
-  padding: clamp(4rem, 8vw, 8rem) 0 clamp(3rem, 6vw, 6rem);
+  padding: clamp(4.25rem, 7vw, 7rem) 0 clamp(3.25rem, 5.5vw, 5.5rem);
 }
 
 .index-hero__copy {
@@ -385,7 +385,7 @@ li {
 .index-hero h1 {
   max-width: 11ch;
   margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
-  font-size: clamp(3.8rem, 7vw, 8rem);
+  font-size: clamp(3.8rem, 6.65vw, 7.55rem);
   overflow-wrap: anywhere;
 }
 
@@ -394,11 +394,11 @@ li {
 }
 
 .index-hero__lead {
-  max-width: 680px;
+  max-width: 720px;
   margin: 0;
   color: var(--muted);
-  font-size: clamp(1.08rem, 1.45vw, 1.4rem);
-  line-height: 1.55;
+  font-size: clamp(1.08rem, 1.38vw, 1.34rem);
+  line-height: 1.58;
 }
 
 .index-hero__ledger {
@@ -441,7 +441,7 @@ li {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 1rem clamp(1.25rem, 3vw, 3rem);
-  padding: clamp(1.25rem, 2.5vw, 2rem);
+  padding: clamp(1.2rem, 2.2vw, 1.8rem);
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
   background: var(--paper);
@@ -583,7 +583,7 @@ li {
   --card-muted: var(--muted);
   display: grid;
   min-width: 0;
-  min-height: 21rem;
+  min-height: 20rem;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   border-bottom: 1px solid var(--ink);
   background: var(--card-bg);
@@ -620,14 +620,14 @@ li {
 .case-card__copy {
   min-width: 0;
   grid-column: 6 / 11;
-  padding: clamp(2rem, 4vw, 4.5rem);
+  padding: clamp(2rem, 3.5vw, 4rem);
   border-right: 1px solid var(--rule);
 }
 
 .case-card h2 {
   max-width: 16ch;
-  margin: clamp(2.5rem, 5vw, 5rem) 0 1.25rem;
-  font-size: clamp(2.25rem, 3.6vw, 4rem);
+  margin: clamp(2.25rem, 4.2vw, 4.4rem) 0 1.25rem;
+  font-size: clamp(2.25rem, 3.45vw, 3.85rem);
   overflow-wrap: anywhere;
 }
 
@@ -783,7 +783,7 @@ li {
 .site-cta .title-stop { color: var(--ink); }
 
 .site-cta__copy {
-  padding: clamp(4rem, 8vw, 9rem) max(3vw, calc((100vw - min(94vw, 1580px)) / 2));
+  padding: clamp(4rem, 8vw, 9rem) max(2.5rem, calc((100vw - 1480px) / 2));
 }
 
 .site-cta h2 {
@@ -870,8 +870,8 @@ li {
 
 .article-hero h1 {
   max-width: 15ch;
-  margin: clamp(4rem, 9vw, 8rem) 0 2rem;
-  font-size: clamp(3.4rem, 7vw, 8rem);
+  margin: clamp(3.5rem, 7vw, 6.5rem) 0 2rem;
+  font-size: clamp(3.4rem, 6.7vw, 7.5rem);
   overflow-wrap: anywhere;
 }
 
@@ -964,8 +964,8 @@ li {
 .case-layout {
   display: grid;
   grid-template-columns: minmax(220px, 3fr) minmax(0, 9fr);
-  gap: clamp(3rem, 7vw, 8rem);
-  padding-block: clamp(5rem, 10vw, 10rem);
+  gap: clamp(3rem, 6.5vw, 7rem);
+  padding-block: clamp(5.5rem, 8vw, 8rem);
 }
 
 .case-toc {
@@ -1020,7 +1020,7 @@ li {
 .story-section {
   counter-increment: story-section;
   max-width: var(--reading);
-  margin-bottom: clamp(5rem, 9vw, 9rem);
+  margin-bottom: clamp(5rem, 8vw, 8rem);
   scroll-margin-top: calc(var(--header-height) + 2rem);
 }
 
@@ -1028,7 +1028,7 @@ li {
   position: relative;
   margin-bottom: 2rem;
   padding-top: 2.4rem;
-  font-size: clamp(2.6rem, 5vw, 5.5rem);
+  font-size: clamp(2.6rem, 4.7vw, 5rem);
   overflow-wrap: anywhere;
   hyphens: auto;
 }
@@ -1545,7 +1545,7 @@ li {
 @media (max-width: 51.25em) {
   :root {
     --header-height: 72px;
-    --shell: min(92vw, 720px);
+    --shell: min(calc(100% - 40px), 720px);
   }
 
   body.menu-open {

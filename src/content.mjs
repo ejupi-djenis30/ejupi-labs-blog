@@ -313,7 +313,7 @@ export const locales = {
     index: {
       title: "The decisions behind the software.",
       description:
-        "No victory laps. Each case study names the constraint, the route I chose, the strongest alternative, the cost and the evidence available.",
+        "In every case study, I document the constraint, the decision, the strongest alternative, the trade-off and the evidence available.",
       eyebrow: "Engineering case studies / 01 / 10",
       ctaTitle: "Is a difficult part of the system holding the project back?",
       ctaBody: "Bring me that part. I can help you define the architecture, plan the delivery and get to a useful first release.",
@@ -725,7 +725,7 @@ export const locales = {
     index: {
       title: "Le decisioni dietro il software.",
       description:
-        "Niente autocelebrazione. Spiego il vincolo, la strada scelta, l’alternativa più credibile, il costo e le evidenze disponibili in ogni case study.",
+        "Spiego il vincolo, la decisione, l’alternativa più credibile, il compromesso e le evidenze disponibili in ogni case study.",
       eyebrow: "Case study di engineering / 01 / 10",
       ctaTitle: "Una parte complessa del sistema sta bloccando il progetto?",
       ctaBody: "Partiamo proprio da lì. Posso aiutarti a definire l’architettura, pianificare il rilascio e arrivare a una prima versione utile.",
@@ -1137,7 +1137,7 @@ export const locales = {
     index: {
       title: "Die Entscheidungen hinter der Software.",
       description:
-        "Ich lasse die Siegesrunde aus. Jede Fallstudie nennt die Einschränkung, meinen Weg, die stärkste Alternative, den Preis und die verfügbaren Belege.",
+        "Ich dokumentiere in jeder Fallstudie die Einschränkung, die Entscheidung, die stärkste Alternative, den Trade-off und die verfügbaren Belege.",
       eyebrow: "Engineering-Fallstudien / 01 / 10",
       ctaTitle: "Hält ein schwieriger Teil des Systems Ihr Projekt auf?",
       ctaBody: "Bringen Sie mir genau diesen Teil. Ich helfe Ihnen, die Architektur zu klären, die Auslieferung zu planen und eine erste brauchbare Version auf den Weg zu bringen.",
@@ -1549,7 +1549,7 @@ export const locales = {
     index: {
       title: "Les décisions derrière le logiciel.",
       description:
-        "Pas d’autocélébration. J’explique la contrainte, la voie choisie, l’alternative la plus crédible, son coût et les preuves disponibles.",
+        "J’explique dans chaque étude de cas la contrainte, la décision, l’alternative la plus crédible, le compromis et les preuves disponibles.",
       eyebrow: "Études de cas d’ingénierie / 01 / 10",
       ctaTitle: "Une partie complexe du système bloque votre projet ?",
       ctaBody: "Parlons précisément de ce point. Je peux vous aider à cadrer l’architecture, organiser la livraison et parvenir à une première version utile.",

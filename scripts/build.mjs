@@ -364,7 +364,7 @@ function footer(localeKey) {
   const locale = locales[localeKey];
   const ui = editorialUi[localeKey];
   return `<footer class="site-footer">
-  <a class="page-compass text-button" href="#main" aria-label="${escapeHtml(locale.ui.backToTop)}" data-page-compass hidden>${escapeHtml(locale.ui.backToTop)} <span aria-hidden="true">↑</span></a>
+  <a class="page-compass text-button" href="#main" aria-label="${escapeHtml(locale.ui.backToTop)}" data-page-compass hidden><span aria-hidden="true">↑</span></a>
   <div class="site-footer__inner shell">
     <div class="site-footer__brand">
       <img src="/assets/brand/ejupi-labs-primary-on-carbon.svg" width="958" height="295" alt="Ejupi Labs" loading="lazy" />
