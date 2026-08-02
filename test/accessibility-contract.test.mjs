@@ -207,6 +207,10 @@ test("case-study motion is finite and follows the reader's action", () => {
     stylesheet,
     /\.case-card:has\(\.text-link:is\(:hover, :focus-visible\)\) \.case-card__signal i\s*\{[^}]*transition-delay:\s*var\(--bar-delay\)/u,
   );
+  assert.match(
+    stylesheet,
+    /\.case-card:has\(\.text-link:is\(:hover, :focus-visible\)\)\s*\{[^}]*box-shadow:\s*inset 0 3px var\(--signal\)/u,
+  );
   for (const delay of ["45ms", "90ms", "135ms"]) {
     assert.match(stylesheet, new RegExp(`--bar-delay:\\s*${delay}`, "u"));
   }
