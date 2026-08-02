@@ -159,6 +159,13 @@ test("forced-colors mode preserves focus, progress and content boundaries", () =
 });
 
 test("font-relative breakpoints and complete summaries support resized text", () => {
+  assert.match(stylesheet, /:root\s*\{[\s\S]*?font-synthesis:\s*none/u);
+  assert.match(stylesheet, /h1,\s*h2,\s*h3\s*\{[\s\S]*?text-wrap:\s*balance/u);
+  assert.match(stylesheet, /p,\s*li\s*\{[\s\S]*?text-wrap:\s*pretty/u);
+  assert.match(
+    stylesheet,
+    /\.eyebrow,[\s\S]*?font-variant-numeric:\s*tabular-nums/u,
+  );
   for (const breakpoint of ["65.625em", "51.25em", "35em"]) {
     assert.ok(
       stylesheet.includes(`@media (max-width: ${breakpoint})`),

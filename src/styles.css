@@ -330,6 +330,7 @@ li {
 .tag-list {
   font-family: var(--mono);
   font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
   letter-spacing: 0.09em;
   line-height: 1.35;
   text-transform: uppercase;
