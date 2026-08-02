@@ -178,8 +178,7 @@ li {
   top: 0;
   height: var(--header-height);
   border-bottom: 1px solid var(--rule);
-  background: color-mix(in srgb, var(--paper) 91%, transparent);
-  backdrop-filter: blur(16px);
+  background: var(--paper);
 }
 
 .header-inner {
@@ -431,8 +430,7 @@ li {
   padding: clamp(1.25rem, 2.5vw, 2rem);
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
-  background: color-mix(in srgb, var(--paper) 96%, transparent);
-  backdrop-filter: blur(12px);
+  background: var(--paper);
 }
 
 .discovery label {
@@ -1669,7 +1667,6 @@ li {
     position: relative;
     top: auto;
     grid-template-columns: 1fr;
-    backdrop-filter: none;
   }
 
   .case-card { grid-template-columns: 1fr; }
