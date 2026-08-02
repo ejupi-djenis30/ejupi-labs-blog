@@ -216,6 +216,14 @@ test("language choices keep generous targets and symmetric navigation feedback",
   );
 });
 
+test("the page compass owns its compact surface and exposes reading progress", () => {
+  assert.match(
+    stylesheet,
+    /\.page-compass\.text-button\s*\{[^}]*--compass-progress:\s*0;[^}]*width:\s*3\.25rem;[^}]*conic-gradient\([\s\S]*?var\(--compass-progress\)/u,
+  );
+  assert.match(stylesheet, /\.page-compass\.text-button\s*\{[^}]*border:\s*3px solid transparent;/u);
+});
+
 test("interface copy keeps authored casing and the primary reading face", () => {
   assert.doesNotMatch(stylesheet, /text-transform:\s*uppercase/u);
   for (const selector of [

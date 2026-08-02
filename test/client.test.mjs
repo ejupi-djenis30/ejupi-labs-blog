@@ -110,4 +110,6 @@ test("reading progress batches scroll work through requestAnimationFrame", async
 
   assert.match(source, /document\.addEventListener\("scroll", scheduleReadingProgress/);
   assert.match(source, /progressFrame = window\.requestAnimationFrame\(updateReadingProgress\)/);
+  assert.match(source, /pageCompass\.style\.setProperty\("--compass-progress", String\(ratio\)\)/);
+  assert.match(source, /pageCompass\.hidden = !shouldShowPageCompass\(/);
 });

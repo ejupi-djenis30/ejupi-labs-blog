@@ -146,14 +146,27 @@ li {
   pointer-events: none;
 }
 
-.page-compass {
+.page-compass.text-button {
+  --compass-progress: 0;
   position: fixed;
   z-index: 80;
-  right: 1rem;
-  bottom: 1rem;
-  padding-inline: 0.75rem;
-  background: var(--ink);
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: grid;
+  width: 3.25rem;
+  aspect-ratio: 1;
+  place-items: center;
+  padding: 0;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--ink), var(--ink)) padding-box,
+    conic-gradient(
+      var(--signal) calc(var(--compass-progress) * 1turn),
+      var(--rule-light) 0
+    ) border-box;
   color: var(--paper);
+  font-size: 1.1rem;
   text-decoration: none;
 }
 
