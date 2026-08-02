@@ -25,7 +25,6 @@
   --muted: #626966;
   --rule: rgba(14, 17, 17, 0.22);
   --rule-light: rgba(244, 241, 234, 0.22);
-  --grid: rgba(14, 17, 17, 0.055);
   --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --shell: min(94vw, 1580px);
@@ -60,18 +59,6 @@ body {
   font-family: var(--sans);
   font-size: 1rem;
   line-height: 1.55;
-}
-
-body::before {
-  position: fixed;
-  z-index: -1;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, var(--grid) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
-  background-size: clamp(56px, 5vw, 88px) clamp(56px, 5vw, 88px);
-  pointer-events: none;
-  content: "";
 }
 
 ::selection {
@@ -1873,13 +1860,17 @@ li {
   }
 }
 
+@media (prefers-contrast: more) {
+  :root {
+    --muted: #3d4441;
+    --rule: rgba(14, 17, 17, 0.55);
+    --rule-light: rgba(244, 241, 234, 0.55);
+  }
+}
+
 @media (forced-colors: active) {
   :root {
     forced-color-adjust: auto;
-  }
-
-  body::before {
-    display: none;
   }
 
   :focus-visible {
@@ -1978,10 +1969,6 @@ li {
   .architecture-frame {
     background: #fff;
     color: #000;
-  }
-
-  body::before {
-    display: none;
   }
 
   .case-layout,
