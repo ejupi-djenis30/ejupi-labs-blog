@@ -220,7 +220,7 @@ export const locales = {
     ui: {
       skip: "Skip to content",
       home: "Case studies",
-      portfolio: "Ejupi Labs",
+      portfolio: "Studio",
       navigation: "Primary navigation",
       languages: "Choose language",
       menuOpen: "Open navigation",
@@ -236,20 +236,20 @@ export const locales = {
       next: "Next case study",
       back: "Back to all case studies",
       sourceNote: "Evidence boundary",
-      footerLine: "Software, systems and product engineering from Switzerland.",
+      footerLine: "Product software, cloud systems and automation from Switzerland.",
       rights: "All rights reserved.",
-      notFoundTitle: "This page is not here.",
-      notFoundBody: "The address may have changed. The case-study index is a good place to restart.",
-      notFoundAction: "Go to the case studies",
+      notFoundTitle: "This page is not available.",
+      notFoundBody: "Check the address or return to the case-study archive.",
+      notFoundAction: "Browse all case studies",
     },
     index: {
-      title: "What I built, and why.",
+      title: "Engineering work, explained.",
       description:
-        "This archive contains ten case studies. Three cover anonymised professional systems and seven cover open-source Labs projects. I explain the constraints, the decisions I made and what the evidence supports.",
+        "Case studies tracing the constraints, decisions and evidence behind anonymised professional systems and open-source Labs projects.",
       eyebrow: "Engineering case studies / 01 / 10",
-      introTitle: "Work worth explaining",
+      introTitle: "The decisions behind the systems",
       introBody:
-        "A stack list tells you very little. This archive separates professional work from Labs projects, then follows the decisions, verification and limits behind each system.",
+        "These case studies separate professional work from Labs projects and make the constraints, trade-offs, evidence and limits explicit.",
       principles: [
         {
           number: "P01",
@@ -267,8 +267,8 @@ export const locales = {
           body: "Organisations and commercial details are omitted. The engineering scope is kept specific.",
         },
       ],
-      ctaTitle: "Have a system that needs a clearer path forward?",
-      ctaBody: "Bring the difficult part. We can work through the architecture, delivery plan and first useful release together.",
+      ctaTitle: "Need a clearer route through a complex system?",
+      ctaBody: "Share the difficult part. We can frame the architecture, delivery path and first useful release together.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
@@ -559,12 +559,12 @@ export const locales = {
     ui: {
       skip: "Vai al contenuto",
       home: "Case study",
-      portfolio: "Ejupi Labs",
+      portfolio: "Studio",
       navigation: "Navigazione principale",
       languages: "Scegli la lingua",
       menuOpen: "Apri la navigazione",
       menuClose: "Chiudi la navigazione",
-      contact: "Parliamo del progetto",
+      contact: "Parliamo di un progetto",
       allWork: "Tutti i case study",
       readCase: "Leggi il case study",
       articleLabel: "Case study anonimizzato",
@@ -575,20 +575,20 @@ export const locales = {
       next: "Case study successivo",
       back: "Torna ai case study",
       sourceNote: "Limiti delle informazioni",
-      footerLine: "Software, sistemi e product engineering dalla Svizzera.",
+      footerLine: "Software di prodotto, sistemi cloud e automazione dalla Svizzera.",
       rights: "Tutti i diritti riservati.",
-      notFoundTitle: "Questa pagina non c’è.",
-      notFoundBody: "L’indirizzo potrebbe essere cambiato. Puoi ripartire dall’indice dei case study.",
-      notFoundAction: "Vai ai case study",
+      notFoundTitle: "Questa pagina non è disponibile.",
+      notFoundBody: "Controlla l’indirizzo oppure torna all’archivio dei case study.",
+      notFoundAction: "Vedi tutti i case study",
     },
     index: {
-      title: "Cosa ho costruito e perché.",
+      title: "Progetti di ingegneria, spiegati.",
       description:
-        "Questo archivio raccoglie dieci case study. Tre riguardano sistemi professionali anonimizzati e sette progetti open source di Labs. Spiego i vincoli, le decisioni che ho preso e ciò che le prove possono sostenere.",
+        "Case study che ricostruiscono vincoli, decisioni ed evidenze dietro sistemi professionali anonimizzati e progetti Labs open source.",
       eyebrow: "Case study di engineering / 01 / 10",
-      introTitle: "Lavoro che vale la pena spiegare",
+      introTitle: "Le decisioni dietro i sistemi",
       introBody:
-        "Un elenco di tecnologie dice poco. L’archivio separa lavoro professionale e progetti Labs, poi segue decisioni, verifiche e limiti di ogni sistema.",
+        "I case study separano lavoro professionale e progetti Labs e rendono espliciti vincoli, compromessi, evidenze e limiti.",
       principles: [
         {
           number: "P01",
@@ -606,8 +606,8 @@ export const locales = {
           body: "Le organizzazioni e i dettagli commerciali non compaiono. Il perimetro tecnico resta specifico.",
         },
       ],
-      ctaTitle: "Hai un sistema che ha bisogno di una direzione più chiara?",
-      ctaBody: "Partiamo dalla parte difficile. Possiamo definire insieme architettura, piano di consegna e prima release utile.",
+      ctaTitle: "Serve un percorso più chiaro per un sistema complesso?",
+      ctaBody: "Partiamo dalla parte difficile. Possiamo definire insieme architettura, percorso di delivery e prima release utile.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
@@ -898,7 +898,7 @@ export const locales = {
     ui: {
       skip: "Zum Inhalt springen",
       home: "Fallstudien",
-      portfolio: "Ejupi Labs",
+      portfolio: "Studio",
       navigation: "Hauptnavigation",
       languages: "Sprache wählen",
       menuOpen: "Navigation öffnen",
@@ -914,20 +914,20 @@ export const locales = {
       next: "Nächste Fallstudie",
       back: "Zurück zu allen Fallstudien",
       sourceNote: "Informationsgrenze",
-      footerLine: "Software-, System- und Produktentwicklung aus der Schweiz.",
+      footerLine: "Produktsoftware, Cloud-Systeme und Automatisierung aus der Schweiz.",
       rights: "Alle Rechte vorbehalten.",
-      notFoundTitle: "Diese Seite gibt es nicht.",
-      notFoundBody: "Die Adresse hat sich möglicherweise geändert. Der Fallstudien-Index ist ein guter Neustart.",
-      notFoundAction: "Zu den Fallstudien",
+      notFoundTitle: "Diese Seite ist nicht verfügbar.",
+      notFoundBody: "Prüfen Sie die Adresse oder kehren Sie zum Fallstudien-Archiv zurück.",
+      notFoundAction: "Alle Fallstudien ansehen",
     },
     index: {
-      title: "Was ich gebaut habe und warum.",
+      title: "Engineering-Arbeit, erklärt.",
       description:
-        "Dieses Archiv enthält zehn Fallstudien. Drei behandeln anonymisierte berufliche Systeme, sieben weitere Open-Source-Projekte aus Labs. Ich erkläre die Bedingungen, meine Entscheidungen und was die Belege tatsächlich stützen.",
+        "Fallstudien zu Anforderungen, Entscheidungen und Nachweisen hinter anonymisierten beruflichen Systemen und Open-Source-Projekten aus Labs.",
       eyebrow: "Engineering-Fallstudien / 01 / 10",
-      introTitle: "Arbeit, die eine Erklärung verdient",
+      introTitle: "Die Entscheidungen hinter den Systemen",
       introBody:
-        "Eine Technologieliste sagt wenig aus. Das Archiv trennt berufliche Arbeit und Labs-Projekte und folgt dann Entscheidungen, Prüfungen und Grenzen jedes Systems.",
+        "Die Fallstudien trennen berufliche Arbeit von Labs-Projekten und machen Anforderungen, Abwägungen, Nachweise und Grenzen sichtbar.",
       principles: [
         {
           number: "P01",
@@ -945,8 +945,8 @@ export const locales = {
           body: "Organisationen und kommerzielle Details fehlen bewusst. Der technische Umfang bleibt konkret.",
         },
       ],
-      ctaTitle: "Braucht Ihr System einen klareren Weg nach vorn?",
-      ctaBody: "Bringen Sie den schwierigen Teil mit. Gemeinsam klären wir Architektur, Lieferplan und die erste nützliche Version.",
+      ctaTitle: "Braucht ein komplexes System einen klareren Weg?",
+      ctaBody: "Bringen Sie den schwierigen Teil mit. Gemeinsam klären wir Architektur, Auslieferungspfad und die erste nützliche Version.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
@@ -1237,7 +1237,7 @@ export const locales = {
     ui: {
       skip: "Aller au contenu",
       home: "Études de cas",
-      portfolio: "Ejupi Labs",
+      portfolio: "Studio",
       navigation: "Navigation principale",
       languages: "Choisir la langue",
       menuOpen: "Ouvrir la navigation",
@@ -1253,20 +1253,20 @@ export const locales = {
       next: "Étude de cas suivante",
       back: "Retour aux études de cas",
       sourceNote: "Limite des informations",
-      footerLine: "Ingénierie logicielle, systèmes et produit depuis la Suisse.",
+      footerLine: "Logiciels produit, systèmes cloud et automatisation depuis la Suisse.",
       rights: "Tous droits réservés.",
-      notFoundTitle: "Cette page n’existe pas.",
-      notFoundBody: "L’adresse a peut-être changé. L’index des études de cas est un bon point de départ.",
-      notFoundAction: "Voir les études de cas",
+      notFoundTitle: "Cette page n’est pas disponible.",
+      notFoundBody: "Vérifiez l’adresse ou revenez aux archives des études de cas.",
+      notFoundAction: "Voir toutes les études de cas",
     },
     index: {
-      title: "Ce que j’ai construit et pourquoi.",
+      title: "Le travail d’ingénierie, expliqué.",
       description:
-        "Ces archives réunissent dix études de cas. Trois portent sur des systèmes professionnels anonymisés et sept sur des projets open source de Labs. J’explique les contraintes, mes décisions et ce que les preuves permettent réellement d’affirmer.",
+        "Des études de cas qui retracent les contraintes, les décisions et les preuves derrière des systèmes professionnels anonymisés et des projets Labs open source.",
       eyebrow: "Études de cas d’ingénierie / 01 / 10",
-      introTitle: "Un travail qui mérite d’être expliqué",
+      introTitle: "Les décisions derrière les systèmes",
       introBody:
-        "Une liste de technologies dit peu de choses. L’archive sépare le travail professionnel des projets Labs, puis suit les décisions, la vérification et les limites de chaque système.",
+        "Les études distinguent le travail professionnel des projets Labs et rendent explicites les contraintes, les arbitrages, les preuves et les limites.",
       principles: [
         {
           number: "P01",
@@ -1284,8 +1284,8 @@ export const locales = {
           body: "Les organisations et les détails commerciaux sont omis. Le périmètre d’ingénierie reste précis.",
         },
       ],
-      ctaTitle: "Votre système a besoin d’une direction plus claire ?",
-      ctaBody: "Commençons par la partie difficile. Nous pouvons cadrer ensemble l’architecture, le plan de livraison et la première version utile.",
+      ctaTitle: "Un système complexe a besoin d’un parcours plus clair ?",
+      ctaBody: "Commençons par la partie difficile. Nous pouvons cadrer ensemble l’architecture, le parcours de livraison et la première version utile.",
     },
     cases: {
       "ai-workflow-cloud-migration": {
