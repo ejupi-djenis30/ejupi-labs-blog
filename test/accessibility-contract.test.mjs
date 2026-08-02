@@ -186,8 +186,25 @@ test("font-relative breakpoints and complete summaries support resized text", ()
   assert.match(reducedMotion, /transition-delay:\s*0s !important/u);
 });
 
-test("interface copy keeps the casing authored by each locale", () => {
+test("interface copy keeps authored casing and the primary reading face", () => {
   assert.doesNotMatch(stylesheet, /text-transform:\s*uppercase/u);
+  for (const selector of [
+    ".skip-link",
+    ".brand-label",
+    ".index-hero__ledger dt",
+    ".discovery label",
+    ".text-button",
+    ".case-card__decision dt",
+    ".architecture-frame figcaption",
+    ".evidence-ledger dt",
+    ".evidence-citation",
+  ]) {
+    const rule = blockFor(selector);
+    assert.doesNotMatch(rule, /font-family:\s*var\(--mono\)/u);
+    assert.doesNotMatch(rule, /letter-spacing:/u);
+  }
+  assert.match(blockFor(".discovery__shortcut"), /font-family:\s*var\(--mono\)/u);
+  assert.match(blockFor(".technology-choice__number"), /font-family:\s*var\(--mono\)/u);
 });
 
 test("editorial canvases stay quiet while increased contrast sharpens hierarchy", () => {
