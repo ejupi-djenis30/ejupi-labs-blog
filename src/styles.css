@@ -702,7 +702,10 @@ li {
 .case-card__signal i:nth-of-type(4) { --bar: 88%; --bar-delay: 135ms; }
 .case-card[data-kind="labs"] .case-card__signal i { background: var(--paper); }
 
-.case-card:has(.text-link:is(:hover, :focus-visible)) { background: var(--paper); }
+.case-card:has(.text-link:is(:hover, :focus-visible)) {
+  background: var(--paper);
+  box-shadow: inset 0 3px var(--signal);
+}
 .case-card:has(.text-link:is(:hover, :focus-visible)) .case-card__signal i {
   height: calc(100% - 7rem);
   transition-delay: var(--bar-delay);

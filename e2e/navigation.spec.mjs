@@ -427,11 +427,15 @@ test("archive cards signal interaction only from their real action", async ({
   await page.goto("/");
 
   const card = page.locator("[data-case-card]").first();
+  const activeRail = () => card.evaluate((element) => getComputedStyle(element).boxShadow);
+
   await card.locator(".case-card__copy").hover();
   await expect(card).toHaveCSS("background-color", "rgb(250, 248, 243)");
+  await expect.poll(activeRail).toBe("none");
 
   await card.locator(".text-link").hover();
   await expect(card).toHaveCSS("background-color", "rgb(244, 241, 234)");
+  await expect.poll(activeRail).toContain("inset");
 });
 
 test("768px archive and VECTOR article remain free of clipped content", async ({
