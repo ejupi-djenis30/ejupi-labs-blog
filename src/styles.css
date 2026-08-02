@@ -130,7 +130,6 @@ li {
   color: var(--paper);
   font-family: var(--mono);
   font-size: 0.78rem;
-  text-transform: uppercase;
 }
 
 .skip-link:focus {
@@ -198,7 +197,6 @@ li {
   font-size: 0.7rem;
   letter-spacing: 0.09em;
   line-height: 1.2;
-  text-transform: uppercase;
 }
 
 .site-nav {
@@ -320,7 +318,6 @@ li {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.09em;
   line-height: 1.35;
-  text-transform: uppercase;
 }
 
 .index-hero {
@@ -392,7 +389,6 @@ li {
   font-family: var(--mono);
   font-size: 0.68rem;
   letter-spacing: 0.07em;
-  text-transform: uppercase;
 }
 
 .index-hero__ledger dd {
@@ -431,7 +427,6 @@ li {
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .discovery__shortcut {
@@ -510,7 +505,6 @@ li {
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   cursor: pointer;
 }
 
@@ -645,7 +639,6 @@ li {
   font-size: 0.65rem;
   letter-spacing: 0.06em;
   line-height: 1.5;
-  text-transform: uppercase;
 }
 
 .case-card__decision dd {
@@ -923,7 +916,6 @@ li {
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .article-byline__updated {
@@ -941,7 +933,6 @@ li {
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .article-meta-bar__group {
@@ -1106,7 +1097,6 @@ li {
   font-family: var(--mono);
   font-size: 0.72rem;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
 }
 
 .technology-rationale-section {
@@ -1146,7 +1136,6 @@ li {
   font-weight: 400;
   letter-spacing: 0.07em;
   line-height: 1.45;
-  text-transform: uppercase;
 }
 
 .technology-choice__number {
@@ -1273,7 +1262,6 @@ li {
   font-family: var(--mono);
   font-size: 0.74rem;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
 .evidence-ledger dd {
@@ -1293,7 +1281,6 @@ li {
   font-family: var(--mono);
   font-size: 0.72rem !important;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
 .evidence-citation__state {

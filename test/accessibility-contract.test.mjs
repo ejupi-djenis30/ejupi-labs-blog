@@ -186,6 +186,10 @@ test("font-relative breakpoints and complete summaries support resized text", ()
   assert.match(reducedMotion, /transition-delay:\s*0s !important/u);
 });
 
+test("interface copy keeps the casing authored by each locale", () => {
+  assert.doesNotMatch(stylesheet, /text-transform:\s*uppercase/u);
+});
+
 test("editorial canvases stay quiet while increased contrast sharpens hierarchy", () => {
   assert.doesNotMatch(stylesheet, /--grid:/u);
   assert.doesNotMatch(stylesheet, /body::before\s*\{/u);
