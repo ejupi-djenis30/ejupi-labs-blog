@@ -197,6 +197,25 @@ test("compact interface text keeps a readable size floor", () => {
   );
 });
 
+test("language choices keep generous targets and symmetric navigation feedback", () => {
+  assert.match(
+    stylesheet,
+    /\.site-nav > a,\s*\.language-list a\s*\{[^}]*min-height:\s*2\.75rem;/u,
+  );
+  assert.match(
+    stylesheet,
+    /\.language-list a\s*\{[^}]*min-width:\s*2\.75rem;/u,
+  );
+  assert.match(
+    stylesheet,
+    /\.site-nav > a:is\(:hover, :focus-visible\)::after,\s*\.language-list a:is\(:hover, :focus-visible\)::after,/u,
+  );
+  assert.match(
+    stylesheet,
+    /\.language-list a\[aria-current="page"\]::after\s*\{[^}]*height:\s*2px;/u,
+  );
+});
+
 test("interface copy keeps authored casing and the primary reading face", () => {
   assert.doesNotMatch(stylesheet, /text-transform:\s*uppercase/u);
   for (const selector of [
