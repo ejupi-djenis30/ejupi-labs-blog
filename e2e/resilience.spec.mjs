@@ -70,6 +70,26 @@ test("the article contents navigation moves focus to the selected section", asyn
   await expect(link).toHaveAttribute("aria-current", "true");
 });
 
+test("page compass reveals with reading progress and yields to the footer", async ({ page }) => {
+  await page.goto("/");
+
+  const compass = page.locator("[data-page-compass]");
+  await expect(compass).toBeHidden();
+
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.45));
+  await expect(compass).toBeVisible();
+  await expect
+    .poll(() =>
+      compass.evaluate((element) =>
+        Number.parseFloat(getComputedStyle(element).getPropertyValue("--compass-progress"))
+      )
+    )
+    .toBeGreaterThan(0);
+
+  await page.locator(".site-footer").scrollIntoViewIfNeeded();
+  await expect(compass).toBeHidden();
+});
+
 test.describe("without JavaScript", () => {
   test.use({
     javaScriptEnabled: false,

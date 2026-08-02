@@ -439,6 +439,7 @@ if (typeof document !== "undefined") {
         footer instanceof HTMLElement ? footer.getBoundingClientRect().top : Number.POSITIVE_INFINITY;
       progress.style.setProperty("--reading-progress", String(ratio));
       if (pageCompass) {
+        pageCompass.style.setProperty("--compass-progress", String(ratio));
         pageCompass.hidden = !shouldShowPageCompass(
           window.scrollY,
           window.innerHeight,
