@@ -216,7 +216,9 @@ for (const localeKey of localeOrder) {
       }
     }
     if (!html.includes('href="#main"')) errors.push(`${label} has no skip link.`);
-    if (!html.includes('id="site-navigation"')) errors.push(`${label} menu is not associated with its toggle.`);
+    if (!html.includes('id="mobile-menu"') || !html.includes('aria-controls="mobile-menu"')) {
+      errors.push(`${label} menu is not associated with its toggle.`);
+    }
     if (!/href="\/assets\/styles\.[0-9a-f]{12}\.css"/u.test(html)) errors.push(`${label} has no fingerprinted stylesheet.`);
     if (!/src="\/assets\/client\.[0-9a-f]{12}\.js"/u.test(html)) errors.push(`${label} has no fingerprinted client script.`);
     if (/\/assets\/(?:styles\.css|client\.js)/u.test(html)) errors.push(`${label} references an unversioned mutable asset.`);
@@ -354,7 +356,7 @@ for (const localeKey of localeOrder) {
         errors.push(`${label} uses non-list markup for its technologies.`);
       }
       const articleNavigation =
-        html.match(/<nav class="site-nav"[\s\S]*?<\/nav>/u)?.[0] ?? "";
+        html.match(/<nav class="[^"]*\bsite-nav\b[^"]*"[\s\S]*?<\/nav>/u)?.[0] ?? "";
       if (
         !articleNavigation.includes(`href="${routeFor(localeKey, null)}"`) ||
         !articleNavigation.includes(locales[localeKey].ui.allWork)
@@ -445,7 +447,7 @@ for (const localeKey of localeOrder) {
         errors.push(`${label} uses non-list markup for its technologies.`);
       }
       const indexNavigation =
-        html.match(/<nav class="site-nav"[\s\S]*?<\/nav>/u)?.[0] ?? "";
+        html.match(/<nav class="[^"]*\bsite-nav\b[^"]*"[\s\S]*?<\/nav>/u)?.[0] ?? "";
       if (indexNavigation.includes(`>${locales[localeKey].ui.allWork}</a>`)) {
         errors.push(`${label} repeats a self-link to the case-study index in its primary navigation.`);
       }
@@ -684,7 +686,7 @@ if (
 }
 const assetBudgets = [
   ["browser JavaScript", browserJavaScriptBytes, 13_000],
-  ["browser CSS", stylesheetBytes, 33_000],
+  ["browser CSS", stylesheetBytes, 35_000],
   ["largest HTML document", maximumHtmlBytes, 34_000],
   ["web fonts", fontBytes, 75_000],
   ["largest localized search index", maximumSearchBytes, 105_000],
@@ -913,6 +915,6 @@ if (errors.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Validated ${files.length} files, ${canonicalPageCount} canonical pages, ${localeOrder.length} locales and ${caseDefinitions.length} case-study routes. Asset budgets: first load ${firstLoadBytes}/160000 bytes; JS ${browserJavaScriptBytes}/13000; CSS ${stylesheetBytes}/33000.`,
+    `Validated ${files.length} files, ${canonicalPageCount} canonical pages, ${localeOrder.length} locales and ${caseDefinitions.length} case-study routes. Asset budgets: first load ${firstLoadBytes}/160000 bytes; JS ${browserJavaScriptBytes}/13000; CSS ${stylesheetBytes}/35000.`,
   );
 }

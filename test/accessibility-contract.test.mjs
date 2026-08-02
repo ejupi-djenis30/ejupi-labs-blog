@@ -200,7 +200,7 @@ test("compact interface text keeps a readable size floor", () => {
 test("language choices keep generous targets and symmetric navigation feedback", () => {
   assert.match(
     stylesheet,
-    /\.site-nav > a,\s*\.language-list a\s*\{[^}]*min-height:\s*2\.75rem;/u,
+    /\.desktop-nav > a,\s*\.language-list a\s*\{[^}]*min-height:\s*2\.75rem;/u,
   );
   assert.match(
     stylesheet,
@@ -208,7 +208,7 @@ test("language choices keep generous targets and symmetric navigation feedback",
   );
   assert.match(
     stylesheet,
-    /\.site-nav > a:is\(:hover, :focus-visible\)::after,\s*\.language-list a:is\(:hover, :focus-visible\)::after,/u,
+    /\.desktop-nav > a:is\(:hover, :focus-visible\)::after,\s*\.language-list a:is\(:hover, :focus-visible\)::after,/u,
   );
   assert.match(
     stylesheet,

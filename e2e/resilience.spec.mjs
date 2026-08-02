@@ -105,7 +105,8 @@ test.describe("without JavaScript", () => {
 
       await expect(page.locator("html")).toHaveClass(/\bno-js\b/u);
       await expect(page.locator("[data-menu-toggle]")).toBeHidden();
-      await expect(page.locator("[data-menu]")).toBeVisible();
+      await expect(page.locator(".desktop-nav")).toBeVisible();
+      await expect(page.locator(".header-actions")).toBeVisible();
       await expect(page.locator("[data-discovery]")).toBeHidden();
       await expect(page.locator("[data-case-card]")).toHaveCount(
         currentCaseDefinitions.length,
