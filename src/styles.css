@@ -806,17 +806,25 @@ li {
   font-weight: 600;
   text-align: center;
   text-decoration: none;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.site-cta__action a span {
   transition: transform 180ms ease;
 }
 
+.site-cta__action a:is(:hover, :focus-visible) span {
+  transform: translate(0.2rem, -0.2rem);
+}
+
 .site-cta__action a:hover {
-  transform: translateY(-3px);
   background: var(--paper);
   color: var(--oxide);
 }
 
 .site-cta__action a:focus-visible {
-  transform: translateY(-3px);
   background: var(--paper);
   color: var(--oxide);
   outline-color: var(--paper);
