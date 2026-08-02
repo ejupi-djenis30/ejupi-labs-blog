@@ -224,6 +224,13 @@ test("the page compass owns its compact surface and exposes reading progress", (
   assert.match(stylesheet, /\.page-compass\.text-button\s*\{[^}]*border:\s*3px solid transparent;/u);
 });
 
+test("touch controls retain visible branded feedback", () => {
+  assert.match(
+    stylesheet,
+    /button,\s*a\s*\{[^}]*-webkit-tap-highlight-color:\s*#e97a4a38;/u,
+  );
+});
+
 test("interface copy keeps authored casing and the primary reading face", () => {
   assert.doesNotMatch(stylesheet, /text-transform:\s*uppercase/u);
   for (const selector of [
