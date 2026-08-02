@@ -713,12 +713,13 @@ li {
 .case-card__signal i:nth-of-type(4) { --bar: 88%; }
 .case-card[data-kind="labs"] .case-card__signal i { background: var(--paper); }
 
-.case-card:hover,
-.case-card:focus-within { background: var(--paper); }
-.case-card:hover .case-card__signal i,
-.case-card:focus-within .case-card__signal i { height: calc(100% - 7rem); }
-.case-card:hover .case-card__decision::before,
-.case-card:focus-within .case-card__decision::before { width: 100%; }
+.case-card:has(.text-link:is(:hover, :focus-visible)) { background: var(--paper); }
+.case-card:has(.text-link:is(:hover, :focus-visible)) .case-card__signal i {
+  height: calc(100% - 7rem);
+}
+.case-card:has(.text-link:is(:hover, :focus-visible)) .case-card__decision::before {
+  width: 100%;
+}
 
 .case-card .tag-list { color: var(--muted); }
 .case-card__foot .text-link { margin-top: auto; }

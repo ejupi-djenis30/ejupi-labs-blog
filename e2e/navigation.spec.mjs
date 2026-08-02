@@ -420,6 +420,20 @@ test("archive previews remain editorial rows at every breakpoint", async ({
   await expect.poll(columnCount).toBe(1);
 });
 
+test("archive cards signal interaction only from their real action", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  const card = page.locator("[data-case-card]").first();
+  await card.locator(".case-card__copy").hover();
+  await expect(card).toHaveCSS("background-color", "rgb(250, 248, 243)");
+
+  await card.locator(".text-link").hover();
+  await expect(card).toHaveCSS("background-color", "rgb(244, 241, 234)");
+});
+
 test("768px archive and VECTOR article remain free of clipped content", async ({
   page,
 }) => {
