@@ -33,12 +33,10 @@ assertPublicDomainTopology({
 const root = resolve(import.meta.dirname, "..");
 const outputRoot = join(root, "dist");
 const sourceRoot = join(root, "site");
-const [baseStylesInput, journalStylesInput, clientInput] = await Promise.all([
+const [stylesInput, clientInput] = await Promise.all([
   readFile(join(root, "src", "styles.css"), "utf8"),
-  readFile(join(root, "src", "journal-redesign.css"), "utf8"),
   readFile(join(root, "src", "client.js"), "utf8"),
 ]);
-const stylesInput = `${baseStylesInput.replace('@import "./journal-redesign.css";', "")}\n${journalStylesInput}`;
 const [{ code: stylesSource }, { code: clientSource }] = await Promise.all([
   transform(stylesInput, {
     legalComments: "none",
@@ -447,7 +445,7 @@ function indexPage(localeKey) {
   };
 
   return `${pageHead({ localeKey, title: locale.ui.home, description: locale.index.description })}
-<body class="journal-v2 journal-index">
+<body>
 <script type="application/ld+json">${safeJson(blogSchema)}</script>
 ${header(localeKey, null, true)}
 <main id="main" tabindex="-1" itemscope itemtype="https://schema.org/Blog">
@@ -661,7 +659,7 @@ function articlePage(localeKey, definition) {
   };
 
   return `${pageHead({ localeKey, title: study.seoTitle, description: study.seoDescription, slug: definition.slug, type: "article", published: definition.published, updated: definition.updated })}
-<body class="journal-v2 journal-article">
+<body>
 <script type="application/ld+json">${safeJson(articleSchema)}</script>
 ${header(localeKey, definition.slug)}
 <main id="main" tabindex="-1">
@@ -760,7 +758,7 @@ function methodologyPage(localeKey) {
     published: methodology.published,
     updated: methodology.updated,
   })}
-<body class="journal-v2 journal-methodology">
+<body>
 <script type="application/ld+json">${safeJson(pageSchema)}</script>
 ${header(localeKey, null, false, "methodology")}
 <main id="main" tabindex="-1">
@@ -784,7 +782,7 @@ ${footer(localeKey)}
 function notFoundPage(localeKey) {
   const locale = locales[localeKey];
   return `${pageHead({ localeKey, title: "404", description: locale.ui.notFoundBody, noIndex: true })}
-<body class="journal-v2 journal-error">
+<body>
 ${header(localeKey, null)}
 <main class="not-found shell" id="main" tabindex="-1"><span class="not-found__code">ERROR / 404</span><h1>${escapeHtml(locale.ui.notFoundTitle)}</h1><p>${escapeHtml(locale.ui.notFoundBody)}</p><a class="text-link" href="${escapeHtmlAttribute(routeFor(localeKey, null))}">${escapeHtml(locale.ui.notFoundAction)} <span aria-hidden="true">→</span></a></main>
 ${footer(localeKey)}
