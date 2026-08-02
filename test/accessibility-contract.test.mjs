@@ -229,6 +229,8 @@ test("touch controls retain visible branded feedback", () => {
     stylesheet,
     /button,\s*a\s*\{[^}]*-webkit-tap-highlight-color:\s*#e97a4a38;/u,
   );
+  assert.match(stylesheet, /button\s*\{[^}]*cursor:\s*pointer;/u);
+  assert.match(stylesheet, /button:disabled\s*\{[^}]*cursor:\s*default;/u);
 });
 
 test("interface copy keeps authored casing and the primary reading face", () => {
