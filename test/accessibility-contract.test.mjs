@@ -185,3 +185,18 @@ test("font-relative breakpoints and complete summaries support resized text", ()
   );
   assert.match(reducedMotion, /transition-delay:\s*0s !important/u);
 });
+
+test("editorial canvases stay quiet while increased contrast sharpens hierarchy", () => {
+  assert.doesNotMatch(stylesheet, /--grid:/u);
+  assert.doesNotMatch(stylesheet, /body::before\s*\{/u);
+
+  const start = stylesheet.indexOf("@media (prefers-contrast: more)");
+  const end = stylesheet.indexOf("@media (forced-colors: active)", start);
+  assert.notEqual(start, -1, "Missing the increased-contrast media query.");
+  assert.ok(end > start, "The increased-contrast query must be self-contained.");
+
+  const contract = stylesheet.slice(start, end);
+  for (const token of ["--muted", "--rule", "--rule-light"]) {
+    assert.match(contract, new RegExp(`${token}:`, "u"));
+  }
+});
