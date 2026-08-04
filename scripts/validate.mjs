@@ -411,16 +411,85 @@ for (const localeKey of localeOrder) {
       }
     } else {
       if (!html.includes(uppercase(editorial.caseLabel))) errors.push(`${label} has an untranslated case-card label.`);
+      if (
+        !html.includes(
+          `<dt>${escapeHtml(editorial.publishedCases)}</dt><dd>${currentLocaleDefinitions.length}</dd>`,
+        )
+      ) {
+        errors.push(`${label} is missing its localized published-case count.`);
+      }
       if (count(html, /class="case-card__decision"/g) !== currentLocaleDefinitions.length) {
         errors.push(`${label} must expose one key decision per case card.`);
       }
       if (!html.includes(editorial.decisionPreview)) {
         errors.push(`${label} has an untranslated key-decision label.`);
       }
+      const professionalDefinitions = currentLocaleDefinitions.filter(
+        ({ kind }) => kind === "professional",
+      );
+      if (count(html, /class="case-card__role"/g) !== professionalDefinitions.length) {
+        errors.push(`${label} must expose one role/contribution row per professional case card.`);
+      }
+      if (
+        professionalDefinitions.length > 0 &&
+        (!html.includes(escapeHtml(editorial.professionalCase)) ||
+          !html.includes(`<dt>${escapeHtml(editorial.roleContribution)}</dt>`))
+      ) {
+        errors.push(`${label} is missing localized professional provenance or role copy.`);
+      }
       for (const visibleDefinition of currentLocaleDefinitions) {
         const decisionTitle = locales[localeKey].cases[visibleDefinition.slug].decisions.items[0].title;
         if (!html.includes(escapeHtml(decisionTitle))) {
           errors.push(`${label} is missing the ${visibleDefinition.slug} key decision.`);
+        }
+      }
+      const indexCards = [
+        ...html.matchAll(/<article class="case-card"[\s\S]*?<\/article>/gu),
+      ].map((match) => match[0]);
+      if (indexCards.length !== currentLocaleDefinitions.length) {
+        errors.push(`${label} must expose one article per current case card.`);
+      }
+      for (const card of indexCards) {
+        const slug = card.match(/data-case-slug="(?<slug>[^"]+)"/u)?.groups?.slug;
+        const definition = currentLocaleDefinitions.find((candidate) => candidate.slug === slug);
+        const titleAction = card.match(
+          /<h2 itemprop="headline"><a class="case-card__title-link case-card__action" href="(?<href>[^"]+)" itemprop="url">/u,
+        );
+        const readAction = card.match(
+          /<a class="text-link case-card__action" href="(?<href>[^"]+)">/u,
+        );
+        const titlePosition = card.indexOf('class="case-card__title-link');
+        const summaryPosition = card.indexOf('class="case-card__summary"');
+        const actionPosition = card.indexOf('class="text-link case-card__action"');
+        const signalPosition = card.indexOf('class="case-card__signal"');
+        if (!titleAction?.groups?.href || titleAction.groups.href !== readAction?.groups?.href) {
+          errors.push(`${label} has a case card whose title and reading action do not share one canonical route.`);
+        }
+        if (
+          titlePosition < 0 ||
+          summaryPosition < 0 ||
+          actionPosition < 0 ||
+          signalPosition < 0 ||
+          !(titlePosition < summaryPosition && summaryPosition < actionPosition && actionPosition < signalPosition)
+        ) {
+          errors.push(`${label} must place linked titles, summaries and actions before decorative case signals.`);
+        }
+        if (!definition) {
+          errors.push(`${label} has a case card without an authoritative slug.`);
+        } else if (definition.kind === "professional") {
+          const study = locales[localeKey].cases[definition.slug];
+          const roleContribution = [study.facts[0]?.[1], study.facts[2]?.[1]]
+            .filter(Boolean)
+            .join(" · ");
+          if (
+            !card.includes(escapeHtml(editorial.professionalCase)) ||
+            !card.includes('class="case-card__role"') ||
+            !card.includes(`<dd>${escapeHtml(roleContribution)}</dd>`)
+          ) {
+            errors.push(`${label} has incomplete provenance for ${definition.slug}.`);
+          }
+        } else if (card.includes('class="case-card__role"')) {
+          errors.push(`${label} incorrectly labels Labs case ${definition.slug} as employment work.`);
         }
       }
       const indexTechnologyLists = [
@@ -845,6 +914,24 @@ if (!Array.isArray(catalog.cases) || catalog.cases.length !== currentCaseDefinit
         !entry.translations?.[localeKey]?.category
       ) {
         errors.push(`Machine-readable catalog lacks ${localeKey} preview copy for ${definition.slug}.`);
+      }
+      const translation = entry.translations?.[localeKey];
+      const study = locales[localeKey].cases[definition.slug];
+      if (definition.kind === "professional") {
+        const roleContribution = [study.facts[0]?.[1], study.facts[2]?.[1]]
+          .filter(Boolean)
+          .join(" · ");
+        if (
+          translation?.provenance !== editorialUi[localeKey].professionalCase ||
+          translation?.roleContribution !== roleContribution
+        ) {
+          errors.push(`Professional catalog preview lacks ${localeKey} provenance for ${definition.slug}.`);
+        }
+      } else if (
+        translation?.provenance !== undefined ||
+        translation?.roleContribution !== undefined
+      ) {
+        errors.push(`Labs catalog preview ${definition.slug} exposes employment provenance.`);
       }
     }
   }

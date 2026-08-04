@@ -90,6 +90,21 @@ test("page compass reveals with reading progress and yields to the footer", asyn
   await expect(compass).toBeHidden();
 });
 
+test("mobile reading keeps the page compass clear of cards and search remains labelled", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  const compass = page.locator("[data-page-compass]");
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.45));
+  await expect(compass).toBeHidden();
+  await expect(page.getByRole("searchbox", { name: "Search case studies" })).toHaveAttribute(
+    "placeholder",
+    "Search decisions, technologies or projects",
+  );
+});
+
 test.describe("without JavaScript", () => {
   test.use({
     javaScriptEnabled: false,

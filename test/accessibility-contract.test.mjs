@@ -222,6 +222,12 @@ test("the page compass owns its compact surface and exposes reading progress", (
     /\.page-compass\.text-button\s*\{[^}]*--compass-progress:\s*0;[^}]*width:\s*3\.25rem;[^}]*conic-gradient\([\s\S]*?var\(--compass-progress\)/u,
   );
   assert.match(stylesheet, /\.page-compass\.text-button\s*\{[^}]*border:\s*3px solid transparent;/u);
+  const mobileCompassRule = stylesheet.match(
+    /@media \(max-width: 30em\)\s*\{\s*\.page-compass\.text-button\s*\{(?<rule>[^}]*)\}/u,
+  );
+  assert.ok(mobileCompassRule?.groups?.rule);
+  assert.match(mobileCompassRule.groups.rule, /display:\s*none;/u);
+  assert.doesNotMatch(mobileCompassRule.groups.rule, /!important/u);
 });
 
 test("touch controls retain visible branded feedback", () => {
@@ -295,11 +301,11 @@ test("case-study motion is finite and follows the reader's action", () => {
   assert.doesNotMatch(stylesheet, /\binfinite\b/u);
   assert.match(
     stylesheet,
-    /\.case-card:has\(\.text-link:is\(:hover, :focus-visible\)\) \.case-card__signal i\s*\{[^}]*transition-delay:\s*var\(--bar-delay\)/u,
+    /\.case-card:has\(\.case-card__action:is\(:hover, :focus-visible\)\) \.case-card__signal i\s*\{[^}]*transition-delay:\s*var\(--bar-delay\)/u,
   );
   assert.match(
     stylesheet,
-    /\.case-card:has\(\.text-link:is\(:hover, :focus-visible\)\)\s*\{[^}]*box-shadow:\s*inset 0 3px var\(--signal\)/u,
+    /\.case-card:has\(\.case-card__action:is\(:hover, :focus-visible\)\)\s*\{[^}]*box-shadow:\s*inset 0 3px var\(--signal\)/u,
   );
   for (const delay of ["45ms", "90ms", "135ms"]) {
     assert.match(stylesheet, new RegExp(`--bar-delay:\\s*${delay}`, "u"));

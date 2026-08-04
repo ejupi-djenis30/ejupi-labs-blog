@@ -113,6 +113,7 @@ test("English case-study index links only to current canonical articles", async 
   assert.match(html, /data-search-state/);
   assert.match(html, /data-case-count/);
   assert.match(html, /data-case-clear/);
+  assert.match(html, /<dt>Published cases<\/dt><dd>9<\/dd>/u);
   assert.equal((html.match(/aria-label="Primary navigation"/gu) ?? []).length, 1);
   assert.equal((html.match(/aria-label="Footer navigation"/gu) ?? []).length, 1);
   assert.match(html, />Show all case studies <span aria-hidden="true">↺<\/span>/u);
@@ -142,6 +143,38 @@ test("English case-study index links only to current canonical articles", async 
   const cards = [...html.matchAll(/<article class="case-card"[\s\S]*?<\/article>/gu)];
   assert.equal(cards.length, currentCaseDefinitions.length);
   for (const card of cards) {
+    const source = card[0];
+    const slug = source.match(/data-case-slug="(?<slug>[^"]+)"/u)?.groups?.slug;
+    const definition = currentCaseDefinitions.find((candidate) => candidate.slug === slug);
+    assert.ok(definition);
+    const titleAction = source.match(
+      /<h2 itemprop="headline"><a class="case-card__title-link case-card__action" href="(?<href>[^"]+)" itemprop="url">/u,
+    );
+    const readAction = source.match(
+      /<a class="text-link case-card__action" href="(?<href>[^"]+)">/u,
+    );
+    assert.ok(titleAction?.groups?.href);
+    assert.equal(titleAction.groups.href, readAction?.groups?.href);
+    const titlePosition = source.indexOf('class="case-card__title-link');
+    const summaryPosition = source.indexOf('class="case-card__summary"');
+    const actionPosition = source.indexOf('class="text-link case-card__action"');
+    const signalPosition = source.indexOf('class="case-card__signal"');
+    assert.ok(titlePosition < summaryPosition);
+    assert.ok(summaryPosition < actionPosition);
+    assert.ok(actionPosition < signalPosition);
+    assert.match(source, /class="case-card__signal" aria-hidden="true"/u);
+    if (definition.kind === "professional") {
+      const study = locales.en.cases[definition.slug];
+      const roleContribution = [study.facts[0][1], study.facts[2][1]].join(" · ");
+      assert.ok(source.includes(escapeHtml(editorialUi.en.professionalCase)));
+      assert.ok(
+        source.includes(
+          `<dl class="case-card__role">\n      <dt>${escapeHtml(editorialUi.en.roleContribution)}</dt>\n      <dd>${escapeHtml(roleContribution)}</dd>`,
+        ),
+      );
+    } else {
+      assert.doesNotMatch(source, /class="case-card__role"/u);
+    }
     const tags = card[0].match(/<ul class="tag-list" role="list"[^>]*>(?<tags>[\s\S]*?)<\/ul>/u)?.groups?.tags;
     assert.ok(tags);
     assert.ok((tags.match(/<li>/gu) ?? []).length <= 3);
@@ -152,6 +185,7 @@ test("English case-study index links only to current canonical articles", async 
 test("technology tags are labelled semantic lists on indexes and articles", async () => {
   for (const localeKey of localeOrder) {
     const locale = locales[localeKey];
+    const ui = editorialUi[localeKey];
     const prefix = locale.prefix.replace(/^\//u, "");
     const outputDirectory = prefix ? `${prefix}/` : "";
     const indexHtml = await readFile(
@@ -160,6 +194,11 @@ test("technology tags are labelled semantic lists on indexes and articles", asyn
     );
     const visibleDefinitions = currentCaseDefinitions.filter(({ availableLocales }) =>
       availableLocales.includes(localeKey),
+    );
+    assert.ok(
+      indexHtml.includes(
+        `<dt>${escapeHtml(ui.publishedCases)}</dt><dd>${visibleDefinitions.length}</dd>`,
+      ),
     );
     assert.equal(
       (indexHtml.match(/<ul class="tag-list" role="list" aria-label="[^"]+">/gu) ?? []).length,
@@ -435,6 +474,13 @@ test("localized chrome, bylines and cross-site routes stay in the selected langu
       (index.match(/class="case-card__decision"/gu) ?? []).length,
       visibleDefinitions.length,
     );
+    const professionalDefinitions = visibleDefinitions.filter(({ kind }) => kind === "professional");
+    assert.equal(
+      (index.match(/class="case-card__role"/gu) ?? []).length,
+      professionalDefinitions.length,
+    );
+    assert.ok(index.includes(escapeHtml(ui.professionalCase)));
+    assert.ok(index.includes(`<dt>${escapeHtml(ui.roleContribution)}</dt>`));
     assert.ok(index.includes(`<dt>${escapeHtml(ui.decisionPreview)}</dt>`));
     for (const definition of visibleDefinitions) {
       assert.ok(
@@ -442,6 +488,11 @@ test("localized chrome, bylines and cross-site routes stay in the selected langu
           `<dd>${escapeHtml(locale.cases[definition.slug].decisions.items[0].title)}</dd>`,
         ),
       );
+      if (definition.kind === "professional") {
+        const study = locale.cases[definition.slug];
+        const roleContribution = [study.facts[0][1], study.facts[2][1]].join(" · ");
+        assert.ok(index.includes(`<dd>${escapeHtml(roleContribution)}</dd>`));
+      }
     }
     assert.ok(ui.emptyTitle.endsWith("."));
     assert.ok(
@@ -708,6 +759,18 @@ test("machine-readable catalog derives only current routes from the authoritativ
       );
       assert.ok(entry.translations[localeKey].title);
       assert.ok(entry.translations[localeKey].summary);
+      const translation = entry.translations[localeKey];
+      const study = locales[localeKey].cases[definition.slug];
+      if (definition.kind === "professional") {
+        assert.equal(translation.provenance, editorialUi[localeKey].professionalCase);
+        assert.equal(
+          translation.roleContribution,
+          [study.facts[0][1], study.facts[2][1]].join(" · "),
+        );
+      } else {
+        assert.equal(translation.provenance, undefined);
+        assert.equal(translation.roleContribution, undefined);
+      }
     }
   }
 });
