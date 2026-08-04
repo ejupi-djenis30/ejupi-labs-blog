@@ -123,6 +123,7 @@ for (const width of [390, 1440]) {
       const selectors = [
         ".case-card__meta",
         ".case-card__category",
+        ".case-card__title-link",
         ".case-card__summary",
         ".tag-list",
         ".text-link",
@@ -339,6 +340,10 @@ test("the editorial header leads directly into search and case studies", async (
     "/",
   );
   await expect(page.locator(".discovery__status [data-case-clear]")).toBeDisabled();
+  await expect(page.locator(".index-hero__ledger > div:first-child dt")).toHaveText(
+    "Published cases",
+  );
+  await expect(page.locator(".index-hero__ledger > div:first-child dd")).toHaveText("9");
 
   const layout = await page.evaluate(() => {
     const hero = document.querySelector(".index-hero");
@@ -428,10 +433,40 @@ test("archive cards signal interaction only from their real action", async ({
 
   const card = page.locator("[data-case-card]").first();
   const activeRail = () => card.evaluate((element) => getComputedStyle(element).boxShadow);
+  const hierarchy = await card.evaluate((element) => {
+    const title = element.querySelector(".case-card__title-link");
+    const summary = element.querySelector(".case-card__summary");
+    const action = element.querySelector(".text-link");
+    const signal = element.querySelector(".case-card__signal");
+    if (!title || !summary || !action || !signal) return null;
+    const cardBox = element.getBoundingClientRect();
+    const titleBox = title.getBoundingClientRect();
+    const summaryBox = summary.getBoundingClientRect();
+    const actionBox = action.getBoundingClientRect();
+    const signalBox = signal.getBoundingClientRect();
+    return {
+      actionBottom: actionBox.bottom - cardBox.top,
+      actionBeforeSignal: actionBox.bottom <= signalBox.top + 1,
+      signalHeight: signalBox.height,
+      summaryBeforeSignal: summaryBox.bottom <= signalBox.top + 1,
+      titleBeforeSignal: titleBox.bottom <= signalBox.top + 1,
+    };
+  });
 
-  await card.locator(".case-card__copy").hover();
+  expect(hierarchy).not.toBeNull();
+  expect(hierarchy.titleBeforeSignal).toBe(true);
+  expect(hierarchy.summaryBeforeSignal).toBe(true);
+  expect(hierarchy.actionBeforeSignal).toBe(true);
+  expect(hierarchy.actionBottom).toBeLessThan(480);
+  expect(hierarchy.signalHeight).toBeLessThan(80);
+
+  await card.locator(".case-card__category").hover();
   await expect(card).toHaveCSS("background-color", "rgb(250, 248, 243)");
   await expect.poll(activeRail).toBe("none");
+
+  await card.locator(".case-card__title-link").hover();
+  await expect(card).toHaveCSS("background-color", "rgb(244, 241, 234)");
+  await expect.poll(activeRail).toContain("inset");
 
   await card.locator(".text-link").hover();
   await expect(card).toHaveCSS("background-color", "rgb(244, 241, 234)");

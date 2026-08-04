@@ -194,6 +194,10 @@ function latestCatalogUpdate() {
   );
 }
 
+function professionalRoleContribution(study) {
+  return [study.facts[0]?.[1], study.facts[2]?.[1]].filter(Boolean).join(" · ");
+}
+
 function caseCatalog() {
   return {
     schemaVersion: 1,
@@ -233,6 +237,12 @@ function caseCatalog() {
               title: study.title,
               summary: study.summary,
               category: study.category,
+              ...(definition.kind === "professional"
+                ? {
+                    provenance: editorialUi[localeKey].professionalCase,
+                    roleContribution: professionalRoleContribution(study),
+                  }
+                : {}),
             },
           ];
         }),
@@ -392,27 +402,33 @@ function caseCard(localeKey, definition) {
   const study = locale.cases[definition.slug];
   const collectionLabel =
     definition.kind === "labs" ? ui.labsCase : ui.professionalCase;
+  const roleContribution =
+    definition.kind === "professional" ? professionalRoleContribution(study) : null;
   return `<article class="case-card" data-case-card data-case-slug="${escapeHtmlAttribute(definition.slug)}" data-kind="${escapeHtmlAttribute(definition.kind)}" data-topic="${escapeHtmlAttribute(definition.categoryKey)}" itemscope itemtype="https://schema.org/Article">
   <div class="case-card__meta meta-line">
     <span class="card-number">${escapeHtml(ui.caseLabel.toLocaleUpperCase(locale.lang))} / ${escapeHtml(definition.number)}</span>
     <span>${escapeHtml(collectionLabel)}</span>
   </div>
-  <div class="case-card__signal" aria-hidden="true">
-    <span><small>№</small>${escapeHtml(definition.number)}</span>
-    <div class="case-card__trace"><i></i><i></i><i></i><i></i></div>
-  </div>
   <div class="case-card__copy">
     <div class="case-card__category meta-line"><span>${escapeHtml(study.category)}</span><span>${escapeHtml(study.readMinutes)} ${escapeHtml(locale.ui.readTime)}</span></div>
-    <h2 itemprop="headline">${heading(study.cardTitle)}</h2>
+    <h2 itemprop="headline"><a class="case-card__title-link case-card__action" href="${escapeHtmlAttribute(routeFor(localeKey, definition.slug))}" itemprop="url">${heading(study.cardTitle)}</a></h2>
     <p class="case-card__summary" itemprop="description">${escapeHtml(study.summary)}</p>
+    <a class="text-link case-card__action" href="${escapeHtmlAttribute(routeFor(localeKey, definition.slug))}">${escapeHtml(locale.ui.readCase)} <span aria-hidden="true">↗</span></a>
+    ${roleContribution ? `<dl class="case-card__role">
+      <dt>${escapeHtml(ui.roleContribution)}</dt>
+      <dd>${escapeHtml(roleContribution)}</dd>
+    </dl>` : ""}
     <dl class="case-card__decision">
       <dt>${escapeHtml(ui.decisionPreview)}</dt>
       <dd>${escapeHtml(study.decisions.items[0].title)}</dd>
     </dl>
   </div>
+  <div class="case-card__signal" aria-hidden="true">
+    <span><small>№</small>${escapeHtml(definition.number)}</span>
+    <div class="case-card__trace"><i></i><i></i><i></i><i></i></div>
+  </div>
   <div class="case-card__foot">
     <ul class="tag-list" role="list" aria-label="${escapeHtml(locale.ui.stack)}">${definition.stack.slice(0, 3).map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>
-    <a class="text-link" href="${escapeHtmlAttribute(routeFor(localeKey, definition.slug))}" itemprop="url">${escapeHtml(locale.ui.readCase)} <span aria-hidden="true">↗</span></a>
   </div>
 </article>`;
 }
@@ -459,7 +475,7 @@ ${header(localeKey, null, true)}
       <p class="index-hero__lead" itemprop="description">${escapeHtml(locale.index.description)}</p>
     </div>
     <dl class="index-hero__ledger">
-      <div><dt>${escapeHtml(ui.caseLabel)}</dt><dd>${visibleDefinitions.length}</dd></div>
+      <div><dt>${escapeHtml(ui.publishedCases)}</dt><dd>${visibleDefinitions.length}</dd></div>
       <div><dt>${escapeHtml(locale.ui.languages)}</dt><dd>${localeOrder.length.toString().padStart(2, "0")}</dd></div>
       <div><dt>${escapeHtml(ui.methodology)}</dt><dd><a href="${escapeHtmlAttribute(methodologyRoute(localeKey))}">${escapeHtml(ui.indexPromise)} <span aria-hidden="true">↗</span></a></dd></div>
     </dl>
