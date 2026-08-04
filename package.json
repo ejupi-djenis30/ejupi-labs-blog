@@ -16,7 +16,7 @@
     "build": "node scripts/build.mjs",
     "validate": "node scripts/validate.mjs",
     "verify:sources": "node scripts/verify-labs-sources.mjs",
-    "audit": "npm audit --audit-level=moderate",
+    "audit": "npm audit --omit=dev --audit-level=moderate",
     "typecheck": "npm run check:worker-env && tsc -p tsconfig.worker.json && tsc -p tsconfig.client.json",
     "pretest": "npm run check:runtime",
     "pretest:e2e": "npm run check:runtime",

@@ -400,7 +400,7 @@ test("archive search, URL state and empty state stay in sync", async ({
   await expect(page.locator("[data-case-search]")).toBeFocused();
 });
 
-test("archive previews remain editorial rows at every breakpoint", async ({
+test("archive previews use an editorial grid that collapses for compact viewports", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -411,9 +411,9 @@ test("archive previews remain editorial rows at every breakpoint", async ({
         getComputedStyle(element).gridTemplateColumns.split(" ").length,
     );
 
-  await expect.poll(columnCount).toBe(1);
+  await expect.poll(columnCount).toBe(2);
   await page.setViewportSize({ width: 900, height: 900 });
-  await expect.poll(columnCount).toBe(1);
+  await expect.poll(columnCount).toBe(2);
   await page.setViewportSize({ width: 768, height: 900 });
   await expect.poll(columnCount).toBe(1);
   await page.setViewportSize({ width: 390, height: 844 });
