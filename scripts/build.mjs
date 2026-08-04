@@ -397,7 +397,10 @@ function caseCard(localeKey, definition) {
     <span class="card-number">${escapeHtml(ui.caseLabel.toLocaleUpperCase(locale.lang))} / ${escapeHtml(definition.number)}</span>
     <span>${escapeHtml(collectionLabel)}</span>
   </div>
-  <div class="case-card__signal" aria-hidden="true"><span>${escapeHtml(definition.number)}</span><i></i><i></i><i></i><i></i></div>
+  <div class="case-card__signal" aria-hidden="true">
+    <span><small>№</small>${escapeHtml(definition.number)}</span>
+    <div class="case-card__trace"><i></i><i></i><i></i><i></i></div>
+  </div>
   <div class="case-card__copy">
     <div class="case-card__category meta-line"><span>${escapeHtml(study.category)}</span><span>${escapeHtml(study.readMinutes)} ${escapeHtml(locale.ui.readTime)}</span></div>
     <h2 itemprop="headline">${heading(study.cardTitle)}</h2>
@@ -458,7 +461,7 @@ ${header(localeKey, null, true)}
     <dl class="index-hero__ledger">
       <div><dt>${escapeHtml(ui.caseLabel)}</dt><dd>${visibleDefinitions.length}</dd></div>
       <div><dt>${escapeHtml(locale.ui.languages)}</dt><dd>${localeOrder.length.toString().padStart(2, "0")}</dd></div>
-      <div><dt>${escapeHtml(ui.methodology)}</dt><dd>${escapeHtml(ui.indexPromise)}</dd></div>
+      <div><dt>${escapeHtml(ui.methodology)}</dt><dd><a href="${escapeHtmlAttribute(methodologyRoute(localeKey))}">${escapeHtml(ui.indexPromise)} <span aria-hidden="true">↗</span></a></dd></div>
     </dl>
   </section>
   <section class="case-index shell" aria-label="${escapeHtml(ui.archive)}">
@@ -673,7 +676,7 @@ ${header(localeKey, definition.slug)}
           <h1 itemprop="headline">${heading(study.title)}</h1>
           <p class="article-hero__summary" itemprop="description">${escapeHtml(study.summary)}</p>
         </div>
-        <dl class="article-hero__facts">${facts}</dl>
+        <dl class="article-hero__facts"><div class="article-hero__marker" aria-hidden="true"><dt>${escapeHtml(ui.caseLabel)}</dt><dd>${escapeHtml(definition.number)}</dd></div>${facts}</dl>
       </div>
     </header>
     <div class="article-byline shell">
