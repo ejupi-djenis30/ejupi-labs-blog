@@ -32,14 +32,14 @@
     "deploy": "npm run check && wrangler deploy --env=\"\""
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "5.20260727.1",
+    "@cloudflare/workers-types": "5.20260729.1",
     "@playwright/test": "1.62.0",
-    "@types/node": "24.13.3",
+    "@types/node": "26.1.2",
     "esbuild": "0.28.1",
     "entities": "8.0.0",
     "sharp": "0.35.3",
     "typescript": "7.0.2",
-    "wrangler": "4.114.0"
+    "wrangler": "4.115.0"
   },
   "overrides": {
     "sharp": "0.35.3"
