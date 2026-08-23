@@ -28,6 +28,34 @@ async function enableForcedColors(page) {
   }
 }
 
+async function expectPageCompassClearOfMainContent(page) {
+  const overlaps = await page.evaluate(() => {
+    const compass = document.querySelector("[data-page-compass]");
+    if (!(compass instanceof HTMLElement)) return ["missing page compass"];
+
+    const compassBox = compass.getBoundingClientRect();
+    const candidates = document.querySelectorAll(
+      "main h1, main h2, main h3, main p, main dt, main dd, main a, main button, main input, main .tag-list li",
+    );
+
+    return [...candidates]
+      .filter((element) => {
+        const box = element.getBoundingClientRect();
+        return (
+          box.width > 0 &&
+          box.height > 0 &&
+          box.right > compassBox.left &&
+          box.left < compassBox.right &&
+          box.bottom > compassBox.top &&
+          box.top < compassBox.bottom
+        );
+      })
+      .map((element) => element.textContent?.trim() || element.tagName);
+  });
+
+  expect(overlaps).toEqual([]);
+}
+
 test("removed project URLs return the standard not-found response", async ({
   request,
 }) => {
@@ -71,6 +99,7 @@ test("the article contents navigation moves focus to the selected section", asyn
 });
 
 test("page compass reveals with reading progress and yields to the footer", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
 
   const compass = page.locator("[data-page-compass]");
@@ -78,6 +107,16 @@ test("page compass reveals with reading progress and yields to the footer", asyn
 
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.45));
   await expect(compass).toBeVisible();
+  await expect(compass).toHaveAccessibleName("Back to top");
+  await expect(compass).toHaveText("↑");
+  const compassBox = await compass.evaluate((element) => ({
+    clientHeight: element.clientHeight,
+    clientWidth: element.clientWidth,
+    scrollHeight: element.scrollHeight,
+    scrollWidth: element.scrollWidth,
+  }));
+  expect(compassBox.scrollWidth).toBeLessThanOrEqual(compassBox.clientWidth);
+  expect(compassBox.scrollHeight).toBeLessThanOrEqual(compassBox.clientHeight);
   await expect
     .poll(() =>
       compass.evaluate((element) =>
@@ -90,19 +129,30 @@ test("page compass reveals with reading progress and yields to the footer", asyn
   await expect(compass).toBeHidden();
 });
 
-test("mobile reading keeps the page compass clear of cards and search remains labelled", async ({
+test("narrow-gutter reading keeps the page compass clear of content and search remains labelled", async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  for (const width of [390, 820, 1280]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/");
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.45));
+    await expect(page.locator("[data-page-compass]")).toBeHidden();
+  }
 
-  const compass = page.locator("[data-page-compass]");
+  await page.setViewportSize({ width: 1281, height: 844 });
+  await page.goto("/");
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight * 0.45));
-  await expect(compass).toBeHidden();
+  await expect(page.locator("[data-page-compass]")).toBeVisible();
+  await expectPageCompassClearOfMainContent(page);
   await expect(page.getByRole("searchbox", { name: "Search case studies" })).toHaveAttribute(
     "placeholder",
     "Search decisions, technologies or projects",
   );
+
+  await page.goto("/case-studies/ai-workflow-cloud-migration/#technology-rationale");
+  await page.locator("#technology-rationale").scrollIntoViewIfNeeded();
+  await expect(page.locator("[data-page-compass]")).toBeVisible();
+  await expectPageCompassClearOfMainContent(page);
 });
 
 test.describe("without JavaScript", () => {
