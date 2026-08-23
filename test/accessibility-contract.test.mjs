@@ -222,12 +222,12 @@ test("the page compass owns its compact surface and exposes reading progress", (
     /\.page-compass\.text-button\s*\{[^}]*--compass-progress:\s*0;[^}]*width:\s*3\.25rem;[^}]*conic-gradient\([\s\S]*?var\(--compass-progress\)/u,
   );
   assert.match(stylesheet, /\.page-compass\.text-button\s*\{[^}]*border:\s*3px solid transparent;/u);
-  const mobileCompassRule = stylesheet.match(
-    /@media \(max-width: 30em\)\s*\{\s*\.page-compass\.text-button\s*\{(?<rule>[^}]*)\}/u,
+  const safeGutterCompassRule = stylesheet.match(
+    /@media \(max-width: 80em\)\s*\{[\s\S]*?\.page-compass\.text-button\s*\{(?<rule>[^}]*)\}/u,
   );
-  assert.ok(mobileCompassRule?.groups?.rule);
-  assert.match(mobileCompassRule.groups.rule, /display:\s*none;/u);
-  assert.doesNotMatch(mobileCompassRule.groups.rule, /!important/u);
+  assert.ok(safeGutterCompassRule?.groups?.rule);
+  assert.match(safeGutterCompassRule.groups.rule, /display:\s*none;/u);
+  assert.doesNotMatch(safeGutterCompassRule.groups.rule, /!important/u);
 });
 
 test("touch controls retain visible branded feedback", () => {

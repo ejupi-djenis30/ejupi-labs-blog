@@ -171,7 +171,7 @@ li {
       var(--rule-light) 0
     ) border-box;
   color: var(--paper);
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   text-decoration: none;
 }
 
@@ -1561,6 +1561,12 @@ li {
   color: #8e9591;
 }
 
+@media (max-width: 80em) {
+  .page-compass.text-button {
+    display: none;
+  }
+}
+
 @media (max-width: 65.625em) {
   .case-card {
     min-height: 38rem;
@@ -1905,12 +1911,6 @@ li {
     font-size: clamp(3rem, 16vw, 4.5rem);
     overflow-wrap: break-word;
     hyphens: auto;
-  }
-}
-
-@media (max-width: 30em) {
-  .page-compass.text-button {
-    display: none;
   }
 }
 

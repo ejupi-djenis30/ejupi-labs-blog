@@ -251,7 +251,7 @@ test("the page compass is localized and the footer keeps a non-JavaScript return
 
     assert.ok(
       html.includes(
-        `<a class="page-compass text-button" href="#main" aria-label="${escapeHtml(locale.ui.backToTop)}" data-page-compass hidden>`,
+        `<a class="page-compass text-button" href="#main" aria-label="${escapeHtml(locale.ui.backToTop)}" data-page-compass hidden><span aria-hidden="true">↑</span></a>`,
       ),
     );
     assert.ok(
