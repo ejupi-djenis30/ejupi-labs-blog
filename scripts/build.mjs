@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
-import { transform } from "esbuild";
+import { build, transform } from "esbuild";
 import {
   caseDefinitions,
   currentCaseDefinitions,
@@ -33,24 +33,24 @@ assertPublicDomainTopology({
 const root = resolve(import.meta.dirname, "..");
 const outputRoot = join(root, "dist");
 const sourceRoot = join(root, "site");
-const [stylesInput, clientInput] = await Promise.all([
-  readFile(join(root, "src", "styles.css"), "utf8"),
-  readFile(join(root, "src", "client.js"), "utf8"),
-]);
-const [{ code: stylesSource }, { code: clientSource }] = await Promise.all([
+const stylesInput = await readFile(join(root, "src", "styles.css"), "utf8");
+const [{ code: stylesSource }, clientBuild] = await Promise.all([
   transform(stylesInput, {
     legalComments: "none",
     loader: "css",
     minify: true,
   }),
-  transform(clientInput, {
+  build({
+    entryPoints: [join(root, "src", "client.js")],
+    bundle: true,
+    write: false,
     format: "esm",
     legalComments: "none",
-    loader: "js",
     minify: true,
     target: "es2024",
   }),
 ]);
+const clientSource = clientBuild.outputFiles[0].text;
 const fingerprint = (source) => createHash("sha256").update(source).digest("hex").slice(0, 12);
 const assetFiles = Object.freeze({
   styles: `assets/styles.${fingerprint(stylesSource)}.css`,
