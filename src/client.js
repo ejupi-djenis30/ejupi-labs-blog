@@ -1,3 +1,5 @@
+import { fetchSearchIndex } from "./search-index.js";
+
 /**
  * @param {string} key
  * @param {boolean} expanded
@@ -126,34 +128,11 @@ if (typeof document !== "undefined") {
         searchState.textContent = searchState.dataset.loading ?? "";
         searchIndexPromise = (async () => {
           try {
-            if (!searchIndexUrl) throw new Error("Search index URL is missing.");
-            const response = await fetch(searchIndexUrl, {
-              credentials: "same-origin",
-              cache: "force-cache",
+            const entries = await fetchSearchIndex(searchIndexUrl, {
+              locale: document.documentElement.lang,
+              slugs: caseCards.map((card) => card.dataset.caseSlug ?? ""),
             });
-            if (!response.ok) throw new Error(`Search index returned ${response.status}.`);
-            const payload = await response.json();
-            if (
-              payload?.schemaVersion !== 1 ||
-              payload.locale !== document.documentElement.lang ||
-              !Array.isArray(payload.cases) ||
-              payload.cases.length !== caseCards.length
-            ) {
-              throw new Error("Search index has an unexpected shape.");
-            }
-            const seenSlugs = new Set();
-            for (const entry of payload.cases) {
-              if (
-                typeof entry?.slug !== "string" ||
-                typeof entry?.text !== "string" ||
-                seenSlugs.has(entry.slug) ||
-                !caseCards.some((card) => card.dataset.caseSlug === entry.slug)
-              ) {
-                throw new Error("Search index contains an invalid case.");
-              }
-              seenSlugs.add(entry.slug);
-              fullTextBySlug.set(entry.slug, entry.text);
-            }
+            for (const [slug, text] of entries) fullTextBySlug.set(slug, text);
             searchIndexState = "loaded";
             searchState.textContent = "";
           } catch {
