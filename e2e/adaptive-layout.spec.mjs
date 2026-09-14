@@ -101,3 +101,47 @@ test("200% text enlargement keeps full summaries and keyboard actions available"
   );
   expect(fontSize).toBeGreaterThanOrEqual(20);
 });
+
+test("narrow mobile headings and architecture diagrams remain readable", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 280, height: 760 });
+  await page.route(/\/assets\/fonts\/instrument-sans-.*\.woff2$/u, (route) =>
+    route.abort(),
+  );
+
+  await page.goto("/fr/methodology/");
+  expectLayoutAudit(await layoutAudit(page), "narrow methodology");
+  const methodologyHeading = await page.locator(".methodology-hero h1").evaluate(
+    (heading) => ({
+      clientWidth: heading.clientWidth,
+      scrollWidth: heading.scrollWidth,
+    }),
+  );
+  expect(methodologyHeading.scrollWidth).toBeLessThanOrEqual(
+    methodologyHeading.clientWidth + 1,
+  );
+
+  await page.goto("/");
+  const indexHeading = await page.locator(".index-hero h1").evaluate((heading) => ({
+    headingWidth: heading.getBoundingClientRect().width,
+    copyWidth: heading.parentElement?.getBoundingClientRect().width ?? 0,
+  }));
+  expect(Math.abs(indexHeading.headingWidth - indexHeading.copyWidth)).toBeLessThanOrEqual(1);
+
+  await page.goto("/de/case-studies/vector-placement-operations/");
+  expectLayoutAudit(await layoutAudit(page), "narrow article");
+  const diagram = await page.locator(".architecture-frame").evaluate((frame) => {
+    const svg = frame.querySelector("svg");
+    return {
+      clientWidth: frame.clientWidth,
+      documentOverflow:
+        document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      scrollWidth: frame.scrollWidth,
+      svgWidth: svg?.getBoundingClientRect().width ?? 0,
+    };
+  });
+  expect(diagram.documentOverflow).toBeLessThanOrEqual(0);
+  expect(diagram.scrollWidth).toBeGreaterThan(diagram.clientWidth);
+  expect(diagram.svgWidth).toBeGreaterThanOrEqual(768);
+});
